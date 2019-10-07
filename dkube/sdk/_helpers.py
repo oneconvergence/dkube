@@ -1,12 +1,13 @@
 from minio import Minio
-
 import os
+import random
+import string
 
 from .env import *
 from .schema import *
-from .rest import client as d3c
+from .rest.client import *
 
-def _upload_to_dkube(env:Environment, fspath:str, name:str):
+def upload_to_dkube(env:Environment, fspath:str, name:str):
     client = Minio(env.endpoint,
                access_key=env.key,
                secret_key=env.secret, secure=False)
@@ -23,18 +24,14 @@ def _upload_to_dkube(env:Environment, fspath:str, name:str):
             target = "{}/{}/{}".format(prefix, directory, filee)
             client.fput_object(bucket, target, os.path.join(path, filee), 'text/plain')
 
-def _create_model(env:Environment, model:Model):
+def create_model(env:Environment, model:Model):
     url = "{}/dkube/v2/users/{}/datums".format(env.url, env.user)
-    d3c.post(url, model, env.token)
+    post(url, model, env.token)
     
-def _generate_version():
-    import random
-
+def generate_version():
     return ''.join([random.choice(string.digits) for n in range(10)])
 
-def _get_tfmodel_version(fspath: str):
-    import os
-
+def get_tfmodel_version(fspath: str):
     #For models generated using Tensorflow Estimator - version will be present in the path
     #Expected path is <basepath>/modelversion
     if os.path.isdir(fspath):

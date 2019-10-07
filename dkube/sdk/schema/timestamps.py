@@ -36,11 +36,11 @@ class Duration(object):
 
     def from_json(self, data:dict):
         assert type(data) == dict, "type mismatch error"
-        #fill this object from json
 
-    def to_json(self):
-        #return json of this object
-        pass
+        self._days(data['days'])
+        self._hours(data['hours'])
+        self._minutes(data['minutes'])
+        self._seconds(data['seconds'])
 
 class TimeStamps(object):
     def __init__(self):
@@ -72,8 +72,7 @@ class TimeStamps(object):
 
     def from_json(self, data:dict):
         assert type(data) == dict, "type mismatch error"
-        #fill this object from json
 
-    def to_json(self):
-        #return json of this object
-        pass
+        self._start(data['start'])
+        self._end(data['end'])
+        self.duration.from_json(data['duration'])

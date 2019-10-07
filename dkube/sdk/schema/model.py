@@ -5,14 +5,34 @@ class ModelKind(enum.Enum):
     downloaded  = "downloaded"
     trained     = "dkube_trained"
 
+    @staticmethod
+    def from_str(label):
+        if label == "downloaded":
+            return ModelKind.downloaded
+        elif label == "dkube_trained":
+            return ModelFormat.trained
+        else:
+            raise NotImplementedError
+
+
 class ModelFormat(enum.Enum):
     unsupported = "unsupported"
     tensorpb    = "tensorpb"
 
+    @staticmethod
+    def from_str(label):
+        if label == "unsupported":
+            return ModelFormat.unsupported
+        elif label == "tensorpb":
+            return ModelFormat.tensorpb
+        else:
+            raise NotImplementedError
+
 class ModelDetails(object):
     def __init__(self):
-        self.__kind   = ModelKind.downloaded
-        self.__format = ModelFormat.unsupported
+        self.__kind         = ModelKind.downloaded
+        self.__format       = ModelFormat.unsupported
+        self.__job          = ""
 
     @property
     def kind(self):
@@ -20,6 +40,9 @@ class ModelDetails(object):
     @property
     def format(self):
         return self.__format.value
+    @property
+    def job(self):
+        return self.__job
 
     def _format(self, data):
         assert type(data) == ModelFormat, "type mismatch error"
@@ -28,6 +51,15 @@ class ModelDetails(object):
     def _kind(self, data):
         assert type(data) == ModelKind, "type mismatch error"
         self.__kind = data
+
+    def _job(self, data):
+        assert type(data) == str, "type mismatch error"
+        self.__job = data
+
+    def from_json(self, data:dict):
+        self._format(ModelFormat.from_str(details['format']))
+        self._kind(ModelKind.from_str(details['kind'].value))
+        self._job(details['kind']['dkube_trained']['job'])
 
 
 class Model(object):
@@ -61,11 +93,12 @@ class Model(object):
         self.__details = data
 
     def to_json(self):
-        return {
-                "class": self.type,
-                "name": self.input.name,
-                "remote": self.input.remote,
-                "source": self.input.source.name,
-                "tags": self.input.tags,
-                "url": self.input.url
-                }
+        res = {'class': self.type}
+        res.update(self.input.to_json())
+        return res
+
+    def from_json(self, data:dict):
+        self.input.from_json(data)
+        self.generated.from_json(data['generated'])
+        self.details.from_json(data['generated']['details']['model'])
+

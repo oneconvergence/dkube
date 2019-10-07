@@ -1,7 +1,6 @@
 __all__ = ['_environ', 'Environment']
 
-from . import _environ
-Environment = _environ.Environment
+from ._environ import *
 
 import os
 

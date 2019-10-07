@@ -1,8 +1,7 @@
 from .env import *
 from .schema import *
 from ._types import *
-
-from . import _helpers as util
+from ._helpers import *
 
 def export_model(fspath:str, name:str, autogenerate=False,
                  environ=Environment().internal, 
@@ -15,13 +14,15 @@ def export_model(fspath:str, name:str, autogenerate=False,
         version = ""
         if framework == Framework.Tensorflow:
             #extract version from fspath
-            version = util._get_tfmodel_version(fspath)
+            version = get_tfmodel_version(fspath)
         if version == "":
-            version = util._generate_version()
+            version = generate_version()
         name = "{}-{}".format(name, version)
 
     #upload data to dkube storage
-    util._upload_to_dkube(environ, fspath, name)
+    upload_to_dkube(environ, fspath, name)
+
+    print("data uploaded to dkube storage sucessfully \n")
 
     #create a model in dkube database
     model = Model()
@@ -31,5 +32,7 @@ def export_model(fspath:str, name:str, autogenerate=False,
     model.input.tags    = []
     model.input.remote  = False
 
-    util._create_model(environ, model) 
+    create_model(environ, model) 
+
+    print("model created successfully in dkube \n")
 

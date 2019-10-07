@@ -20,16 +20,16 @@ class Environment(object):
         self.bucket     = os.getenv("DKUBE_STORE_BUCKET")
         self.user       = os.getenv('USERNAME')
         self.token      = os.getenv("ACCESS_TOKEN")
-        self.url        = "http://dkube-d3api.dkube:5000/"
+        self.url        = "http://dkube-d3api.dkube:5000"
         return self
 
     @property
     def external(self):
         self.type       = "external"
-        self.endpoint   = "https://{}:32222/minio".format(self.ip)
+        self.endpoint   = "{}:32223".format(self.ip)
         self.key        = os.getenv("DKUBE_STORE_ACCESS_KEY")
         self.secret     = os.getenv("DKUBE_STORE_ACCESS_SECRET")
         self.bucket     = os.getenv("DKUBE_STORE_BUCKET")
-        self.url        = "https://{}:32222/".format(self.ip)
+        self.url        = "https://{}:32222".format(self.ip)
 
         return self

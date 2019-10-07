@@ -4,15 +4,12 @@ from typing import List
 from .timestamps import *
 from .status import *
 
-#from timestamps import *
-#from status import *
-
 class DatumGitSource(object):
     def __init__(self):
-        self.apikey     = ""
-        self.password   = ""
-        self.private    = False
-        self.username   = ""
+        self.__apikey     = ""
+        self.__password   = ""
+        self.__private    = False
+        self.__username   = ""
 
     @property
     def apikey(self):
@@ -49,20 +46,26 @@ class DatumGitSource(object):
 
     def from_json(self, data :dict):
         assert type(data) == dict, "type mismatch error"
-        #fill fields from input json
+
+        self.apikey     = data['apikey']
+        self.password   = data['password']
+        self.private    = data['private']
+        self.username   = data['username']
 
     def to_json(self):
-        #return json for this object
-        pass
-
+        return {'apikey': self.apikey,
+                'password': self.password,
+                'private': self.private,
+                'username': self.username
+                }
 
 class DatumAwsSource(object):
     def __init__(self):
-        self.accesskey  = ""
-        self.accessid   = ""
-        self.bucket     = ""
-        self.endpoint   = ""
-        self.prefix     = ""
+        self.__accesskey  = ""
+        self.__accessid   = ""
+        self.__bucket     = ""
+        self.__endpoint   = ""
+        self.__prefix     = ""
 
     @property
     def accesskey(self):
@@ -105,13 +108,22 @@ class DatumAwsSource(object):
         assert type(data) == str, "type mismatch error"
         self.__prefix = data
 
+    def to_json(self):
+        return {'accesskey': self.accesskey,
+                'accesskeyid': self.accessid,
+                'bucket': self.bucket,
+                'endpoint': self.endpoint,
+                'prefix': self.prefix
+                }
+
     def from_json(self, data:dict):
         assert type(data) == dict, "type mismatch error"
-        #fill fields from input json
 
-    def to_json(self):
-        #return json for this object
-        pass
+        self.accesskey  = data['accesskey']
+        self.accessid   = data['accesskeyid']
+        self.bucket     = data['bucket']
+        self.endpoint   = data['endpoint']
+        self.prefix     = data['prefix']
 
 class DatumMinioSource(DatumAwsSource):
     def __init__(self):
@@ -119,6 +131,16 @@ class DatumMinioSource(DatumAwsSource):
 
 class DatumURLSource(object):
     def __init__(self):
+        self.__name = "pub_url"
+
+    @property
+    def name(self):
+        return self.__name
+
+    def to_json(self):
+        return {}
+
+    def from_json(self, data:dict):
         pass
 
 class DatumDkubeSource(object):
@@ -129,6 +151,9 @@ class DatumDkubeSource(object):
     def name(self):
         return self.__name
 
+    def to_json(self):
+        return {}
+
 class DatumSource(enum.Enum):
     default = None
     git     = DatumGitSource()
@@ -136,6 +161,27 @@ class DatumSource(enum.Enum):
     minio   = DatumMinioSource()
     url     = DatumURLSource()
     dkube   = DatumDkubeSource()
+
+    @staticmethod
+    def from_dict(data: dict):
+        source = data['source']
+        if source == "git":
+            DatumSource.git.from_json(data['gitaccess'])
+            return DatumSource.git
+        if source == "aws_s3":
+            DatumSource.aws.from_json(data['s3access'])
+            return DatumSource.aws
+        if source == "s3":
+            DatumSource.minio.from_json(data['s3access'])
+            return DatumSource.minio
+        if source == "pub_url":
+            DatumSource.url.from_json(data['s3access'])
+            return DatumSource.url
+        if source == "dkube":
+            DatumSource.dkube.from_json(data['s3access'])
+            return DatumSource.dkube
+        else:
+            raise NotImplementedError
 
 class DatumInput(object):
     def __init__(self):
@@ -186,8 +232,25 @@ class DatumInput(object):
         assert type(data) == str, "type mismatch error"
         self.__name = data
 
+    def to_json(self):
+        res= {  "name": self.name,
+                "remote": self.remote,
+                "source": self.source.name,
+                "tags": self.tags,
+                "url": self.url
+             }
+        res.update(self.source.value.to_json())
+        return res
 
+    def from_json(self, data:dict):
+        assert type(data) == dict, "type mismatch error"
 
+        self.name   = data['name']
+        self.tags   = data['tags']
+        self.remote = data['remote']
+        self.source = DatumSource.from_data(data)
+
+        
 class DatumGenerated(object):
     def __init__(self):
         self.__uuid           = ""
@@ -242,8 +305,10 @@ class DatumGenerated(object):
 
     def from_json(self, data:dict):
         assert type(data) == dict, "type mismatch error"
-        #fill fields from input json
 
-    def to_json(self):
-        #return json for this object
-        pass
+        self._uuid(data['uuid'])
+        self._progress(data['progress'])
+        self._size(data['size'])
+        self._storagepath(data['storage_path'])
+        self.timestamps.from_json(data['timestamps'])
+        self.status.from_json(data['status'])
