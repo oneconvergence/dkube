@@ -44,7 +44,7 @@ implementation:
       rundetails: /tmp/rundetails
 """
 
-def DkubeTrainOp(name='dkube-viewer'):
+def DkubeViewerOp(name='dkube-viewer'):
     cdict = load_yaml(SPEC)
     cdict['name'] = name
     cyaml = dump_yaml(cdict)

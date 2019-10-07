@@ -44,7 +44,7 @@ implementation:
       servingurl: /tmp/servingurl
 """
 
-def DkubeTrainOp(name='dkube-serving'):
+def DkubeServeOp(name='dkube-serving'):
     cdict = load_yaml(SPEC)
     cdict['name'] = name
     cyaml = dump_yaml(cdict)
