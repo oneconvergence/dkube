@@ -11,6 +11,6 @@ setup(name='dkube',
       author='oneconvergence',
       author_email='www.oneconvergence.com',
       url='git+https://github.com/oneconvergence/dkube.git',
-      packages = ['dkube', 'dkube.sdk', 'dkube.sdk.env', 'dkube.sdk.rest', 'dkube.sdk.schema'],
+      packages = ['dkube', 'dkube.sdk', 'dkube.sdk.env', 'dkube.sdk.rest', 'dkube.sdk.schema', 'dkube.pipelines'],
       install_requires=required
      )
