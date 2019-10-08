@@ -1,33 +1,16 @@
-from minio import Minio
 import os
 import random
 import string
 
 from .env import *
 from .schema import *
-from .rest.client import *
+from .lib import *
 
 def upload_to_dkube(env:Environment, fspath:str, name:str):
-    if env == Environment.internal:
-        client = Minio(env.endpoint,
-                   access_key=env.key,
-                   secret_key=env.secret, secure=False)
-    if env == Environment.external:
-        #setup a proxy server
-	import urllib3
-	httpClient = urllib3.ProxyManager(
-                'https://{}:32222/minio/',
-                timeout=urllib3.Timeout.DEFAULT_TIMEOUT,
-                cert_reqs='CERT_REQUIRED',
-                retries=urllib3.Retry(
-                    total=5,
-                    backoff_factor=0.2,
-                    status_forcelist=[500, 502, 503, 504]
-                )
-            )
-        client = Minio(env.endpoint,
-                   access_key=env.key,
-                   secret_key=env.secret, secure=True)
+    if env.type == EnvironmentType.INTERNAL:
+        client = minio_client(env.endpoint, env.key, env.secret)
+    if env.type == EnvironmentType.EXTERNAL:
+        client = minio_client(env.endpoint, env.key, env.secret, proxy=True, token=env.token)
     bucket = env.bucket
     prefix = "users/{}/model".format(env.user)
     access_token = env.token
@@ -39,6 +22,7 @@ def upload_to_dkube(env:Environment, fspath:str, name:str):
         directory = path.replace(fspath,"")
         for filee in files:
             target = "{}/{}/{}".format(prefix, directory, filee)
+            target = os.path.normpath(target)
             client.fput_object(bucket, target, os.path.join(path, filee), 'text/plain')
 
 def create_model(env:Environment, model:Model):
