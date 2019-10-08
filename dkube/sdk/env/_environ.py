@@ -26,7 +26,7 @@ class Environment(object):
     @property
     def external(self):
         self.type       = "external"
-        self.endpoint   = "{}:32223".format(self.ip)
+        self.endpoint   = "{}:32222".format(self.ip)
         self.key        = os.getenv("DKUBE_STORE_ACCESS_KEY")
         self.secret     = os.getenv("DKUBE_STORE_ACCESS_SECRET")
         self.bucket     = os.getenv("DKUBE_STORE_BUCKET")

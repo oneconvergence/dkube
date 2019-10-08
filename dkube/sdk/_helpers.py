@@ -8,9 +8,26 @@ from .schema import *
 from .rest.client import *
 
 def upload_to_dkube(env:Environment, fspath:str, name:str):
-    client = Minio(env.endpoint,
-               access_key=env.key,
-               secret_key=env.secret, secure=False)
+    if env == Environment.internal:
+        client = Minio(env.endpoint,
+                   access_key=env.key,
+                   secret_key=env.secret, secure=False)
+    if env == Environment.external:
+        #setup a proxy server
+	import urllib3
+	httpClient = urllib3.ProxyManager(
+                'https://{}:32222/minio/',
+                timeout=urllib3.Timeout.DEFAULT_TIMEOUT,
+                cert_reqs='CERT_REQUIRED',
+                retries=urllib3.Retry(
+                    total=5,
+                    backoff_factor=0.2,
+                    status_forcelist=[500, 502, 503, 504]
+                )
+            )
+        client = Minio(env.endpoint,
+                   access_key=env.key,
+                   secret_key=env.secret, secure=True)
     bucket = env.bucket
     prefix = "users/{}/model".format(env.user)
     access_token = env.token
