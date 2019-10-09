@@ -1,4 +1,4 @@
 validators
 minio
 requests
-https://storage.googleapis.com/ml-pipeline/release/0.1.18/kfp.tar.gz
+-e https://storage.googleapis.com/ml-pipeline/release/0.1.18/kfp.tar.gz
