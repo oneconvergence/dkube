@@ -1,5 +1,10 @@
 import os
 import validators
+import enum
+
+class EnvironmentType(enum.Enum):
+    INTERNAL = "internal"
+    EXTERNAL = "external"
 
 class Environment(object):
     def __init__(self, ip:str='127.0.0.1', user:str='', token:str=''):
@@ -13,7 +18,7 @@ class Environment(object):
 
     @property
     def internal(self):
-        self.type       = "internal"
+        self.type       = EnvironmentType.INTERNAL
         self.endpoint   = os.getenv("S3_ENDPOINT")
         self.key        = os.getenv("DKUBE_STORE_ACCESS_KEY")
         self.secret     = os.getenv("DKUBE_STORE_ACCESS_SECRET")
@@ -25,8 +30,8 @@ class Environment(object):
 
     @property
     def external(self):
-        self.type       = "external"
-        self.endpoint   = "{}:32223".format(self.ip)
+        self.type       = EnvironmentType.EXTERNAL
+        self.endpoint   = "{}:32222".format('192.168.200.19')
         self.key        = os.getenv("DKUBE_STORE_ACCESS_KEY")
         self.secret     = os.getenv("DKUBE_STORE_ACCESS_SECRET")
         self.bucket     = os.getenv("DKUBE_STORE_BUCKET")
