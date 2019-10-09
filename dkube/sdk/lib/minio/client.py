@@ -5,6 +5,21 @@ from urllib3.util.url import Url
 from minio import Minio
 
 class DkubeProxy(urllib3.ProxyManager):
+    @staticmethod
+    def _prepare_dkube_proxy(conn):
+        conn.connect()
+
+    def connection_from_host(self, host, port=None, scheme="http", pool_kwargs=None):
+        if scheme == "https":
+            conn = super(DkubeProxy, self).connection_from_host(
+                host, port, scheme, pool_kwargs=pool_kwargs
+            )
+            conn._prepare_proxy = DkubeProxy._prepare_dkube_proxy
+
+        return super(DkubeProxy, self).connection_from_host(
+            self.proxy.host, self.proxy.port, self.proxy.scheme, pool_kwargs=pool_kwargs
+        )
+
     def urlopen(self, method, url, redirect=True, **kw):
         murl = parse_url(url)
         if murl.path.startswith('/minio') == False:
@@ -29,7 +44,8 @@ def _proxy(endpoint, access_token):
                 total=5,
                 backoff_factor=0.2,
                 status_forcelist=[500, 502, 503, 504]
-                )
+                ),
+            proxy=None
             )
 
 def minio_client(endpoint, accesskey, secret, proxy=False, token=None):

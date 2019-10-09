@@ -1,3 +1,8 @@
+import sys
+import logging
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 from .env import *
 from .schema import *
 from ._types import *
@@ -22,7 +27,7 @@ def export_model(fspath:str, name:str, autogenerate=False,
     #upload data to dkube storage
     upload_to_dkube(environ, fspath, name)
 
-    print("data uploaded to dkube storage sucessfully \n")
+    logger.info("data uploaded to dkube storage sucessfully")
 
     #create a model in dkube database
     model = Model()
@@ -34,5 +39,5 @@ def export_model(fspath:str, name:str, autogenerate=False,
 
     create_model(environ, model) 
 
-    print("model created successfully in dkube \n")
+    logger.debug("model created successfully in dkube")
 
