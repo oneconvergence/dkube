@@ -1,9 +1,3 @@
-from kfp.components._yaml_utils import load_yaml
-from kfp.components._yaml_utils import dump_yaml
-from kfp import components
-
-SPEC = \
-"""
 name: dkube-viewer
 description: |
     Viewer component which renders UI as static HTML in KF Output viewer.
@@ -42,11 +36,3 @@ implementation:
     ]
     fileOutputs:
       rundetails: /tmp/rundetails
-"""
-
-def DkubeViewerOp(name='dkube-viewer'):
-    cdict = load_yaml(SPEC)
-    cdict['name'] = name
-    cyaml = dump_yaml(cdict)
-
-    return components.load_component_from_text(cyaml)

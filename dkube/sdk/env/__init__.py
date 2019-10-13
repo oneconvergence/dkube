@@ -1,9 +1,12 @@
-#__all__ = ['_environ', 'Environment']
-
 from ._environ import *
+from ._defaults import *
 
 import os
 
-os.environ["DKUBE_STORE_ACCESS_KEY"] = "dkube"
-os.environ["DKUBE_STORE_ACCESS_SECRET"] = "l06dands19s"
-os.environ["DKUBE_STORE_BUCKET"] = "dkube"
+self = globals()['_defaults']
+
+def _env(key, val):
+    os.environ[key.lstrip('_')] = val
+    return key
+
+envs = [_env(var, getattr(self, var)) for var in getattr(self, '__vars__')]

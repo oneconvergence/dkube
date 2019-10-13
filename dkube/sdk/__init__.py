@@ -1,1 +1,3 @@
-__all__ = ['dkube', 'env']
+__all__ = ['dkube', 'env', 'logger']
+
+from .lib import logger

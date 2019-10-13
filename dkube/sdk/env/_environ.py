@@ -12,29 +12,30 @@ class Environment(object):
         assert type(user) == str, "type mismatch error, username must be string"
         assert type(token) == str, "type mismatch error, token must be string"
 
-        self.ip     = ip
-        self.user   = user
-        self.token  = token
+        self.__ip     = ip
+        self.__user   = user
+        self.__token  = token
 
     @property
     def internal(self):
         self.type       = EnvironmentType.INTERNAL
-        self.endpoint   = os.getenv("S3_ENDPOINT")
-        self.key        = os.getenv("DKUBE_STORE_ACCESS_KEY")
-        self.secret     = os.getenv("DKUBE_STORE_ACCESS_SECRET")
-        self.bucket     = os.getenv("DKUBE_STORE_BUCKET")
-        self.user       = os.getenv('USERNAME')
-        self.token      = os.getenv("ACCESS_TOKEN")
-        self.url        = "http://dkube-d3api.dkube:5000"
+        self.endpoint   = os.getenv('DKUBE_STORE_S3_ENDPOINT')
+        self.key        = os.getenv('DKUBE_STORE_S3_ACCESS_KEY')
+        self.secret     = os.getenv('DKUBE_STORE_S3_ACCESS_SECRET')
+        self.bucket     = os.getenv('DKUBE_STORE_S3_BUCKET')
+        self.user       = os.getenv('DKUBE_LOGIN_USERNAME')
+        self.token      = os.getenv('DKUBE_ACCESS_TOKEN')
+        self.url        = os.getenv('DKUBE_ACCESS_URL')
         return self
 
     @property
     def external(self):
         self.type       = EnvironmentType.EXTERNAL
-        self.endpoint   = "{}:32222".format(self.ip)
-        self.key        = os.getenv("DKUBE_STORE_ACCESS_KEY")
-        self.secret     = os.getenv("DKUBE_STORE_ACCESS_SECRET")
-        self.bucket     = os.getenv("DKUBE_STORE_BUCKET")
-        self.url        = "https://{}:32222".format(self.ip)
-
+        self.endpoint   = "{}:32222".format(self.__ip)
+        self.key        = os.getenv('DKUBE_STORE_S3_ACCESS_KEY')
+        self.secret     = os.getenv('DKUBE_STORE_S3_ACCESS_SECRET')
+        self.bucket     = os.getenv('DKUBE_STORE_S3_BUCKET')
+        self.url        = "https://{}:32222".format(self.__ip)
+        self.user       = self.__user or os.getenv('DKUBE_LOGIN_USERNAME')
+        self.token      = self.__token or os.getenv('DKUBE_ACCESS_TOKEN')
         return self

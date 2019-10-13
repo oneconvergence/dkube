@@ -57,9 +57,9 @@ class ModelDetails(object):
         self.__job = data
 
     def from_json(self, data:dict):
-        self._format(ModelFormat.from_str(details['format']))
-        self._kind(ModelKind.from_str(details['kind'].value))
-        self._job(details['kind']['dkube_trained']['job'])
+        self._format(ModelFormat.from_str(data['format']))
+        self._kind(ModelKind.from_str(data['kind'].value))
+        self._job(data['kind']['dkube_trained']['job'])
 
 
 class Model(object):
@@ -78,6 +78,9 @@ class Model(object):
     @property
     def generated(self):
         return self.__generated
+    @property
+    def details(self):
+        return self.__details
 
     @input.setter
     def input(self, data:DatumInput):
