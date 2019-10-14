@@ -13,7 +13,6 @@ from ._helpers import *
 
 def launch_training_job(name:str, autogenerate=False,
                         environ=Environment().internal,
-                        framework:Framework=Framework.Tensorflow,
                         tags=[],
                         container:ContainerImageDetails=ContainerImage.DKUBE_DS_TF_CPU_1_14,
                         workspace:str='',

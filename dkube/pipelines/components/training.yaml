@@ -28,9 +28,9 @@ inputs:
   - {name: script,          type: String,   optional: true,
      description: 'Optional. Startup script to run inside container. If not passed expected is that container has entrypoint'}
 
-  - {name: envs,            type: List,     optional: true,     default: '{}',
-    description: 'Optional. Environments for training program. Format: {<key>:<val>}.
-                  Env var name inside container will be <key> and value will be <val>'}
+  - {name: envs,            type: Dict,     optional: true,     default: '{}',
+    description: 'Optional. Environments for training program. Format: {<key>:<val>,}.
+                  Env var name inside container will be <key>=<val>'}
 
   - {name: program,         type: String,   optional: true,     default: '',
      description: 'Optional. Program imported in Dkube to be run inside container. If not specified container should have entrypoint.'}

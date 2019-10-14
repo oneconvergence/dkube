@@ -1,4 +1,4 @@
-from dkube.env import *
+from dkube.sdk.dkube import *
 from . import *
 
 #For component_args please check the definition @./components/training.yaml, use value of 'name' field as key

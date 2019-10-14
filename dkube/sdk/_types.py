@@ -22,7 +22,7 @@ class ContainerImageDetails(object):
         self.__executor = executor
         self.__path = path
         self.__user = user
-        self__password = password
+        self.__password = password
 
     @property
     def path(self):
@@ -63,12 +63,34 @@ class ContainerImageDetails(object):
         assert type(data) == str, "type mismatch error"
         self.__executor = Executor.from_str(data)
 
+    def from_dict(self, data:dict):
+        assert type(data) == dict, "type mismatch error"
+        #MAK - TODO - can we use the same keys in pipeline component def too?
+        self.path = data['image']
+        self.user = data.get('username', '')
+        self.password = data.get('password', '')
+
 class ContainerImage(enum.Enum):
     DKUBE_DS_TF_CPU_1_13 = ContainerImageDetails(executor=ExecutorType.Dkube, path="docker.io/ocdr/dkube-datascience-tf-cpu:v1.13")
     DKUBE_DS_TF_CPU_1_14 = ContainerImageDetails(executor=ExecutorType.Dkube, path="docker.io/ocdr/dkube-datascience-tf-cpu:v1.14")
     DKUBE_DS_TF_GPU_1_13 = ContainerImageDetails(executor=ExecutorType.Dkube, path="docker.io/ocdr/dkube-datascience-tf-gpu:v1.13")
     DKUBE_DS_TF_GPU_1_14 = ContainerImageDetails(executor=ExecutorType.Dkube, path="docker.io/ocdr/dkube-datascience-tf-gpu:v1.14")
     CUSTOM_IMAGE         = ContainerImageDetails(executor=ExecutorType.Custom, path="docker.io/unknown/unknown:unknown")
+
+    @staticmethod
+    def from_dict(data:dict):
+        if "ocdr/dkube-datascience-tf-cpu:v1.13" in data['image']:
+            return ContainerImage.DKUBE_DS_TF_CPU_1_13
+        elif "ocdr/dkube-datascience-tf-cpu:v1.14" in data['image']:
+            return ContainerImage.DKUBE_DS_TF_CPU_1_14
+        elif "ocdr/dkube-datascience-tf-gpu:v1.13" in data['image']:
+            return ContainerImage.DKUBE_DS_TF_GPU_1_13
+        elif "ocdr/dkube-datascience-tf-gpu:v1.14" in data['image']:
+            return ContainerImage.DKUBE_DS_TF_GPU_1_14
+        else:
+            ci = ContainerImage.CUSTOM_IMAGE
+            ci.value.from_dict(data)
+            return ci
 
 class DistributionStrategy(enum.Enum):
     """
@@ -98,6 +120,15 @@ class DistributionStrategy(enum.Enum):
     This strategy definition can be used when framework == tensorflow
     """
     DISTRIBUTION_STRATEGY_TF = 'unsupported'
+
+    @staticmethod
+    def from_str(label:str):
+        if label == 'default':
+            return DistributionStrategy.DISTRIBUTION_STRATEGY_DEFAULT
+        elif label == 'auto':
+            return DistributionStrategy.DISTRIBUTION_STRATEGY_AUTO
+        else:
+            raise NotImplementedError
 
 
 class DistributeOpts(object):
@@ -129,3 +160,8 @@ class DistributeOpts(object):
     def strategy(self, data:enum.Enum):
         assert type(data) == enum.Enum, "type mismatch error"
         self.__strategy = data
+
+    def from_dict(self, data:dict):
+        assert type(data) == dict, "type mismatch error"
+        self.workers = data['workers']
+        self.strategy = DistributionStrategy.from_str(data['strategy'])
