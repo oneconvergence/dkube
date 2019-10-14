@@ -24,7 +24,7 @@ def get(url:str, token:str, query:str=None):
 
     if resp.ok:
         logger.info("GET -> {} successful".format(url))
-        return json.loads(resp.content)
+        return json.loads(resp.content.decode())
     elif resp.status_code == 401:
         raise DkubeAPIException('GET', url, resp.status_code)
     else:
