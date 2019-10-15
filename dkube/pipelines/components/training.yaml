@@ -13,9 +13,6 @@ metadata:
   annotations: {platform: 'Dkube'}
   labels: {platform: 'Dkube', wfid: '{{workflow.uid}}', runid: '{{pod.name}}', stage: 'training'}
 inputs:
-  - {name:user,             type: String,   optional: false,
-     description: 'Required. Logged in dkube user.'}
-
   - {name: auth_token,      type: String,   optional: false,
      description: 'Required. Dkube authentication token.'}
 
@@ -61,7 +58,6 @@ inputs:
   - {name: accessurl,       type: String,   optional: true,     default: '',
      description: 'Optional. URL at which dkube is accessible. Format: https://{ip}:{port}
                    Copy paste from the browser of this window. Required for cloud deployments.'}
-
 outputs:
   - {name: rundetails,      description: 'Details of the dkube run'}
   - {name: artifact,        description: 'Identifier in Dkube storage where artifacts of training are stored.'}
@@ -72,17 +68,16 @@ implementation:
     command: ['dkubepl']
     args: [
       training, 
-      --user, {inputValue: user},
       --accessurl, {inputValue: accessurl},
       --token, {inputValue: auth_token},
       --container, {inputValue: container},
       --script, {inputValue: script},
-      --envs, {inputValue, envs},
+      --envs, {inputValue: envs},
       --program, {inputValue: program},
       --datasets, {inputValue: datasets},
       --models, {inputValue: models},
       --ngpus, {inputValue: ngpus},
-      --distributeopts, {inputValue: distributeops},
+      --distributeopts, {inputValue: distributeopts},
       --config, {inputValue: config},
       --tuning, {inputValue: tuning},
       --runid, '{{pod.name}}'

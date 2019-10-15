@@ -1,7 +1,7 @@
 """Dkube Pipeline Component Launcher
 
 Usage:
-    cmd.py [--name=NAME] [--user=USER] [--url=URL] [--token=TOKEN] [--container=CONTAINER] [--script=SCRIPT] [--envs=ENVS] [--program=PROGRAM] [--datasets=DATASETS] [--models=MODELS] [--ngpus=NGPUS] [--distributeopts=DISTRIBUTEOPTS] [--config=CONFIG] [--tuning=TUNING] [--runid=RUNID]
+    cmd.py [--name=NAME] [--token=TOKEN] [--container=CONTAINER] [--script=SCRIPT] [--envs=ENVS] [--program=PROGRAM] [--datasets=DATASETS] [--models=MODELS] [--ngpus=NGPUS] [--distributeopts=DISTRIBUTEOPTS] [--config=CONFIG] [--tuning=TUNING] [--runid=RUNID]
     cmd.py (-h | --help)
     cmd.py --version
 
@@ -9,8 +9,6 @@ Options:
     -h --help                           Show this screen.
     --version                           Show version.
     --name=NAME                         User specified name of the pipeline stage
-    --user=USER                         Dkube user who owns the pipeline
-    --url=URL                           Access URL of dkube. Format: 'https://<ip>:<port>'
     --token=TOKEN                       Authentication token of logged in user
     --container=CONTAINER               Container to be launched for the job. 
                                         Format: '{'image':<path>,'username':<user>,'password':<password>}'
@@ -46,9 +44,7 @@ def validate_distributeopts(opts):
 def validate(**kwargs):
     #There are some parameters which are mandatory
     assert kwargs['--name'] != None, "--name is missing. Must be specified."
-    assert kwargs['--user'] != None, "--user is missing. Must be specified."
     assert kwargs['--token'] != None, "--token is missing. Must be specified."
-    assert kwargs['--url'] != None, "--url is missing. Must be specified."
     assert kwargs['--runid'] != None, "--runid is missing. Must be specified."
 
     assert kwargs['--container'] != None, "--container is missing, Must be specified."
@@ -72,17 +68,15 @@ def transform(**kwargs):
     return data
 
 import os
-from urllib3.util.url import parse_url
 
 from dkube.sdk.dkube import *
 from dkube.sdk._types import *
 
 def training(**kwargs):
-    url = kwargs['url']
-    url = parse_url(url)
-    #url.path, url.scheme, url.host, url.port
-
-    env = Environment(ip=url.host, user=kwargs['user'], token=kwargs['token'])
+    #extract user from supplied token
+    #_extract_user_from_token(token)
+    user = 'ocdkube'
+    env = Environment(ip="http://dkube-d3api.dkube:5000", user=user, token=kwargs['token'])
     args = {}
     args.update({
             'container':ContainerImage.from_dict(kwargs['container']),

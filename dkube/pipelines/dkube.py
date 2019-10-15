@@ -5,6 +5,7 @@ from ._component import *
 def dkube_training_op(
         env=Environment().internal,
         name='dkube-training',
+        container=ContainerImage.DKUBE_DS_TF_CPU_1_14.value.to_dict(),
         **component_args):
 
     token       = env.token
@@ -12,7 +13,7 @@ def dkube_training_op(
 
     component_args['accessurl'] = url
 
-    return DkubeTrainingOp(name, token, url, **component_args)
+    return DkubeTrainingOp(name, token, url, container, **component_args)
 
 """
 def DkubeTrainingOp(name='dkube-training'):

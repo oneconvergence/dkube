@@ -70,6 +70,9 @@ class ContainerImageDetails(object):
         self.user = data.get('username', '')
         self.password = data.get('password', '')
 
+    def to_dict(self):
+        return {'image': self.path, 'username': self.user, 'password': self.password}
+
 class ContainerImage(enum.Enum):
     DKUBE_DS_TF_CPU_1_13 = ContainerImageDetails(executor=ExecutorType.Dkube, path="docker.io/ocdr/dkube-datascience-tf-cpu:v1.13")
     DKUBE_DS_TF_CPU_1_14 = ContainerImageDetails(executor=ExecutorType.Dkube, path="docker.io/ocdr/dkube-datascience-tf-cpu:v1.14")
@@ -91,6 +94,16 @@ class ContainerImage(enum.Enum):
             ci = ContainerImage.CUSTOM_IMAGE
             ci.value.from_dict(data)
             return ci
+
+    @staticmethod
+    def tensorflow(ver='1.14', gpu=False):
+        if ver == '1.14':
+            return ContainerImage.DKUBE_DS_TF_CPU_1_14 if gpu == False else ContainerImage.DKUBE_DS_TF_GPU_1_14
+        elif ver == '1.13':
+            return ContainerImage.DKUBE_DS_TF_CPU_1_13 if gpu == False else DKUBE_DS_TF_GPU_1_13
+        else:
+            raise NotImplementedError
+
 
 class DistributionStrategy(enum.Enum):
     """
