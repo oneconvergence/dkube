@@ -65,6 +65,7 @@ def transform(**kwargs):
     data['datasets'] = json.loads(data['datasets']) if data['datasets'] else None
     data['models'] = json.loads(data['models']) if data['models'] else None
     data['distributeopts'] = json.loads(data['distributeopts']) if data['distributeopts'] else None
+    data['ngpus'] = int(data['ngpus'])
     return data
 
 import os
