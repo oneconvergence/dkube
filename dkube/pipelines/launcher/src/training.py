@@ -110,6 +110,7 @@ def training(**kwargs):
 #if __name__ == '__main__':
 def main():
     args = docopt(__doc__, version='1.4')
+    print(**args)
     validate(**args)
     args = transform(**args)
 
