@@ -6,7 +6,7 @@ from kfp.components._yaml_utils import load_yaml
 from kfp.components._yaml_utils import dump_yaml
 from kfp import components
 
-def DkubeTrainingOp(name, token, url, container, **kwargs):
+def DkubeTrainingOp(name, token, container, **kwargs):
     component = None
     path = Path(__file__).parent
     with open('{}/components/training.yaml'.format(path), 'rb') as stream:
@@ -17,4 +17,4 @@ def DkubeTrainingOp(name, token, url, container, **kwargs):
 
     assert component != None, "Internal error, loading DKube training component failed"
 
-    return component(token, container, **kwargs)
+    return component(name, token, container, **kwargs)

@@ -13,6 +13,9 @@ metadata:
   annotations: {platform: 'Dkube'}
   labels: {platform: 'Dkube', wfid: '{{workflow.uid}}', runid: '{{pod.name}}', stage: 'training'}
 inputs:
+  - {name: name,            type: String,   optional: false,
+     description: 'Required. Name of the dkube job name'}
+
   - {name: auth_token,      type: String,   optional: false,
      description: 'Required. Dkube authentication token.'}
 
@@ -54,10 +57,6 @@ inputs:
      description: 'Optional. Hyperparameter tuning information. Supports inline data. Must be a json formatted string.
                    Future inputs :
                        <ks://<configmap-name>> -> k8s configmap name'}
-
-  - {name: accessurl,       type: String,   optional: true,     default: '',
-     description: 'Optional. URL at which dkube is accessible. Format: https://{ip}:{port}
-                   Copy paste from the browser of this window. Required for cloud deployments.'}
 outputs:
   - {name: rundetails,      description: 'Details of the dkube run'}
   - {name: artifact,        description: 'Identifier in Dkube storage where artifacts of training are stored.'}
@@ -65,10 +64,9 @@ outputs:
 implementation:
   container:
     image: ocdr/dkubepl:py
-    command: ['dkubepl']
+    command: ['training']
     args: [
-      training, 
-      --accessurl, {inputValue: accessurl},
+      --name, {inputValue: name}, 
       --token, {inputValue: auth_token},
       --container, {inputValue: container},
       --script, {inputValue: script},

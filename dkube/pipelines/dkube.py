@@ -1,4 +1,6 @@
 from dkube.sdk.dkube import *
+from dkube.sdk._helpers import *
+
 from ._component import *
 
 #For component_args please check the definition @./components/training.yaml, use value of 'name' field as key
@@ -9,11 +11,10 @@ def dkube_training_op(
         **component_args):
 
     token       = env.token
-    url         = env.url
 
-    component_args['accessurl'] = url
+    name = "{}-{}".format(name, generate_version())
 
-    return DkubeTrainingOp(name, token, url, container, **component_args)
+    return DkubeTrainingOp(name, token, container, **component_args)
 
 """
 def DkubeTrainingOp(name='dkube-training'):
