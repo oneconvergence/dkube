@@ -50,7 +50,7 @@ def validate(**kwargs):
     assert kwargs['--container'] != None, "--container is missing, Must be specified."
     validate_container(kwargs['--container'])
 
-    if kwargs['--distributeopts']:
+    if json.loads(kwargs['--distributeopts']):
         validate_distributeopts(kwargs['--distributeopts'])
 
 
