@@ -1,20 +1,18 @@
 from dkube.sdk.dkube import *
-from . import *
+from ._component import *
 
 #For component_args please check the definition @./components/training.yaml, use value of 'name' field as key
 def dkube_training_op(
         env=Environment().internal,
-        framework=Framework.Tensorflow,
         name='dkube-training',
         **component_args):
 
     token       = env.token
-    framework   = framework.value
     url         = env.url
 
     component_args['accessurl'] = url
 
-    return DkubeTrainingOp(name, token, framework, url, **component_args)
+    return DkubeTrainingOp(name, token, url, **component_args)
 
 """
 def DkubeTrainingOp(name='dkube-training'):

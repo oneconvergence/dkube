@@ -19,9 +19,6 @@ inputs:
   - {name: auth_token,      type: String,   optional: false,
      description: 'Required. Dkube authentication token.'}
 
-  - {name: framework,       type:String,    optional: false,
-     description: 'Required. ML/DL framework to be used for training. Supported values tensorflow/custom.'}
-
   - {name: container,       type: Dict,     optional: false,
      description: 'Required. Container to use for training. Format: {"image":<url>, "username":<>, "password":<>}'}
 
