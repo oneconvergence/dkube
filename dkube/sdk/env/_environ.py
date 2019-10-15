@@ -7,14 +7,14 @@ class EnvironmentType(enum.Enum):
     EXTERNAL = "external"
 
 class Environment(object):
-    def __init__(self, url:str='https://127.0.0.1:32222', user:str='', token:str=''):
-        assert validators.url(url) == True, "type mismatch for ip field should be IPV4 address"
+    def __init__(self, host:str='127.0.0.1', port:int=5000, user:str='', token:str=''):
+        assert validators.ip(host) || validators.domain(host), "type mismatch for ip field should be IPV4 address"
         assert type(user) == str, "type mismatch error, username must be string"
         assert type(token) == str, "type mismatch error, token must be string"
 
-        self.__url    = url
-        self.__user   = user
-        self.__token  = token
+        self.__endpoint = '{}:{}'.format(ip, port)
+        self.__user     = user
+        self.__token    = token
 
     @property
     def internal(self):
@@ -31,11 +31,11 @@ class Environment(object):
     @property
     def external(self):
         self.type       = EnvironmentType.EXTERNAL
-        self.endpoint   = "{}:32222".format(self.__ip)
+        self.endpoint   = self.__endpoint
         self.key        = os.getenv('DKUBE_STORE_S3_ACCESS_KEY')
         self.secret     = os.getenv('DKUBE_STORE_S3_ACCESS_SECRET')
         self.bucket     = os.getenv('DKUBE_STORE_S3_BUCKET')
-        self.url        = self.__url
+        self.url        = 'https://{}'.format(self.__endpoint)
         self.user       = self.__user or os.getenv('DKUBE_LOGIN_USERNAME')
         self.token      = self.__token or os.getenv('DKUBE_ACCESS_TOKEN')
         return self

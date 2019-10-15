@@ -77,7 +77,7 @@ def training(**kwargs):
     #extract user from supplied token
     #_extract_user_from_token(token)
     user = 'ocdkube'
-    env = Environment(url="http://dkube-d3api.dkube:5000", user=user, token=kwargs['token'])
+    env = Environment(host='dkube-d3api.dkube', port=5000, user=user, token=kwargs['token'])
     args = {}
     args.update({
             'container':ContainerImage.from_dict(kwargs['container']),
