@@ -8,7 +8,7 @@ class EnvironmentType(enum.Enum):
 
 class Environment(object):
     def __init__(self, ip:str='127.0.0.1', user:str='', token:str=''):
-        assert validators.ipv4(ip) == True, "type mismatch for ip field should be IPV4 address"
+        #assert validators.ipv4(ip) == True, "type mismatch for ip field should be IPV4 address"
         assert type(user) == str, "type mismatch error, username must be string"
         assert type(token) == str, "type mismatch error, token must be string"
 
