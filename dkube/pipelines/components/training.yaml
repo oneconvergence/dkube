@@ -14,7 +14,7 @@ metadata:
   labels: {platform: 'Dkube', wfid: '{{workflow.uid}}', runid: '{{pod.name}}', stage: 'training'}
 inputs:
   - {name: name,            type: String,   optional: false,
-     description: 'Required. Name of the dkube job name'}
+     description: 'Required. Name of the dkube job.'}
 
   - {name: auth_token,      type: String,   optional: false,
      description: 'Required. Dkube authentication token.'}
@@ -59,7 +59,7 @@ inputs:
                        <ks://<configmap-name>> -> k8s configmap name'}
 outputs:
   - {name: rundetails,      description: 'Details of the dkube run'}
-  - {name: artifact,        description: 'Identifier in Dkube storage where artifacts of training are stored.'}
+  - {name: trainedmodel,    description: 'Points to the trained model in Dkube'}
 
 implementation:
   container:
@@ -82,4 +82,4 @@ implementation:
     ]
     fileOutputs:
       rundetails:   /tmp/rundetails
-      artifact:     /tmp/artifact
+      trainedmodel: /tmp/trainedmodel

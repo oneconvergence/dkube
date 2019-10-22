@@ -264,8 +264,12 @@ class State(enum.Enum):
         return state in ['complete', 'stopped', 'error']
 
     @staticmethod
-    def is_progress_state(state:str):
+    def is_inprogress_state(state:str):
         return state in ['queued', 'starting', 'training', 'running', 'stopping', 'deleting']
+
+    @staticmethod
+    def is_running_state(state:str):
+        return state in ['running']
 
 class Status(object):
     def __init__(self):

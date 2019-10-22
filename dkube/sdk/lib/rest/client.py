@@ -6,7 +6,6 @@ from ..exceptions import *
 from ..log import *
 
 def post(url:str, token:str, data:dict={}):
-    #jdata = data.to_json()
     rdata   = json.dumps(data)
     headers = {"Content-Type": "application/keyauth.api.v1+json", "Authorization": "Bearer {}".format(token)}
     resp = requests.post(url, data=rdata, headers=headers, timeout=(100, 100), verify=False)
@@ -19,6 +18,7 @@ def post(url:str, token:str, data:dict={}):
         raise DkubeAPIException('POST', url, resp.status_code)
 
 def get(url:str, token:str, query:str=None):
+    #MAK - TODO - Good to retry GETs on 503, 504 timeout errors
     headers = {"Content-Type": "application/keyauth.api.v1+json", "Authorization": "Bearer {}".format(token)}
     resp = requests.get(url, headers=headers, timeout=(100, 100), verify=False)
 

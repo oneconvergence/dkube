@@ -4,15 +4,20 @@ from .training import *
 
 class JobParams(enum.Enum):
     TRAINING        = Training()
-    #NOTEBOOK        = Notebook()
-    #SERVING         = Serving()
+    SERVING         = Serving()
+    CUSTOM          = Custom()
     #PREPROCESSING   = Preprocessing()
+    #NOTEBOOK        = Notebook()
 
     @staticmethod
     def from_str(label:str):
         assert type(label) == str, "type mismatch error"
         if label == "training":
             return JobParams.TRAINING
+        if label == "serving":
+            return JobParams.SERVING
+        if label == "custom":
+            return JobParams.CUSTOM
 
 class DkubeJob(object):
     def __init__(self):

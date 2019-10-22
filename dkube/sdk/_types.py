@@ -78,6 +78,8 @@ class ContainerImage(enum.Enum):
     DKUBE_DS_TF_CPU_1_14 = ContainerImageDetails(executor=ExecutorType.Dkube, path="docker.io/ocdr/dkube-datascience-tf-cpu:v1.14")
     DKUBE_DS_TF_GPU_1_13 = ContainerImageDetails(executor=ExecutorType.Dkube, path="docker.io/ocdr/dkube-datascience-tf-gpu:v1.13")
     DKUBE_DS_TF_GPU_1_14 = ContainerImageDetails(executor=ExecutorType.Dkube, path="docker.io/ocdr/dkube-datascience-tf-gpu:v1.14")
+    DKUBE_SERVING_CPU    = ContainerImageDetails(executor=ExecutorType.Dkube, path="docker.io/ocdr/dkube-tfserving-cpu:v1.14")
+    DKUBE_SERVING_GPU    = ContainerImageDetails(executor=ExecutorType.Dkube, path="docker.io/ocdr/dkube-tfserving-gpu:v1.14")
     CUSTOM_IMAGE         = ContainerImageDetails(executor=ExecutorType.Custom, path="docker.io/unknown/unknown:unknown")
 
     @staticmethod
@@ -90,6 +92,10 @@ class ContainerImage(enum.Enum):
             return ContainerImage.DKUBE_DS_TF_GPU_1_13
         elif "ocdr/dkube-datascience-tf-gpu:v1.14" in data['image']:
             return ContainerImage.DKUBE_DS_TF_GPU_1_14
+        elif "ocdr/dkube-tfserving-cpu:v1.14" in data['image']:
+            return ContainerImage.DKUBE_SERVING_CPU
+        elif "ocdr/dkube-tfserving-gpu:v1.14" in data['image']:
+            return ContainerImage.DKUBE_SERVING_GPU
         else:
             ci = ContainerImage.CUSTOM_IMAGE
             ci.value.from_dict(data)

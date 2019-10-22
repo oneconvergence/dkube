@@ -1,9 +1,9 @@
 """Dkube Pipeline Component Launcher
 
 Usage:
-    cmd.py [--name=NAME] [--token=TOKEN] [--container=CONTAINER] [--script=SCRIPT] [--envs=ENVS] [--program=PROGRAM] [--datasets=DATASETS] [--models=MODELS] [--ngpus=NGPUS] [--distributeopts=DISTRIBUTEOPTS] [--config=CONFIG] [--tuning=TUNING] [--runid=RUNID]
-    cmd.py (-h | --help)
-    cmd.py --version
+    training.py [--name=NAME] [--token=TOKEN] [--container=CONTAINER] [--script=SCRIPT] [--envs=ENVS] [--program=PROGRAM] [--datasets=DATASETS] [--models=MODELS] [--ngpus=NGPUS] [--distributeopts=DISTRIBUTEOPTS] [--config=CONFIG] [--tuning=TUNING] [--runid=RUNID]
+    training.py (-h | --help)
+    training.py --version
 
 Options:
     -h --help                           Show this screen.
@@ -73,6 +73,15 @@ import os
 from dkube.sdk.dkube import *
 from dkube.sdk._types import *
 
+def generate_outputs(env, name):
+    model = get_trained_model(env, name)
+    with open("/tmp/trainedmodel") as op:
+        op.write(model)
+
+    job = training_job(env, name)
+    with open("/tmp/rundetails") as op:
+        op.write(job.to_json())
+
 def training(**kwargs):
     #extract user from supplied token
     #_extract_user_from_token(token)
@@ -106,9 +115,12 @@ def training(**kwargs):
         args.update({'distributeopts': DistributeOpts().from_dict(dopts)})
 
 
+    #this will also wait for job to complete (success/failed)
     launch_training_job(kwargs['name'], autogenerate=True, environ=env.external, **args)
 
-#if __name__ == '__main__':
+    #generate the outputs, next stage can pick from here
+    generate_outputs(env.external, kwargs['name'])
+
 def main():
     args = docopt(__doc__, version='1.4')
     validate(**args)

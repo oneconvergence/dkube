@@ -10,14 +10,102 @@ class ModelKind(enum.Enum):
         if label == "downloaded":
             return ModelKind.downloaded
         elif label == "dkube_trained":
-            return ModelFormat.trained
+            return ModelKind.trained
         else:
             raise NotImplementedError
 
+class ModelUnsupported(object):
+    def __init__(self):
+        self.__format = 'unsupported'
+        self.__reason = 'model not in standard tensorpb format'
+
+    @property
+    def format(self):
+        return self.__format
+    @property
+    def reason(self):
+        return self.__reason
+    @reason.setter(self, data:str):
+        assert type(data) == str, "type mismatch error"
+        self.__reason = data
+
+class ModelDeviceInfo(object):
+    def __init__(self):
+        self.__cpu = False
+        self.__gpu = False
+
+    @property
+    def cpu(self):
+        return self.__cpu
+    @property
+    def gpu(self):
+        return self.__gpu
+
+    @cpu.setter
+    def cpu(self, data:bool):
+        assert type(data) == bool, "type mismatch error"
+        self.__cpu = data
+
+    @gpu.setter
+    def gpu(self, data:bool):
+        assert type(data) == bool, "type mismatch error"
+        self.__gpu = data
+
+    def to_json(self):
+        return {'cpu': self.cpu, 'gpu': self.gpu}
+
+    def from_json(self, data:dict):
+        assert type(data) == dict, "type mismatch error"
+        self.cpu = data['cpu']
+        self.gpu = data['gpu']
+
+class ModelTensorpb(object):
+    def __init__(self):
+        self.__format = "tensorpb"
+        self.__devicenodes = []
+        self.__devices  = ModelDeviceInfo()
+        self.__servable = False
+
+    @property
+    def format(self):
+        return self.__format
+    @property
+    def devicenodes(self):
+        return self.__devicenodes
+    @property
+    def devices(self):
+        return self.__devices
+    @property
+    def servable(self):
+        return self.__servable
+
+    @devicenodes.setter
+    def devicenodes(self, data:list):
+        assert type(data) == list, "type mismatch error"
+        self.__devicenodes = data
+
+    @devices.setter
+    def devices(self, data:ModelDeviceInfo):
+        assert type(data) == ModelDeviceInfo, "type mismatch error"
+        self.__devices = data
+
+    @servable.setter
+    def servable(self, data:bool):
+        assert type(data) == bool, "type mismatch error"
+        self.__servable = data
+
+    def to_json(self):
+        return {'devicenodes': self.devicenodes, 'devices': self.devices.to_json(), 'servable': self.servable}
+
+    def from_json(self, data:dict):
+        assert type(data) == dict, "type mismatch error"
+        self.devicenodes = data['devicenodes']
+        self.devices.from_json(data['devices'])
+        self.servable = data['servable']
 
 class ModelFormat(enum.Enum):
-    unsupported = "unsupported"
-    tensorpb    = "tensorpb"
+    unsupported = ModelUnsupported()
+    tensorpb    = ModelTensorpb()
 
     @staticmethod
     def from_str(label):

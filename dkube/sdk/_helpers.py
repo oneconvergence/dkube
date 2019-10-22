@@ -34,25 +34,50 @@ def create_training_job(env:Environment, job:DkubeJob):
     url = "{}/dkube/v2/users/{}/jobs".format(env.url, env.user)
     post(url, env.token, data=job.to_json())
 
-def wait_for_training_job(env:Environment, name:str):
-    job = DkubeJob()
-    job.name = name
+def create_serving_job(env:Environment, job:DkubeJob):
+    url = "{}/dkube/v2/users/{}/jobs".format(env.url, env.user)
+    post(url, env.token, data=job.to_json())
 
+def wait_for_training_job(env:Environment, name:str):
     state = State.UNKNOWN.value
     reason = 'unknown'
     while State.is_final_state(state) == False:
         time.sleep(10)
-        get_training_job(env, job)
+        job = get_training_job(env, name)
         state = job.params.value.generated.status.state.value
         reason = job.params.value.generated.status.reason
         logger.info("user {}, job {}, state {}, reason {}".format(env.user, job.name, state, reason))
 
     return state, reason
 
-def get_training_job(env:Environment, job:DkubeJob):
+def wait_for_serving_job(env:Environment, name:str):
+    state = State.UNKNOWN.value
+    reason = 'unknown'
+    while State.is_running_state(state) == False:
+        time.sleep(10)
+        job = get_serving_job(env, name)
+        state = job.params.value.generated.status.state.value
+        reason = job.params.value.generated.status.reason
+        logger.info("user {}, job {}, state {}, reason {}".format(env.user, job.name, state, reason))
+
+    return state, reason
+
+def get_training_job(env:Environment, name:str):
+    job = DkubeJob()
+    job.name = name
     url = "{}/dkube/v2/users/{}/jobs/class/{}/job/{}/collection".format(env.url, env.user, "training", job.name)
     data = get(url, env.token)
     job.from_json(data['data']['job'])
+    return job
+
+def get_serving_job(env:Environment, name:str):
+    job = DkubeJob()
+    job.name = name
+    url = "{}/dkube/v2/users/{}/jobs/class/{}/job/{}/collection".format(env.url, env.user, "inference", job.name)
+    data = get(url, env.token)
+    job.from_json(data['data']['job'])
+    return job
+
     
 def generate_version():
     return ''.join([random.choice(string.digits) for n in range(10)])
