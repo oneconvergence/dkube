@@ -20,7 +20,7 @@ def get_trained_model(environ=Environment().internal, name:str):
 
         time.sleep(x)
 
-    DkubeInternalErrorException("trained model not found for job {} for user {}".format(environ.user, name)
+    DkubeInternalErrorException("trained model not found for job {} for user {}".format(environ.user, name))
 
 def training_job(environ=Environment().internal, name:str):
     return get_training_job(environ, name)
