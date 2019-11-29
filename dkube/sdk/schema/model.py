@@ -25,7 +25,9 @@ class ModelUnsupported(object):
     @property
     def reason(self):
         return self.__reason
-    @reason.setter(self, data:str):
+
+    @reason.setter
+    def reason(self, data:str):
         assert type(data) == str, "type mismatch error"
         self.__reason = data
 

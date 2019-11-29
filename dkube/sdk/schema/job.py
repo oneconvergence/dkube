@@ -1,11 +1,12 @@
 import enum
 
 from .training import *
+from .serving import *
 
 class JobParams(enum.Enum):
     TRAINING        = Training()
     SERVING         = Serving()
-    CUSTOM          = Custom()
+    #CUSTOM          = Custom()
     #PREPROCESSING   = Preprocessing()
     #NOTEBOOK        = Notebook()
 
