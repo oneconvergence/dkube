@@ -11,7 +11,7 @@ from .schema import *
 from ._types import *
 from ._helpers import *
 
-def get_trained_model(environ=Environment().internal, name:str):
+def get_trained_model(name:str, environ=Environment().internal):
     for x in range(1, 10):
         job = get_training_job(environ, name)
         model = job.params.value.details.model
@@ -22,7 +22,7 @@ def get_trained_model(environ=Environment().internal, name:str):
 
     DkubeInternalErrorException("trained model not found for job {} for user {}".format(environ.user, name))
 
-def training_job(environ=Environment().internal, name:str):
+def training_job(name:str, environ=Environment().internal):
     return get_training_job(environ, name)
     
 def launch_serving_job(name:str, autogenerate=False,
