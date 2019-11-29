@@ -37,9 +37,9 @@ class VersionInfo(object):
     def from_json(self, data:dict):
         assert type(data) == dict
 
-        self.cuda   = data['cuda']
+        self.cuda   = data.get('cuda', '') #optional
         self.dkube  = data['dkube']
-        self.nvidia = data['nvidia']
+        self.nvidia = data.get('nvidia', '') #optional
 
 
 class JobGenerated(object):
