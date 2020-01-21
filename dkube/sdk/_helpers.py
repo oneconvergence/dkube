@@ -27,15 +27,15 @@ def upload_to_dkube(env:Environment, fspath:str, name:str):
             client.fput_object(bucket, target, os.path.join(path, filee), 'text/plain')
 
 def create_model(env:Environment, model:Model):
-    url = "{}/dkube/v2/users/{}/datums".format(env.url, env.user)
+    url = "{}/dkube/v2/controller/users/{}/datums".format(env.url, env.user)
     post(url, env.token, data=model.to_json())
 
 def create_training_job(env:Environment, job:DkubeJob):
-    url = "{}/dkube/v2/users/{}/jobs".format(env.url, env.user)
+    url = "{}/dkube/v2/controller/users/{}/jobs".format(env.url, env.user)
     post(url, env.token, data=job.to_json())
 
 def create_serving_job(env:Environment, job:DkubeJob):
-    url = "{}/dkube/v2/users/{}/jobs".format(env.url, env.user)
+    url = "{}/dkube/v2/controller/users/{}/jobs".format(env.url, env.user)
     post(url, env.token, data=job.to_json())
 
 def wait_for_training_job(env:Environment, name:str):
@@ -65,7 +65,7 @@ def wait_for_serving_job(env:Environment, name:str):
 def get_training_job(env:Environment, name:str):
     job = DkubeJob()
     job.name = name
-    url = "{}/dkube/v2/users/{}/jobs/class/{}/job/{}/collection".format(env.url, env.user, "training", job.name)
+    url = "{}/dkube/v2/controller/users/{}/jobs/class/{}/job/{}/collection".format(env.url, env.user, "training", job.name)
     data = get(url, env.token)
     job.from_json(data['data']['job'])
     return job
@@ -73,7 +73,7 @@ def get_training_job(env:Environment, name:str):
 def get_serving_job(env:Environment, name:str):
     job = DkubeJob()
     job.name = name
-    url = "{}/dkube/v2/users/{}/jobs/class/{}/job/{}/collection".format(env.url, env.user, "inference", job.name)
+    url = "{}/dkube/v2/controller/users/{}/jobs/class/{}/job/{}/collection".format(env.url, env.user, "inference", job.name)
     data = get(url, env.token)
     job.from_json(data['data']['job'])
     return job

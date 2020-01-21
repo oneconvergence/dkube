@@ -136,9 +136,10 @@ def launch_training_job(name:str, autogenerate=False,
     #models = [{'name': '{}:{}'.format(environ.user, model) for model in models]
     #training.input.models = models
 
-    #datasets = ['{}:{}'.format(environ.user, dataset) for dataset in datasets]
-    datasets = [{'name':'{}:{}'.format(environ.user, datasets[0]), 'mountpath': '/opt/dkube/input'}]
-    training.input.datasets = datasets
+    ipdatasets = []
+    for dataset in datasets:
+        ipdatasets.append({'name':'{}:{}'.format(environ.user, dataset['name']), 'mountpath': dataset['mountpath']})
+    training.input.datasets = ipdatasets
 
     outputs = [{'name': '{}:{}'.format(environ.user, models[0]), 'mountpath': '/opt/dkube/output'}]
     training.input.outputs = outputs
