@@ -8,7 +8,8 @@ from ..log import *
 def post(url:str, token:str, data:dict={}):
     rdata   = json.dumps(data)
     headers = {"Content-Type": "application/keyauth.api.v1+json", "Authorization": "Bearer {}".format(token)}
-    resp = requests.post(url, data=rdata, headers=headers, timeout=(100, 100), verify=False)
+    params  = {'run': 'true'}
+    resp = requests.post(url, data=rdata, headers=headers, params=params, timeout=(100, 100), verify=False)
 
     if resp.ok:
         logger.info("POST -> {} successful".format(url))

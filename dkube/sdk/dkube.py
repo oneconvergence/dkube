@@ -103,6 +103,7 @@ def launch_training_job(name:str, autogenerate=False,
                         script:str='',
                         models:list=[],
                         datasets:list=[],
+                        template='',
                         hptuning:str='',
                         steps:int=100,
                         batchsize:int=100,
@@ -128,15 +129,19 @@ def launch_training_job(name:str, autogenerate=False,
         training.input.executor.value.framework.value.version = container.value.tag
 
     if workspace != '':
-        training.input.workspace.program = '{}:{}'.format(environ.user,workspace)
+        training.input.workspace.data.name = '{}:{}'.format(environ.user,workspace)
 
     training.input.workspace.script = script
 
-    models = ['{}:{}'.format(environ.user, model) for model in models]
-    training.input.models = models
+    #models = [{'name': '{}:{}'.format(environ.user, model) for model in models]
+    #training.input.models = models
 
-    datasets = ['{}:{}'.format(environ.user, dataset) for dataset in datasets]
+    #datasets = ['{}:{}'.format(environ.user, dataset) for dataset in datasets]
+    datasets = [{'name':'{}:{}'.format(environ.user, datasets[0]), 'mountpath': '/opt/dkube/input'}]
     training.input.datasets = datasets
+
+    outputs = [{'name': '{}:{}'.format(environ.user, models[0]), 'mountpath': '/opt/dkube/output'}]
+    training.input.outputs = outputs
 
     training.input.tags = tags
 
@@ -155,11 +160,15 @@ def launch_training_job(name:str, autogenerate=False,
     training.input.nworkers = distributeopts.workers
     training.input.gpus_override = distributeopts.strategy == DistributionStrategy.DISTRIBUTION_STRATEGY_AUTO
 
+    training.run.template = template
+    training.run.group = 'default'
+
     create_training_job(environ, job)
     logger.info("User {} Job {} created successfully \n".format(environ.user, job.name))
 
-    state, reason = wait_for_training_job(environ, name)
-    logger.info("User {} Job {} finished with status {}, reason {} \n".format(environ.user, job.name, state, reason))
+    runname = '{}-{}'.format('run', name)
+    state, reason = wait_for_training_job(environ, runname)
+    logger.info("User {} Job {} finished with status {}, reason {} \n".format(environ.user, runname, state, reason))
 
 
 

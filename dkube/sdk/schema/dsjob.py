@@ -167,22 +167,62 @@ class Executor(enum.Enum):
         else:
             raise NotImplementedError
 
+class DatumDetails(object):
+    def __init__(self):
+        self.__name = ''
+        self.__version = ''
+        self.__mountpath = ''
+
+    @property
+    def name(self):
+        return self.__name
+    @property
+    def version(self):
+        return self.__version
+    @property
+    def mountpath(self):
+        return self.__mountpath
+
+    @name.setter
+    def name(self, data:str):
+        assert type(data) == str, "type mismatch error"
+        self.__name = data
+
+    @version.setter
+    def version(self, data:str):
+        assert type(data) == str, "type mismatch error"
+        self.__version = data
+
+    @mountpath.setter
+    def mountpath(self, data:str):
+        assert type(data) == str, "type mismatch error"
+        self.__mountpath = data
+
+    def to_json(self):
+        return {'name' : self.name}
+
+    def from_json(self, data:dict):
+        assert type(data) == dict, "type mismatch error"
+        self.name = data['name']
+        self.version = data['version']
+        #self.mountpath = data['mountpath']
+
 class WorkspaceDetails(object):
     def __init__(self):
-        self.__program = ''
+        self.__data = DatumDetails()
         self.__script  = ''
 
     @property
-    def program(self):
-        return self.__program
+    def data(self):
+        return self.__data
     @property
     def script(self):
         return self.__script
 
-    @program.setter
-    def program(self, data:str):
-        assert type(data) == str, "type mismatch error"
-        self.__program = data
+    @data.setter
+    def data(self, dataa:str):
+        assert type(dataa) == str, "type mismatch error"
+        self.__data = dataa
 
     @script.setter
     def script(self, data:str):
@@ -190,11 +230,11 @@ class WorkspaceDetails(object):
         self.__script = data
 
     def to_json(self):
-        return {'program': self.program, 'script': self.script}
+        return {'data': self.data.to_json(), 'script': self.script}
 
     def from_json(self, data:dict):
         assert type(data) == dict, "type mismatch error"
-        self.program = data['program']
+        self.data.from_json(data['data'])
         self.script = data['script']
 
 class ConfigFile(object):
@@ -293,13 +333,14 @@ class HyperParams(object):
         self.customkv = data['customkv']
         self.file.from_json(data['file'])
 
-        
+
 class DSJobInput(object):
     def __init__(self):
         self.__executor  = Executor.Dkube
         self.__workspace = WorkspaceDetails()
         self.__models    = []
         self.__datasets  = []
+        self.__outputs   = []
         self.__tags      = []
         self.__hptuning  = ConfigFile()
         self.__hparams   = HyperParams()
@@ -319,6 +360,9 @@ class DSJobInput(object):
     @property
     def datasets(self):
         return self.__datasets
+    @property
+    def outputs(self):
+        return self.__outputs
     @property
     def tags(self):
         return self.__tags
@@ -353,6 +397,11 @@ class DSJobInput(object):
         assert type(data) == list, "type mismatch error"
         self.__datasets = data
 
+    @outputs.setter
+    def outputs(self, data:list):
+        assert type(data) == list, "type mismatch error"
+        self.__outputs = data
+
     @tags.setter
     def tags(self, data:list):
         assert type(data) == list, "type mismatch error"
@@ -380,9 +429,12 @@ class DSJobInput(object):
 
     def to_json(self):
         return {'executor': self.executor.value.to_json(),
-                'workspace': self.workspace.to_json(),
-                'models': self.models,
-                'datasets': self.datasets,
+                'datums': {
+                    'workspace': self.workspace.to_json(),
+                    'models': self.models, 
+                    'datasets': self.datasets, 
+                    'outputs': self.outputs
+                },
                 'tags': self.tags,
                 'hptuning': self.hptuning.to_json(),
                 'hyperparams': self.hparams.to_json(),
@@ -394,9 +446,10 @@ class DSJobInput(object):
         assert type(data) == dict, "type mismatch error"
         self.executor = Executor.from_str(data['executor']['choice'])
         self.executor.value.from_json(data['executor'])
-        self.workspace.from_json(data['workspace'])
-        self.models = data['models']
-        self.datasets = data['datasets']
+        self.workspace.from_json(data['datums']['workspace'])
+        self.models = data['datums']['models']
+        self.datasets = data['datums']['datasets']
+        self.outputs = data['datums']['outputs']
         self.tags = data['tags']
         self.hptuning.from_json(data['hptuning'])
         self.hparams.from_json(data['hyperparams'])
