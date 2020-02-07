@@ -22,7 +22,7 @@ num_cluster_nodes=1                             #Number of nodes desired for cur
 k8s_version=1.14                                  #Kubernetes version
 EKS_cluster_username=ubuntu                       #Username of the eks cluster
 DISTRO=ubuntu                                     #Choose one of ubuntu/centos
-DKUBEVERSON="1.4.3"                               #version of dkube to be installed
+DKUBEVERSION="1.4.3"                               #version of dkube to be installed
 dkubeuser=user123                                 #Username for dkube
 dkubepass=user123                                 #password for dkube user
 installer_user_passwd='your setup password'       #Needed only if setup requires password on sudo permission
@@ -159,8 +159,8 @@ if [[ "${?}" -ne 0 ]];then
 fi
 echo $installer_user_passwd | sudo -S systemctl start docker
 echo $installer_user_passwd | sudo -S docker login -u lucifer001 -p lucifer@dkube
-echo $installer_user_passwd | sudo -S docker pull ocdr/dkubeadm:1.4.2
-echo $installer_user_passwd | sudo -S docker run --rm -t -v $HOME/.dkube:/root/.dkube ocdr/dkubeadm:1.4.2 init
+echo $installer_user_passwd | sudo -S docker pull ocdr/dkubeadm:$DKUBEVERSION
+echo $installer_user_passwd | sudo -S docker run --rm -t -v $HOME/.dkube:/root/.dkube ocdr/dkubeadm:$DKUBEVERSION init
 echo $installer_user_passwd | sudo -S cp $HOME/install $HOME/.dkube/install
 echo $installer_user_passwd | sudo -S cp ../$pem $HOME/.dkube/
 echo $installer_user_passwd | sudo -S chown -R $installer_username:$installer_username $HOME/.dkube
