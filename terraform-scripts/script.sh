@@ -133,6 +133,9 @@ if [ ! -d $HOME/.kube ];then
 fi
 echo $installer_user_passwd | sudo -S chown -R $installer_username:$installer_username $HOME/.kube
 cp kubeconfig $HOME/.kube/config
+sudo mkdir -p /root/.kube
+echo $installer_user_passwd | sudo -S cp kubeconfig /root/.kube/config
+
 
 sleep 3m
 #Apply the yaml file , what we got above
