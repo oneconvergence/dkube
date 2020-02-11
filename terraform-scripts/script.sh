@@ -7,7 +7,7 @@
 ###########################################
 
 #######REQUIRED######
-EKS_core_name=$(awk -F "=" '/EKS_core_name/ {print $2}' terraform-eks.ini)
+EKS_core_name=$(awk -F "=" '/EKS_core_name/ {print $2}' terraform-eks.ini)            #Base name of your cluster
 ip=$(awk -F "=" '/ip/ {print $2}' terraform-eks.ini)                                  #First 8-bit field value IPv4
 pem=$(awk -F "=" '/pem/ {print $2}' terraform-eks.ini)                                #aws pem file to access cluster
 ami=$(awk -F "=" '/ami/ {print $2}' terraform-eks.ini)                                #AMI-id of EKS Image
