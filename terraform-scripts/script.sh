@@ -7,31 +7,28 @@
 ###########################################
 
 #######REQUIRED######
-EKS_core_name=$(awk -F "=" '/EKS_core_name/ {print $2}' terraform-eks.ini)            #Base name of your cluster
-ip=$(awk -F "=" '/ip/ {print $2}' terraform-eks.ini)                                  #First 8-bit field value IPv4
-pem=$(awk -F "=" '/pem/ {print $2}' terraform-eks.ini)                                #aws pem file to access cluster
-ami=$(awk -F "=" '/ami/ {print $2}' terraform-eks.ini)                                #AMI-id of EKS Image
-instance_type=$(awk -F "=" '/instance/ {print $2}' terraform-eks.ini)                 #Instance type for your cluster
-region=$(awk -F "=" '/region/ {print $2}' terraform-eks.ini)                          #Region for your aws cluster
-max_cluster_nodes=$(awk -F "=" '/max_cluster_nodes/ {print $2}' terraform-eks.ini)    #Maximum number of managed node groups per cluster
-num_cluster_nodes=$(awk -F "=" '/num_cluster_nodes/ {print $2}' terraform-eks.ini)    #Number of nodes desired for current cluster
+EKS_core_name=$(crudini --get terraform-eks.ini REQUIRED EKS_CORE_NAME)
+ip=$(crudini --get terraform-eks.ini REQUIRED ip)                                  #First 8-bit field value IPv4
+pem=$(crudini --get terraform-eks.ini REQUIRED pem)                                #aws pem file to access cluster
+ami=$(crudini --get terraform-eks.ini REQUIRED ami)                                #AMI-id of EKS Image
+instance_type=$(crudini --get terraform-eks.ini REQUIRED instance_type)            #Instance type for your cluster
+region=$(crudini --get terraform-eks.ini REQUIRED region)                          #Region for your aws cluster
+max_cluster_nodes=$(crudini --get terraform-eks.ini REQUIRED max_cluster_nodes)    #Maximum number of managed node groups per cluster
+num_cluster_nodes=$(crudini --get terraform-eks.ini REQUIRED num_cluster_nodes)    #Number of nodes desired for current cluster
 
-
-
-#######ADVANCED(When required user will modify based on setup)#######
-k8s_version=$(awk -F "=" '/k8s_version/ {print $2}' terraform-eks.ini)                       #Kubernetes version
-EKS_cluster_username=$(awk -F "=" '/EKS_cluster_username/ {print $2}' terraform-eks.ini)     #Username of the eks cluster
-DISTRO=$(awk -F "=" '/DISTRO/ {print $2}' terraform-eks.ini)                                 #Choose one of ubuntu/centos
-DKUBEVERSION=$(awk -F "=" '/DKUBEVERSION/ {print $2}' terraform-eks.ini)                     #version of dkube to be installed
-dkubeuser=$(awk -F "=" '/dkubeuser/ {print $2}' terraform-eks.ini)                           #Username for dkube
-dkubepass=$(awk -F "=" '/dkubepass/ {print $2}' terraform-eks.ini)                           #password for dkube user
-installer_user_passwd=$(awk -F "=" '/installer_user_passwd/ {print $2}' terraform-eks.ini)   #Needed only if setup requires password on sudo permission
-
+#####ADVANCED(When required user will modify based on setup)#######
+k8s_version=$(crudini --get terraform-eks.ini ADVANCED k8s_version)                      #Kubernetes version
+EKS_cluster_username=$(crudini --get terraform-eks.ini ADVANCED EKS_cluster_username)    #Username of the eks cluster
+DISTRO=$(crudini --get terraform-eks.ini ADVANCED DISTRO)                                #Choose one of ubuntu/centos
+DKUBEVERSION=$(crudini --get terraform-eks.ini ADVANCED DKUBEVERSION)                    #version of dkube to be installed
+dkubeuser=$(crudini --get terraform-eks.ini ADVANCED dkubeuser)                          #Username for dkube
+dkubepass=$(crudini --get terraform-eks.ini ADVANCED dkubepass)                          #password for dkube user
+installer_user_passwd=$(crudini --get terraform-eks.ini ADVANCED installer_user_passwd)  #Needed only if setup requires password on sudo permission
 
 key=$( echo $pem | cut -d. -f1)
 installer_username=`whoami`
 platform=eks
-
+source $home/.bashrc
 center(){
   BOLD='\033[1m'
   NORMAL='\e[21m'
@@ -70,16 +67,6 @@ if [ $(id -u) = "0" ]; then
           export PATH=$PATH:$HOME/bin
 fi
 
-##checking awscli installed or not
-#command -v aws
-#if [[ "${?}" -ne 0 ]];then
-#        echo "awscli not installed"
-#        echo "Installing aws cli ... "
-#        echo $installer_user_passwd | sudo -S  apt-get -y install awscli
-#        echo "please configure awscli and install aws-iam-authenticator https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html"
-#        exit 0
-#fi
-
 #Untar the tar file. i.e terraform script
 echo $installer_user_passwd | sudo -S tar -xvf eks-script3.tar
 
@@ -101,7 +88,7 @@ echo $installer_user_passwd | sudo -S chown -R ${installer_username}:${installer
 cd eks-getting-started
 
 
-#Changed all resuorce name in terraform script
+#Changed all resource name in terraform script
 sed -i -e "s/demo/$EKS_core_name-&/g" -e "/version *= \"[0-9.]*\"/s/\"[0-9.]*\"/\"$k8s_version\"/" eks-cluster.tf
 sed -i "s/demo/$EKS_core_name-&/g" variables.tf
 sed -i -e "s/demo/$EKS_core_name-&/g" -e "/image_id *= \"ami-[a-zA-Z0-9]*\"/s/\"ami-[a-zA-Z0-9]*\"/\"$ami\"/" -e "/instance_type *= \"[a-zA-Z0-9.]*\"/s/\"[a-zA-Z0-9.]*\"/\"$instance_type\"/" -e "/key_name *= \"[a-zA-Z0-9-]*\"/s/\"[a-zA-Z0-9-]*\"/\"$key\"/" -e "/max_cluster_nodes *= [0-9]/s/[0-9]/$max_cluster_nodes/" -e "/num_cluster_nodes *= [0-9]/s/[0-9]/$num_cluster_nodes/" eks-worker-nodes.tf
@@ -133,6 +120,8 @@ if [ ! -d $HOME/.kube ];then
 fi
 echo $installer_user_passwd | sudo -S chown -R $installer_username:$installer_username $HOME/.kube
 cp kubeconfig $HOME/.kube/config
+sudo mkdir -p /root/.kube
+echo $installer_user_passwd | sudo -S cp kubeconfig /root/.kube/config
 
 sleep 3m
 #Apply the yaml file , what we got above
@@ -142,21 +131,6 @@ if [[ "${?}" -ne 0 ]];then
         exit 1
 fi
 
-##Check for Docker if not installed, installed it
-#command -v docker
-#if [[ "${?}" -ne 0 ]];then
-#  VERSIONSTRING="5:18.09.2~3-0~ubuntu-bionic"
-#  echo "Docker does not exist\n"
-#  echo "installing Docker\n"
-#  sudo apt-get remove docker docker-engine docker.io containerd runc
-#  sudo apt-get -y update
-#  sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-#  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-#  sudo apt-key fingerprint 0EBFCD88
-#  sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-#  sudo apt-get -y update
-#  sudo apt-get install docker-ce=$VERSIONSTRING docker-ce-cli=$VERSIONSTRING containerd.io
-#fi
 echo $installer_user_passwd | sudo -S systemctl start docker
 echo $installer_user_passwd | sudo -S docker login -u lucifer001 -p lucifer@dkube
 echo $installer_user_passwd | sudo -S docker pull ocdr/dkubeadm:$DKUBEVERSION
@@ -164,17 +138,6 @@ echo $installer_user_passwd | sudo -S docker run --rm -t -v $HOME/.dkube:/root/.
 echo $installer_user_passwd | sudo -S cp $HOME/install $HOME/.dkube/install
 echo $installer_user_passwd | sudo -S cp ../$pem $HOME/.dkube/
 echo $installer_user_passwd | sudo -S chown -R $installer_username:$installer_username $HOME/.dkube
-
-##Check for kubectl.if not installed, installed it
-#command -v kubectl
-#if [[ "${?}" -ne 0 ]]; then
-#  echo "Kubectl does not exist\n"
-#  echo "Installing kubectl\n"
-#  curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
-#  chmod +x ./kubectl
-#  sudo mv ./kubectl /usr/local/bin/kubectl
-#  kubectl version
-#fi
 
 sleep 150s
 nodes=$(kubectl get no -o wide | awk '{if (NR!=1) {print $1}}')
@@ -227,3 +190,4 @@ cd $HOME/.dkube
 ls -larth $HOME/.dkube
 sudo chmod 400 $HOME/.dkube/$pem
 sudo ./install
+
