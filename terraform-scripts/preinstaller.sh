@@ -25,9 +25,11 @@ install_iam_authenticator() {
 	openssl sha1 -sha256 aws-iam-authenticator
 	chmod +x ./aws-iam-authenticator
 	mkdir -p $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/bin:$PATH
+	sudo cp ./aws-iam-authenticator /usr/local/bin
 	echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
-	sleep 10s
+	chmod a+x ~/.bashrc
 	source ~/.bashrc
+	sleep 10s
 	aws-iam-authenticator help
         if [[ "${?}" -ne 0 ]];then
                 echo "awscli note installed properly ..."
