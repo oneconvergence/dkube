@@ -71,4 +71,3 @@ install_awscli
 install_iam_authenticator
 install_docker
 install_kubectl
-

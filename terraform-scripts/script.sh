@@ -21,7 +21,10 @@ k8s_version=$(crudini --get terraform-eks.ini ADVANCED k8s_version)             
 EKS_cluster_username=$(crudini --get terraform-eks.ini ADVANCED EKS_cluster_username)    #Username of the eks cluster
 DISTRO=$(crudini --get terraform-eks.ini ADVANCED DISTRO)                                #Choose one of ubuntu/centos
 DKUBEVERSION=$(crudini --get terraform-eks.ini ADVANCED DKUBEVERSION)                    #version of dkube to be installed
+dkubeuser=$(crudini --get terraform-eks.ini ADVANCED dkubeuser)                          #Username for dkube
+dkubepass=$(crudini --get terraform-eks.ini ADVANCED dkubepass)                          #password for dkube user
 installer_user_passwd=$(crudini --get terraform-eks.ini ADVANCED installer_user_passwd)  #Needed only if setup requires password on sudo permission
+
 
 key=$( echo $pem | cut -d. -f1)
 installer_username=`whoami`
@@ -187,5 +190,4 @@ fi
 cd $HOME/.dkube
 ls -larth $HOME/.dkube
 sudo chmod 400 $HOME/.dkube/$pem
-sudo ./dkubeadm dkube install
-
+sudo ./install
