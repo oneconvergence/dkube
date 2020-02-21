@@ -25,7 +25,6 @@ dkubeuser=$(crudini --get terraform-eks.ini ADVANCED dkubeuser)                 
 dkubepass=$(crudini --get terraform-eks.ini ADVANCED dkubepass)                          #password for dkube user
 installer_user_passwd=$(crudini --get terraform-eks.ini ADVANCED installer_user_passwd)  #Needed only if setup requires password on sudo permission
 
-
 key=$( echo $pem | cut -d. -f1)
 installer_username=`whoami`
 platform=eks
