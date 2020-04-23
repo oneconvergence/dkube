@@ -60,3 +60,4 @@ class DkubeJob(object):
         self.version = data['version']
         self.params = JobParams.from_str(data['parameters']['class'])
         self.params.value.from_json(data['parameters'])
+        return self

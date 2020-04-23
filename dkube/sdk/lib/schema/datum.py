@@ -5,10 +5,15 @@ from .common import *
 
 class DatumGitSource(object):
     def __init__(self):
+        self.__url        = ""
         self.__apikey     = ""
         self.__password   = ""
         self.__private    = False
         self.__username   = ""
+
+    @property
+    def url(self):
+        return self.__url
 
     @property
     def apikey(self):
@@ -22,6 +27,11 @@ class DatumGitSource(object):
     @property
     def username(self):
         return self.__username
+
+    @url.setter
+    def url(self, data:str):
+        assert type(data) == str, "type mismatch error"
+        self.__url = data
 
     @apikey.setter
     def apikey(self, data :str):
@@ -44,19 +54,24 @@ class DatumGitSource(object):
         self.__username = data
 
     def from_json(self, data :dict):
-        assert type(data) == dict, "type mismatch error"
-
-        self.apikey     = data['apikey']
-        self.password   = data['password']
-        self.private    = data['private']
-        self.username   = data['username']
+        self.url        = data.get('url', '')
+        self.apikey     = data.get('apikey', '')
+        self.password   = data.get('password', '')
+        self.private    = data.get('private', False)
+        self.username   = data.get('username', '')
 
     def to_json(self):
-        return {'apikey': self.apikey,
-                'password': self.password,
-                'private': self.private,
-                'username': self.username
+        return {
+            'gitaccess': {
+                'url': self.url, 
+                'credentials': {
+                    'apikey': self.apikey,
+                    'password': self.password,
+                    'private': self.private,
+                    'username': self.username
+                    }
                 }
+            }
 
 class DatumAwsSource(object):
     def __init__(self):
@@ -153,6 +168,17 @@ class DatumDkubeSource(object):
     def to_json(self):
         return {}
 
+class DatumDVSSource(object):
+    def __init__(self):
+        self.__name = "dvs"
+
+    @property
+    def name(self):
+        return self.__name
+
+    def to_json(self):
+        return {}
+
 class DatumSource(enum.Enum):
     default = None
     git     = DatumGitSource()
@@ -160,25 +186,28 @@ class DatumSource(enum.Enum):
     minio   = DatumMinioSource()
     url     = DatumURLSource()
     dkube   = DatumDkubeSource()
+    dvs     = DatumDVSSource()
 
     @staticmethod
     def from_dict(data: dict):
         source = data['source']
         if source == "git":
-            DatumSource.git.from_json(data['gitaccess'])
+            DatumSource.git.value.from_json(data['gitaccess'])
             return DatumSource.git
-        if source == "aws_s3":
-            DatumSource.aws.from_json(data['s3access'])
+        if source == "awss3":
+            DatumSource.aws.value.from_json(data['s3access'])
             return DatumSource.aws
         if source == "s3":
-            DatumSource.minio.from_json(data['s3access'])
+            DatumSource.minio.value.from_json(data['s3access'])
             return DatumSource.minio
         if source == "pub_url":
-            DatumSource.url.from_json(data['s3access'])
+            DatumSource.url.value.from_json(data['s3access'])
             return DatumSource.url
         if source == "dkube":
-            DatumSource.dkube.from_json(data['s3access'])
+            DatumSource.dkube.value.from_json(data['s3access'])
             return DatumSource.dkube
+        if source == "dvs":
+            return DatumSource.dvs
         else:
             raise NotImplementedError
 
@@ -247,7 +276,7 @@ class DatumInput(object):
         self.name   = data['name']
         self.tags   = data['tags']
         self.remote = data['remote']
-        self.source = DatumSource.from_data(data)
+        self.source = DatumSource.from_dict(data)
 
         
 class DatumGenerated(object):
@@ -306,8 +335,9 @@ class DatumGenerated(object):
         assert type(data) == dict, "type mismatch error"
 
         self._uuid(data['uuid'])
-        self._progress(data['progress'])
-        self._size(data['size'])
-        self._storagepath(data['storage_path'])
+        self._progress(data.get('progress', 0))
+        self._size(data.get('size', '0'))
+        self._storagepath(data.get('storage_path', ''))
         self.timestamps.from_json(data['timestamps'])
         self.status.from_json(data['status'])
+        return self

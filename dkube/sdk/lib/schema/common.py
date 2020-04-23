@@ -234,6 +234,8 @@ class TimeStamps(object):
 
 class State(enum.Enum):
     QUEUED      = 'queued'
+    DOWNLOADING = 'downloading'
+    READY       = 'ready'
     STARTING    = 'starting'
     TRAINING    = 'training'
     RUNNING     = 'running'
@@ -249,6 +251,8 @@ class State(enum.Enum):
         assert type(label) == str, "type mismatch error"
         label = label.lower()
         if label == 'queued': return State.QUEUED
+        elif label == 'downloading': return State.DOWNLOADING
+        elif label == 'ready': return State.READY
         elif label == 'starting': return State.STARTING
         elif label == 'training': return State.TRAINING
         elif label == 'running': return State.RUNNING
@@ -261,11 +265,11 @@ class State(enum.Enum):
 
     @staticmethod
     def is_final_state(state:str):
-        return state in ['complete', 'stopped', 'error']
+        return state in ['complete', 'stopped', 'error', 'ready']
 
     @staticmethod
     def is_inprogress_state(state:str):
-        return state in ['queued', 'starting', 'training', 'running', 'stopping', 'deleting']
+        return state in ['queued', 'starting', 'training', 'running', 'stopping', 'deleting', 'downloading']
 
     @staticmethod
     def is_running_state(state:str):

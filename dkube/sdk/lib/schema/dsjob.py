@@ -270,46 +270,19 @@ class ConfigFile(object):
         assert type(data) == dict, "type mismatch error"
         if data == {}: return
         self.name = data['name']
-        self.body = dta['body']
+        self.body = data['body']
 
 class HyperParams(object):
     def __init__(self):
-        self.__epochs = 0
-        self.__steps  = 0
-        self.__batchsize = 0
         self.__customkv = []
         self.__file = ConfigFile()
 
-    @property
-    def epochs(self):
-        return self.__epochs
-    @property
-    def steps(self):
-        return self.__steps
-    @property
-    def batchsize(self):
-        return self.__batchsize
     @property
     def customkv(self):
         return self.__customkv
     @property
     def file(self):
         return self.__file
-
-    @epochs.setter
-    def epochs(self, data:int):
-        assert type(data) == int, "type mismatch error"
-        self.__epochs = data
-
-    @steps.setter
-    def steps(self, data:int):
-        assert type(data) == int, "type mismatch error"
-        self.__steps = data
-
-    @batchsize.setter
-    def batchsize(self, data:int):
-        assert type(data) == int, "type mismatch error"
-        self.__batchsize = data
 
     @customkv.setter
     def customkv(self, data:list):
@@ -322,14 +295,10 @@ class HyperParams(object):
         self.__file = data
 
     def to_json(self):
-        return {'epochs': self.epochs, 'steps': self.steps, 'batchsize': self.batchsize, 
-                'customkv': self.customkv, 'file': self.file.to_json()}
+        return {'customkv': self.customkv, 'file': self.file.to_json()}
 
     def from_json(self, data:dict):
         assert type(data) == dict, "type mismatch error"
-        self.epochs = data['epochs']
-        self.steps  = data['steps']
-        self.batchsize = data['batchsize']
         self.customkv = data['customkv']
         self.file.from_json(data['file'])
 
@@ -447,9 +416,9 @@ class DSJobInput(object):
         self.executor = Executor.from_str(data['executor']['choice'])
         self.executor.value.from_json(data['executor'])
         self.workspace.from_json(data['datums']['workspace'])
-        self.models = data['datums']['models']
-        self.datasets = data['datums']['datasets']
-        self.outputs = data['datums']['outputs']
+        self.models = data['datums']['models'] or []
+        self.datasets = data['datums']['datasets'] or []
+        self.outputs = data['datums']['outputs'] or []
         self.tags = data['tags']
         self.hptuning.from_json(data['hptuning'])
         self.hparams.from_json(data['hyperparams'])
