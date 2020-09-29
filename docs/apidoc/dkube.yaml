@@ -1,0 +1,6029 @@
+swagger: '2.0'
+info:
+  title: Dkube api server
+  version: 0.2.2
+schemes:
+  - https
+host: '34.66.186.4:32222'
+basePath: /dkube/v2/controller
+consumes:
+  - application/keyauth.api.v1+json
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  d3apikey:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: Dkube JWT token for api access
+tags:
+  - name: dfab
+    description: Dfab APIs which only operator has access to.
+    externalDocs:
+      description: Find out more @
+      url: 'http://oneconvergence.com/dkube/docs'
+  - name: dkube
+    description: Dkube APIs which both operator and datascientist has access to.
+    externalDocs:
+      description: Find out more @
+      url: 'http://oneconvergence.com/dkube/docs'
+  - name: dkube-operator-exclusive
+    description: Dkube APIs which only operator can invoke.
+    externalDocs:
+      description: Find out more @
+      url: 'http://oneconvergence.com/dkube/docs'
+paths:
+  /admin/cluster:
+    get:
+      tags:
+        - dfab
+      operationId: clusterStatus
+      security:
+        - d3apikey: []
+      summary: API to fetch the status of various clusters
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              components:
+                $ref: '#/definitions/ClusterStatus'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /dlsupport:
+    get:
+      tags:
+        - dkube
+      operationId: dlsupport
+      summary: API to fetch all the dl support by dkube
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/DLSupport'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /dlframeworks:
+    get:
+      tags:
+        - dkube
+      operationId: dl_frameworks
+      summary: API to fetch all the frameworks
+      security:
+        - d3apikey: []
+      parameters:
+        - name: class
+          in: query
+          type: string
+        - name: project
+          in: query
+          type: string
+        - name: user
+          in: query
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/DLFrameworks'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /dkubeinfo:
+    get:
+      tags:
+        - dkube
+      operationId: dkubeinfo
+      summary: API to fetch all the information about dkube installation
+      parameters:
+        - name: authmode
+          in: query
+          type: boolean
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/DkubeInfo'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /admin/diag:
+    post:
+      tags:
+        - dkube
+      operationId: diag
+      summary: API to manage admin related operations.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              debug:
+                type: boolean
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /admin/logger:
+    post:
+      tags:
+        - dkube-operator-exclusive
+      operationId: log_viewer_post
+      summary: API to enable Fluentd to talk to a log viewer
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            $ref: '#/definitions/LogViewer'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    put:
+      tags:
+        - dkube-operator-exclusive
+      operationId: log_viewer_put
+      summary: API to edit log viewer configuration in Fluentd
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            $ref: '#/definitions/LogViewer'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    delete:
+      tags:
+        - dkube-operator-exclusive
+      operationId: log_viewer_delete
+      summary: API to remove log viewer configuration from Fluentd
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    get:
+      tags:
+        - dkube-operator-exclusive
+      operationId: log_viewer_get
+      summary: API to get log viewer configuration
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/LogViewer'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /login:
+    post:
+      tags:
+        - dkube
+      operationId: login
+      summary: >-
+        API to login into dkube. Unique API key is returned using which user can
+        access dkube apis. API key access will be scoped based on the role of
+        the user.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            $ref: '#/definitions/AuthModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                properties:
+                  jwt:
+                    type: string
+                  role:
+                    type: string
+                  group:
+                    type: string
+                  username:
+                    type: string
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /logout:
+    post:
+      tags:
+        - dkube
+      operationId: logout
+      summary: >-
+        API to logoff from the dkube. The API key will be revoked and
+        invalidated.
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /license/update:
+    post:
+      tags:
+        - dkube-operator-exclusive
+      operationId: license_update
+      summary: >-
+        API to update dkube license.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              secret:
+                type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /token/validate:
+    get:
+      tags:
+        - dkube
+      operationId: tokeninfo
+      summary: API to fetch all claims for a jwt token
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/TokenInfo'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /role/update:
+    post:
+      tags:
+        - dkube-operator-exclusive
+      operationId: role_update
+      summary: >-
+        API to promote/demote a user.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              role:
+                type: string
+                description: Expected role of user.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /init:
+    post:
+      tags:
+        - dkube-operator-exclusive
+      operationId: init
+      summary: >-
+        API to initialize the dkube. The user initializing should be an admin
+        and will be auto onboarded into dkube with operator role.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            $ref: '#/definitions/AuthModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /onboard:
+    post:
+      tags:
+        - dkube-operator-exclusive
+      operationId: onboard
+      summary: >-
+        API to onboard a user into dkube.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - users
+            properties:
+              users:
+                type: array
+                description: >-
+                  Name of the valid users. Each  user should be a valid github user.
+                items:
+                  type: string
+              group:
+                type: string
+                description: >-
+                  Name of the valid group. This should be a valid group existing in dkube.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /offboard:
+    delete:
+      tags:
+        - dkube-operator-exclusive
+      operationId: offboard
+      security:
+        - d3apikey: []
+      summary: >-
+        API to offboard a user into dkube.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - users
+            properties:
+              users:
+                type: array
+                description: >-
+                  Name of the valid users. Each  user should be a valid github user.
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /sync/:
+    get:
+      tags:
+        - dkube-operator-exclusive
+      operationId: sync
+      summary: >-
+        API to sync D3 db with the resources available in cluster This also
+        synchronizes members from github.
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              members:
+                type: array
+                items:
+                  type: string
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /recover/:
+    post:
+      tags:
+        - dkube-operator-exclusive
+      operationId: recover
+      summary: API to recover the D3 system.
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/triggers/runs':
+    post:
+      tags:
+        - dkube
+      operationId: trigger_runs_by_condition
+      summary: Triggers runs in dkube which satisfies the condition specified
+      security:
+        - d3apikey: []
+      parameters:
+        - name: conditions
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              match:
+                type: string
+                enum:
+                  - dataset
+                  - model
+                  - project
+              user:
+                type: string
+              name:
+                type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                description: All the runs which got triggered.
+                items:
+                  type: object
+                  properties:
+                    user:
+                      type: string
+                    run:
+                      type: string
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+
+  /dvs/config:
+    get:
+      tags:
+        - dkube
+      operationId: get_dvs_config
+      security:
+        - d3apikey: []
+      summary: >-
+        API to list dkube version management system config.
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/DVSModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    post:
+      tags:
+        - dkube-operator-exclusive
+      operationId: add_dvs_config
+      security:
+        - d3apikey: []
+      summary: >-
+        API to configuring dkube version management system.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DVSModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    delete:
+      tags:
+        - dkube-operator-exclusive
+      operationId: delete_dvs_config
+      security:
+        - d3apikey: []
+      summary: >-
+        API to delete dkube version management system configuration.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - dvs
+            properties:
+              dvs:
+                type: array
+                items:
+                  type: string
+                description: List of DVS config to delete
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /users/{user}/preferences:
+    get:
+      tags:
+        - dkube
+      operationId: get_datum_prev_cred
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+      summary: >-
+        API to get previous datum creation auth credentials.
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/LastUsedCredentials'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /users/preferences:
+    get:
+      tags:
+        - dkube
+      operationId: get_all_datum_prev_cred
+      security:
+        - d3apikey: []
+      summary: >-
+        API to get previous datum creation auth credentials of all users in dkube.
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/LastUsedCredentials'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/datums':
+    post:
+      tags:
+        - dkube
+      operationId: datums_add_one
+      summary: API to add a datum.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DatumModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/groups':
+    post:
+      tags:
+        - dkube
+      operationId: job_group_add_one
+      summary: API to add a job group.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/JobGroupModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    get:
+      tags:
+        - dkube
+      operationId: get_job_groups
+      summary: >-
+        API to get all job gropus.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/JobGroupModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/rungroups/{rungroup}':
+    put:
+      tags:
+        - dkube
+      operationId: run_group_update
+      summary: API to update a run group.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: rungroup
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/RunGroupModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/repos/class/{class}/repo/{repo}':
+    put:
+      tags:
+        - dkube
+      operationId: repo_update_one
+      summary: API to update a datum.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: repo
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/RepoModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/{class}/templates/{template}':
+    put:
+      tags:
+        - dkube
+      operationId: update_template_one
+      summary: API to update a template.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+          enum:
+            - training
+            - preprocessing
+        - name: template
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/RunTemplateModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/{class}/runs/{run}':
+    put:
+      tags:
+        - dkube
+      operationId: update_run_one
+      summary: Update description of a run.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+          enum:
+          - training
+          - preprocessing
+        - name: run
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+              tags:
+                type: array
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/modelcatalog/{model}/version/{version}':
+    put:
+      tags:
+        - dkube-operator-exclusive
+      operationId: update_model_in_catalog
+      summary: >-
+        API to update a model in model catalog
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: model
+          in: path
+          required: true
+          type: string
+        - name: version
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+              tags:
+                type: array
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+
+
+
+  '/users/{user}/datum/version/{uuid}':
+    put:
+      tags:
+        - dkube
+      operationId: update_datum_version_model
+      summary: Update version model info of a datum.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: uuid
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              tags:
+                type: array
+                items:
+                  type: string
+              description:
+                type: string
+                minLength: 1
+                maxLength: 255
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/sessionkey':
+    get:
+      tags:
+        - dkube
+      operationId: get_session_key
+      summary: API to get session key(static jwt token)
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                properties:
+                  key:
+                    type: string
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    put:
+      tags:
+        - dkube
+      operationId: revoke_session_key
+      summary: API to renew the session key(static jwt token)
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                properties:
+                  key:
+                    type: string
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/datums/class/{class}/datum/{datum}/abort':
+    put:
+      tags:
+        - dkube
+      operationId: datum_one_abort_download
+      summary: API to abort a download
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: datum
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/datums/class/{class}/datum/{datum}/start':
+    put:
+      tags:
+        - dkube
+      operationId: datum_one_restart_download
+      summary: API to restart a failed datum download
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: datum
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/DatumModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/stats/resources':
+    get:
+      tags:
+        - dkube
+      operationId: GPU's capability
+      summary: >-
+        API to get GPU's capability of a user, job, cluster, node.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: source
+          in: query
+          required: true
+          type: string
+        - name: value
+          in: query
+          required: false
+          type: string
+        - name: class
+          in: query
+          required: false
+          type: string
+        - name: user
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                required: [total_gpus, used_gpus]
+                properties:
+                  total_gpus:
+                    type: integer
+                  used_gpus:
+                    type: integer
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/users/{user}/capability':
+    get:
+      tags:
+        - dkube
+      operationId: user_capability
+      summary: >-
+        API to get capabilities of a user.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                required: [total_gpus, free_gpus]
+                properties:
+                  total_gpus:
+                    type: integer
+                  free_gpus:
+                    type: integer
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/users/{user}/datums/class/{class}/datum/{datum}/':
+    get:
+      tags:
+        - dkube
+      operationId: datums_get_one_by_class
+      summary: >-
+        API to get a datums of a class. Refer 'DatumClassType' definition for
+        possible values of class.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: datum
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                properties:
+                  datum:
+                    $ref: '#/definitions/DatumModel'
+                  owner:
+                    type: string
+                  versions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        version:
+                          $ref: '#/definitions/VersionModel'
+                        details:
+                          $ref: '#/definitions/VersionDetails'
+                        jobs:
+                          type: array
+                          description: List of jobs used by datum version
+                          items:
+                            $ref: '#/definitions/DatumJobDetails'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/datums/class/{class}/':
+    get:
+      tags:
+        - dkube
+      operationId: datums_get_by_class
+      summary: >-
+        API to get all datums by class. Refer 'DatumClassType' definition for
+        possible values of class.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: shared
+          in: query
+          required: true
+          type: boolean
+        - name: archived
+          in: query
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    owner:
+                      type: string
+                    datums:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          datum:
+                            $ref: '#/definitions/DatumModel'
+                          versions:
+                            type: array
+                            items:
+                              $ref: '#/definitions/VersionModel'
+                          search:
+                            type: object
+                            properties:
+                              datasets:
+                                type: array
+                                description: filled use.
+                                items:
+                                  $ref: '#/definitions/JobInputDatumModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    delete:
+      tags:
+        - dkube
+      operationId: datums_delete_by_class
+      summary: >-
+        API to delete all datums by class. Refer 'DatumClassType' definition for
+        possible values of class.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: force
+          in: query
+          type: boolean
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - datums
+            properties:
+              datums:
+                type: array
+                items:
+                  type: string
+                description: List of datums to delete
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/datums/class/{class}/archive':
+    put:
+      tags:
+        - dkube
+      operationId: datums_archive_by_class
+      summary: >-
+        API to archive  or un-archive all datums by class. Refer 'DatumClassType' definition for
+        possible values of class.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: archive
+          in: query
+          type: string
+          required: true
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - datums
+            properties:
+              datums:
+                type: array
+                items:
+                  type: string
+                description: List of datums to archive
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/modelcatalogs/metrics':
+    post:
+      tags:
+        - dkube-operator-exclusive
+      operationId: modelcatalog_get_metrics
+      summary: >-
+        API to get metrics of a list of modelcatalogs
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - modelcatalogs
+            properties:
+              modelcatalogs:
+                type: array
+                items:
+                  type: string
+                description: List of modelcatalogs
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                $ref: '#/definitions/ModelCatalogMetrics'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/datums/class/{class}/metrics':
+    post:
+      tags:
+        - dkube
+      operationId: datums_get_metrics
+      summary: >-
+        API to get metrics of a list of datum
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - datums
+            properties:
+              datums:
+                type: array
+                items:
+                  type: string
+                description: List of datums
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                $ref: '#/definitions/DatumMetrics'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/users/{user}/datums/class/{class}/datum/{datum}/versions/{version}/metrics':
+    get:
+      tags:
+        - dkube
+      operationId: datums_get_one_version_metrics
+      summary: >-
+        API to get metrics of a model
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: datum
+          in: path
+          required: true
+          type: string
+        - name: version
+          in: path
+          required: true
+          type : string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                $ref: '#/definitions/ModelMetrics'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/modelcatalogname/{model}':
+    get:
+      tags:
+        - dkube-operator-exclusive
+      operationId: get_model_catalog_name
+      summary: >-
+        API to fetch the model catalog name for the given model
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: model
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                properties:
+                  publishedName:
+                    type: string
+                  description:
+                    type: string
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/modelcatalog/models/{model}/versions/{version}/update':
+    post:
+      tags:
+        - dkube
+      operationId: Update_model_catalog
+      summary: >-
+        API to update modelcatalog version item
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: model
+          in: path
+          required: true
+          type: string
+        - name: version
+          in: path
+          required: true
+          type : string
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/modelcatalog':
+    get:
+      tags:
+        - dkube-operator-exclusive
+      operationId: get_model_catalog
+      summary: >-
+        API to fetch the model catalog
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/ModelCatalog'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/users/{user}/releasedmodels':
+    get:
+      tags:
+        - dkube-operator-exclusive
+      operationId: get_released_models
+      summary: >-
+        API to fetch the released model
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/ReleasedModels'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/models/{model}/versions/{version}/release':
+    post:
+      tags:
+        - dkube
+      operationId: datums_release_one_model
+      summary: >-
+        API to release a model
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: model
+          in: path
+          required: true
+          type: string
+        - name: version
+          in: path
+          required: true
+          type : string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/models/{model}/versions/{version}/publish':
+    post:
+      tags:
+        - dkube
+      operationId: datums_publish_one_model
+      summary: >-
+        API to publish a model
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: model
+          in: path
+          required: true
+          type: string
+        - name: version
+          in: path
+          required: true
+          type : string
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+              serving:
+                $ref: '#/definitions/InferenceJobModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/models/{model}/versions/{version}/deploy':
+    post:
+      tags:
+        - dkube
+      operationId: datums_deploy_one_model
+      summary: >-
+        API to deploy a model
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: model
+          in: path
+          required: true
+          type: string
+        - name: version
+          in: path
+          required: true
+          type : string
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+              serving:
+                $ref: '#/definitions/InferenceJobModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/models/{model}/versions/{version}/testdeploy':
+    post:
+      tags:
+        - dkube
+      operationId: datums_testdeploy_one_model
+      summary: >-
+        API to deploy a model in dev cluster
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: model
+          in: path
+          required: true
+          type: string
+        - name: version
+          in: path
+          required: true
+          type : string
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+              serving:
+                $ref: '#/definitions/InferenceJobModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/datums/class/{class}/datum/{datum}/versions/{version}/lineage':
+    get:
+      tags:
+        - dkube
+      operationId: datums_get_one_version_lineage
+      summary: >-
+        API to get lineage of a datum version
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: datum
+          in: path
+          required: true
+          type: string
+        - name: version
+          in: path
+          required: true
+          type : string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                properties:
+                  datum:
+                    $ref: '#/definitions/DatumModel'
+                  version:
+                    $ref: '#/definitions/VersionModel'
+                  run:
+                    $ref: '#/definitions/JobModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/jobs/class/{class}/runs/{runid}/lineage':
+    get:
+      tags:
+        - dkube
+      operationId: get_one_run_lineage
+      summary: >-
+        API to get lineage of a run
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: runid
+          in: path
+          required: true
+          type : string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                properties:
+                  run:
+                    $ref: '#/definitions/JobModel'
+                  outputs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        datum:
+                          $ref: '#/definitions/DatumModel'
+                        version:
+                          $ref: '#/definitions/VersionModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/jobs/{job}/logs/':
+    get:
+      tags:
+        - dkube
+      operationId: logs_get_one
+      summary: API to get logs of a job
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: job
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/jobs/':
+    post:
+      tags:
+        - dkube
+      operationId: jobs_add_one
+      summary: API to add a new job.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: run
+          in: query
+          type: string
+        - name: subclass
+          in: query
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/JobModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/jobs/uuid/{uuid}':
+    get:
+      tags:
+        - dkube
+      operationId: jobs_get_one_by_uuid
+      summary: API to get a job by uuid.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/JobModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/jobs/class/{class}/uuid/{uuid}':
+    delete:
+      tags:
+        - dkube
+      operationId: jobs_delete_one_by_uuid
+      summary: API to delete a job by uuid.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/class/{class}/jobs/{job}/abort':
+    put:
+      tags:
+        - dkube
+      operationId: jobs_abort_one
+      summary: API to abort a single job.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: job
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/users/{user}/class/{class}/jobs/{job}/start':
+    put:
+      tags:
+        - dkube
+      operationId: jobs_start_one
+      summary: API to start an aborted job.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: job
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/users/{user}/jobs/class/{class}/':
+    get:
+      tags:
+        - dkube
+      operationId: jobs_get_by_class
+      summary: API to get jobs of a user by class.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: shared
+          in: query
+          required: true
+          type: boolean
+        - name: run
+          in: query
+          type: string
+        - name: template
+          in: query
+          type: string
+        - name: group
+          in: query
+          type: string
+        - name: all
+          in: query
+          type: string
+        - name: archived
+          in: query
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    owner:
+                      type: string
+                    jobs:
+                      type: array
+                      items:
+                        $ref: '#/definitions/JobModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    delete:
+      tags:
+        - dkube
+      operationId: jobs_list_delete_by_class
+      summary: >-
+        API to delete jobs by class. Refer to 'JobClassType' definition for
+        possible values of class.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - jobs
+            properties:
+              jobs:
+                type: array
+                items:
+                  type: string
+                description: List of jobs to delete
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/jobs/class/{class}/archive':
+    put:
+      tags:
+        - dkube
+      operationId: jobs_list_archive_by_class
+      summary: >-
+        API to archive or un-archive jobs by class. Refer to 'JobClassType' definition for
+        possible values of class.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: archive
+          in: query
+          type: string
+          required: true
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - jobs
+            properties:
+              jobs:
+                type: array
+                items:
+                  type: string
+                description: List of jobs to archive/un-archive
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/userprofiles':
+    post:
+      tags:
+        - dkube
+      operationId: create_user_profile
+      summary: Create a user profile in dkube
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              kind:
+                type: string
+                enum:
+                  - inline
+                  - server
+              server:
+                type: string
+                description: Address of server to download from
+              inline:
+                $ref: '#/definitions/UserProfile'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    get:
+      tags:
+        - dkube
+      operationId: list_user_profiles
+      summary: list all user profiles
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/UserProfile'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/userprofiles/{profile}':
+    get:
+      tags:
+        - dkube
+      operationId: get_single_user_profile
+      summary: Fetch single user profile
+      security:
+        - d3apikey: []
+      parameters:
+        - name: profile
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/UserProfile'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    put:
+      tags:
+        - dkube
+      operationId: attach_user_profile
+      summary: Attach profile to a user
+      security:
+        - d3apikey: []
+      parameters:
+        - name: profile
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              user:
+                type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/users/{user}/jobs/collection':
+    get:
+      tags:
+        - dkube
+      operationId: jobs_get_collection_all
+      summary: API to get jobs collection for all jobs.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    class:
+                      type: string
+                    jobs:
+                      type: array
+                      items:
+                        $ref: '#/definitions/JobCollection'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/users/{user}/jobs/class/{class}/job/{job}/tensorboard/start':
+    put:
+      tags:
+        - dkube
+      operationId: start_tensorboard
+      summary: API to start tensorboard for a given job.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: job
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/users/{user}/jobs/class/{class}/job/{job}/tensorboard/stop':
+    delete:
+      tags:
+        - dkube
+      operationId: stop_tensorboard
+      summary: API to stop tensorboard for a given job.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: job
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/users/{user}/jobs/class/{class}/job/{job}/collection':
+    get:
+      tags:
+        - dkube
+      operationId: jobs_get_collection_one
+      summary: API to get jobs collection for single job.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: job
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/JobCollection'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/users/{user}/jobs/class/{class}/collection':
+    get:
+      tags:
+        - dkube
+      operationId: job_get_collection_all_by_class
+      summary: API to get jobs collection for all jobs of a class.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: class
+          in: path
+          required: true
+          type: string
+        - name: run
+          in: query
+          type: string
+        - name: template
+          in: query
+          type: string
+        - name: group
+          in: query
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/JobCollection'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /users/collection:
+    get:
+      tags:
+        - dkube
+      operationId: users_get_collection_all
+      summary: API to get user collection for all users.
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/UserCollection'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/users/{user}/collection':
+    get:
+      tags:
+        - dkube
+      operationId: user_get_collection_one
+      summary: API to get user collection for single user.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/UserCollection'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /groups/:
+    post:
+      tags:
+        - dfab
+      operationId: groups_create_one_or_update
+      summary: >-
+        API to create a new group if not present and update group with pools and
+        users.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - groupname
+              - users
+              - pools
+            properties:
+              upsert:
+                type: boolean
+                default: true
+              groupname:
+                type: string
+                minLength: 1
+                maxLength: 255
+              users:
+                type: array
+                description: List of users by names to be added into this group.
+                items:
+                  type: string
+              pools:
+                type: array
+                description: List of pools by names to be added into this group.
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    delete:
+      tags:
+        - dfab
+      operationId: groups_delete_list
+      summary: API to delete a list of groups
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - groups
+            properties:
+              groups:
+                type: array
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /groups/collection:
+    get:
+      tags:
+        - dfab
+      operationId: groups_get_collection_all
+      summary: API to get all the groups.
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/GroupCollection'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/groups/{group}/collection':
+    get:
+      tags:
+        - dfab
+      operationId: groups_get_collection_one
+      summary: API to get all the groups.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: group
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/GroupCollection'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /pools/:
+    post:
+      tags:
+        - dfab
+      operationId: pools_create_one_or_update
+      summary: >-
+        API to create a new pool if not present and update group with pools and
+        users.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - poolname
+              - pooltype
+              - ndevices
+            properties:
+              upsert:
+                type: boolean
+                default: true
+              poolname:
+                type: string
+                minLength: 1
+                maxLength: 255
+              pooltype:
+                type: string
+                minLength: 1
+                maxLength: 255
+              ndevices:
+                type: integer
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    delete:
+      tags:
+        - dfab
+      operationId: pools_delete_list
+      summary: API to delete a list of pools
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - pools
+            properties:
+              pools:
+                type: array
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /pools/collection:
+    get:
+      tags:
+        - dfab
+      operationId: pools_get_collection_all
+      summary: API to get all the pools.
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/PoolCollection'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/pools/{pool}/collection':
+    get:
+      tags:
+        - dfab
+      operationId: pools_get_collection_one
+      summary: API to get collection of single pool.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: pool
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/PoolCollection'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /nodes/collection:
+    get:
+      tags:
+        - dfab
+      operationId: nodes_get_all
+      summary: API to get collection of nodes.
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                properties:
+                  healthy:
+                    type: array
+                    items:
+                      $ref: '#/definitions/NodeCollection'
+                  unhealthy:
+                    type: array
+                    items:
+                      $ref: '#/definitions/NodeCollection'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /auth:
+    put:
+      tags:
+        - dkube-operator-exclusive
+      operationId: change_auth
+      summary: API to change the current authorization mode.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            $ref: '#/definitions/AuthModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    get:
+      tags:
+        - dkube-operator-exclusive
+      operationId: get_auth
+      summary: API to fetch information about all authorization modes.
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/AuthModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /storage/volumes:
+    get:
+      tags:
+        - dkube
+      operationId: volumes_storage
+      summary: API to fetch information about storage.
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                properties:
+                  volumes:
+                    type: array
+                    items:
+                      type: string
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/migration':
+    post:
+      tags:
+        - dkube
+      operationId: jobmigration
+      summary: API to migrate jobs
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - jobs
+            properties:
+              name:
+                type: string
+              source_url:
+                type: string
+              source_JWT:
+                type: string
+              target_url:
+                type: string
+              target_JWT:
+                type: string
+              jobs:
+                type: array
+                items:
+                  $ref: '#/definitions/MigrationJobEntry'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/MigrationStatus'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/migrations/{migration}':
+    get:
+      tags:
+        - dkube
+      operationId: migration_status_user
+      summary: API to send status of migration
+      security:
+        - d3apikey: []
+      parameters:
+        - name: migration
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/MigrationStatus'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/migrations/{migration}/abort':
+    put:
+      tags:
+        - dkube
+      operationId: abort_migration
+      summary: API to terminate migration
+      security:
+        - d3apikey: []
+      parameters:
+        - name: migration
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/MigrationStatus'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/migrations/{migration}/delete':
+    delete:
+      tags:
+        - dkube
+      operationId: delete_migration
+      summary: API to terminate migration
+      security:
+        - d3apikey: []
+      parameters:
+        - name: migration
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/migrations/{migration}/meta' :
+    get:
+      tags:
+        - dkube
+      operationId: get_migration_metadata
+      produces:
+        - application/octet-stream
+      summary: API to export a single job.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: migration
+          in: path
+          type: string
+          required: true
+        - name: Data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              jobs :
+                type: array
+                items:
+                  $ref: '#/definitions/MigrationJobEntry'
+      responses:
+        '200':
+          description: download file
+          schema:
+            type: file
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/migrations/{migration}/target/init':
+    put:
+      tags:
+        - dkube
+      operationId: target_migration_init
+      summary: API to initiate_migration
+      security:
+        - d3apikey: []
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: migration
+          in: path
+          type: string
+          required: true
+        - in: formData
+          name: upfile
+          type: file
+          description: The file to upload.
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/MigrationStatus'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/migrations/{migration}/source/init':
+    put:
+      tags:
+        - dkube
+      operationId: source_migration_init
+      summary: API to initiate_migration
+      security:
+        - d3apikey: []
+      parameters:
+        - name: migration
+          in: path
+          type: string
+          required: true
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/MigrationStatus'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/MigrationStatus'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/migrations/{migration}/update':
+    put:
+      tags:
+        - dkube
+      operationId: migration_status
+      summary: API to send status of migration
+      security:
+        - d3apikey: []
+      parameters:
+        - name: migration
+          in: path
+          type: string
+          required: true
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/MigrationStatus'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/migrations/{migration}/complete':
+    put:
+      tags:
+        - dkube
+      operationId: migration_complete
+      summary: API to notify migration complete
+      security:
+        - d3apikey: []
+      parameters:
+        - name: migration
+          in: path
+          type: string
+          required: true
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/MigrationStatus'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/MigrationStatus'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /notify/{type}/{op}:
+    post:
+      tags:
+        - dkube
+      operationId: notification
+      summary: >-
+        API to post notifications to Dkube API server
+      parameters:
+        - name: type
+          in: path
+          required: true
+          type: string
+          description: the resource type that is notified about
+        - name: op
+          in: path
+          required: true
+          type: string
+          enum: [add, update, delete]
+          description: the operation type this notification carries
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            $ref: '#/definitions/NotificationData'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /pipelines/runs:
+    delete:
+      tags:
+        - dkube
+      operationId: delete_pipeline_runs_all
+      summary: API to delete all pipeline runs
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /pipelines/runs/{name}:
+    delete:
+      tags:
+        - dkube
+      operationId: delete_pipeline_run
+      summary: API to delete a pipeline run
+      security:
+        - d3apikey: []
+      parameters:
+        - name: name
+          in: path
+          type: string
+          required: true
+        - name: exp
+          in: query
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /pipelines/runs/runid/{runid}:
+    delete:
+      tags:
+        - dkube
+      operationId: delete_pipeline_run_by_id
+      summary: API to delete a pipeline run by id
+      security:
+        - d3apikey: []
+      parameters:
+        - name: runid
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /pipelines/experiments:
+    delete:
+      tags:
+        - dkube
+      operationId: delete_pipeline_experiments_all
+      summary: API to delete all pipeline experiments
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /pipelines/experiments/{name}:
+    delete:
+      tags:
+        - dkube
+      operationId: delete_pipeline_experiment
+      summary: API to delete a pipeline experiment
+      security:
+        - d3apikey: []
+      parameters:
+        - name: name
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /pipelines/experiments/expid/{expid}:
+    delete:
+      tags:
+        - dkube
+      operationId: delete_pipeline_experiment)by_id
+      summary: API to delete a pipeline experiment by id
+      security:
+        - d3apikey: []
+      parameters:
+        - name: expid
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /model/deploy:
+    post:
+      tags:
+        - dkube
+      operationId: model_deploy
+      summary: API to deploy model
+      parameters:
+        - name: Data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+              operator:
+                type: string
+              event_data:
+                type: object
+                properties:
+                  resources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        resource_url:
+                          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+definitions:
+  AuthModel:
+    type: object
+    description: Schema for an authorization mode in dkube.
+    required: [mode]
+    properties:
+      mode:
+        type: string
+        description: The authorization mode to switch to.
+        enum: [github, local, ldap]
+      code:
+        type: string
+        description: >-
+          Code provided by Dex that can be exchanged with it
+          to receive JWT token.
+      providers:
+        type: array
+        items:
+          type: string
+        description: >-
+          The modes of authorization that supports changing to
+          from operator dashboard.
+      ldap:
+        type: object
+        description: LDAP.
+        properties:
+          username:
+            type: string
+            minLength: 1
+            maxLength: 255
+            description: >-
+              Name of the valid user. This user must be present in LDAP server.
+          password:
+            type: string
+            minLength: 1
+            maxLength: 255
+            description: Password of the user.
+          basedn:
+            type: string
+            description: LDAP BaseDN.
+          cacert:
+            $ref: '#/definitions/CertFileModel'
+          scope:
+            type: string
+            description: Search scope
+            enum: [base, singlelevel, wholesubtree]
+          userAttr:
+            type: string
+            description: Search scope
+          groupAttr:
+            type: string
+            description: Search scope
+          groupFilter:
+            type: string
+            description: Optional LDAP group search filter
+          userFilter:
+            type: string
+            description: Optional LDAP user search filter
+          binddn:
+            type: string
+            description: LDAP BindDN.
+          endpoint:
+            type: string
+            description: AD IP Address without protocol and port.
+          advanced:
+            type: object
+            properties:
+              name:
+                type: string
+              dataProfile:
+                type: string
+              superuserProfile:
+                type: string
+          updatedAt:
+            type: string
+            format: 'YYYY:MM:DD HH:MM:SS'
+            description: Time at which this provider was migrated to.
+      github:
+        type: object
+        description: Github info required to onboard an operator.
+        properties:
+          username:
+            type: string
+            minLength: 1
+            maxLength: 255
+            description: >-
+              Name of the valid user. This user should be a github user and
+              must have admin priviliges.
+          organization:
+            type: string
+            minLength: 1
+            maxLength: 255
+            description: >-
+              Git organization of which this user is admin. All the members
+              of organization will auto imported as part of init. They will
+              just be created and not onboarded. Such users still do not
+              have access to Dkube APIs. This user with operator role would
+              need to onboard the user explicitly.
+          token:
+            type: string
+            description: Github token with admin priviliges.
+            minLength: 1
+          code:
+            type: string
+            description: Github session code for generating access_token.
+            minLength: 1
+            maxLength: 255
+          clientId:
+            type: string
+            description: Github App client id.
+            minLength: 1
+            maxLength: 255
+          clientSecret:
+            type: string
+            description: Github App client secret.
+            minLength: 1
+            maxLength: 255
+          updatedAt:
+            type: string
+            format: 'YYYY:MM:DD HH:MM:SS'
+            description: Time at which this provider was migrated to.
+      local:
+        type: object
+        description: Username/password combo required to onboard an operator.
+        required: [username, password]
+        properties:
+          username:
+            type: string
+            minLength: 1
+            maxLength: 255
+            description: Username of the operator.
+          password:
+            type: string
+            minLength: 1
+            maxLength: 255
+            description: Password of the operator.
+  UserProfile:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Unique name of the profile
+      uid:
+        type: string
+      user:
+        type: string
+      homedir:
+        type: string
+      shareddir:
+        type: string
+      limits:
+        type: object
+        properties:
+          cpus:
+            type: string
+          mem:
+              type: string
+          gpus:
+            type: integer
+  RunGroupModel:
+    type: object
+    description: Schema for a run group
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+
+  RepoModel:
+    type: object
+    description: Schema for a datum (Model/Program/Dataset)
+    properties:
+      name:
+        type: string
+      tags:
+        type: array
+        items:
+          type: string
+      description:
+        type: string
+      gitaccess:
+        $ref: '#/definitions/GitAccessCredentials'
+      s3access:
+        $ref: '#/definitions/RepoS3AccessCredentials'
+      k8svolume:
+        $ref: '#/definitions/K8SVolumeInfo'
+      nfsaccess:
+        $ref: '#/definitions/NFSAccessInfo'
+      gcsaccess:
+        $ref: '#/definitions/RepoGCSAccessInfo'
+      redshift:
+        $ref: '#/definitions/RedshiftAccessInfo'
+
+  RepoS3AccessCredentials:
+    type: object
+    properties:
+      AccessKeyId:
+        type: string
+      AccessKey:
+        type: string
+
+  K8SVolumeInfo:
+    type: object
+    properties:
+      Name:
+        type: string
+
+  RepoGCSAccessInfo:
+    type: object
+    properties:
+      secret:
+        type: object
+        description: Secret file in json format
+        properties:
+          name:
+            type: string
+            description: Secret file name
+          content:
+            type: string
+            description: Secret file content
+
+  RunTemplateModel:
+    type: object
+    description: Schema for a Job in dkube.
+    properties:
+      version:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+      parameters:
+        type: object
+        properties:
+          gpu_allocation:
+            $ref: '#/definitions/Gpu_allocation'
+          priority:
+             type: object
+             properties:
+               donot_queue:
+                 type: string
+          training:
+            $ref: '#/definitions/DSJobModel'
+            description: >-
+              Training job related inputs. Should be provided if choice is
+              training job.
+          preprocessing:
+            $ref: '#/definitions/PreprocessingJobModel'
+            description: >-
+              Data processing job related inputs.
+
+  UserModel:
+    type: object
+    description: Schema for dkube user
+    properties:
+      version:
+        type: string
+      name:
+        type: string
+        minLength: 1
+        maxLength: 255
+      role:
+        type: string
+        enum:
+          - operator
+          - datascientist
+      created_at:
+        $ref: '#/definitions/TimeStamps'
+      status:
+        type: string
+        enum:
+          - onboarding
+          - onboarded
+      generated:
+        type: object
+        description: These fields are generated by backend.
+        readOnly: true
+        properties:
+          uuid:
+            type: string
+  LastUsedCredentials:
+    description: Schema to store last used git credentials of datum
+    type: array
+    items:
+      type: object
+      properties:
+        host:
+          type: string
+        credentials:
+          $ref: '#/definitions/GitAccessCredentials'
+  GitAccessCredentials:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+      apikey:
+        type: string
+      sshkey:
+        type: string
+      private:
+        type: boolean
+        default: false
+  S3AccessCredentials:
+    type: object
+    properties:
+      AccessKeyId:
+        type: string
+      AccessKey:
+        type: string
+      bucket:
+        type: string
+      prefix:
+        type: string
+      endpoint:
+        type: string
+  TimeStamps:
+    type: object
+    properties:
+      start:
+        type: string
+        format: 'YYYY:MM:DD HH:MM:SS'
+      end:
+        type: string
+        format: 'YYYY:MM:DD HH:MM:SS'
+      duration:
+        type: object
+        properties:
+          days:
+            type: string
+          hours:
+            type: string
+          minutes:
+            type: string
+          seconds:
+            type: string
+  Tensor:
+    type: object
+    description: Schema of a tensor of a model.
+    properties:
+      dtype:
+        type: string
+      name:
+        type: string
+      tensor_shape:
+        type: string
+      key:
+        type: string
+  DatumSourceDetails:
+    type: object
+    description: Schema for details of owner of a datum
+    properties:
+      kind:
+        type: string
+        enum:
+          - dkube_generated
+          - dkube_referenced
+      job:
+        type: object
+        properties:
+          name:
+            type: string
+            description: Name of the job that generated this datum.
+          jobid:
+            type: string
+            description: Jobid of job that generated this datum.
+  DatumJobDetails:
+    type: object
+    description: Schema for details of owner of a datum
+    properties:
+      name:
+        type: string
+        description: Name of the job that uses the datum.
+      user:
+        type: string
+        description: User to which this job belongs.
+      jobid:
+        type: string
+        description: Jobid of job that uses the datum.
+      class:
+        type: string
+        description: Class of job that uses the datum.
+      state:
+        type: string
+        description: State of the job
+      tags:
+        type: array
+        items:
+          type: string
+      pipeline:
+        type: object
+        properties:
+          name:
+            type: string
+          runid:
+            type: string
+  ReleasedModelItem:
+    description: Struct defining a single item in ReleasedModelItem
+    type: object
+    properties:
+      name:
+        type: string
+      reason:
+        type: string
+      version:
+        type: string
+      user:
+        type: string
+      stage:
+        type: string
+      trackingURL:
+        type: string
+      UUID:
+        type: string
+      description:
+        type: string
+      releasedTimestamp:
+        $ref: '#/definitions/TimeStamps'
+  ReleasedModels:
+    description: Schema for Released models
+    type: array
+    items:
+      $ref: '#/definitions/ReleasedModelItem'
+
+  ModelServingInfo:
+    description: Struct defining a serving info for a model
+    type: object
+    properties:
+      images:
+        type: object
+        properties:
+          serving:
+            $ref: '#/definitions/CustomContainerModel'
+          transformer:
+            $ref: '#/definitions/CustomContainerModel'
+      transformer_code:
+        type: object
+        properties:
+          repo:
+            type: string
+          commit:
+            type: string
+          transformer_code:
+            type: string
+          project:
+            type: string
+  ModelTrainingInfo:
+    description: Struct defining a training info for a model
+    type: object
+    properties:
+      images:
+        type: object
+        properties:
+          training:
+            type: string
+      training_code:
+        type: object
+        properties:
+          repo:
+            type: string
+          commit:
+            type: string
+          project:
+            type: string
+      datasets:
+        type: object
+        properties:
+          name:
+            type: string
+          source_details:
+            type: object
+            properties:
+              source:
+                type: string
+              version:
+                type: string
+
+  ModelCatalogItemVersion:
+    description: Struct defining a version of a model in ModelCatalogItem
+    type: object
+    properties:
+      version:
+        type: string
+      name:
+        type: string
+      publisher:
+        type: string
+      owner:
+        type: string
+      model:
+        type: object
+        properties:
+          name:
+            type: string
+          version:
+            type: string
+      serving:
+        $ref: '#/definitions/ModelServingInfo'
+      training:
+        $ref: '#/definitions/ModelTrainingInfo'
+      stage:
+        type: string
+      description:
+        type: string
+      publishedTimestamp:
+        $ref: '#/definitions/TimeStamps'
+
+  ModelCatalogItem:
+    description: Struct defining a single item in ModelCatalog
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      generated:
+        type: object
+        readOnly: true
+        properties:
+          uuid:
+            type: string
+      model:
+        type: object
+        properties:
+          name:
+            type: string
+          owner:
+            type: string
+      updateTimestamp:
+        $ref: '#/definitions/TimeStamps'
+      publisher:
+        type: string
+      versions:
+        type: array
+        items:
+            $ref: '#/definitions/ModelCatalogItemVersion'
+
+  ModelCatalog:
+    description: Schema for model catalog
+    type: array
+    items:
+      $ref: '#/definitions/ModelCatalogItem'
+  ModelDetails:
+    type: object
+    description: Schema for details of a model
+    properties:
+      kind:
+        type: object
+        properties:
+          value:
+            type: string
+            enum:
+              - dkube_trained
+              - downloaded
+          dkube_trained:
+            type: object
+            properties:
+              job:
+                type: string
+                description: Name of the job which generated this model.
+      format:
+        type: string
+        enum:
+          - tensorpb
+          - unsupported
+      unsupported:
+        type: object
+        properties:
+          reason:
+            type: string
+      tensorpb:
+        type: object
+        properties:
+          signatures:
+            type: array
+            items:
+              type: object
+            properties:
+              name:
+                type: string
+              method:
+                type: string
+              inputs:
+                type: array
+                items:
+                  $ref: '#/definitions/Tensor'
+              outputs:
+                type: array
+                items:
+                  $ref: '#/definitions/Tensor'
+          devicenodes:
+            type: array
+            items:
+              type: string
+          devices:
+            type: object
+            properties:
+             cpu:
+               type: boolean
+               default: false
+             gpu:
+               type: boolean
+               default: false
+          parameters:
+            type: integer
+          weights:
+            type: integer
+          layers:
+            type: integer
+          servable:
+            type: boolean
+  GitCommitDetails:
+    type: object
+    description: Schema for details of a program
+    properties:
+      id:
+        type: string
+      message:
+        type: string
+      date:
+        type: string
+  GitDetails:
+    type: object
+    properties:
+      repo:
+        type: boolean
+        default: false
+        description: Set to true if the git URL points to a git repo.
+      repodetails:
+        type: object
+        description: Will be empty when repo is False
+        properties:
+          branches:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                commits:
+                  type: array
+                  items:
+                    $ref: '#/definitions/GitCommitDetails'
+  NFSAccessInfo:
+    type: object
+    properties:
+      server:
+        type: string
+      path:
+        type: string
+  RedshiftAccessInfo:
+    type: object
+    properties:
+      endpoint:
+        type: string
+        description: Redshift endpoint to connect to. Should be with protocol, host and port.
+      username:
+        type: string
+        description: User authorized to connect to database.
+      password:
+        type: string
+        description: Password to be used to connect to redshift.
+      database:
+        type: string
+        description: Database in the redshift that this dataset should point to.
+      region:
+        type: string
+        description: Region where this database resides.
+      cacert:
+        $ref: '#/definitions/CertFileModel'
+        description: Certificate to be used while connecting to redshift.
+      insecureSSL:
+        type: boolean
+  GitAccessInfo:
+    type: object
+    properties:
+      path:
+        type: string
+      url:
+        type: string
+      branch:
+        type: string
+      credentials:
+        $ref: '#/definitions/GitAccessCredentials'
+  GCSAccessInfo:
+    type: object
+    properties:
+      bucket:
+        type: string
+      prefix:
+        type: string
+      secret:
+        type: object
+        description: Secret file in json format
+        properties:
+          name:
+            type: string
+            description: Secret file name
+          content:
+            type: string
+            description: Secret file content
+  DatumStatusModel:
+    type: object
+    description: Schema for a datum status
+    properties:
+      state:
+        type: string
+        enum:
+          - DOWNLOADING
+          - READY
+          - FAILED
+          - STOPPING
+          - STOPPED
+          - UPLOADING
+          - CREATING
+          - QUEUED
+      reason:
+        type: string
+  JobGroupModel:
+    type: object
+    description: Schema for a job group
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      generated:
+        type: object
+        readOnly: true
+        description: Following values will be autogenerated by dkube.
+        properties:
+          uuid:
+            type: string
+          created_time:
+            $ref: '#/definitions/TimeStamps'
+      user:
+        type: string
+
+  DatumModel:
+    type: object
+    description: Schema for a datum (Model/Program/Dataset)
+    properties:
+      version:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+      tags:
+        type: array
+        items:
+          type: string
+      class:
+        type: string
+        enum:
+          - model
+          - dataset
+          - program
+      dvs:
+        type: string
+      source:
+        type: string
+        description: >-
+          Enum of supported sources. git - If the datum is in github repo,
+          aws-s3 - If the datum is in aws_s3 bucket, pub_url - If the datum is
+          accessible over a public url, s3 - If datum is in any other s3 storage
+          say like storage provided by minio, dkube - If datum is in dkube s3 storage itself
+        enum:
+          - git
+          - aws_s3
+          - s3
+          - pub_url
+          - k8s_volume
+          - dkube
+          - nfs
+          - gcs
+          - dvs
+          - workstation
+          - redshift
+      url:
+        type: string
+        description: Actual URL to download/access from based on the source.
+      remote:
+        type: boolean
+        description: >-
+          Set to 'true' if datum should not be downloaded and only accessed
+          remotely. Say data in AWS S3 bucket which can be mounted and accessed.
+        default: false
+      gitaccess:
+        $ref: '#/definitions/GitAccessInfo'
+      redshift:
+        $ref: '#/definitions/RedshiftAccessInfo'
+      s3access:
+        $ref: '#/definitions/S3AccessCredentials'
+      k8svolume:
+        type: object
+        properties:
+          name:
+           type: string
+      nfsaccess:
+        $ref: '#/definitions/NFSAccessInfo'
+      gcsaccess:
+        $ref: '#/definitions/GCSAccessInfo'
+      generated:
+        type: object
+        readOnly: true
+        description: Following values will be autogenerated by dkube.
+        properties:
+          deleted:
+            type: boolean
+            default: false
+          archived:
+            type: boolean
+            default: false
+          private:
+            type: string
+          head_version_index:
+            type: integer
+          head_version:
+            type: string
+          updated_time:
+            $ref: '#/definitions/TimeStamps'
+          storage_path:
+            type: string
+            description: Local path of datum stored in dkube storage
+          affinity:
+            type: string
+            description: Affinity of this datum.
+          uuid:
+            type: string
+          status:
+            $ref: '#/definitions/DatumStatusModel'
+          size:
+            type: string
+            description: Size in bytes
+          progress:
+            type: integer
+            description: Progress in percentage
+          timestamps:
+            $ref: '#/definitions/TimeStamps'
+          tbref:
+            type: string
+          user:
+            type: string
+            description: user to which this datum belongs
+          details:
+            type: object
+            properties:
+              git:
+                $ref: '#/definitions/GitDetails'
+              model:
+                $ref: '#/definitions/ModelDetails'
+              tensorboard:
+                $ref: '#/definitions/TensorboardModel'
+              source:
+                $ref: '#/definitions/DatumSourceDetails'
+  VersionDetails:
+    type: object
+    properties:
+      model:
+        $ref: '#/definitions/ModelDetails'
+
+  DVSModel:
+    type: object
+    description: Schema for configuring dkube version management system
+    properties:
+      name:
+        type: string
+      uuid:
+        type: string
+      status:
+        type: object
+        properties:
+          state:
+            type: string
+            enum:
+              - CREATING
+              - CREATED
+              - FAILED
+          reason:
+            type: string
+      metadata:
+        type: string
+        enum:
+          - dkube
+          - git
+      store:
+        type: string
+        enum:
+          - dkube
+          - s3
+          - gcs
+      git:
+        type: object
+        properties:
+          repo:
+            type: string
+          token:
+            type: string
+      s3:
+        type: object
+        properties:
+          secretkey:
+            type: string
+          secretid:
+            type: string
+          bucket:
+            type: string
+      gcs:
+        type: object
+        properties:
+          bucket:
+            type: string
+          secret:
+            type: string
+            description: JSON string of google service account
+
+  VersionModel:
+    type: object
+    description: Schema for version of a dataset/model
+    properties:
+      name:
+        type: string
+        description: Name of the version given by user
+      uuid:
+        type: string
+        description: Unique id generated by system (timestamp in milliseconds)
+      tags:
+        type: array
+        items:
+          type: string
+        description: Unique tags provided by user
+      description:
+        type: string
+        description: User defined description for the version
+      index:
+        type: integer
+        description: Incremental index to sort
+      timestamps:
+        $ref: '#/definitions/TimeStamps'
+      syncState:
+        type: string
+        description: State of syncing data from cache to remote
+      storagePath:
+        type: string
+        description: Path at which the data of this version is
+      user:
+        type: string
+        description: Name of the owner
+      datumName:
+        type: string
+        description: Name of the datum
+      datumUUID:
+        type: string
+        description: UUID of dataset/model.
+      trackingUUID:
+        type: string
+      commitID:
+        type: string
+      datumType:
+        type: string
+        enum:
+          - model
+          - dataset
+          - program
+      model:
+        type: object
+        properties:
+          releasedTimestamp:
+            $ref: '#/definitions/TimeStamps'
+          publishedTimestamp:
+            $ref: '#/definitions/TimeStamps'
+          publishedName:
+            type: string
+          publishedDescription:
+            type: string
+          reason:
+            type: string
+          stage:
+            type: string
+            enum:
+              - DEFAULT
+              - RELEASED
+              - PUBLISHING
+              - PUBLISHED
+              - DEPLOYED
+              - STAGED
+
+  JobStatusModel:
+    type: object
+    description: Possible states of a run
+    properties:
+      state:
+        type: string
+        enum:
+          - QUEUED
+          - STARTING
+          - TRAINING
+          - RUNNING
+          - COMPLETE
+          - STOPPED
+          - STOPPING
+          - DELETING
+          - ERROR
+      reason:
+        type: string
+  DLSupport:
+    type: object
+    description: Identifies all the DL support by dkube
+    properties:
+      version:
+        type: string
+      frameworks:
+        type: array
+        items:
+          type: string
+          enum:
+            - tensorflow
+            - mxnet
+      tensorflow:
+        type: object
+        properties:
+          versions:
+            type: array
+            items:
+              type: string
+  DkubeInfo:
+    type: object
+    description: Identifies all the information about dkube
+    properties:
+      version:
+        type: string
+      platform:
+        type: string
+      license:
+        type: object
+        properties:
+          startDate:
+            type: string
+          endDate:
+            type: string
+          validity:
+            type: integer
+          licensee:
+            type: string
+          genTime:
+            type: string
+          expired:
+            type: boolean
+            default: false
+      release:
+        type: object
+        description: Schema for maintaining previous and current dkube release versions.
+        required: [previous, current]
+        properties:
+          previous:
+            type: string
+            description: The previous Dkube version if it has been migrated.
+          current:
+            type: string
+            description: The current Dkube version.
+      auth:
+        type: object
+        $ref: '#/definitions/AuthModel'
+      rdma:
+        type: boolean
+        default: false
+      frameworks:
+        type: array
+        items:
+          type: string
+          enum:
+            - tensorflow
+      tensorflow:
+        type: object
+        properties:
+          versions:
+            type: array
+            items:
+              type: string
+
+  DLFrameworkModel:
+    type: object
+    properties:
+      frameworks:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            versions:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  image:
+                    type: string
+  DLFrameworkProject:
+    type: object
+    properties:
+      user:
+        type: string
+      name:
+        type: string
+      images:
+        type: array
+        items:
+          type: string
+  DLFramework:
+    type: object
+    properties:
+      name:
+        type: string
+      versions:
+        type: array
+        items:
+          type: string
+  DLFrameworks:
+    type: object
+    description: Identifies all the DL frameworks
+    properties:
+      nb-ide:
+        $ref: '#/definitions/DLFrameworkModel'
+      r-ide:
+        $ref: '#/definitions/DLFrameworkModel'
+      training:
+        $ref: '#/definitions/DLFrameworkModel'
+      preprocessing:
+        $ref: '#/definitions/DLFrameworkModel'
+      serving:
+        $ref: '#/definitions/DLFrameworkModel'
+      project:
+        $ref: '#/definitions/DLFrameworkProject'
+      frameworks:
+        type: array
+        items:
+          $ref: '#/definitions/DLFramework'
+
+  DkubeContainerModel:
+    type: object
+    description: Schema for dkube container execution
+    properties:
+      framework:
+        type: object
+        properties:
+          choice:
+            type: string
+          details:
+            type: object
+            properties:
+              version:
+                type: string
+                description: >-
+                  Supported framework versions by dkube.
+              image:
+                type: string
+              private:
+                type: boolean
+                default: false
+              username:
+                type: string
+              password:
+                type: string
+
+  CustomContainerModel:
+    type: object
+    description: Schema for custom container execution
+    properties:
+      image:
+        type: object
+        required: [path]
+        properties:
+          path:
+            type: string
+          username:
+            type: string
+          password:
+            type: string
+          runas:
+            type: string
+
+  CustomKVModel:
+    type: array
+    description: 'Each entry should be JSON key:value pair'
+    items:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+
+  ConfigFileModel:
+    type: object
+    description: 'Hyper parameter file'
+    properties:
+      name:
+        type: string
+      body:
+        type: string
+
+  JobDatumModel:
+   type: object
+   properties:
+     workspace:
+       type: object
+       properties:
+         data:
+           $ref: '#/definitions/JobInputDatumModel'
+         script:
+           type: string
+     models:
+       type: array
+       description: List of model names the job would use.
+       items:
+         $ref: '#/definitions/JobInputDatumModel'
+     datasets:
+       type: array
+       description: List of dataset names the job would use.
+       items:
+         $ref: '#/definitions/JobInputDatumModel'
+     outputs:
+       type: array
+       description: List of datum names the job would generate.
+       items:
+         $ref: '#/definitions/JobInputDatumModel'
+
+  JobInputDatumModel:
+   type: object
+   properties:
+     name:
+       type: string
+     version:
+       type: string
+     mountpath:
+       type: string
+
+  DSJobModel:
+    type: object
+    description: >-
+      Schema for a datascience job - common schema for Distributed Training Job
+      / Notebook / Rstudio
+    properties:
+      executor:
+        type: object
+        properties:
+          choice:
+            type: string
+            enum:
+              - dkube
+              - custom
+          dkube:
+            $ref: '#/definitions/DkubeContainerModel'
+            description: Executor object for dkube class
+          custom:
+            $ref: '#/definitions/CustomContainerModel'
+            description: Executor object for custom class
+      datums:
+        $ref: '#/definitions/JobDatumModel'
+
+      tags:
+        type: array
+        description: Custom tags set by user for the job.
+        items:
+          type: string
+      hptuning:
+        type: object
+        description: a string of YAML file
+        properties:
+          name:
+            type: string
+          body:
+            type: string
+      hyperparams:
+        type: object
+        properties:
+          epochs:
+            type: integer
+            format: int32
+          steps:
+            type: integer
+            format: int32
+          batchsize:
+            type: integer
+            format: int32
+          custom:
+            type: array
+            description: 'Each entry should be JSON key:value pair'
+            items:
+              type: string
+          customkv:
+            $ref: '#/definitions/CustomKVModel'
+          file:
+            $ref: '#/definitions/ConfigFileModel'
+      nworkers:
+        type: integer
+        format: int32
+      ngpus:
+        type: integer
+        format: int32
+      rdma:
+        type: boolean
+        default: true
+      gpus_override:
+        type: boolean
+        default: true
+      view:
+        type: object
+        properties:
+          ready:
+            type: boolean
+            default: false
+
+  CertFileModel:
+    type: object
+    description: 'Certificate file'
+    properties:
+      name:
+        type: string
+      body:
+        type: string
+
+  InferenceJobModel:
+    type: object
+    description: Schema for a Inference Job Model
+    properties:
+      model:
+        type: string
+        description: Name of the model to be deployed
+      version:
+        type: string
+        description: Version of the model to be deployed
+      owner:
+        type: string
+        description: Name of the user who owns the model
+      device:
+        type: string
+        description: Type of device to serve model on
+        enum:
+           - cpu
+           - gpu
+      deploy:
+        type: boolean
+        default: false
+      serving_image:
+        $ref: '#/definitions/CustomContainerModel'
+      transformer:
+        type: boolean
+        default: false
+      transformer_image:
+        $ref: '#/definitions/CustomContainerModel'
+      transformer_project:
+        type: string
+      transformer-commitID:
+        type: string
+      transformer_code:
+        type: string
+        description: path to transformer code in the project selected
+  JobConfigModel:
+    type: object
+    description: Schema for data and custom job configuration
+    properties:
+      envs:
+        $ref: '#/definitions/CustomKVModel'
+      file:
+        $ref: '#/definitions/ConfigFileModel'
+  PreprocessingJobModel:
+    type: object
+    description: >-
+      Schema for a data processing job.
+    properties:
+      kind:
+        type: string
+        enum:
+          - preprocessing
+          - ingestion
+      executor:
+        type: object
+        properties:
+          choice:
+            type: string
+            enum:
+              - custom
+              - spark
+          custom:
+            $ref: '#/definitions/CustomContainerModel'
+            description: Executor object for custom class
+      datums:
+        $ref: '#/definitions/JobDatumModel'
+      tags:
+        type: array
+        description: Custom tags set by user for the job.
+        items:
+          type: string
+      config:
+        $ref: '#/definitions/JobConfigModel'
+  CustomJobModel:
+    type: object
+    description: >-
+      Schema for a custom job.
+    properties:
+      datums:
+        $ref: '#/definitions/JobDatumModel'
+      tags:
+        type: array
+        description: Custom tags set by user for the job.
+        items:
+          type: string
+      config:
+        $ref: '#/definitions/JobConfigModel'
+      service:
+        type: object
+        properties:
+          targetport:
+            type: integer
+          exposeas:
+            type: string
+            enum:
+              - nodeport
+              - dkubeproxy
+              - clusterip
+      container:
+        $ref: '#/definitions/CustomContainerModel'
+  CustomJobResultModel:
+    type: object
+    description: Defines schema for custom job result
+    properties:
+      url:
+        type: string
+        description: Service url
+      outdir:
+        type: string
+        description: Minio path where output is stored
+      view:
+        type: object
+        properties:
+          ready:
+            type: boolean
+            default: false
+  NotebookResultModel:
+    type: object
+    description: Defines schema for training notebook result
+    properties:
+      nburl:
+        type: string
+        description: Jupyter URL to view notebook
+  TrainingResultModel:
+    type: object
+    description: Defines schema for training result
+    properties:
+      model:
+        type: string
+        description: Name of the model generated after training
+  TensorboardModel:
+    type: object
+    description: Defines schema for tensorboad associated with training/trained model/notebook
+    properties:
+      version:
+        type: string
+      uuid:
+        type: string
+      url:
+        type: string
+      status:
+        type: string
+  ServingResultModel:
+    type: object
+    description: Defines schema for an inference job result
+    properties:
+      modeldir:
+        type: string
+        description: Name of dir where the artificats of this model are stored
+      servingurl:
+        type: string
+      curlcmd:
+        type: string
+  AffinityModel:
+    type: object
+    description: Affinity fields for subjects in a distributed environment.
+    properties:
+      server:
+        type: string
+        description: D3API server name
+  TrackingModel:
+    type: object
+    properties:
+      runId:
+        type: string
+      artifactId:
+        type: string
+      versionId:
+        type: string
+      pipelineId:
+        type: string
+
+  ModelMetrics:
+    type: array
+    items:
+      type: object
+      properties:
+        class:
+          type: string
+          enum:
+            - CURVE
+            - SCALAR
+            - TABLE
+            - CONFUSION_MATRIX
+        name:
+          type: string
+        curve:
+          type: object
+          properties:
+            csv:
+              type: string
+        table:
+          type: object
+          properties:
+            csv:
+              type: string
+        scalar:
+          type: string
+        confusion_matrix:
+          type: object
+          properties:
+            csv:
+              type: string
+
+  Metrics:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+
+  ModelCatalogMetrics:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        metrics:
+          $ref: '#/definitions/Metrics'
+
+  DatumMetrics:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        uuid:
+          type: string
+        versions:
+          type: array
+          items:
+            type: object
+            properties:
+              uuid:
+                type: string
+              inputs:
+               type: object
+               properties:
+                 workspace:
+                    $ref: '#/definitions/JobInputDatumModel'
+                 models:
+                   type: array
+                   description: List of model names the job would use.
+                   items:
+                     $ref: '#/definitions/JobInputDatumModel'
+                 datasets:
+                   type: array
+                   description: List of dataset names the job would use.
+                   items:
+                     $ref: '#/definitions/JobInputDatumModel'
+              metrics:
+                $ref: '#/definitions/Metrics'
+  JobModel:
+    type: object
+    description: Schema for a Job in dkube.
+    properties:
+      version:
+        type: string
+      name:
+        type: string
+      description:
+        type: string
+      parameters:
+        type: object
+        properties:
+          class:
+            type: string
+            enum:
+              - training
+              - notebook
+              - inference
+              - preprocessing
+              - custom
+              - rstudio
+          gpu_allocation:
+            $ref: '#/definitions/Gpu_allocation'
+          priority:
+             type: object
+             properties:
+               donot_queue:
+                 type: string
+          training:
+            $ref: '#/definitions/DSJobModel'
+            description: >-
+              Training job related inputs. Should be provided if choice is
+              training job.
+          notebook:
+            $ref: '#/definitions/DSJobModel'
+            description: >-
+              Notebook job related inputs. Should be provided if choice is
+              notebook job.
+          inference:
+            $ref: '#/definitions/InferenceJobModel'
+            description: >-
+              Inference job related inputs. Should be provided if choice is
+              inference job.
+          preprocessing:
+            $ref: '#/definitions/PreprocessingJobModel'
+            description: >-
+              Data processing job related inputs. Should be provided if
+              choice is data job. Job which downloads/does some processing on available data and generates new dataset for further consumption.
+          custom:
+            $ref: '#/definitions/CustomJobModel'
+            description: >-
+              Custom job related inputs. Should be provided if choice is
+              custom. Job which does custom tasks.
+          run:
+            type: object
+            properties:
+              template:
+                type: string
+              group:
+                type: string
+          generated:
+            type: object
+            readOnly: true
+            properties:
+              deleted:
+                type: boolean
+                default: false
+              archived:
+                type: boolean
+                default: false
+              private:
+                type: string
+              category:
+                type: string
+                enum:
+                  - template
+                  - run
+              pipeline:
+                type: object
+                properties:
+                  runid:
+                    type: string
+                  name:
+                    type: string
+              subclass:
+                type: string
+                enum:
+                  - training
+                  - inference
+                  - notebook
+                  - rstudio
+                  - study
+                  - studytrial
+                  - dkube
+              hp_tuning_info:
+                type: string
+                description: Tuning hyperparam json string
+              training_image:
+                $ref: '#/definitions/CustomContainerModel'
+              serving_image:
+                $ref: '#/definitions/CustomContainerModel'
+              scheduled:
+                type: boolean
+                description: identifing job scheduled or not
+              affinity:
+                type: string
+                description: Affinity of this job.
+              user:
+                type: string
+                description: user to which this job belongs
+              jobid:
+                type: string
+                description: 6Char alphanumeric ID unique per user
+              uuid:
+                type: string
+              status:
+                $ref: '#/definitions/JobStatusModel'
+              timestamps:
+                $ref: '#/definitions/TimeStamps'
+              runtime:
+                $ref: '#/definitions/TimeStamps'
+              ngpus_alloc:
+                type: integer
+                description: >-
+                  Actual number of gpus allocated to this job, will determined
+                  when jobs get to running
+              ngpus_max:
+                type: integer
+                description: >-
+                  Max number of gpus this job could get allocated with.
+              tbref:
+                type: string
+                description: UUID of TB resouruce
+              studyref:
+                type: string
+                description: Unique id of study job
+              trialref:
+                type: string
+                description: Unique id of a studyjob trial
+              best_trial_id:
+                type: string
+                description: Unique id of best studyjob trial
+              best_objective_value:
+                type: number
+                description: Objective value of best studyjob trial
+              accelerator:
+                type: string
+                description: Node affinity
+              versions:
+                type: object
+                properties:
+                  cuda:
+                    type: string
+                  dkube:
+                    type: string
+                  nvidia:
+                    type: string
+              tracking:
+                type: array
+                items:
+                  type: string
+              details:
+                type: object
+                properties:
+                  tensorboard:
+                    $ref: '#/definitions/TensorboardModel'
+                  notebook:
+                    $ref: '#/definitions/NotebookResultModel'
+                    description: Will be set if the choice was notebook
+                  training:
+                    $ref: '#/definitions/TrainingResultModel'
+                    description: Will be set if the choice was training
+                  serving:
+                    $ref: '#/definitions/ServingResultModel'
+                    description: Will be generated and set if the choice was serving
+                  custom:
+                    $ref: '#/definitions/CustomJobResultModel'
+                  accesstoken:
+                    type: string
+  WorkerModel:
+    type: object
+    description: Schema for workers of a job.
+    readOnly: true
+    properties:
+      version:
+        type: string
+      name:
+        type: string
+      role:
+        type: string
+        default: SINGLETON
+      uuid:
+        type: string
+      containers:
+        type: array
+        items:
+          type: object
+          properties:
+            uuid:
+              type: string
+            name:
+              type: string
+            status:
+              type: string
+            reason:
+              type: string
+      status:
+        type: string
+      reason:
+        type: string
+      event:
+        type: string
+      poduuid:
+        type: string
+      exit_code:
+        type: integer
+      node:
+        type: string
+  Gpu_allocation:
+    type: object
+    properties:
+      manual:
+        type: boolean
+      auto:
+        type: boolean
+  DeviceModel:
+    type: object
+    readOnly: true
+    description: 'Schema for dkube devices e.g., GPUs.'
+    properties:
+      version:
+        type: string
+      name:
+        type: string
+        minLength: 1
+        maxLength: 255
+      class:
+        type: string
+        enum:
+          - gpu
+        default: gpu
+      vendor:
+        type: string
+        enum:
+          - nvidia
+        default: nvidia
+      model:
+        type: string
+      UUID:
+        type: string
+      healthy:
+        type: boolean
+        default: true
+      node:
+        type: string
+      created_at:
+        $ref: '#/definitions/TimeStamps'
+  CpuModel:
+    type: object
+    description: 'Schema for dkube devices e.g., CPUs.'
+    properties:
+      version:
+        type: string
+      cpus:
+        type: string
+      architecture:
+        type: string
+      cpu_op_models:
+        type: string
+      byte_order:
+        type: string
+      threads_per_core:
+         type: integer
+         format: int32
+      cores_per_socket:
+         type: integer
+         format: int32
+      sockets:
+        type: integer
+        format: int32
+      vendor:
+        type: string
+      modelNumber:
+        type: string
+      cores:
+        type: integer
+        format: int32
+      modelName:
+        type: string
+      frequency:
+        type: string
+      frequency_max:
+        type: string
+      frequency_min:
+        type: string
+      virtualization:
+        type: string
+      family:
+        type: string
+      l1d_cache:
+        type: string
+      l1i_cache:
+        type: string
+      l2_cache:
+        type: string
+      l3_cache:
+        type: string
+  DevicePoolModel:
+    type: object
+    description: Schema for device pools. Multiple devices can be pooled together.
+    properties:
+      version:
+        type: string
+      name:
+        type: string
+        minLength: 1
+        maxLength: 255
+      class:
+        type: string
+        description: Model of devices - homogenous pool
+      ndevices:
+        type: integer
+        format: uint16
+        description: Number of devices in the pool
+      created_at:
+        $ref: '#/definitions/TimeStamps'
+      generated:
+        type: object
+        readOnly: true
+        properties:
+          uuid:
+            type: string
+  GroupModel:
+    type: object
+    description: >-
+      Schema for the user group. Multiple users could be grouped. Device pools
+      can be assigned to each group. Each group will have unique properties and
+      access priviliges.
+    properties:
+      version:
+        type: string
+      name:
+        type: string
+        minLength: 1
+        maxLength: 255
+      providertype:
+        type: string
+        enum:
+          - external
+      provider:
+        type: string
+        enum:
+          - github
+      created_at:
+        $ref: '#/definitions/TimeStamps'
+      generated:
+        type: object
+        readOnly: true
+        properties:
+          uuid:
+            type: string
+  NodeModel:
+    type: object
+    readOnly: true
+    description: Schema for dkube nodes
+    properties:
+      version:
+        type: string
+      name:
+        type: string
+        minLength: 1
+        maxLength: 255
+      network:
+        type: object
+        properties:
+          hostname:
+            type: string
+          hostip:
+            type: string
+          hostmac:
+            type: string
+      software:
+        type: object
+        properties:
+          osversion:
+            type: string
+          kernel:
+            type: string
+      capacity:
+        type: object
+        properties:
+          cpus:
+            $ref: '#/definitions/CpuModel'
+          memory:
+            type: string
+      accelerator:
+        type: object
+        properties:
+          healthy:
+            type: boolean
+            default: true
+          class:
+            type: string
+            enum:
+              - gpu
+            default: gpu
+          name:
+            type: string
+      dkube:
+        type: object
+        properties:
+          status:
+            type: string
+      uptime:
+        type: string
+        format: 'YYYY:MM:DD HH:MM:SS'
+      generated:
+        type: object
+        readOnly: true
+        properties:
+          uuid:
+            type: string
+  D3APIKeyModel:
+    type: object
+    description: Schema for all the keys generated/stored by/in dkube
+    readOnly: true
+    properties:
+      version:
+        type: string
+      apikey:
+        type: string
+      revoked:
+        type: boolean
+        default: false
+      generated:
+        type: object
+        readOnly: true
+        properties:
+          uuid:
+            type: string
+  D3StateModel:
+    type: object
+    description: State of the dkube system
+    readOnly: true
+    properties:
+      state:
+        type: string
+        enum:
+          - default
+          - ready
+  JobCollection:
+    type: object
+    description: Collection object of a job
+    readOnly: true
+    properties:
+      children:
+        type: array
+        items:
+          $ref: '#/definitions/JobModel'
+      job:
+        $ref: '#/definitions/JobModel'
+      workers:
+        type: array
+        items:
+          $ref: '#/definitions/WorkerModel'
+      devices:
+        type: array
+        items:
+          type: object
+          properties:
+            device:
+              $ref: '#/definitions/DeviceModel'
+            node:
+              $ref: '#/definitions/NodeModel'
+  Counters:
+    type: object
+    description: Schema for counters
+    readOnly: true
+    properties:
+      active:
+        type: string
+      total:
+        type: string
+      failed:
+        type: string
+      complete:
+        type: string
+  UserCollection:
+    type: object
+    description: Collection object of a user
+    readOnly: true
+    properties:
+      counters:
+        type: object
+        properties:
+          notebooks:
+            $ref: '#/definitions/Counters'
+          jobs:
+            $ref: '#/definitions/Counters'
+          inferences:
+            $ref: '#/definitions/Counters'
+          preprocessing:
+            $ref: '#/definitions/Counters'
+          rstudio:
+            $ref: '#/definitions/Counters'
+          ngpus:
+            type: string
+      user:
+        $ref: '#/definitions/UserModel'
+      models:
+        type: array
+        items:
+          $ref: '#/definitions/DatumModel'
+      datasets:
+        type: array
+        items:
+          $ref: '#/definitions/DatumModel'
+      programs:
+        type: array
+        items:
+          $ref: '#/definitions/DatumModel'
+      jobs:
+        type: object
+        properties:
+          notebooks:
+            type: object
+            properties:
+              running:
+                type: array
+                items:
+                  $ref: '#/definitions/JobCollection'
+              completed:
+                type: array
+                items:
+                  $ref: '#/definitions/JobCollection'
+              failed:
+                type: array
+                items:
+                  $ref: '#/definitions/JobCollection'
+          jobs:
+            type: object
+            properties:
+              running:
+                type: array
+                items:
+                  $ref: '#/definitions/JobCollection'
+              completed:
+                type: array
+                items:
+                  $ref: '#/definitions/JobCollection'
+              failed:
+                type: array
+                items:
+                  $ref: '#/definitions/JobCollection'
+          inferences:
+            type: object
+            properties:
+              running:
+                type: array
+                items:
+                  $ref: '#/definitions/JobCollection'
+              completed:
+                type: array
+                items:
+                  $ref: '#/definitions/JobCollection'
+              failed:
+                type: array
+                items:
+                  $ref: '#/definitions/JobCollection'
+          preprocessing:
+            type: object
+            properties:
+              running:
+                type: array
+                items:
+                  $ref: '#/definitions/JobCollection'
+              completed:
+                type: array
+                items:
+                  $ref: '#/definitions/JobCollection'
+              failed:
+                type: array
+                items:
+                  $ref: '#/definitions/JobCollection'
+  PoolCollection:
+    type: object
+    description: Collection object of a pool
+    readOnly: true
+    properties:
+      pool:
+        $ref: '#/definitions/DevicePoolModel'
+      devices:
+        type: object
+        properties:
+          inuse:
+            type: object
+            description: All devices of the pool in use by some job.
+            properties:
+              count:
+                type: integer
+              devices:
+                type: array
+                items:
+                  $ref: '#/definitions/DeviceModel'
+  GroupCollection:
+    type: object
+    description: Collection object of a group
+    readOnly: true
+    properties:
+      group:
+        $ref: '#/definitions/GroupModel'
+      users:
+        type: array
+        items:
+          type: object
+          properties:
+            user:
+              $ref: '#/definitions/UserModel'
+            devices:
+              type: array
+              items:
+                $ref: '#/definitions/DeviceModel'
+                description: All devices currently used by user will be listed here.
+      pools:
+        type: array
+        items:
+          $ref: '#/definitions/PoolCollection'
+  NodeCollection:
+    type: object
+    description: Collection object of a dkube node
+    readOnly: true
+    properties:
+      node:
+        $ref: '#/definitions/NodeModel'
+      devices:
+        type: object
+        properties:
+          gpus:
+            type: object
+            properties:
+              healthy:
+                type: array
+                items:
+                  $ref: '#/definitions/DeviceModel'
+              unhealthy:
+                type: array
+                items:
+                  $ref: '#/definitions/DeviceModel'
+
+
+  MigrationMetaModel:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/DatumModel'
+      genmodels:
+        type: array
+        items:
+          $ref: '#/definitions/DatumModel'
+      job :
+        $ref: '#/definitions/JobModel'
+      vizierdb :
+        type: string
+
+  MigrationJobEntry :
+    type: object
+    properties:
+      name:
+        type: string
+      class:
+        type: string
+
+  MigrationObjUUID:
+    type : object
+    description: source and destination uuids
+    properties:
+      src_UUID:
+        type: string
+      tgt_UUID:
+        type: string
+      src_name:
+        type: string
+      tgt_name:
+        type: string
+
+  MigrationDatumModel:
+    type: object
+    description: datum meta data for migration
+    properties:
+      UUID:
+        type: string
+      remote_UUID:
+        type : string
+      dkubeDatumUUIDs:
+        $ref: '#/definitions/MigrationObjUUID'
+      migrationUUID:
+        type: string
+      migrationJobUUID:
+        type: string
+      duplicate:
+        type: boolean
+      duplicate_ref:
+        type: string
+      datum_type:
+        type: string
+      bucket:
+        type: string
+      status:
+        type: string
+      progress:
+        type: integer
+        format: int32
+      details:
+        type: string
+
+  MigrationJobModel:
+    type: object
+    description: job meta data for migration
+    properties:
+      name:
+        type: string
+      class:
+        type: string
+      UUID:
+        type: string
+      remote_UUID:
+        type : string
+      src_state:
+        type: string
+      dkubeJobUUIDS:
+        $ref: '#/definitions/MigrationObjUUID'
+      migrationUUID:
+        type: string
+      status:
+        type: string
+      progress:
+        type: integer
+        format: int32
+      datums :
+        type: array
+        items:
+          type: string
+      details:
+        type: string
+
+  MigrationModel:
+    type: object
+    description: meta data for migration
+    properties:
+      version:
+        type: string
+      name:
+        type: string
+      UUID:
+        type : string
+      remote_UUID:
+        type : string
+      User:
+        type: string
+      triggering_point:
+        enum:
+          - source
+          - target
+      location:
+        enum:
+          - source
+          - target
+      remote:
+        type : object
+        properties:
+          url:
+            type: string
+          JWT:
+            type: string
+          user:
+            type: string
+      progress:
+        type: integer
+        format: int32
+      status:
+        $ref: '#/definitions/MigrationStatusModel'
+      time_stamp:
+        type: string
+      jobs:
+        type: array
+        items:
+          $ref: '#/definitions/MigrationJobEntry'
+      job_refs :
+        type: array
+        items:
+          type: string
+
+  MigrationJobStatus:
+    type: object
+    description: status for migration
+    properties:
+      job:
+        $ref: '#/definitions/MigrationJobModel'
+      datums:
+        type: array
+        items:
+          $ref: '#/definitions/MigrationDatumModel'
+
+  MigrationStatus:
+    type: object
+    description: status for migration
+    properties:
+      migration:
+        $ref: '#/definitions/MigrationModel'
+      jobs:
+        type: array
+        items:
+          $ref: '#/definitions/MigrationJobStatus'
+
+  MigrationStatusModel:
+    type: object
+    description: Possible states of a run
+    properties:
+      state:
+        type: string
+        enum:
+          - QUEUED
+          - SCHEDULED
+          - MIGRATING
+          - COMPLETE
+          - STOPPED
+          - ERROR
+      reason:
+        type: string
+
+  LogViewer:
+    type: object
+    properties:
+      Username:
+        type: string
+      Password:
+        type: string
+      SvrAddress:
+        type: string
+      Protocol:
+        type: string
+      Port:
+        type: string
+
+  NotificationData:
+    type: object
+    properties:
+      Username:
+        type: string
+      JobUUID:
+        type: string
+      Class:
+        type: string
+      Subclass:
+        type: string
+      Status:
+        type: string
+      Reason:
+        type: string
+      NotebookUrl:
+        type: string
+      ServingUrl:
+        type: string
+      TensorboardUrl:
+        type: string
+      IsTensorboard:
+        type: boolean
+      Study:
+        type : object
+        properties:
+          StudyID:
+            type: string
+          BestTrialID:
+            type: string
+          BestObjectiveValue:
+            type: number
+      Worker:
+        $ref: '#/definitions/WorkerModel'
+      Datum:
+        $ref: '#/definitions/DatumModel'
+      Version:
+        $ref: '#/definitions/VersionModel'
+
+  ClusterStatus:
+    type: array
+    items:
+      type: object
+      properties:
+        component:
+          type: string
+        instances:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              node:
+                type: string
+              status:
+                type: string
+
+  TokenInfo:
+    type: object
+    description: Claims for a given jwt token
+    properties:
+      username:
+        type: string
+      role:
+        type: string
+
+  ApiResponse:
+    type: object
+    description: Schema for a generic response of dkube APIs on Success.
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      uuid:
+        type: string
+  ApiError:
+    type: object
+    description: Schema for a generic response of dkube APIs on Failure.
+    properties:
+      code:
+        type: integer
+      message:
+        type: string

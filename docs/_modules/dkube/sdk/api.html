@@ -1,0 +1,721 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dkube.sdk.api &#8212; DKubeSDK 2.1.4 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for dkube.sdk.api</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">.. module:: DKubeAPI</span>
+<span class="sd">   :synopsis: Helper class which provides high level methods for user to integrate at workflow level.</span>
+
+<span class="sd">.. moduleauthor:: Ahmed Khan &lt;github.com/mak-454&gt;</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.api_base</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.rsrcs</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<div class="viewcode-block" id="DkubeApi"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi">[docs]</a><span class="k">class</span> <span class="nc">DkubeApi</span><span class="p">(</span><span class="n">ApiBase</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        This class encapsules all the high level dkube workflow functions.::</span>
+
+<span class="sd">            from dkube.sdk import *</span>
+<span class="sd">            dapi = DkubeApi()</span>
+
+<span class="sd">        *Inputs*</span>
+
+<span class="sd">            URL</span>
+<span class="sd">                FQDN endpoint at which DKube platform is deployed::</span>
+
+<span class="sd">                    http://dkube-controller-master.dkube.cluster.local:5000</span>
+
+<span class="sd">                    https://dkube.ai:32222</span>
+
+<span class="sd">                .. note:: If not provided then the value is picked from *DKUBE_ACCESS_URL* env variable. If not found then http://dkube-controller-master.dkube.cluster.local:5000 is used assuming the access is internal to the DKube cluster</span>
+
+
+<span class="sd">            token</span>
+<span class="sd">                Access token for the APIs, without which DKube will return 40x codes</span>
+
+<span class="sd">                .. note:: If not provided then the value is picked from *DKUBE_ACCESS_TOKEN* env variable. ASSERTs if env is not defined.</span>
+
+
+<span class="sd">            common_tags</span>
+<span class="sd">                Tags which need to applied all the resources created using this API object</span>
+
+
+<span class="sd">            req_timeout</span>
+<span class="sd">                Timeout for all the requests which are issued using this API object</span>
+
+
+<span class="sd">            req_retries</span>
+<span class="sd">                Number of retries per request</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">URL</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">common_tags</span><span class="o">=</span><span class="p">[],</span> <span class="n">req_timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">req_retries</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">URL</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
+                <span class="s2">&quot;DKUBE_ACCESS_URL&quot;</span><span class="p">,</span> <span class="s2">&quot;http://dkube-controller-master.dkube.cluster.local:5000&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">token</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DKUBE_ACCESS_TOKEN&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">==</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;TOKEN must be specified either by passing argument or by setting DKUBE_ACCESS_TOKEN env variable&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">common_tags</span> <span class="o">=</span> <span class="n">common_tags</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DkubeApi.validate_token"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.validate_token">[docs]</a>    <span class="k">def</span> <span class="nf">validate_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method which can be used to validate the token. </span>
+<span class="sd">            Returns the JWT Claims. Which contains the role assigned to the user.</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate_token</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DkubeApi.create_training_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.create_training_run">[docs]</a>    <span class="k">def</span> <span class="nf">create_training_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">:</span> <span class="n">DkubeTraining</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to create a training run on DKube.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                run</span>
+<span class="sd">                    Instance of :bash:`dkube.sdk.rsrcs.Training` class.</span>
+<span class="sd">                    Please see the :bash:`Resources` section for details on this class.</span>
+
+
+<span class="sd">                wait_for_completion</span>
+<span class="sd">                    When set to :bash:`True` this method will wait for job to complete after submission.</span>
+<span class="sd">                    Job is declared complete if it is one of the :bash:`complete/failed/error` state</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="n">run</span><span class="p">)</span> <span class="o">==</span> <span class="n">DkubeTraining</span><span class="p">,</span> <span class="s2">&quot;Invalid type for run, value must be instance of rsrcs:DkubeTraining class&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">create_run</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">wait_for_completion</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="s1">&#39;training&#39;</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
+            <span class="n">state</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;complete&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;run </span><span class="si">{}</span><span class="s2"> - completed with state </span><span class="si">{}</span><span class="s2"> and reason </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reason</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;run </span><span class="si">{}</span><span class="s2"> - waiting for completion, current state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_training_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_training_run">[docs]</a>    <span class="k">def</span> <span class="nf">get_training_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to fetch the training run with given name for the given user.</span>
+<span class="sd">            Raises exception in case of run is not found or any other connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    User whose training run has to be fetched.</span>
+<span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
+<span class="sd">                    training run of the :bash:`user` in the input. They should be in same DKube group.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the training run to be fetched</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="s1">&#39;training&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.list_training_runs"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.list_training_runs">[docs]</a>    <span class="k">def</span> <span class="nf">list_training_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to list all the training runs of a user.</span>
+<span class="sd">            Raises exception on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    User whose training runs must be fetched.</span>
+<span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
+<span class="sd">                    training runs of the :bash:`user` in the input. They should be in same DKube group.</span>
+
+<span class="sd">                filters</span>
+<span class="sd">                    Only :bash:`*` is supported now.</span>
+
+<span class="sd">                    User will able to filter runs based on state or duration</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_runs</span><span class="p">(</span><span class="s1">&#39;training&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.delete_training_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_training_run">[docs]</a>    <span class="k">def</span> <span class="nf">delete_training_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to delete a run.</span>
+<span class="sd">            Raises exception if token is of different user or if training run with name doesnt exist or on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    The token must belong to this user. As run of different user cannot be deleted.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the run which needs to be deleted.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_run</span><span class="p">(</span><span class="s1">&#39;training&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.create_preprocessing_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.create_preprocessing_run">[docs]</a>    <span class="k">def</span> <span class="nf">create_preprocessing_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">:</span> <span class="n">DkubePreprocessing</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to create a preprocessing run on DKube.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                run</span>
+<span class="sd">                    Instance of :bash:`dkube.sdk.rsrcs.Preprocessing` class.</span>
+<span class="sd">                    Please see the :bash:`Resources` section for details on this class.</span>
+
+
+<span class="sd">                wait_for_completion</span>
+<span class="sd">                    When set to :bash:`True` this method will wait for job to complete after submission.</span>
+<span class="sd">                    Job is declared complete if it is one of the :bash:`complete/failed/error` state</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="n">run</span><span class="p">)</span> <span class="o">==</span> <span class="n">DkubePreprocessing</span><span class="p">,</span> <span class="s2">&quot;Invalid type for run, value must be instance of rsrcs:DkubePreprocessing class&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">create_run</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">wait_for_completion</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="s1">&#39;preprocessing&#39;</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
+            <span class="n">state</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;complete&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;run </span><span class="si">{}</span><span class="s2"> - completed with state </span><span class="si">{}</span><span class="s2"> and reason </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reason</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;run </span><span class="si">{}</span><span class="s2"> - waiting for completion, current state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_preprocessing_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_preprocessing_run">[docs]</a>    <span class="k">def</span> <span class="nf">get_preprocessing_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to fetch the preprocessing run with given name for the given user.</span>
+<span class="sd">            Raises exception in case of run is not found or any other connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    User whose preprocessing run has to be fetched.</span>
+<span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
+<span class="sd">                    preprocessing run of the :bash:`user` in the input. They should be in same DKube group.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the training run to be fetched</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="s1">&#39;preprocessing&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.list_preprocessing_runs"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.list_preprocessing_runs">[docs]</a>    <span class="k">def</span> <span class="nf">list_preprocessing_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to list all the preprocessing runs of a user.</span>
+<span class="sd">            Raises exception on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    User whose preprocessing runs must be fetched.</span>
+<span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
+<span class="sd">                    preprocessing runs of the :bash:`user` in the input. They should be in same DKube group.</span>
+
+<span class="sd">                filters</span>
+<span class="sd">                    Only :bash:`*` is supported now.</span>
+
+<span class="sd">                    User will able to filter runs based on state or duration</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_runs</span><span class="p">(</span><span class="s1">&#39;preprocessing&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.delete_preprocessing_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_preprocessing_run">[docs]</a>    <span class="k">def</span> <span class="nf">delete_preprocessing_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to delete a run.</span>
+<span class="sd">            Raises exception if token is of different user or if preprocessing run with name doesnt exist or on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    The token must belong to this user. As run of different user cannot be deleted.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the run which needs to be deleted.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_run</span><span class="p">(</span><span class="s1">&#39;preprocessing&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.create_serving_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.create_serving_run">[docs]</a>    <span class="k">def</span> <span class="nf">create_serving_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">:</span> <span class="n">DkubeServing</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to create a serving run on DKube.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                run</span>
+<span class="sd">                    Instance of :bash:`dkube.sdk.rsrcs.serving` class.</span>
+<span class="sd">                    Please see the :bash:`Resources` section for details on this class.</span>
+
+
+<span class="sd">                wait_for_completion</span>
+<span class="sd">                    When set to :bash:`True` this method will wait for job to complete after submission.</span>
+<span class="sd">                    Job is declared complete if it is one of the :bash:`complete/failed/error` state</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="n">run</span><span class="p">)</span> <span class="o">==</span> <span class="n">DkubeServing</span><span class="p">,</span> <span class="s2">&quot;Invalid type for run, value must be instance of rsrcs:DkubeServing class&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">create_run</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">wait_for_completion</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;inference&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
+            <span class="n">state</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;complete&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;run </span><span class="si">{}</span><span class="s2"> - completed with state </span><span class="si">{}</span><span class="s2"> and reason </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reason</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;run </span><span class="si">{}</span><span class="s2"> - waiting for completion, current state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_serving_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_serving_run">[docs]</a>    <span class="k">def</span> <span class="nf">get_serving_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to fetch the serving run with given name for the given user.</span>
+<span class="sd">            Raises exception in case of run is not found or any other connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    User whose serving run has to be fetched.</span>
+<span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
+<span class="sd">                    serving run of the :bash:`user` in the input. They should be in same DKube group.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the serving run to be fetched</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="s1">&#39;serving&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.list_serving_runs"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.list_serving_runs">[docs]</a>    <span class="k">def</span> <span class="nf">list_serving_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to list all the serving runs of a user.</span>
+<span class="sd">            Raises exception on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    User whose serving runs must be fetched.</span>
+<span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
+<span class="sd">                    serving runs of the :bash:`user` in the input. They should be in same DKube group.</span>
+
+<span class="sd">                filters</span>
+<span class="sd">                    Only :bash:`*` is supported now.</span>
+
+<span class="sd">                    User will able to filter runs based on state or duration</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_runs</span><span class="p">(</span><span class="s1">&#39;serving&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.delete_serving_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_serving_run">[docs]</a>    <span class="k">def</span> <span class="nf">delete_serving_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to delete a run.</span>
+<span class="sd">            Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    The token must belong to this user. As run of different user cannot be deleted.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the run which needs to be deleted.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_run</span><span class="p">(</span><span class="s1">&#39;serving&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.create_project"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.create_project">[docs]</a>    <span class="k">def</span> <span class="nf">create_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">:</span> <span class="n">DkubeProject</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to create a project on DKube.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                project</span>
+<span class="sd">                    Instance of :bash:`dkube.sdk.rsrcs.project` class.</span>
+<span class="sd">                    Please see the :bash:`Resources` section for details on this class.</span>
+
+
+<span class="sd">                wait_for_completion</span>
+<span class="sd">                    When set to :bash:`True` this method will wait for project resource to get into one of the complete state.</span>
+<span class="sd">                    Project is declared complete if it is one of the :bash:`complete/failed/error` state</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="n">project</span><span class="p">)</span> <span class="o">==</span> <span class="n">DkubeProject</span><span class="p">,</span> <span class="s2">&quot;Invalid type for run, value must be instance of rsrcs:DkubeProject class&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">create_repo</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">wait_for_completion</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_repo</span><span class="p">(</span><span class="s1">&#39;program&#39;</span><span class="p">,</span> <span class="n">project</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">project</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
+            <span class="n">state</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ready&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;project </span><span class="si">{}</span><span class="s2"> - completed with state </span><span class="si">{}</span><span class="s2"> and reason </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reason</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;project </span><span class="si">{}</span><span class="s2"> - waiting for completion, current state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_project"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_project">[docs]</a>    <span class="k">def</span> <span class="nf">get_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to fetch the project with given name for the given user.</span>
+<span class="sd">            Raises exception in case of project is not found or any other connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    User whose project has to be fetched.</span>
+<span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
+<span class="sd">                    project of the :bash:`user` in the input. They should be in same DKube group.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the project to be fetched</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_repo</span><span class="p">(</span><span class="s1">&#39;program&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.list_projects"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.list_projects">[docs]</a>    <span class="k">def</span> <span class="nf">list_projects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to list all the projects of a user.</span>
+<span class="sd">            Raises exception on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    User whose projects must be fetched.</span>
+<span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
+<span class="sd">                    projects of the :bash:`user` in the input. They should be in same DKube group.</span>
+
+<span class="sd">                filters</span>
+<span class="sd">                    Only :bash:`*` is supported now.</span>
+
+<span class="sd">                    User will able to filter projects based on state or the source</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_repos</span><span class="p">(</span><span class="s1">&#39;program&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.delete_project"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_project">[docs]</a>    <span class="k">def</span> <span class="nf">delete_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to delete a project.</span>
+<span class="sd">            Raises exception if token is of different user or if project with name doesnt exist or on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    The token must belong to this user. As project of different user cannot be deleted.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the project which needs to be deleted.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_repo</span><span class="p">(</span><span class="s1">&#39;program&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.create_dataset"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.create_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">create_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">DkubeDataset</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to create a dataset on DKube.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                dataset</span>
+<span class="sd">                    Instance of :bash:`dkube.sdk.rsrcs.dataset` class.</span>
+<span class="sd">                    Please see the :bash:`Resources` section for details on this class.</span>
+
+
+<span class="sd">                wait_for_completion</span>
+<span class="sd">                    When set to :bash:`True` this method will wait for dataset resource to get into one of the complete state.</span>
+<span class="sd">                    dataset is declared complete if it is one of the :bash:`complete/failed/error` state</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="n">dataset</span><span class="p">)</span> <span class="o">==</span> <span class="n">DkubeDataset</span><span class="p">,</span> <span class="s2">&quot;Invalid type for run, value must be instance of rsrcs:DkubeDataset class&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">create_repo</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">wait_for_completion</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_repo</span><span class="p">(</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
+            <span class="n">state</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ready&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;dataset </span><span class="si">{}</span><span class="s2"> - completed with state </span><span class="si">{}</span><span class="s2"> and reason </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reason</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;dataset </span><span class="si">{}</span><span class="s2"> - waiting for completion, current state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_dataset"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">get_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to fetch the dataset with given name for the given user.</span>
+<span class="sd">            Raises exception in case of dataset is not found or any other connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    User whose dataset has to be fetched.</span>
+<span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
+<span class="sd">                    dataset of the :bash:`user` in the input. They should be in same DKube group.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the dataset to be fetched</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_repo</span><span class="p">(</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.list_datasets"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.list_datasets">[docs]</a>    <span class="k">def</span> <span class="nf">list_datasets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to list all the datasets of a user.</span>
+<span class="sd">            Raises exception on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    User whose datasets must be fetched.</span>
+<span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
+<span class="sd">                    datasets of the :bash:`user` in the input. They should be in same DKube group.</span>
+
+<span class="sd">                filters</span>
+<span class="sd">                    Only :bash:`*` is supported now.</span>
+
+<span class="sd">                    User will able to filter datasets based on state or the source</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_repos</span><span class="p">(</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.delete_dataset"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">delete_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to delete a dataset.</span>
+<span class="sd">            Raises exception if token is of different user or if dataset with name doesnt exist or on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    The token must belong to this user. As dataset of different user cannot be deleted.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the dataset which needs to be deleted.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_repo</span><span class="p">(</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.create_model"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.create_model">[docs]</a>    <span class="k">def</span> <span class="nf">create_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">DkubeModel</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to create a model on DKube.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                model</span>
+<span class="sd">                    Instance of :bash:`dkube.sdk.rsrcs.model` class.</span>
+<span class="sd">                    Please see the :bash:`Resources` section for details on this class.</span>
+
+
+<span class="sd">                wait_for_completion</span>
+<span class="sd">                    When set to :bash:`True` this method will wait for model resource to get into one of the complete state.</span>
+<span class="sd">                    model is declared complete if it is one of the :bash:`complete/failed/error` state</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="n">model</span><span class="p">)</span> <span class="o">==</span> <span class="n">DkubeModel</span><span class="p">,</span> <span class="s2">&quot;Invalid type for run, value must be instance of rsrcs:DkubeModel class&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">create_repo</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">wait_for_completion</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_repo</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
+            <span class="n">state</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ready&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;model </span><span class="si">{}</span><span class="s2"> - completed with state </span><span class="si">{}</span><span class="s2"> and reason </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reason</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;model </span><span class="si">{}</span><span class="s2"> - waiting for completion, current state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_model"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_model">[docs]</a>    <span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to fetch the model with given name for the given user.</span>
+<span class="sd">            Raises exception in case of model is not found or any other connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    User whose model has to be fetched.</span>
+<span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
+<span class="sd">                    model of the :bash:`user` in the input. They should be in same DKube group.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the model to be fetched</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_repo</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.list_models"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.list_models">[docs]</a>    <span class="k">def</span> <span class="nf">list_models</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to list all the models of a user.</span>
+<span class="sd">            Raises exception on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    User whose models must be fetched.</span>
+<span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
+<span class="sd">                    models of the :bash:`user` in the input. They should be in same DKube group.</span>
+
+<span class="sd">                filters</span>
+<span class="sd">                    Only :bash:`*` is supported now.</span>
+
+<span class="sd">                    User will able to filter models based on state or the source</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_repos</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.delete_model"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_model">[docs]</a>    <span class="k">def</span> <span class="nf">delete_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to delete a model.</span>
+<span class="sd">            Raises exception if token is of different user or if model with name doesnt exist or on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    The token must belong to this user. As model of different user cannot be deleted.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the model which needs to be deleted.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_repo</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">DKubeSDK</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, OneConvergence.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
