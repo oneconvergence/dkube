@@ -28,7 +28,7 @@ class DkubeModel(object):
 
         self.nfsaccess = NFSAccessInfo(server=None, path=None)
 
-        self.gcssecret = GCSAccessInfoSecret(name=None, content=None)
+        self.gcssecret = RepoGCSAccessInfoSecret(name=None, content=None)
         self.gcsaccess = GCSAccessInfo(
             bucket=None, prefix=None, secret=self.gcssecret)
 
@@ -53,7 +53,7 @@ class DkubeModel(object):
         self.datum.name = name
         self.datum.tags = tags
 
-    def update_dataset_source(self, source=DATASET_SOURCES[0]):
+    def update_model_source(self, source=DATASET_SOURCES[0]):
         self.datum.source = source
 
     def update_git_details(self, url, branch=None, authopt=GIT_ACCESS_OPTS[0], authval=None):

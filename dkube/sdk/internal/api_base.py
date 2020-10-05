@@ -13,7 +13,7 @@ configuration.api_key_prefix['Authorization'] = 'Bearer'
 
 
 class ApiBase(object):
-    def __init__(self, url, user, token):
+    def __init__(self, url, token):
         configuration.host = url_normalize('{}/dkube/v2/controller'.format(url))
         configuration.api_key['Authorization'] = token
         configuration.verify_ssl = False

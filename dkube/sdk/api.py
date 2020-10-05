@@ -56,10 +56,13 @@ class DkubeApi(ApiBase):
 
     def __init__(self, URL=None, token=None, common_tags=[], req_timeout=None, req_retries=None):
 
-        if URL == None:
+        self.url = URL
+        if self.url == None:
             self.url = os.getenv(
                 "DKUBE_ACCESS_URL", "http://dkube-controller-master.dkube.cluster.local:5000")
-        if token == None:
+
+        self.token = token
+        if self.token == None:
             self.token = os.getenv("DKUBE_ACCESS_TOKEN", None)
             assert self.token == None, "TOKEN must be specified either by passing argument or by setting DKUBE_ACCESS_TOKEN env variable"
 
@@ -281,9 +284,9 @@ class DkubeApi(ApiBase):
             run) == DkubeServing, "Invalid type for run, value must be instance of rsrcs:DkubeServing class"
         super().create_run(run)
         while wait_for_completion:
-            status = super().get_run(self, 'inference', user, run.name, fields='status')
+            status = super().get_run('inference', run.user, run.name, fields='status')
             state, reason = status['state'], status['reason']
-            if state.lower() in ['complete', 'failed', 'error']:
+            if state.lower() in ['complete', 'failed', 'error', 'running']:
                 print(
                     "run {} - completed with state {} and reason {}".format(run.name, state, reason))
                 break

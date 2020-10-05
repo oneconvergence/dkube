@@ -39,9 +39,9 @@ class DkubeProject(object):
 
         self.gitcreds.username = self.user
 
-        if authmode == 'apikey':
+        if authopt == 'apikey':
             self.gitcreds.apikey = authval
-        elif authmode == 'password':
+        elif authopt == 'password':
             self.gitcreds.password = authval
-        elif authmode == 'sshkey':
+        elif authopt == 'sshkey':
             self.gitcreds.sshkey = authval

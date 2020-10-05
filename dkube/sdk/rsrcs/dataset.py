@@ -32,7 +32,7 @@ class DkubeDataset(object):
 
         self.nfsaccess = NFSAccessInfo(server=None, path=None)
 
-        self.gcssecret = GCSAccessInfoSecret(name=None, content=None)
+        self.gcssecret = RepoGCSAccessInfoSecret(name=None, content=None)
         self.gcsaccess = GCSAccessInfo(
             bucket=None, prefix=None, secret=self.gcssecret)
 
@@ -67,11 +67,11 @@ class DkubeDataset(object):
 
         self.gitcreds.username = self.user
 
-        if authmode == 'apikey':
+        if authopt == 'apikey':
             self.gitcreds.apikey = authval
-        elif authmode == 'password':
+        elif authopt == 'password':
             self.gitcreds.password = authval
-        elif authmode == 'sshkey':
+        elif authopt == 'sshkey':
             self.gitcreds.sshkey = authval
 
     def update_awss3_details(self, bucket, prefix, key, secret):

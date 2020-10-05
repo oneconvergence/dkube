@@ -10,5 +10,5 @@ sudo pip3 install -r requirements.txt
 
 How to install using pip
 ------------------------
-sudo pip install git+https://github.com/oneconvergence/dkube.git or
-sudo pip3 install git+https://github.com/oneconvergence/dkube.git
+sudo pip install git+https://github.com/oneconvergence/dkube.git@2.1.5 or
+sudo pip3 install git+https://github.com/oneconvergence/dkube.git@2.1.5

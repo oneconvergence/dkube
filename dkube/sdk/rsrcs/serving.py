@@ -6,6 +6,7 @@ from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.internal.dkube_api.models.job_model import JobModel
 from dkube.sdk.internal.dkube_api.models.job_model_parameters import JobModelParameters
+from dkube.sdk.internal.dkube_api.models.job_model_parameters_run import JobModelParametersRun
 from dkube.sdk.internal.dkube_api.models.inference_job_model import InferenceJobModel
 from dkube.sdk.internal.dkube_api.models.custom_container_model import CustomContainerModel
 from dkube.sdk.internal.dkube_api.models.custom_container_model_image import CustomContainerModelImage
@@ -13,17 +14,20 @@ from pprint import pprint
 
 from .util import *
 
+
 class DkubeServing(object):
     def __init__(self, user, name=generate('serving'), description='', tags=[]):
         self.predictor_container = CustomContainerModelImage(
-            path=None, username=None, password=None, runas=None)
+            path='', username=None, password=None, runas=None)
         self.predictor = CustomContainerModel(image=self.predictor_container)
         self.transformer_container = CustomContainerModelImage(
-            path=None, username=None, password=None, runas=None)
+            path='', username=None, password=None, runas=None)
         self.transformer = CustomContainerModel(
             image=self.transformer_container)
-        self.serving_def = InferenceJobModel(
-            model=None, version=None, owner=None, device=None, preprocessing=self.transformer)
+
+        self.serving_def = InferenceJobModel(model=None, version=None, owner=None, device=None, deploy=False,
+                                             serving_image=self.predictor, transformer=False,
+                                             transformer_image=self.transformer, transformer_project=None, transformer_commit_id=None, transformer_code=None)
         self.run_def = JobModelParametersRun(template=None, group='default')
         self.job_parameters = JobModelParameters(
             _class='inference', inference=self.serving_def, run=self.run_def)
@@ -31,21 +35,22 @@ class DkubeServing(object):
 
         self.update_basic(user, name, description, tags)
 
-    def update_basic(self, name, description, tags):
+    def update_basic(self, user, name, description, tags):
         self.user = user
         self.name = name
 
         self.job.name = name
         self.job.description = description
         self.serving_def.tags = tags
+        self.serving_def.device = "cpu"
 
     def update_transformer_code(self, project=None, commitid=None, code=None):
         self.serving_def.transformer = True
-        self.serving_def.transformer_project = project
+        self.serving_def.transformer_project = self.user + ':' + project
         self.serving_def.transformer_commit_id = commitid
         self.serving_def.transformer_code = code
 
-    def update_tranformer_image(self, image_url=None, login_uname=None, login_pswd=None):
+    def update_transformer_image(self, image_url=None, login_uname=None, login_pswd=None):
         self.serving_def.transformer = True
         self.transformer_container.path = image_url
         self.transformer_container.username = login_uname
@@ -54,9 +59,9 @@ class DkubeServing(object):
     def update_serving_model(self, model, version=None):
         self.serving_def.model = model
         self.serving_def.version = version
-        self.serving_dev.owner = self.user
+        self.serving_def.owner = self.user
 
     def update_serving_image(self, image_url=None, login_uname=None, login_pswd=None):
-        self.serving_container.path = image_url
-        self.serving_container.username = login_uname
-        self.serving_container.password = login_pswd
+        self.predictor_container.path = image_url
+        self.predictor_container.username = login_uname
+        self.predictor_container.password = login_pswd

@@ -595,7 +595,7 @@ __eq__	internal/dkube_api/models/worker_model.py	/^    def __eq__(self, other):$
 __eq__	internal/dkube_api/models/worker_model_containers.py	/^    def __eq__(self, other):$/;"	m	class:WorkerModelContainers	file:
 __hasattr	internal/dkube_api/api_client.py	/^    def __hasattr(self, object, name):$/;"	m	class:ApiClient	file:
 __init__	api.py	/^    def __init__(self, URL=None, token=None, common_tags=[], req_timeout=None, req_retries=None):$/;"	m	class:DkubeApi
-__init__	internal/api_base.py	/^    def __init__(self, url, user, token):$/;"	m	class:ApiBase
+__init__	internal/api_base.py	/^    def __init__(self, url, token):$/;"	m	class:ApiBase
 __init__	internal/dkube_api/api/dfab_api.py	/^    def __init__(self, api_client=None):$/;"	m	class:DfabApi
 __init__	internal/dkube_api/api/dkube_api.py	/^    def __init__(self, api_client=None):$/;"	m	class:DkubeApi
 __init__	internal/dkube_api/api/dkube_operator_exclusive_api.py	/^    def __init__(self, api_client=None):$/;"	m	class:DkubeOperatorExclusiveApi
@@ -2345,11 +2345,9 @@ get_datum_prev_cred	internal/dkube_api/api/dkube_api.py	/^    def get_datum_prev
 get_datum_prev_cred_with_http_info	internal/dkube_api/api/dkube_api.py	/^    def get_datum_prev_cred_with_http_info(self, user, **kwargs):  # noqa: E501$/;"	m	class:DkubeApi
 get_dvs_config	internal/dkube_api/api/dkube_api.py	/^    def get_dvs_config(self, **kwargs):  # noqa: E501$/;"	m	class:DkubeApi
 get_dvs_config_with_http_info	internal/dkube_api/api/dkube_api.py	/^    def get_dvs_config_with_http_info(self, **kwargs):  # noqa: E501$/;"	m	class:DkubeApi
-get_head_version	api.py	/^    def get_head_version(self, category, user, repo):$/;"	m	class:DkubeApi
 get_head_version	internal/api_base.py	/^    def get_head_version(self, category, user, repo):$/;"	m	class:ApiBase
 get_job_groups	internal/dkube_api/api/dkube_api.py	/^    def get_job_groups(self, user, **kwargs):  # noqa: E501$/;"	m	class:DkubeApi
 get_job_groups_with_http_info	internal/dkube_api/api/dkube_api.py	/^    def get_job_groups_with_http_info(self, user, **kwargs):  # noqa: E501$/;"	m	class:DkubeApi
-get_latest_version	api.py	/^    def get_latest_version(self, category, user, repo):$/;"	m	class:DkubeApi
 get_latest_version	internal/api_base.py	/^    def get_latest_version(self, category, user, repo):$/;"	m	class:ApiBase
 get_migration_metadata	internal/dkube_api/api/dkube_api.py	/^    def get_migration_metadata(self, migration, data, **kwargs):  # noqa: E501$/;"	m	class:DkubeApi
 get_migration_metadata_with_http_info	internal/dkube_api/api/dkube_api.py	/^    def get_migration_metadata_with_http_info(self, migration, data, **kwargs):  # noqa: E501$/;"	m	class:DkubeApi
@@ -2372,9 +2370,7 @@ get_session_key	internal/dkube_api/api/dkube_api.py	/^    def get_session_key(se
 get_session_key_with_http_info	internal/dkube_api/api/dkube_api.py	/^    def get_session_key_with_http_info(self, user, **kwargs):  # noqa: E501$/;"	m	class:DkubeApi
 get_single_user_profile	internal/dkube_api/api/dkube_api.py	/^    def get_single_user_profile(self, profile, **kwargs):  # noqa: E501$/;"	m	class:DkubeApi
 get_single_user_profile_with_http_info	internal/dkube_api/api/dkube_api.py	/^    def get_single_user_profile_with_http_info(self, profile, **kwargs):  # noqa: E501$/;"	m	class:DkubeApi
-get_training_outputs	api.py	/^    def get_training_outputs(self, user, runname):$/;"	m	class:DkubeApi
 get_training_run	api.py	/^    def get_training_run(self, user, name):$/;"	m	class:DkubeApi
-get_version	api.py	/^    def get_version(self, category, user, repo, version):$/;"	m	class:DkubeApi
 get_version	internal/api_base.py	/^    def get_version(self,category, user, repo, version):$/;"	m	class:ApiBase
 getheader	internal/dkube_api/rest.py	/^    def getheader(self, name, default=None):$/;"	m	class:RESTResponse
 getheaders	internal/dkube_api/rest.py	/^    def getheaders(self):$/;"	m	class:RESTResponse
@@ -2616,7 +2612,6 @@ list_serving_runs	api.py	/^    def list_serving_runs(self, user, filters='*'):$/
 list_training_runs	api.py	/^    def list_training_runs(self, user, filters='*'):$/;"	m	class:DkubeApi
 list_user_profiles	internal/dkube_api/api/dkube_api.py	/^    def list_user_profiles(self, **kwargs):  # noqa: E501$/;"	m	class:DkubeApi
 list_user_profiles_with_http_info	internal/dkube_api/api/dkube_api.py	/^    def list_user_profiles_with_http_info(self, **kwargs):  # noqa: E501$/;"	m	class:DkubeApi
-list_versions	api.py	/^    def list_versions(self, category, user, repo):$/;"	m	class:DkubeApi
 list_versions	internal/api_base.py	/^    def list_versions(self, category, user, repo):$/;"	m	class:ApiBase
 local	internal/dkube_api/models/auth_model.py	/^    def local(self):$/;"	m	class:AuthModel
 local	internal/dkube_api/models/auth_model.py	/^    def local(self, local):$/;"	m	class:AuthModel
