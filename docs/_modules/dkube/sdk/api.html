@@ -90,10 +90,13 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">URL</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">common_tags</span><span class="o">=</span><span class="p">[],</span> <span class="n">req_timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">req_retries</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
-        <span class="k">if</span> <span class="n">URL</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">URL</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
                 <span class="s2">&quot;DKUBE_ACCESS_URL&quot;</span><span class="p">,</span> <span class="s2">&quot;http://dkube-controller-master.dkube.cluster.local:5000&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">token</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">token</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DKUBE_ACCESS_TOKEN&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">==</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;TOKEN must be specified either by passing argument or by setting DKUBE_ACCESS_TOKEN env variable&quot;</span>
 
@@ -292,9 +295,9 @@
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_run</span><span class="p">(</span><span class="s1">&#39;preprocessing&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DkubeApi.create_serving_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.create_serving_run">[docs]</a>    <span class="k">def</span> <span class="nf">create_serving_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">:</span> <span class="n">DkubeServing</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="DkubeApi.create_test_inference"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.create_test_inference">[docs]</a>    <span class="k">def</span> <span class="nf">create_test_inference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">:</span> <span class="n">DkubeServing</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Method to create a serving run on DKube.</span>
+<span class="sd">            Method to create a test inference on DKube.</span>
 <span class="sd">            Raises Exception in case of errors.</span>
 
 
@@ -315,9 +318,9 @@
             <span class="n">run</span><span class="p">)</span> <span class="o">==</span> <span class="n">DkubeServing</span><span class="p">,</span> <span class="s2">&quot;Invalid type for run, value must be instance of rsrcs:DkubeServing class&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">create_run</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
         <span class="k">while</span> <span class="n">wait_for_completion</span><span class="p">:</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;inference&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="s1">&#39;inference&#39;</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
             <span class="n">state</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;complete&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;complete&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;running&#39;</span><span class="p">]:</span>
                 <span class="nb">print</span><span class="p">(</span>
                     <span class="s2">&quot;run </span><span class="si">{}</span><span class="s2"> - completed with state </span><span class="si">{}</span><span class="s2"> and reason </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reason</span><span class="p">))</span>
                 <span class="k">break</span>
@@ -326,15 +329,15 @@
                     <span class="s2">&quot;run </span><span class="si">{}</span><span class="s2"> - waiting for completion, current state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span>
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DkubeApi.get_serving_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_serving_run">[docs]</a>    <span class="k">def</span> <span class="nf">get_serving_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="DkubeApi.get_test_inference"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_test_inference">[docs]</a>    <span class="k">def</span> <span class="nf">get_test_inference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Method to fetch the serving run with given name for the given user.</span>
+<span class="sd">            Method to fetch the test inference with given name for the given user.</span>
 <span class="sd">            Raises exception in case of run is not found or any other connection errors.</span>
 
 <span class="sd">            *Inputs*</span>
 
 <span class="sd">                user</span>
-<span class="sd">                    User whose serving run has to be fetched.</span>
+<span class="sd">                    User whose test inference has to be fetched.</span>
 <span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
 <span class="sd">                    serving run of the :bash:`user` in the input. They should be in same DKube group.</span>
 
@@ -345,15 +348,15 @@
 
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="s1">&#39;serving&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DkubeApi.list_serving_runs"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.list_serving_runs">[docs]</a>    <span class="k">def</span> <span class="nf">list_serving_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="DkubeApi.list_test_inferences"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.list_test_inferences">[docs]</a>    <span class="k">def</span> <span class="nf">list_test_inferences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Method to list all the serving runs of a user.</span>
+<span class="sd">            Method to list all the training inferences of a user.</span>
 <span class="sd">            Raises exception on any connection errors.</span>
 
 <span class="sd">            *Inputs*</span>
 
 <span class="sd">                user</span>
-<span class="sd">                    User whose serving runs must be fetched.</span>
+<span class="sd">                    User whose test inferences must be fetched.</span>
 <span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
 <span class="sd">                    serving runs of the :bash:`user` in the input. They should be in same DKube group.</span>
 
@@ -366,9 +369,9 @@
 
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_runs</span><span class="p">(</span><span class="s1">&#39;serving&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DkubeApi.delete_serving_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_serving_run">[docs]</a>    <span class="k">def</span> <span class="nf">delete_serving_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<div class="viewcode-block" id="DkubeApi.delete_test_inference"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_test_inference">[docs]</a>    <span class="k">def</span> <span class="nf">delete_test_inference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Method to delete a run.</span>
+<span class="sd">            Method to delete a test inference.</span>
 <span class="sd">            Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.</span>
 
 <span class="sd">            *Inputs*</span>
@@ -654,7 +657,57 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_repo</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_repo</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.trigger_runs_byproject"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.trigger_runs_byproject">[docs]</a>    <span class="k">def</span> <span class="nf">trigger_runs_byproject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to trigger all the runs in dkube which uses the mentioned project.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                project</span>
+<span class="sd">                    Name of the project.</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    Owner of the project. All runs of this user will be retriggered.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">condition</span> <span class="o">=</span> <span class="n">TriggerCondition</span><span class="p">(</span><span class="n">match</span><span class="o">=</span><span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">project</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">trigger_runs</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.trigger_runs_bydataset"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.trigger_runs_bydataset">[docs]</a>    <span class="k">def</span> <span class="nf">trigger_runs_bydataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to trigger all the runs in dkube which uses the mentioned dataset in input.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                dataset</span>
+<span class="sd">                    Name of the dataset.</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    Owner of the dataset. All runs of this user will be retriggered.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">condition</span> <span class="o">=</span> <span class="n">TriggerCondition</span><span class="p">(</span><span class="n">match</span><span class="o">=</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">trigger_runs</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.trigger_runs_bymodel"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.trigger_runs_bymodel">[docs]</a>    <span class="k">def</span> <span class="nf">trigger_runs_bymodel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to trigger all the runs in dkube which uses the mentioned model in input.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                model</span>
+<span class="sd">                    Name of the model.</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    Owner of the model. All runs of this user will be retriggered.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">condition</span> <span class="o">=</span> <span class="n">TriggerCondition</span><span class="p">(</span><span class="n">match</span><span class="o">=</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">trigger_runs</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

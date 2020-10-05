@@ -14,7 +14,8 @@ configuration.api_key_prefix['Authorization'] = 'Bearer'
 
 class ApiBase(object):
     def __init__(self, url, token):
-        configuration.host = url_normalize('{}/dkube/v2/controller'.format(url))
+        configuration.host = url_normalize(
+            '{}/dkube/v2/controller'.format(url))
         configuration.api_key['Authorization'] = token
         configuration.verify_ssl = False
 
@@ -82,10 +83,15 @@ class ApiBase(object):
     def list_versions(self, category, user, repo):
         pass
 
-    def get_version(self,category, user, repo, version):
+    def get_version(self, category, user, repo, version):
         pass
 
     def get_run_lineage(self, category, user, runuuid):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
         response = api.get_one_run_lineage(user, category, runuuid)
+        return response.to_dict()['data']
+
+    def trigger_runs(self, condition):
+        api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        response = api.trigger_runs_by_condition(condition)
         return response.to_dict()['data']

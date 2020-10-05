@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dkube.sdk.rsrcs.dataset &#8212; DKubeSDK 2.1.4 documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for dkube.sdk.rsrcs.dataset</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal</span> <span class="kn">import</span> <span class="n">dkube_api</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.rest</span> <span class="kn">import</span> <span class="n">ApiException</span>
+
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.datum_model</span> <span class="kn">import</span> <span class="n">DatumModel</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.git_access_info</span> <span class="kn">import</span> <span class="n">GitAccessInfo</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.git_access_credentials</span> <span class="kn">import</span> <span class="n">GitAccessCredentials</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.s3_access_credentials</span> <span class="kn">import</span> <span class="n">S3AccessCredentials</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.gcs_access_info</span> <span class="kn">import</span> <span class="n">GCSAccessInfo</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.repo_gcs_access_info_secret</span> <span class="kn">import</span> <span class="n">RepoGCSAccessInfoSecret</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.nfs_access_info</span> <span class="kn">import</span> <span class="n">NFSAccessInfo</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.redshift_access_info</span> <span class="kn">import</span> <span class="n">RedshiftAccessInfo</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.datum_model_k8svolume</span> <span class="kn">import</span> <span class="n">DatumModelK8svolume</span>
+
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+
+<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="DkubeDataset"><a class="viewcode-back" href="../../../../index.html#dkube.sdk.rsrcs.dataset.DkubeDataset">[docs]</a><span class="k">class</span> <span class="nc">DkubeDataset</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        This class defines the DKube dataset with helper functions to set properties of dataset.::</span>
+
+<span class="sd">            from dkube.sdk import *</span>
+<span class="sd">            mnist = DkubeDataset(&quot;oneconv&quot;, name=&quot;mnist&quot;)</span>
+
+<span class="sd">            Where first argument is the user of this dataset. User should be a valid onboarded user in dkube.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">DATASET_SOURCES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;dvs&quot;</span><span class="p">,</span> <span class="s2">&quot;git&quot;</span><span class="p">,</span> <span class="s2">&quot;aws_s3&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="s2">&quot;gcs&quot;</span><span class="p">,</span> <span class="s2">&quot;nfs&quot;</span><span class="p">,</span> <span class="s2">&quot;redshift&quot;</span><span class="p">,</span> <span class="s2">&quot;k8svolume&quot;</span><span class="p">]</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	List of valid datasources in DKube.</span>
+<span class="sd">	Some datasources are downloaded while some are remotely referenced.</span>
+
+<span class="sd">	:bash:`dvs` :- To create an empty repository which can be used in future runs.</span>
+
+<span class="sd">	:bash:`git` :- If data is in the git repo. All git compatible repos are supported - github, bitbucket, gitlab. :bash:`Downloaded`</span>
+
+<span class="sd">	:bash:`aws_s3` :- If the data is in AWS s3 bucket. :bash:`Downloaded | Remote`</span>
+
+<span class="sd">	:bash:`s3` :- Non aws s3 data source. Like MinIO deployed on internal cluster. :bash:`Downloaded | Remote`</span>
+
+<span class="sd">	:bash:`gcs` :- Google cloud storage as data source. :bash:`Downloaded`</span>
+
+<span class="sd">	:bash:`nfs` :- External NFS server as data source. :bash:`Remote`</span>
+
+<span class="sd">	:bash:`redshift` :- Redshift as data source. :bash:`Remote`</span>
+
+<span class="sd">	:bash:`k8svolume` :- Kubernetes volume as data source. :bash:`Remote`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">GIT_ACCESS_OPTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;apikey&quot;</span><span class="p">,</span> <span class="s2">&quot;sshkey&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">]</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	List of authentication options supported for git data source.</span>
+
+<span class="sd">	:bash:`apikey` :- Github APIKey based authentication. This must have permission on the repo to clone and checkout.</span>
+
+<span class="sd">	:bash:`sshkey` :- Git SSH key based authentication.</span>
+
+<span class="sd">	:bash:`password` :- Standard username/password based. </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">generate</span><span class="p">(</span><span class="s2">&quot;dataset&quot;</span><span class="p">),</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k8svolume</span> <span class="o">=</span> <span class="n">DatumModelK8svolume</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">redshift</span> <span class="o">=</span> <span class="n">RedshiftAccessInfo</span><span class="p">(</span>
+            <span class="n">endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cacert</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">insecure_ssl</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nfsaccess</span> <span class="o">=</span> <span class="n">NFSAccessInfo</span><span class="p">(</span><span class="n">server</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">gcssecret</span> <span class="o">=</span> <span class="n">RepoGCSAccessInfoSecret</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gcsaccess</span> <span class="o">=</span> <span class="n">GCSAccessInfo</span><span class="p">(</span>
+            <span class="n">bucket</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">secret</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gcssecret</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span> <span class="o">=</span> <span class="n">S3AccessCredentials</span><span class="p">(</span>
+            <span class="n">access_key_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">access_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bucket</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">gitcreds</span> <span class="o">=</span> <span class="n">GitAccessCredentials</span><span class="p">(</span>
+            <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">apikey</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sshkey</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gitaccess</span> <span class="o">=</span> <span class="n">GitAccessInfo</span><span class="p">(</span>
+            <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">branch</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">credentials</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gitcreds</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">datum</span> <span class="o">=</span> <span class="n">DatumModel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_class</span><span class="o">=</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span>
+                                <span class="n">dvs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remote</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gitaccess</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gitaccess</span><span class="p">,</span>
+                                <span class="n">s3access</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="p">,</span> <span class="n">nfsaccess</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nfsaccess</span><span class="p">,</span> <span class="n">gcsaccess</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gcsaccess</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_basic</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">tags</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">update_basic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span>
+
+<div class="viewcode-block" id="DkubeDataset.update_dataset_source"><a class="viewcode-back" href="../../../../index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_dataset_source">[docs]</a>    <span class="k">def</span> <span class="nf">update_dataset_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">DATASET_SOURCES</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to update the source for this dataset.</span>
+<span class="sd">            It should be one of the choice mentioned in DATASET_SOURCES</span>
+<span class="sd">            Default value is **git**</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span></div>
+
+<div class="viewcode-block" id="DkubeDataset.update_git_details"><a class="viewcode-back" href="../../../../index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_git_details">[docs]</a>    <span class="k">def</span> <span class="nf">update_git_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">branch</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">authopt</span><span class="o">=</span><span class="n">GIT_ACCESS_OPTS</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">authval</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to update the details of git datasource.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                url</span>
+<span class="sd">                    A valid Git URL. Following are considered as valid URLs.</span>
+
+<span class="sd">                    - CloneURL : https://github.com/oneconvergence/dkube.git</span>
+
+<span class="sd">                    - TreeURL : https://github.com/oneconvergence/dkube/tree/2.1.dev/dkube</span>
+
+<span class="sd">                    - BlobURL : https://github.com/oneconvergence/dkube/blob/2.1.dev/dkube/sdk/api.py</span>
+
+<span class="sd">                    - ZipURL : https://github.com/oneconvergence/dkube/archive/2.1.dev.zip</span>
+
+<span class="sd">                branch</span>
+<span class="sd">                    Valid branch of git repo. If not provided then **master** branch is used by default.</span>
+
+<span class="sd">                authopt</span>
+<span class="sd">                    One of the valid option from **GIT_ACCESS_OPTS**</span>
+
+<span class="sd">                authval</span>
+<span class="sd">                    Value corresponding to the authopt</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gitaccess</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gitaccess</span><span class="o">.</span><span class="n">branch</span> <span class="o">=</span> <span class="n">branch</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">gitcreds</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span>
+
+        <span class="k">if</span> <span class="n">authopt</span> <span class="o">==</span> <span class="s1">&#39;apikey&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gitcreds</span><span class="o">.</span><span class="n">apikey</span> <span class="o">=</span> <span class="n">authval</span>
+        <span class="k">elif</span> <span class="n">authopt</span> <span class="o">==</span> <span class="s1">&#39;password&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gitcreds</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">authval</span>
+        <span class="k">elif</span> <span class="n">authopt</span> <span class="o">==</span> <span class="s1">&#39;sshkey&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gitcreds</span><span class="o">.</span><span class="n">sshkey</span> <span class="o">=</span> <span class="n">authval</span></div>
+
+<div class="viewcode-block" id="DkubeDataset.update_awss3_details"><a class="viewcode-back" href="../../../../index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_awss3_details">[docs]</a>    <span class="k">def</span> <span class="nf">update_awss3_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">secret</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to update details of aws s3 data source.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                bucket</span>
+<span class="sd">                    Valid bucket in aws s3</span>
+
+<span class="sd">                prefix</span>
+<span class="sd">                    Path to an object in the bucket. Dkube will fetch recursively all objects under this prefix.</span>
+
+<span class="sd">                key</span>
+<span class="sd">                    AWS s3 access key id</span>
+
+<span class="sd">                secret</span>
+<span class="sd">                    AWS s3 access key secret</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">bucket</span> <span class="o">=</span> <span class="n">bucket</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">access_key_id</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">access_key</span> <span class="o">=</span> <span class="n">secret</span></div>
+
+<div class="viewcode-block" id="DkubeDataset.update_s3_details"><a class="viewcode-back" href="../../../../index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_s3_details">[docs]</a>    <span class="k">def</span> <span class="nf">update_s3_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">secret</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to update details of s3 data source like minio.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                bucket</span>
+<span class="sd">                    Valid bucket name in s3 store</span>
+
+<span class="sd">                prefix</span>
+<span class="sd">                    Path to an object in the bucket. Dkube will fetch recursively all objects under this prefix.</span>
+
+<span class="sd">                key</span>
+<span class="sd">                    S3 access key id</span>
+
+<span class="sd">                secret</span>
+<span class="sd">                    s3 access key secret</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">endpoint</span> <span class="o">=</span> <span class="n">endpoint</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">bucket</span> <span class="o">=</span> <span class="n">bucket</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">access_key_id</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">access_key</span> <span class="o">=</span> <span class="n">secret</span></div>
+
+<div class="viewcode-block" id="DkubeDataset.update_gcs_details"><a class="viewcode-back" href="../../../../index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_gcs_details">[docs]</a>    <span class="k">def</span> <span class="nf">update_gcs_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">secret</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to update details of google cloud storage.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                bucket</span>
+<span class="sd">                    Valid bucket in GCS</span>
+
+<span class="sd">                prefix</span>
+<span class="sd">                    Path to an object in bucket. Dkube will fetch recursively all objects under this prefix.</span>
+
+<span class="sd">                key</span>
+<span class="sd">                    Name of the GCS secret</span>
+
+<span class="sd">                secret</span>
+<span class="sd">                    Content of the secret</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gcsaccess</span><span class="o">.</span><span class="n">bucket</span> <span class="o">=</span> <span class="n">bucket</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gcsaccess</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gcssecret</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gcssecret</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">secret</span></div>
+
+<div class="viewcode-block" id="DkubeDataset.update_nfs_details"><a class="viewcode-back" href="../../../../index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_nfs_details">[docs]</a>    <span class="k">def</span> <span class="nf">update_nfs_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to update details of nfs data source.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                server</span>
+<span class="sd">                    IP address of the nfs server.</span>
+
+<span class="sd">                path</span>
+<span class="sd">                    Path in the nfs export. This path is directly mounted for the user program.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nfsaccess</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nfsaccess</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">server</span></div>
+
+    <span class="k">def</span> <span class="nf">update_redshift_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redshift</span><span class="o">.</span><span class="n">endpoint</span> <span class="o">=</span> <span class="n">endpoint</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redshift</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redshift</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redshift</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redshift</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">region</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insecure_ssl</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="DkubeDataset.update_k8svolume_details"><a class="viewcode-back" href="../../../../index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_k8svolume_details">[docs]</a>    <span class="k">def</span> <span class="nf">update_k8svolume_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to update details of k8s volume data source.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the kubernetes volume. Volume should not be already **Bound**.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k8svolume</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">DKubeSDK</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, OneConvergence.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

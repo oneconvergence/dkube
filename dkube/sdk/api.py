@@ -261,9 +261,9 @@ class DkubeApi(ApiBase):
 
         super().delete_run('preprocessing', user, name)
 
-    def create_serving_run(self, run: DkubeServing, wait_for_completion=True):
+    def create_test_inference(self, run: DkubeServing, wait_for_completion=True):
         """
-            Method to create a serving run on DKube.
+            Method to create a test inference on DKube.
             Raises Exception in case of errors.
 
 
@@ -295,15 +295,15 @@ class DkubeApi(ApiBase):
                     "run {} - waiting for completion, current state {}".format(run.name, state))
                 time.sleep(10)
 
-    def get_serving_run(self, user, name):
+    def get_test_inference(self, user, name):
         """
-            Method to fetch the serving run with given name for the given user.
+            Method to fetch the test inference with given name for the given user.
             Raises exception in case of run is not found or any other connection errors.
 
             *Inputs*
 
                 user
-                    User whose serving run has to be fetched.
+                    User whose test inference has to be fetched.
                     In case of if token is of different user, then the token should have permission to fetch the
                     serving run of the :bash:`user` in the input. They should be in same DKube group.
 
@@ -314,15 +314,15 @@ class DkubeApi(ApiBase):
 
         return super().get_run('serving', user, name)
 
-    def list_serving_runs(self, user, filters='*'):
+    def list_test_inferences(self, user, filters='*'):
         """
-            Method to list all the serving runs of a user.
+            Method to list all the training inferences of a user.
             Raises exception on any connection errors.
 
             *Inputs*
 
                 user
-                    User whose serving runs must be fetched.
+                    User whose test inferences must be fetched.
                     In case of if token is of different user, then the token should have permission to fetch the
                     serving runs of the :bash:`user` in the input. They should be in same DKube group.
 
@@ -335,9 +335,9 @@ class DkubeApi(ApiBase):
 
         return super().list_runs('serving', user, name)
 
-    def delete_serving_run(self, user, name):
+    def delete_test_inference(self, user, name):
         """
-            Method to delete a run.
+            Method to delete a test inference.
             Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.
 
             *Inputs*
@@ -624,3 +624,53 @@ class DkubeApi(ApiBase):
         """
 
         super().delete_repo('model', user, name)
+
+    def trigger_runs_byproject(self, project, user):
+        """
+            Method to trigger all the runs in dkube which uses the mentioned project.
+
+            *Inputs*
+
+                project
+                    Name of the project.
+
+                user
+                    Owner of the project. All runs of this user will be retriggered.
+
+        """
+
+        condition = TriggerCondition(match='project', name=project, user=user)
+        return super().trigger_runs(condition)
+
+    def trigger_runs_bydataset(self, dataset, user):
+        """
+            Method to trigger all the runs in dkube which uses the mentioned dataset in input.
+
+            *Inputs*
+
+                dataset
+                    Name of the dataset.
+
+                user
+                    Owner of the dataset. All runs of this user will be retriggered.
+
+        """
+        condition = TriggerCondition(match='dataset', name=dataset, user=user)
+        return super().trigger_runs(condition)
+
+    def trigger_runs_bymodel(self, model, user):
+        """
+            Method to trigger all the runs in dkube which uses the mentioned model in input.
+
+            *Inputs*
+
+                model
+                    Name of the model.
+
+                user
+                    Owner of the model. All runs of this user will be retriggered.
+
+        """
+
+        condition = TriggerCondition(match='model', name=model, user=user)
+        return super().trigger_runs(condition)

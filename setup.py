@@ -7,7 +7,7 @@ with open('requirements.txt') as f:
     required = f.read().splitlines()
 
 setup(name='dkube',
-      version='2.1.4',
+      version='2.1.5',
       description='Dkube SDK',
       author='oneconvergence',
       author_email='www.oneconvergence.com',

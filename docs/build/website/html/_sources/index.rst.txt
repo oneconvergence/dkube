@@ -29,6 +29,14 @@ SDK API
 .. automodule:: dkube.sdk.api
     :members:
 
+DKube Resources
+===============
+.. automodule:: dkube.sdk.rsrcs.dataset
+    :members:
+
+.. automodule:: dkube.sdk.rsrcs.project
+    :members:
+
 DKube API Swagger Spec
 ======================
 - Full spec of DKube APIs
