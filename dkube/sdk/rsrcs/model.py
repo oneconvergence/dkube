@@ -19,6 +19,7 @@ from pprint import pprint
 
 from .util import *
 
+
 class DkubeModel(object):
     DATASET_SOURCES = ["dvs", "git", "aws_s3", "s3", "gcs", "nfs", "k8svolume"]
     GIT_ACCESS_OPTS = ["apikey", "sshkey", "password"]
@@ -41,7 +42,7 @@ class DkubeModel(object):
             path=None, url=None, branch=None, credentials=self.gitcreds)
 
         self.datum = DatumModel(name=None, tags=None, _class='model',
-                                dvs=None, source=None, url=None, remote=False, gitaccess=self.gitaccess,
+                                dvs=None, source='dvs', url=None, remote=False, gitaccess=self.gitaccess,
                                 s3access=self.s3access, nfsaccess=self.nfsaccess, gcsaccess=self.gcsaccess)
 
         self.update_basic(user, name, tags)
@@ -57,6 +58,8 @@ class DkubeModel(object):
         self.datum.source = source
 
     def update_git_details(self, url, branch=None, authopt=GIT_ACCESS_OPTS[0], authval=None):
+
+        self.datum.source = "git"
         self.datum.url = url
         self.gitaccess.url = url
         self.gitaccess.branch = branch
@@ -71,12 +74,16 @@ class DkubeModel(object):
             self.gitcreds.sshkey = authval
 
     def update_awss3_details(self, bucket, prefix, key, secret):
+
+        self.datum.source = "aws_s3"
         self.s3access.bucket = bucket
         self.s3access.prefix = prefix
         self.s3access.access_key_id = key
         self.s3access.access_key = secret
 
     def update_s3_details(self, endpoint, bucket, prefix, key, secret):
+
+        self.datum.source = "s3"
         self.s3access.endpoint = endpoint
         self.s3access.prefix = prefix
         self.s3access.bucket = bucket
@@ -84,14 +91,20 @@ class DkubeModel(object):
         self.s3access.access_key = secret
 
     def update_gcs_details(self, bucket, prefix, key, secret):
+
+        self.datum.source = "gcs"
         self.gcsaccess.bucket = bucket
         self.gcsaccess.prefix = prefix
         self.gcssecret.name = key
         self.gcssecret.content = secret
 
     def update_nfs_details(self, server, path="/"):
+
+        self.datum.source = "nfs"
         self.nfsaccess.path = path
         self.nfsaccess.server = server
 
     def update_k8svolume_details(self, name):
+
+        self.datum.source = "k8svolume"
         self.k8svolume.name = name

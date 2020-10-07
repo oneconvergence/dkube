@@ -90,7 +90,7 @@ class DkubeDataset(object):
             path=None, url=None, branch=None, credentials=self.gitcreds)
 
         self.datum = DatumModel(name=None, tags=None, _class='dataset',
-                                dvs=None, source=None, url=None, remote=False, gitaccess=self.gitaccess,
+                                dvs=None, source='dvs', url=None, remote=False, gitaccess=self.gitaccess,
                                 s3access=self.s3access, nfsaccess=self.nfsaccess, gcsaccess=self.gcsaccess)
 
         self.update_basic(user, name, tags)
@@ -137,6 +137,7 @@ class DkubeDataset(object):
                     Value corresponding to the authopt
         """
 
+        self.datum.source = "git"
         self.datum.url = url
         self.gitaccess.url = url
         self.gitaccess.branch = branch
@@ -168,6 +169,8 @@ class DkubeDataset(object):
                 secret
                     AWS s3 access key secret
         """
+
+        self.datum.source = "aws_s3"
         self.s3access.bucket = bucket
         self.s3access.prefix = prefix
         self.s3access.access_key_id = key
@@ -191,6 +194,8 @@ class DkubeDataset(object):
                 secret
                     s3 access key secret
         """
+
+        self.datum.source = "s3"
         self.s3access.endpoint = endpoint
         self.s3access.prefix = prefix
         self.s3access.bucket = bucket
@@ -215,6 +220,8 @@ class DkubeDataset(object):
                 secret
                     Content of the secret
         """
+
+        self.datum.source = "gcs"
         self.gcsaccess.bucket = bucket
         self.gcsaccess.prefix = prefix
         self.gcssecret.name = key
@@ -233,10 +240,13 @@ class DkubeDataset(object):
                     Path in the nfs export. This path is directly mounted for the user program.
 
         """
+
+        self.datum.source = "nfs"
         self.nfsaccess.path = path
         self.nfsaccess.server = server
 
     def update_redshift_details(self, endpoint, password, database, region):
+        self.datum.source = "redshift"
         self.redshift.endpoint = endpoint
         self.redshift.username = self.user
         self.redshift.password = password
@@ -253,4 +263,6 @@ class DkubeDataset(object):
                 name
                     Name of the kubernetes volume. Volume should not be already **Bound**.
         """
+
+        self.datum.source = "k8svolume"
         self.k8svolume.name = name

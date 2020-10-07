@@ -312,7 +312,7 @@ class DkubeApi(ApiBase):
 
         """
 
-        return super().get_run('serving', user, name)
+        return super().get_run('inference', user, name)
 
     def list_test_inferences(self, user, filters='*'):
         """
@@ -333,7 +333,7 @@ class DkubeApi(ApiBase):
 
         """
 
-        return super().list_runs('serving', user)
+        return super().list_runs('inference', user)
 
     def delete_test_inference(self, user, name):
         """
@@ -350,7 +350,7 @@ class DkubeApi(ApiBase):
 
         """
 
-        super().delete_run('serving', user, name)
+        super().delete_run('inference', user, name)
 
     def create_project(self, project: DkubeProject, wait_for_completion=True):
         """
