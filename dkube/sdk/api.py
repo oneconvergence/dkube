@@ -151,7 +151,7 @@ class DkubeApi(ApiBase):
 
         """
 
-        return super().list_runs('training', user, name)
+        return super().list_runs('training', user)
 
     def delete_training_run(self, user, name):
         """
@@ -242,7 +242,7 @@ class DkubeApi(ApiBase):
 
         """
 
-        return super().list_runs('preprocessing', user, name)
+        return super().list_runs('preprocessing', user)
 
     def delete_preprocessing_run(self, user, name):
         """
@@ -333,7 +333,7 @@ class DkubeApi(ApiBase):
 
         """
 
-        return super().list_runs('serving', user, name)
+        return super().list_runs('serving', user)
 
     def delete_test_inference(self, user, name):
         """
@@ -424,7 +424,7 @@ class DkubeApi(ApiBase):
 
         """
 
-        return super().list_repos('program', user, name)
+        return super().list_repos('program', user)
 
     def delete_project(self, user, name):
         """
@@ -515,7 +515,7 @@ class DkubeApi(ApiBase):
 
         """
 
-        return super().list_repos('dataset', user, name)
+        return super().list_repos('dataset', user)
 
     def delete_dataset(self, user, name):
         """
@@ -606,7 +606,7 @@ class DkubeApi(ApiBase):
 
         """
 
-        return super().list_repos('model', user, name)
+        return super().list_repos('model', user)
 
     def delete_model(self, user, name):
         """

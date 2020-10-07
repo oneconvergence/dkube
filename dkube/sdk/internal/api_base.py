@@ -13,6 +13,7 @@ configuration.api_key_prefix['Authorization'] = 'Bearer'
 
 
 class ApiBase(object):
+
     def __init__(self, url, token):
         configuration.host = url_normalize(
             '{}/dkube/v2/controller'.format(url))
@@ -41,9 +42,9 @@ class ApiBase(object):
 
     def list_runs(self, category, user, filters='*'):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
-        response = api.jobs_get_by_class(user, category, False, all='true')
-        pprint(response)
-        return response.to_dict()
+        response = api.jobs_get_by_class(
+            user, category, False, run='true', all='true')
+        return response.to_dict()['data']
 
     def delete_run(self, category, user, name):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
@@ -68,7 +69,7 @@ class ApiBase(object):
     def list_repos(self, category, user, filters='*'):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
         response = api.datums_get_by_class(user, category, False)
-        return response.to_dict()
+        return response.to_dict()['data']
 
     def delete_repo(self, category, user, name):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
