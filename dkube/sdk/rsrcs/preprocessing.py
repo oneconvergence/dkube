@@ -53,7 +53,7 @@ class DkubePreprocessing(object):
 
         self.update_basic(user, name, description, tags)
 
-    def update_basic(self, name, description, tags):
+    def update_basic(self, user, name, description, tags):
         self.user = user
         self.name = name
 
