@@ -48,7 +48,7 @@ class ApiBase(object):
 
     def delete_run(self, category, user, name):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
-        api.jobs_list_delete_by_class(user, category, list(name))
+        api.jobs_list_delete_by_class(user, category, {'jobs': [name]})
 
     def create_repo(self, repo):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
@@ -73,7 +73,7 @@ class ApiBase(object):
 
     def delete_repo(self, category, user, name):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
-        response = api.datums_delete_by_class(user, category, list(name))
+        response = api.datums_delete_by_class(user, category, {'datums': [name]})
 
     def get_head_version(self, category, user, repo):
         pass
