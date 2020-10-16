@@ -72,6 +72,8 @@ class DkubeTraining(object):
         self.update_basic(user, name, description, tags)
 
     def update_basic(self, user, name, description, tags):
+        tags = list_of_strs(tags)
+
         self.user = user
         self.name = name
 

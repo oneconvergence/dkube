@@ -96,6 +96,8 @@ class DkubeDataset(object):
         self.update_basic(user, name, tags)
 
     def update_basic(self, user, name, tags):
+        tags = list_of_strs(tags)
+
         self.user = user
         self.name = name
 

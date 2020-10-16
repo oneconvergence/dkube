@@ -16,6 +16,7 @@ from .util import *
 
 
 class DkubeServing(object):
+
     def __init__(self, user, name=generate('serving'), description='', tags=[]):
         self.predictor_container = CustomContainerModelImage(
             path='', username=None, password=None, runas=None)
@@ -27,7 +28,8 @@ class DkubeServing(object):
 
         self.serving_def = InferenceJobModel(model=None, version=None, owner=None, device=None, deploy=False,
                                              serving_image=self.predictor, transformer=False,
-                                             transformer_image=self.transformer, transformer_project=None, transformer_commit_id=None, transformer_code=None)
+                                             transformer_image=self.transformer, transformer_project=None,
+                                             transformer_commit_id=None, transformer_code=None)
         self.run_def = JobModelParametersRun(template=None, group='default')
         self.job_parameters = JobModelParameters(
             _class='inference', inference=self.serving_def, run=self.run_def)
@@ -36,6 +38,8 @@ class DkubeServing(object):
         self.update_basic(user, name, description, tags)
 
     def update_basic(self, user, name, description, tags):
+        tags = list_of_strs(tags)
+
         self.user = user
         self.name = name
 

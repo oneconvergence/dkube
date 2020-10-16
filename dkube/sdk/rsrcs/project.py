@@ -12,6 +12,7 @@ from dkube.sdk.internal.dkube_api.rest import ApiException
 
 from .util import *
 
+
 class DkubeProject(object):
     GIT_ACCESS_OPTS = ["apikey", "sshkey", "password"]
 
@@ -26,6 +27,8 @@ class DkubeProject(object):
         self.update_basic(user, name, tags)
 
     def update_basic(self, user, name, tags):
+        tags = list_of_strs(tags)
+
         self.user = user
         self.name = name
 

@@ -48,6 +48,8 @@ class DkubeModel(object):
         self.update_basic(user, name, tags)
 
     def update_basic(self, user, name, tags):
+        tags = list_of_strs(tags)
+
         self.user = user
         self.name = name
 
@@ -58,7 +60,6 @@ class DkubeModel(object):
         self.datum.source = source
 
     def update_git_details(self, url, branch=None, authopt=GIT_ACCESS_OPTS[0], authval=None):
-
         self.datum.source = "git"
         self.datum.url = url
         self.gitaccess.url = url
