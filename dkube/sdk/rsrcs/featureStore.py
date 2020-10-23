@@ -31,16 +31,13 @@ class FeatureStore(object):
                 if each_feature["name"] == featureset:
                     path = each_feature["location"]
         if path == None:
-            fs = list_fs()
-            msg = "feature " + str(featureset) + "doesn't exist, avaiable featuresets are "
-            fs_list = ", ".join(fs)
-            return msg + fs_list
+            return {"data":df_empty ,"status": -1, "error": "Featureset doesn't exist"}
         try:
             table = pq.read_table(os.path.join(path,'example.parquet'))
             feature_df = table.to_pandas()
-            return feature_df, 'none'
+            return {"data":feature_df ,"status": 0, "error": None}
         except Exception as e:
-            return df_empty, e
+            return {"data":df_empty ,"status": -1, "error": e}
 
     def write(self, dataframe, featureset, path = None):
         if path == None:
@@ -51,13 +48,10 @@ class FeatureStore(object):
                 if each_feature["name"] == featureset:
                     path = each_feature["location"]
         if path == None:
-            fs = list_fs()
-            msg = "feature " + str(featureset) + "doesn't exist, avaiable featuresets are "
-            fs_list = ", ".join(fs)
-            return msg + fs_list
+            return {"status": -1, "error": "Featureset doesn't exist"}
         try:
             table = pa.Table.from_pandas(dataframe)
             pq.write_table(table, os.path.join(path,'example.parquet'))
-            return 'Data Written'
+            return return {"status": 0, "error": None}
         except Exception as e:
-            return e
+            return {"status": -1, "error": e}
