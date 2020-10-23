@@ -5,13 +5,14 @@ import pyarrow.parquet as pq
 import os, json
 
 class FeatureStore(object):
-    FEATURE_TYPE = ['dataframe']
-    CONFIG_FILE = "/opt/dkube/fs/config.json"
+
+    def __init__(self, config_file = "/opt/dkube/fs/config.json"):
+        self.CONFIG_FILE = config_file
 
     def list_fs(self):
         fs = []
         try:
-            with open(CONFIG_FILE) as json_file:
+            with open(self.CONFIG_FILE) as json_file:
                 fsconfig = json.load(json_file)
             featuresets = fsconfig["inputs"]["featuresets"]
             for each_feature in featuresets:
@@ -23,7 +24,7 @@ class FeatureStore(object):
     def read(self, featureset, path = None):
         df_empty = pd.DataFrame({'A' : []})
         if path == None:
-            with open(CONFIG_FILE) as json_file:
+            with open(self.CONFIG_FILE) as json_file:
                 fsconfig = json.load(json_file)
             featuresets = fsconfig["inputs"]["featuresets"]
             for each_feature in featuresets:
@@ -43,7 +44,7 @@ class FeatureStore(object):
 
     def write(self, dataframe, featureset, path = None):
         if path == None:
-            with open(CONFIG_FILE) as json_file:
+            with open(self.CONFIG_FILE) as json_file:
                 fsconfig = json.load(json_file)
             featuresets = fsconfig["outputs"]["featuresets"]
             for each_feature in featuresets:
