@@ -52,6 +52,6 @@ class FeatureStore(object):
         try:
             table = pa.Table.from_pandas(dataframe)
             pq.write_table(table, os.path.join(path,'example.parquet'))
-            return return {"status": 0, "error": None}
+            return {"status": 0, "error": None}
         except Exception as e:
             return {"status": -1, "error": e}
