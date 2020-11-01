@@ -27,13 +27,13 @@ import json
 
 from dkube.sdk import *
 
-from dkube.sdk.internal import dkube_client
-from dkube_client.rest import ApiException
+from dkube.sdk.internal import dkube_api
+from dkube.sdk.internal.dkube_api.rest import ApiException
 
 from url_normalize import url_normalize
 
 # Configure API key authorization: d3apikey
-configuration = dkube_client.Configuration()
+configuration = dkube_api.Configuration()
 configuration.api_key_prefix['Authorization'] = 'Bearer'
 
 #Bug: Go via proxy since token-info API is not returning claims on direct http call
@@ -44,7 +44,7 @@ configuration.verify_ssl = False
 
 
 def run_outputs(user, _class, name):
-    api = dkube_client.DkubeApi(dkube_client.ApiClient(configuration))
+    api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
     gresponse = api.jobs_get_collection_one(user, _class, name)
 
     job = gresponse.to_dict()['data']['job']
@@ -76,7 +76,7 @@ def command_serving(name='', user='', serving='', runid='', workflowid='', **kwa
     run['parameters']['class'] = 'serving'
     run['parameters']['inference']['tags'].extend(['owner=pipeline', 'stage='+name, 'workflowid='+workflowid, 'runid='+runid])
 
-    api = dkube_client.DkubeApi(dkube_client.ApiClient(configuration))
+    api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
     api.jobs_add_one(user, run, run='true')
     while True:
         response = api.jobs_get_collection_one(user, 'serving', runname)
@@ -103,7 +103,7 @@ def command_preprocessing(name='', user='', preprocessing='', runid='', workflow
     run['parameters']['class'] = 'preprocessing'
     run['parameters']['preprocessing']['tags'].extend(['owner=pipeline', 'stage='+stagename, 'workflowid='+workflowid, 'runid='+runid])
 
-    api = dkube_client.DkubeApi(dkube_client.ApiClient(configuration))
+    api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
     api.jobs_add_one(user, runname, run='true')
     while True:
         response = api.jobs_get_collection_one(user, 'preprocessing', runname)
@@ -129,7 +129,7 @@ def command_training(name='', user='', training='', runid='', workflowid='',**kw
     run['parameters']['class'] = 'training'
     run['parameters']['training']['tags'].extend(['owner=pipeline', 'stage='+stagename, 'workflowid='+workflowid, 'runid='+runid])
 
-    api = dkube_client.DkubeApi(dkube_client.ApiClient(configuration))
+    api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
     api.jobs_add_one(user, run, run='true')
     while True:
         response = api.jobs_get_collection_one(user, 'training', runname)
@@ -148,7 +148,7 @@ def command_training(name='', user='', training='', runid='', workflowid='',**kw
 def validate_token(token):
     configuration.api_key['Authorization'] = token
 
-    api = dkube_client.DkubeApi(dkube_client.ApiClient(configuration))
+    api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
 
     response = api.tokeninfo()
     claims = response.to_dict()['data']
