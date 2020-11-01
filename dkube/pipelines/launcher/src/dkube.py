@@ -1,7 +1,7 @@
 """Dkube Launcher for kubeflow pipelines
 
 Usage:
-    dkube.py [--name=NAME] [--token=TOKEN] [--command=COMMAND] [--training=TRAINING] [--preprocessing=PREPROCESSING] [--serving=SERVING] [--custom=CUSTOM] [--visualizer=VISUALIZER] [--runid=RUNID] [--workflowid=WORKFLOWID]
+    dkube.py [--name=NAME] [--token=TOKEN] [--command=COMMAND] [--training=TRAINING] [--preprocessing=PREPROCESSING] [--serving=SERVING] [--custom=CUSTOM] [--runid=RUNID] [--workflowid=WORKFLOWID]
     dkube.py (-h | --help)
     dkube.py --version
 
@@ -15,7 +15,6 @@ Options:
     --preprocessing=PREPROCESSING       Preprocessing job definition. JSON str of dkube.sdk.rsrcs:DkubePreprocessing
     --serving=SERVING                   Serving job definition. JSON str of dkube.sdk.rsrcs:DkubeServing
     --custom=CUSTOM                     Custom job definition. JSON str of dkube.sdk.rsrcs.DkubeCustom 
-    --visualizer=VISUALIZER             Details of visualizer to be associated this dkube job.
     --runid=RUNID                       Unique ID of the pipeline run for back reference.
     --workflowid=WORKFLOWID             Unique ID of the pipeline workflow for back reference.
 """

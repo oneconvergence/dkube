@@ -6,7 +6,7 @@ from kfp.components._yaml_utils import load_yaml
 from kfp.components._yaml_utils import dump_yaml
 from kfp import components
 
-VALID_STAGES = ['training', 'preprocessing', 'serving', 'custom']
+VALID_STAGES = ['training', 'preprocessing', 'serving']
 def dkube_op(name, token, stage, **kwargs):
     assert stage in VALID_STAGES, "Invalid value for stage, must be one of training/preprocessing/serving/custom"
 
