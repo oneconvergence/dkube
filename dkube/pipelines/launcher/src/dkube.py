@@ -75,7 +75,7 @@ def command_serving(name='', user='', serving='', runid='', workflowid='', **kwa
     run = json.loads(serving)
     run['name'] = name
     run['parameters']['class'] = 'serving'
-    run['parameters']['inference']['tags'].extend(['owner=pipeline', 'stage='+name, 'workflowid='+workflowid, 'runid='+runid])
+    #run['parameters']['inference']['tags'].extend(['owner=pipeline', 'stage='+name, 'workflowid='+workflowid, 'runid='+runid])
 
     api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
     api.jobs_add_one(user, run, run='true')
