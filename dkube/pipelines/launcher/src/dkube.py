@@ -74,7 +74,7 @@ def command_serving(name='', user='', serving='', runid='', workflowid='', **kwa
 
     run = json.loads(serving)
     run['name'] = name
-    run['parameters']['class'] = 'serving'
+    run['parameters']['class'] = 'inference'
     #run['parameters']['inference']['tags'].extend(['owner=pipeline', 'stage='+name, 'workflowid='+workflowid, 'runid='+runid])
 
     api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
@@ -91,7 +91,7 @@ def command_serving(name='', user='', serving='', runid='', workflowid='', **kwa
             time.sleep(10)
 
     #generate the outputs, next stage can pick from here
-    run_outputs(user, 'serving', runname)
+    run_outputs(user, 'inference', runname)
 
 
 def command_preprocessing(name='', user='', preprocessing='', runid='', workflowid='', **kwargs):
