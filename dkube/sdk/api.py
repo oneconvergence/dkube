@@ -84,6 +84,114 @@ class DkubeApi(ApiBase):
 
         return super().validate_token()
 
+    def launch_jupyter_ide(self, ide: DkubeIDE, wait_for_completion=True):
+        """
+            Method to launch a Jupyter IDE on DKube platform. Two kinds of IDE are supported,
+            Jupyter Notebook & RStudio.
+            Raises Exception in case of errors.
+
+
+            *Inputs*
+
+                ide
+                    Instance of :bash:`dkube.sdk.rsrcs.DkubeIDE` class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for job to complete after submission.
+                    IDE is declared complete if it is one of the :bash:`running/failed/error` state
+
+        """
+
+        assert type(
+            ide) == DkubeIDE, "Invalid type for run, value must be instance of rsrcs:DkubeIDE class"
+        super().launch_jupyter_ide(ide)
+        while wait_for_completion:
+            status = super().get_ide('notebook', ide.user, ide.name, fields='status')
+            state, reason = status['state'], status['reason']
+            if state.lower() in ['running', 'failed', 'error']:
+                print(
+                    "IDE {} - completed with state {} and reason {}".format(ide.name, state, reason))
+                break
+            else:
+                print(
+                    "IDE {} - waiting for completion, current state {}".format(ide.name, state))
+                time.sleep(10)
+
+    def launch_rstudio_ide(self, ide: DkubeIDE, wait_for_completion=True):
+        """
+            Method to launch a Rstudio IDE on DKube platform. Two kinds of IDE are supported,
+            Jupyter Notebook & RStudio.
+            Raises Exception in case of errors.
+
+
+            *Inputs*
+
+                ide
+                    Instance of :bash:`dkube.sdk.rsrcs.DkubeIDE` class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for job to complete after submission.
+                    IDE is declared complete if it is one of the :bash:`running/failed/error` state
+
+        """
+
+        assert type(
+            ide) == DkubeIDE, "Invalid type for run, value must be instance of rsrcs:DkubeIDE class"
+        super().launch_rstudio_ide(ide)
+        while wait_for_completion:
+            status = super().get_ide('notebook', ide.user, ide.name, fields='status')
+            state, reason = status['state'], status['reason']
+            if state.lower() in ['running', 'failed', 'error']:
+                print(
+                    "IDE {} - completed with state {} and reason {}".format(ide.name, state, reason))
+                break
+            else:
+                print(
+                    "IDE {} - waiting for completion, current state {}".format(ide.name, state))
+                time.sleep(10)
+
+    def list_ides(self, user, filters='*'):
+        """
+            Method to list all the IDEs of a user.
+            Raises exception on any connection errors.
+
+            *Inputs*
+
+                user
+                    User whose IDE instances must be fetched.
+                    In case of if token is of different user, then the token should have permission to fetch the
+                    training runs of the :bash:`user` in the input. They should be in same DKube group.
+
+                filters
+                    Only :bash:`*` is supported now.
+
+                    User will able to filter runs based on state or duration
+
+        """
+
+        return super().list_ides('notebook', user)
+
+    def delete_ide(self, user, name):
+        """
+            Method tio delete an IDE.
+            Raises exception if token is of different user or if training run with name doesnt exist or on any connection errors.
+
+            *Inputs*
+
+                user
+                    The token must belong to this user. As IDE instance of different user cannot be deleted.
+
+                name
+                    Name of the IDE which needs to be deleted.
+
+        """
+
+        super().delete_ide('notebook', user, name)
+
     def create_training_run(self, run: DkubeTraining, wait_for_completion=True):
         """
             Method to create a training run on DKube.

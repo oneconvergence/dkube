@@ -25,6 +25,36 @@ class ApiBase(object):
         response = api.tokeninfo()
         return response.to_dict()['data']
 
+    def launch_jupyter_ide(self, ide):
+        api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        response = api.jobs_add_one(ide.user, ide.job, run='false')
+
+    def launch_rstudio_ide(self, ide):
+        api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        response = api.jobs_add_one(
+            ide.user, ide.job, run='false', subclass='rstudio')
+
+    def get_ide(self, category, user, name, fields='*'):
+        api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        response = api.jobs_get_collection_one(user, category, name)
+
+        if fields == '*':
+            return response.to_dict()['data']
+        elif fields == 'status':
+            return response.to_dict()['data']['job']['parameters']['generated']['status']
+        else:
+            raise Exception('Unsupported fields parameter')
+
+    def list_ides(self, category, user, filters='*'):
+        api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        response = api.jobs_get_by_class(
+            user, category, False, run='false')
+        return response.to_dict()['data']
+
+    def delete_ide(self, category, user, name):
+        api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        api.jobs_list_delete_by_class(user, category, {'jobs': [name]})
+
     def create_run(self, run):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
         response = api.jobs_add_one(run.user, run.job, run='true')
