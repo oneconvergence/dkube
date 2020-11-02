@@ -15,6 +15,9 @@ from dkube.sdk.internal.dkube_api.models.conditions import Conditions as Trigger
 
 import time
 
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 class DkubeApi(ApiBase):
 
