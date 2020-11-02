@@ -11,6 +11,8 @@
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.rsrcs import *
 
+from dkube.sdk.internal.dkube_api.models.conditions import Conditions as TriggerCondition
+
 import time
 
 
@@ -71,7 +73,7 @@ class DkubeApi(ApiBase):
 
     def validate_token(self):
         """
-            Method which can be used to validate the token. 
+            Method which can be used to validate the token.
             Returns the JWT Claims. Which contains the role assigned to the user.
 
 
@@ -273,6 +275,16 @@ class DkubeApi(ApiBase):
                     Instance of :bash:`dkube.sdk.rsrcs.serving` class.
                     Please see the :bash:`Resources` section for details on this class.
 
+                    If serving image is not updated in :bash:`run:DkubeServing` argument then,
+                    - If training used supported standard framework, dkube will pick approp serving image
+                    - If training used custom image, dkube will try to use the same image for serving
+
+                    If transformer image is not updated in :bash:`run:DkubeServing` then,
+                    - Dkube will use same image as training image
+
+                    If transformer project is not updated in :bash:`run:DkubeServing` then,
+                    - Dkube will use the project used for training
+
 
                 wait_for_completion
                     When set to :bash:`True` this method will wait for job to complete after submission.
@@ -282,6 +294,37 @@ class DkubeApi(ApiBase):
 
         assert type(
             run) == DkubeServing, "Invalid type for run, value must be instance of rsrcs:DkubeServing class"
+
+        # Fetch training run details and fill in information for serving
+        if run.predictor.image == None or (
+                run.serving_def.transformer == True and run.transformer.image == None) or (
+                run.serving_def.transformer == True and run.serving_def.transformer_project == None):
+
+            if run.serving_def.version == None:
+                v = self.get_model_latest_version(
+                    run.serving_def.owner, run.serving_def.model)
+                run.serving_def.version = v['uuid']
+
+            li = self.get_model_lineage(
+                run.serving_def.owner, run.serving_def.model, run.serving_def.version)
+            if run.predictor.image == None:
+                si = li['run']['parameters'][
+                    'generated']['serving_image']['image']
+                run.update_serving_image(
+                    si['path'], si['username'], si['password'])
+
+            if run.serving_def.transformer == True and run.transformer.image == None:
+                ti = li['run']['parameters']['generated'][
+                    'training_image']['image']
+                run.update_transformer_image(
+                    ti['path'], ti['username'], ti['password'])
+
+            if run.serving_def.transformer == True and run.serving_def.transformer_project == None:
+                code = li['run']['parameters']['training'][
+                    'datums']['workspace']['data']
+                name = code['name'].split(':')[1]
+                run.update_transformer_project(name, code['version'])
+
         super().create_run(run)
         while wait_for_completion:
             status = super().get_run('inference', run.user, run.name, fields='status')
@@ -674,3 +717,191 @@ class DkubeApi(ApiBase):
 
         condition = TriggerCondition(match='model', name=model, user=user)
         return super().trigger_runs(condition)
+
+    def get_model_lineage(self, user, name, version):
+        """
+            Method to get lineage of a model version.
+
+            *Inputs*
+
+                name
+                    Name of the model
+
+                version
+                    Version of the model
+
+                user
+                    Owner of the model.
+        """
+
+        return super().get_datum_lineage('model', user, name, version)
+
+    def get_dataset_lineage(self, user, name, version):
+        """
+            Method to get lineage of a dataset version.
+
+            *Inputs*
+
+                name
+                    Name of the dataset
+
+                version
+                    Version of the dataset
+
+                user
+                    Owner of the dataset.
+        """
+
+        return super().get_datum_lineage('dataset', user, name, version)
+
+    def get_training_run_lineage(self, user, name):
+        """
+            Method to get lineage of a training run.
+
+            *Inputs*
+
+                name
+                    Name of the run
+
+                user
+                    owner of the run
+
+        """
+
+        # Get the training run info
+        run = self.get_training_run(user, name)
+        runid = run['job']['parameters']['generated']['uuid']
+        return super().get_run_lineage('training', user, runid)
+
+    def get_preprocessing_run_lineage(self, user, name):
+        """
+            Method to get lineage of a preprocessing run.
+
+            *Inputs*
+
+                name
+                    Name of the run
+
+                user
+                    owner of the run
+
+        """
+
+        # Get the preprocessing run info
+        run = get_preprocessing_run(user, name)
+        runid = run['job']['parameters']['generated']['uuid']
+        return super().get_run_lineage('preprocessing', user, runid)
+
+    def get_model_versions(self, user, name):
+        """
+            Method to get the versions of model.
+            Versions are returned in ascending order.
+
+            *Inputs*
+
+                name
+                    Name of the model
+
+                user
+                    owner of the model
+
+        """
+
+        model = self.get_model(user, name)
+        return model['versions']
+
+    def get_model_latest_version(self, user, name):
+        """
+            Method to get the latest version of the given model.
+
+            *Inputs*
+
+                name
+                    Name of the model
+
+                user
+                    owner of the model
+
+        """
+
+        versions = self.get_model_versions(user, name)
+        return versions[0]['version']
+
+    def get_dataset_versions(self, user, name):
+        """
+            Method to get the versions of dataset.
+            Versions are returned in ascending order.
+
+            *Inputs*
+
+                name
+                    Name of the dataset
+
+                user
+                    owner of the dataset
+
+        """
+
+        dataset = self.get_dataset(user, name)
+        return dataset['versions']
+
+    def get_dataset_latest_version(self, user, name):
+        """
+            Method to get the latest version of the given dataset.
+
+            *Inputs*
+
+                name
+                    Name of the dataset
+
+                user
+                    owner of the dataset
+
+        """
+
+        versions = self.get_dataset_versions(user, name)
+        return versions[0]['version']
+
+    def get_datascience_capabilities(self):
+        """
+            Method to get the datascience capabilities of the platform.
+            Returns the supported frameworks, versions and the corresponding container image details.
+
+        """
+        return super().get_datascience_capability()
+
+    def get_notebook_capabilities(self):
+        """
+            Method to get the notebook capabilities of the platform.
+            Returns the supported frameworks, versions and the image details.
+
+        """
+        caps = self.get_datascience_capabilities()
+        return caps['nb_ide']['frameworks']
+
+    def get_r_capabilities(self):
+        """
+            Method to get the R language capabilities of the platform.
+            Returns the supported frameworks, versions and the image details.
+
+        """
+        caps = self.get_datascience_capabilities()
+        return caps['r_ide']['frameworks']
+
+    def get_training_capabilities(self):
+        """
+            Method to get the training capabilities of the platform.
+            Returns the supported frameworks, versions and the image details.
+
+        """
+        caps = self.get_datascience_capabilities()
+        return caps['training']['frameworks']
+
+    def get_serving_capabilities(self):
+        """
+            Method to get the serving capabilities of the platform.
+            Returns the supported frameworks, versions and the image details.
+
+        """
+        caps = self.get_datascience_capabilities()
+        return caps['serving']['frameworks']

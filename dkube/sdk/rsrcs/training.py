@@ -28,8 +28,8 @@ from .util import *
 
 class DkubeTraining(object):
 
-    FRAMEWORK_OPTS = ["custom", "tensorflow_v1.14", "tensorflow_v2.0",
-                      "pytorch_v2.6", "scikit_v0.2.2"]
+    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0",
+                      "pytorch_2.6", "scikit_0.2.2"]
 
     DISTRIBUTION_OPTS = ["manual", "auto"]
 
@@ -82,7 +82,7 @@ class DkubeTraining(object):
         self.training_def.tags = tags
 
         # Defaults
-        self.dkube_framework_details.version = 'v1.14'
+        self.dkube_framework_details.version = '1.14'
         self.executor_def.custom = None
         self.input_project.script = 'python model.py'
         return self
