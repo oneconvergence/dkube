@@ -36,6 +36,11 @@ DKube Resources
 .. automodule:: dkube.sdk.rsrcs.model
     :members:
 
+DKube Pipeline Components
+=========================
+.. automodule:: dkube.pipelines.ops
+    :members:
+
 
 DKube API Swagger Spec
 ======================
