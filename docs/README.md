@@ -5,9 +5,9 @@ How to build SDK Documentation
 
 - virtualenv -p python3 dkubesdkdoc
 
-- source dkubesdk/bin/activate
+- source dkubesdkdoc/bin/activate
 
-- pip install Sphinx; pip install rinohtype
+- pip install Sphinx; pip install rinohtype; pip install url_normalize
 
 - Install DKube SDK (mentioned in Main README)
 

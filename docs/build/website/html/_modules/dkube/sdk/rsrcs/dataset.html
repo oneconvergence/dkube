@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>dkube.sdk.rsrcs.dataset &#8212; DKubeSDK 2.1.4 documentation</title>
-    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <title>dkube.sdk.rsrcs.dataset &#8212; DKubeSDK 2.1.6.2 documentation</title>
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
     <script src="../../../../_static/jquery.js"></script>
     <script src="../../../../_static/underscore.js"></script>
@@ -124,12 +124,14 @@
             <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">branch</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">credentials</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gitcreds</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">datum</span> <span class="o">=</span> <span class="n">DatumModel</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_class</span><span class="o">=</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span>
-                                <span class="n">dvs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remote</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gitaccess</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gitaccess</span><span class="p">,</span>
+                                <span class="n">dvs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s1">&#39;dvs&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">remote</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gitaccess</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gitaccess</span><span class="p">,</span>
                                 <span class="n">s3access</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="p">,</span> <span class="n">nfsaccess</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nfsaccess</span><span class="p">,</span> <span class="n">gcsaccess</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gcsaccess</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">update_basic</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">tags</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">update_basic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="n">list_of_strs</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
@@ -171,6 +173,7 @@
 <span class="sd">                    Value corresponding to the authopt</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;git&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gitaccess</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gitaccess</span><span class="o">.</span><span class="n">branch</span> <span class="o">=</span> <span class="n">branch</span>
@@ -202,6 +205,8 @@
 <span class="sd">                secret</span>
 <span class="sd">                    AWS s3 access key secret</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;aws_s3&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">bucket</span> <span class="o">=</span> <span class="n">bucket</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">access_key_id</span> <span class="o">=</span> <span class="n">key</span>
@@ -225,6 +230,8 @@
 <span class="sd">                secret</span>
 <span class="sd">                    s3 access key secret</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;s3&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">endpoint</span> <span class="o">=</span> <span class="n">endpoint</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">s3access</span><span class="o">.</span><span class="n">bucket</span> <span class="o">=</span> <span class="n">bucket</span>
@@ -249,6 +256,8 @@
 <span class="sd">                secret</span>
 <span class="sd">                    Content of the secret</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;gcs&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gcsaccess</span><span class="o">.</span><span class="n">bucket</span> <span class="o">=</span> <span class="n">bucket</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gcsaccess</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gcssecret</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">key</span>
@@ -267,16 +276,38 @@
 <span class="sd">                    Path in the nfs export. This path is directly mounted for the user program.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;nfs&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nfsaccess</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nfsaccess</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">server</span></div>
 
-    <span class="k">def</span> <span class="nf">update_redshift_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
+<div class="viewcode-block" id="DkubeDataset.update_redshift_details"><a class="viewcode-back" href="../../../../index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_redshift_details">[docs]</a>    <span class="k">def</span> <span class="nf">update_redshift_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">region</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to update details of redshift data source.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                endpoint</span>
+<span class="sd">                    Redshift endpoint</span>
+
+<span class="sd">                password</span>
+<span class="sd">                    Login password. Username is picked up from the login name in DKube.</span>
+
+<span class="sd">                database</span>
+<span class="sd">                    Database in redshift to connect to.</span>
+
+<span class="sd">                region</span>
+<span class="sd">                    AWS region in which the redshift is setup.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;redshift&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">redshift</span><span class="o">.</span><span class="n">endpoint</span> <span class="o">=</span> <span class="n">endpoint</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">redshift</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">redshift</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">redshift</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">redshift</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">region</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">insecure_ssl</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">insecure_ssl</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="DkubeDataset.update_k8svolume_details"><a class="viewcode-back" href="../../../../index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_k8svolume_details">[docs]</a>    <span class="k">def</span> <span class="nf">update_k8svolume_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -287,6 +318,8 @@
 <span class="sd">                name</span>
 <span class="sd">                    Name of the kubernetes volume. Volume should not be already **Bound**.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">datum</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;k8svolume&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k8svolume</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div></div>
 </pre></div>
 
@@ -342,7 +375,7 @@
       &copy;2020, OneConvergence.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; DKubeSDK 2.1.4 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <title>Index &#8212; DKubeSDK 2.1.6.2 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
@@ -40,6 +40,8 @@
  | <a href="#G"><strong>G</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
@@ -72,6 +74,8 @@
 </li>
       <li><a href="index.html#dkube.sdk.api.DkubeApi.delete_dataset">delete_dataset() (dkube.sdk.api.DkubeApi method)</a>
 </li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.delete_ide">delete_ide() (dkube.sdk.api.DkubeApi method)</a>
+</li>
       <li><a href="index.html#dkube.sdk.api.DkubeApi.delete_model">delete_model() (dkube.sdk.api.DkubeApi method)</a>
 </li>
       <li><a href="index.html#dkube.sdk.api.DkubeApi.delete_preprocessing_run">delete_preprocessing_run() (dkube.sdk.api.DkubeApi method)</a>
@@ -89,13 +93,20 @@
         <li><a href="index.html#module-dkube.sdk.api">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     dkube.sdk.rsrcs.dataset
 
       <ul>
         <li><a href="index.html#module-dkube.sdk.rsrcs.dataset">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    dkube.sdk.rsrcs.model
+
+      <ul>
+        <li><a href="index.html#module-dkube.sdk.rsrcs.model">module</a>
 </li>
       </ul></li>
       <li>
@@ -116,42 +127,88 @@
 </li>
       <li><a href="index.html#dkube.sdk.rsrcs.dataset.DkubeDataset">DkubeDataset (class in dkube.sdk.rsrcs.dataset)</a>
 </li>
+      <li><a href="index.html#dkube.sdk.rsrcs.model.DkubeModel">DkubeModel (class in dkube.sdk.rsrcs.model)</a>
+</li>
+      <li><a href="index.html#dkube.sdk.rsrcs.project.DkubeProject">DkubeProject (class in dkube.sdk.rsrcs.project)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_datascience_capabilities">get_datascience_capabilities() (dkube.sdk.api.DkubeApi method)</a>
+</li>
       <li><a href="index.html#dkube.sdk.api.DkubeApi.get_dataset">get_dataset() (dkube.sdk.api.DkubeApi method)</a>
+</li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_dataset_latest_version">get_dataset_latest_version() (dkube.sdk.api.DkubeApi method)</a>
+</li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_dataset_lineage">get_dataset_lineage() (dkube.sdk.api.DkubeApi method)</a>
+</li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_dataset_version">get_dataset_version() (dkube.sdk.api.DkubeApi method)</a>
+</li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_dataset_versions">get_dataset_versions() (dkube.sdk.api.DkubeApi method)</a>
 </li>
       <li><a href="index.html#dkube.sdk.api.DkubeApi.get_model">get_model() (dkube.sdk.api.DkubeApi method)</a>
 </li>
-      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_preprocessing_run">get_preprocessing_run() (dkube.sdk.api.DkubeApi method)</a>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_model_latest_version">get_model_latest_version() (dkube.sdk.api.DkubeApi method)</a>
+</li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_model_lineage">get_model_lineage() (dkube.sdk.api.DkubeApi method)</a>
+</li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_model_version">get_model_version() (dkube.sdk.api.DkubeApi method)</a>
+</li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_model_versions">get_model_versions() (dkube.sdk.api.DkubeApi method)</a>
+</li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_notebook_capabilities">get_notebook_capabilities() (dkube.sdk.api.DkubeApi method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_preprocessing_run">get_preprocessing_run() (dkube.sdk.api.DkubeApi method)</a>
+</li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_preprocessing_run_lineage">get_preprocessing_run_lineage() (dkube.sdk.api.DkubeApi method)</a>
+</li>
       <li><a href="index.html#dkube.sdk.api.DkubeApi.get_project">get_project() (dkube.sdk.api.DkubeApi method)</a>
+</li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_r_capabilities">get_r_capabilities() (dkube.sdk.api.DkubeApi method)</a>
+</li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_serving_capabilities">get_serving_capabilities() (dkube.sdk.api.DkubeApi method)</a>
 </li>
       <li><a href="index.html#dkube.sdk.api.DkubeApi.get_test_inference">get_test_inference() (dkube.sdk.api.DkubeApi method)</a>
 </li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_training_capabilities">get_training_capabilities() (dkube.sdk.api.DkubeApi method)</a>
+</li>
       <li><a href="index.html#dkube.sdk.api.DkubeApi.get_training_run">get_training_run() (dkube.sdk.api.DkubeApi method)</a>
 </li>
-      <li><a href="index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.GIT_ACCESS_OPTS">GIT_ACCESS_OPTS (dkube.sdk.rsrcs.dataset.DkubeDataset attribute)</a>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.get_training_run_lineage">get_training_run_lineage() (dkube.sdk.api.DkubeApi method)</a>
 </li>
+      <li><a href="index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.GIT_ACCESS_OPTS">GIT_ACCESS_OPTS (dkube.sdk.rsrcs.dataset.DkubeDataset attribute)</a>
+
+      <ul>
+        <li><a href="index.html#dkube.sdk.rsrcs.model.DkubeModel.GIT_ACCESS_OPTS">(dkube.sdk.rsrcs.model.DkubeModel attribute)</a>
+</li>
+        <li><a href="index.html#dkube.sdk.rsrcs.project.DkubeProject.GIT_ACCESS_OPTS">(dkube.sdk.rsrcs.project.DkubeProject attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.launch_jupyter_ide">launch_jupyter_ide() (dkube.sdk.api.DkubeApi method)</a>
+</li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.launch_rstudio_ide">launch_rstudio_ide() (dkube.sdk.api.DkubeApi method)</a>
+</li>
       <li><a href="index.html#dkube.sdk.api.DkubeApi.list_datasets">list_datasets() (dkube.sdk.api.DkubeApi method)</a>
 </li>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.list_ides">list_ides() (dkube.sdk.api.DkubeApi method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#dkube.sdk.api.DkubeApi.list_models">list_models() (dkube.sdk.api.DkubeApi method)</a>
 </li>
       <li><a href="index.html#dkube.sdk.api.DkubeApi.list_preprocessing_runs">list_preprocessing_runs() (dkube.sdk.api.DkubeApi method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#dkube.sdk.api.DkubeApi.list_projects">list_projects() (dkube.sdk.api.DkubeApi method)</a>
 </li>
       <li><a href="index.html#dkube.sdk.api.DkubeApi.list_test_inferences">list_test_inferences() (dkube.sdk.api.DkubeApi method)</a>
@@ -164,6 +221,8 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#dkube.sdk.rsrcs.model.DkubeModel.MODEL_SOURCES">MODEL_SOURCES (dkube.sdk.rsrcs.model.DkubeModel attribute)</a>
+</li>
       <li>
     module
 
@@ -172,11 +231,29 @@
 </li>
         <li><a href="index.html#module-dkube.sdk.rsrcs.dataset">dkube.sdk.rsrcs.dataset</a>
 </li>
+        <li><a href="index.html#module-dkube.sdk.rsrcs.model">dkube.sdk.rsrcs.model</a>
+</li>
         <li><a href="index.html#module-dkube.sdk.rsrcs.project">dkube.sdk.rsrcs.project</a>
 </li>
         <li><a href="index.html#module-DKubeAPI">DKubeAPI</a>
 </li>
       </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.publish_model">publish_model() (dkube.sdk.api.DkubeApi method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#dkube.sdk.api.DkubeApi.release_model">release_model() (dkube.sdk.api.DkubeApi method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -198,21 +275,51 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_awss3_details">update_awss3_details() (dkube.sdk.rsrcs.dataset.DkubeDataset method)</a>
+
+      <ul>
+        <li><a href="index.html#dkube.sdk.rsrcs.model.DkubeModel.update_awss3_details">(dkube.sdk.rsrcs.model.DkubeModel method)</a>
 </li>
+      </ul></li>
       <li><a href="index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_dataset_source">update_dataset_source() (dkube.sdk.rsrcs.dataset.DkubeDataset method)</a>
 </li>
       <li><a href="index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_gcs_details">update_gcs_details() (dkube.sdk.rsrcs.dataset.DkubeDataset method)</a>
+
+      <ul>
+        <li><a href="index.html#dkube.sdk.rsrcs.model.DkubeModel.update_gcs_details">(dkube.sdk.rsrcs.model.DkubeModel method)</a>
 </li>
+      </ul></li>
+      <li><a href="index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_git_details">update_git_details() (dkube.sdk.rsrcs.dataset.DkubeDataset method)</a>
+
+      <ul>
+        <li><a href="index.html#dkube.sdk.rsrcs.model.DkubeModel.update_git_details">(dkube.sdk.rsrcs.model.DkubeModel method)</a>
+</li>
+        <li><a href="index.html#dkube.sdk.rsrcs.project.DkubeProject.update_git_details">(dkube.sdk.rsrcs.project.DkubeProject method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_git_details">update_git_details() (dkube.sdk.rsrcs.dataset.DkubeDataset method)</a>
-</li>
       <li><a href="index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_k8svolume_details">update_k8svolume_details() (dkube.sdk.rsrcs.dataset.DkubeDataset method)</a>
+
+      <ul>
+        <li><a href="index.html#dkube.sdk.rsrcs.model.DkubeModel.update_k8svolume_details">(dkube.sdk.rsrcs.model.DkubeModel method)</a>
+</li>
+      </ul></li>
+      <li><a href="index.html#dkube.sdk.rsrcs.model.DkubeModel.update_model_source">update_model_source() (dkube.sdk.rsrcs.model.DkubeModel method)</a>
 </li>
       <li><a href="index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_nfs_details">update_nfs_details() (dkube.sdk.rsrcs.dataset.DkubeDataset method)</a>
+
+      <ul>
+        <li><a href="index.html#dkube.sdk.rsrcs.model.DkubeModel.update_nfs_details">(dkube.sdk.rsrcs.model.DkubeModel method)</a>
+</li>
+      </ul></li>
+      <li><a href="index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_redshift_details">update_redshift_details() (dkube.sdk.rsrcs.dataset.DkubeDataset method)</a>
 </li>
       <li><a href="index.html#dkube.sdk.rsrcs.dataset.DkubeDataset.update_s3_details">update_s3_details() (dkube.sdk.rsrcs.dataset.DkubeDataset method)</a>
+
+      <ul>
+        <li><a href="index.html#dkube.sdk.rsrcs.model.DkubeModel.update_s3_details">(dkube.sdk.rsrcs.model.DkubeModel method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -276,7 +383,7 @@
       &copy;2020, OneConvergence.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

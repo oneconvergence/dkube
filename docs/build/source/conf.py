@@ -26,7 +26,7 @@ author = 'OneConvergence'
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '2.1.4'
+release = '2.1.6.2'
 
 # -- General configuration ---------------------------------------------------
 

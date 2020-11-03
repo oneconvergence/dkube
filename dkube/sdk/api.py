@@ -959,7 +959,7 @@ class DkubeApi(ApiBase):
             if v['version']['uuid'] == version:
                 return v['version']
 
-        raise Exception(f"{user}/{name}/{version} not found")
+        raise Exception('{}/{}/{} not found'.format(user, name, version))
 
     def get_dataset_versions(self, user, name):
         """
@@ -1017,7 +1017,7 @@ class DkubeApi(ApiBase):
             if v['version']['uuid'] == version:
                 return v['version']
 
-        raise Exception(f"{user}/{name}/{version} not found")
+        raise Exception('{}/{}/{} not found'.format(user, name, version))
 
     def get_datascience_capabilities(self):
         """

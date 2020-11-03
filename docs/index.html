@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DKube SDK Developer Guide &#8212; DKubeSDK 2.1.4 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <title>DKube SDK Developer Guide &#8212; DKubeSDK 2.1.6.2 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
@@ -117,7 +117,7 @@ dataset is declared complete if it is one of the <code class="code bash docutils
 
 <dl class="py method">
 <dt id="dkube.sdk.api.DkubeApi.create_model">
-<code class="sig-name descname">create_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n">dkube.sdk.rsrcs.model.DkubeModel</span></em>, <em class="sig-param"><span class="n">wait_for_completion</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.create_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.create_model" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">create_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#dkube.sdk.rsrcs.model.DkubeModel" title="dkube.sdk.rsrcs.model.DkubeModel">dkube.sdk.rsrcs.model.DkubeModel</a></span></em>, <em class="sig-param"><span class="n">wait_for_completion</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.create_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.create_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to create a model on DKube.
 Raises Exception in case of errors.</p>
 <p><em>Inputs</em></p>
@@ -153,7 +153,7 @@ Job is declared complete if it is one of the <code class="code bash docutils lit
 
 <dl class="py method">
 <dt id="dkube.sdk.api.DkubeApi.create_project">
-<code class="sig-name descname">create_project</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">project</span><span class="p">:</span> <span class="n">dkube.sdk.rsrcs.project.DkubeProject</span></em>, <em class="sig-param"><span class="n">wait_for_completion</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.create_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.create_project" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">create_project</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">project</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#dkube.sdk.rsrcs.project.DkubeProject" title="dkube.sdk.rsrcs.project.DkubeProject">dkube.sdk.rsrcs.project.DkubeProject</a></span></em>, <em class="sig-param"><span class="n">wait_for_completion</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.create_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.create_project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to create a project on DKube.
 Raises Exception in case of errors.</p>
 <p><em>Inputs</em></p>
@@ -176,9 +176,16 @@ Project is declared complete if it is one of the <code class="code bash docutils
 Raises Exception in case of errors.</p>
 <p><em>Inputs</em></p>
 <blockquote>
-<div><dl class="simple">
+<div><dl>
 <dt>run</dt><dd><p>Instance of <code class="code bash docutils literal notranslate"><span class="pre">dkube.sdk.rsrcs.serving</span></code> class.
 Please see the <code class="code bash docutils literal notranslate"><span class="pre">Resources</span></code> section for details on this class.</p>
+<p>If serving image is not updated in <code class="code bash docutils literal notranslate"><span class="pre">run:DkubeServing</span></code> argument then,
+- If training used supported standard framework, dkube will pick approp serving image
+- If training used custom image, dkube will try to use the same image for serving</p>
+<p>If transformer image is not updated in <code class="code bash docutils literal notranslate"><span class="pre">run:DkubeServing</span></code> then,
+- Dkube will use same image as training image</p>
+<p>If transformer project is not updated in <code class="code bash docutils literal notranslate"><span class="pre">run:DkubeServing</span></code> then,
+- Dkube will use the project used for training</p>
 </dd>
 <dt>wait_for_completion</dt><dd><p>When set to <code class="code bash docutils literal notranslate"><span class="pre">True</span></code> this method will wait for job to complete after submission.
 Job is declared complete if it is one of the <code class="code bash docutils literal notranslate"><span class="pre">complete/failed/error</span></code> state</p>
@@ -216,6 +223,22 @@ Raises exception if token is of different user or if dataset with name doesnt ex
 <dt>user</dt><dd><p>The token must belong to this user. As dataset of different user cannot be deleted.</p>
 </dd>
 <dt>name</dt><dd><p>Name of the dataset which needs to be deleted.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.delete_ide">
+<code class="sig-name descname">delete_ide</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.delete_ide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.delete_ide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method tio delete an IDE.
+Raises exception if token is of different user or if training run with name doesnt exist or on any connection errors.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>user</dt><dd><p>The token must belong to this user. As IDE instance of different user cannot be deleted.</p>
+</dd>
+<dt>name</dt><dd><p>Name of the IDE which needs to be deleted.</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -302,6 +325,13 @@ Raises exception if token is of different user or if training run with name does
 </dd></dl>
 
 <dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_datascience_capabilities">
+<code class="sig-name descname">get_datascience_capabilities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_datascience_capabilities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_datascience_capabilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the datascience capabilities of the platform.
+Returns the supported frameworks, versions and the corresponding container image details.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="dkube.sdk.api.DkubeApi.get_dataset">
 <code class="sig-name descname">get_dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_dataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to fetch the dataset with given name for the given user.
@@ -314,6 +344,72 @@ In case of if token is of different user, then the token should have permission 
 dataset of the <code class="code bash docutils literal notranslate"><span class="pre">user</span></code> in the input. They should be in same DKube group.</p>
 </dd>
 <dt>name</dt><dd><p>Name of the dataset to be fetched</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_dataset_latest_version">
+<code class="sig-name descname">get_dataset_latest_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_dataset_latest_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_dataset_latest_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the latest version of the given dataset.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>name</dt><dd><p>Name of the dataset</p>
+</dd>
+<dt>user</dt><dd><p>owner of the dataset</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_dataset_lineage">
+<code class="sig-name descname">get_dataset_lineage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">version</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_dataset_lineage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_dataset_lineage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get lineage of a dataset version.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>name</dt><dd><p>Name of the dataset</p>
+</dd>
+<dt>version</dt><dd><p>Version of the dataset</p>
+</dd>
+<dt>user</dt><dd><p>Owner of the dataset.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_dataset_version">
+<code class="sig-name descname">get_dataset_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">version</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_dataset_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_dataset_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get details of a version of the given dataset.
+Raises <cite>NotFoundException</cite> if the version is not found</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>name</dt><dd><p>Name of the dataset</p>
+</dd>
+<dt>version</dt><dd><p>Version of the dataset</p>
+</dd>
+<dt>user</dt><dd><p>owner of the dataset</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_dataset_versions">
+<code class="sig-name descname">get_dataset_versions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_dataset_versions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_dataset_versions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the versions of dataset.
+Versions are returned in ascending order.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>name</dt><dd><p>Name of the dataset</p>
+</dd>
+<dt>user</dt><dd><p>owner of the dataset</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -338,6 +434,79 @@ model of the <code class="code bash docutils literal notranslate"><span class="p
 </dd></dl>
 
 <dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_model_latest_version">
+<code class="sig-name descname">get_model_latest_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_model_latest_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_model_latest_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the latest version of the given model.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>name</dt><dd><p>Name of the model</p>
+</dd>
+<dt>user</dt><dd><p>owner of the model</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_model_lineage">
+<code class="sig-name descname">get_model_lineage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">version</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_model_lineage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_model_lineage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get lineage of a model version.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>name</dt><dd><p>Name of the model</p>
+</dd>
+<dt>version</dt><dd><p>Version of the model</p>
+</dd>
+<dt>user</dt><dd><p>Owner of the model.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_model_version">
+<code class="sig-name descname">get_model_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">version</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_model_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_model_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get details of a version of the given model.
+Raises <cite>NotFoundException</cite> if the version is not found</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>name</dt><dd><p>Name of the model</p>
+</dd>
+<dt>version</dt><dd><p>Version of the model</p>
+</dd>
+<dt>user</dt><dd><p>owner of the model</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_model_versions">
+<code class="sig-name descname">get_model_versions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_model_versions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_model_versions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the versions of model.
+Versions are returned in ascending order.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>name</dt><dd><p>Name of the model</p>
+</dd>
+<dt>user</dt><dd><p>owner of the model</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_notebook_capabilities">
+<code class="sig-name descname">get_notebook_capabilities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_notebook_capabilities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_notebook_capabilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the notebook capabilities of the platform.
+Returns the supported frameworks, versions and the image details.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="dkube.sdk.api.DkubeApi.get_preprocessing_run">
 <code class="sig-name descname">get_preprocessing_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_preprocessing_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_preprocessing_run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to fetch the preprocessing run with given name for the given user.
@@ -350,6 +519,21 @@ In case of if token is of different user, then the token should have permission 
 preprocessing run of the <code class="code bash docutils literal notranslate"><span class="pre">user</span></code> in the input. They should be in same DKube group.</p>
 </dd>
 <dt>name</dt><dd><p>Name of the training run to be fetched</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_preprocessing_run_lineage">
+<code class="sig-name descname">get_preprocessing_run_lineage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_preprocessing_run_lineage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_preprocessing_run_lineage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get lineage of a preprocessing run.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>name</dt><dd><p>Name of the run</p>
+</dd>
+<dt>user</dt><dd><p>owner of the run</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -374,6 +558,20 @@ project of the <code class="code bash docutils literal notranslate"><span class=
 </dd></dl>
 
 <dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_r_capabilities">
+<code class="sig-name descname">get_r_capabilities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_r_capabilities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_r_capabilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the R language capabilities of the platform.
+Returns the supported frameworks, versions and the image details.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_serving_capabilities">
+<code class="sig-name descname">get_serving_capabilities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_serving_capabilities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_serving_capabilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the serving capabilities of the platform.
+Returns the supported frameworks, versions and the image details.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="dkube.sdk.api.DkubeApi.get_test_inference">
 <code class="sig-name descname">get_test_inference</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_test_inference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_test_inference" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to fetch the test inference with given name for the given user.
@@ -389,6 +587,13 @@ serving run of the <code class="code bash docutils literal notranslate"><span cl
 </dd>
 </dl>
 </div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_training_capabilities">
+<code class="sig-name descname">get_training_capabilities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_training_capabilities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_training_capabilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get the training capabilities of the platform.
+Returns the supported frameworks, versions and the image details.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -410,6 +615,59 @@ training run of the <code class="code bash docutils literal notranslate"><span c
 </dd></dl>
 
 <dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_training_run_lineage">
+<code class="sig-name descname">get_training_run_lineage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_training_run_lineage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_training_run_lineage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to get lineage of a training run.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>name</dt><dd><p>Name of the run</p>
+</dd>
+<dt>user</dt><dd><p>owner of the run</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.launch_jupyter_ide">
+<code class="sig-name descname">launch_jupyter_ide</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ide</span><span class="p">:</span> <span class="n">dkube.sdk.rsrcs.ide.DkubeIDE</span></em>, <em class="sig-param"><span class="n">wait_for_completion</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.launch_jupyter_ide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.launch_jupyter_ide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to launch a Jupyter IDE on DKube platform. Two kinds of IDE are supported,
+Jupyter Notebook &amp; RStudio.
+Raises Exception in case of errors.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>ide</dt><dd><p>Instance of <code class="code bash docutils literal notranslate"><span class="pre">dkube.sdk.rsrcs.DkubeIDE</span></code> class.
+Please see the <code class="code bash docutils literal notranslate"><span class="pre">Resources</span></code> section for details on this class.</p>
+</dd>
+<dt>wait_for_completion</dt><dd><p>When set to <code class="code bash docutils literal notranslate"><span class="pre">True</span></code> this method will wait for job to complete after submission.
+IDE is declared complete if it is one of the <code class="code bash docutils literal notranslate"><span class="pre">running/failed/error</span></code> state</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.launch_rstudio_ide">
+<code class="sig-name descname">launch_rstudio_ide</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ide</span><span class="p">:</span> <span class="n">dkube.sdk.rsrcs.ide.DkubeIDE</span></em>, <em class="sig-param"><span class="n">wait_for_completion</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.launch_rstudio_ide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.launch_rstudio_ide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to launch a Rstudio IDE on DKube platform. Two kinds of IDE are supported,
+Jupyter Notebook &amp; RStudio.
+Raises Exception in case of errors.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>ide</dt><dd><p>Instance of <code class="code bash docutils literal notranslate"><span class="pre">dkube.sdk.rsrcs.DkubeIDE</span></code> class.
+Please see the <code class="code bash docutils literal notranslate"><span class="pre">Resources</span></code> section for details on this class.</p>
+</dd>
+<dt>wait_for_completion</dt><dd><p>When set to <code class="code bash docutils literal notranslate"><span class="pre">True</span></code> this method will wait for job to complete after submission.
+IDE is declared complete if it is one of the <code class="code bash docutils literal notranslate"><span class="pre">running/failed/error</span></code> state</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
 <dt id="dkube.sdk.api.DkubeApi.list_datasets">
 <code class="sig-name descname">list_datasets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">filters</span><span class="o">=</span><span class="default_value">'*'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.list_datasets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.list_datasets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to list all the datasets of a user.
@@ -423,6 +681,25 @@ datasets of the <code class="code bash docutils literal notranslate"><span class
 </dd>
 <dt>filters</dt><dd><p>Only <code class="code bash docutils literal notranslate"><span class="pre">*</span></code> is supported now.</p>
 <p>User will able to filter datasets based on state or the source</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.list_ides">
+<code class="sig-name descname">list_ides</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">filters</span><span class="o">=</span><span class="default_value">'*'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.list_ides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.list_ides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to list all the IDEs of a user.
+Raises exception on any connection errors.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl>
+<dt>user</dt><dd><p>User whose IDE instances must be fetched.
+In case of if token is of different user, then the token should have permission to fetch the
+training runs of the <code class="code bash docutils literal notranslate"><span class="pre">user</span></code> in the input. They should be in same DKube group.</p>
+</dd>
+<dt>filters</dt><dd><p>Only <code class="code bash docutils literal notranslate"><span class="pre">*</span></code> is supported now.</p>
+<p>User will able to filter runs based on state or duration</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -524,6 +801,57 @@ training runs of the <code class="code bash docutils literal notranslate"><span 
 </dd></dl>
 
 <dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.publish_model">
+<code class="sig-name descname">publish_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">description</span></em>, <em class="sig-param"><span class="n">details</span><span class="p">:</span> <span class="n">dkube.sdk.rsrcs.serving.DkubeServing</span></em>, <em class="sig-param"><span class="n">wait_for_completion</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.publish_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.publish_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to publish a model to model catalog.
+Raises Exception in case of errors.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl>
+<dt>name</dt><dd><p>Name with which the model must be published in the model catalog.</p>
+</dd>
+<dt>description</dt><dd><p>Human readable text for the model being published</p>
+</dd>
+<dt>details</dt><dd><p>Instance of <code class="code bash docutils literal notranslate"><span class="pre">dkube.sdk.rsrcs.serving</span></code> class.
+Please see the <code class="code bash docutils literal notranslate"><span class="pre">Resources</span></code> section for details on this class.</p>
+<p>If serving image is not updated in <code class="code bash docutils literal notranslate"><span class="pre">run:DkubeServing</span></code> argument then,
+- If training used supported standard framework, dkube will pick approp serving image
+- If training used custom image, dkube will try to use the same image for serving</p>
+<p>If transformer image is not updated in <code class="code bash docutils literal notranslate"><span class="pre">run:DkubeServing</span></code> then,
+- Dkube will use same image as training image</p>
+<p>If transformer project is not updated in <code class="code bash docutils literal notranslate"><span class="pre">run:DkubeServing</span></code> then,
+- Dkube will use the project used for training</p>
+</dd>
+<dt>wait_for_completion</dt><dd><p>When set to <code class="code bash docutils literal notranslate"><span class="pre">True</span></code> this method will wait for publish to finish.
+Publishing is complete if stage of the mode is changed to <code class="code bash docutils literal notranslate"><span class="pre">published/failed/error</span></code></p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.release_model">
+<code class="sig-name descname">release_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">version</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">wait_for_completion</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.release_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.release_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to release a model to model catalog.
+Raises Exception in case of errors.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>model</dt><dd><p>Name with model.</p>
+</dd>
+<dt>version</dt><dd><p>Version of the model to be released. 
+If not passed then latest version is released automatically.</p>
+</dd>
+<dt>user</dt><dd><p>Owner of the model.</p>
+</dd>
+<dt>wait_for_completion</dt><dd><p>When set to <code class="code bash docutils literal notranslate"><span class="pre">True</span></code> this method will wait for publish to finish.
+Publishing is complete if stage of the mode is changed to <code class="code bash docutils literal notranslate"><span class="pre">published/failed/error</span></code></p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
 <dt id="dkube.sdk.api.DkubeApi.trigger_runs_bydataset">
 <code class="sig-name descname">trigger_runs_bydataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em>, <em class="sig-param"><span class="n">user</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.trigger_runs_bydataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.trigger_runs_bydataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to trigger all the runs in dkube which uses the mentioned dataset in input.</p>
@@ -571,7 +899,7 @@ training runs of the <code class="code bash docutils literal notranslate"><span 
 <dl class="py method">
 <dt id="dkube.sdk.api.DkubeApi.validate_token">
 <code class="sig-name descname">validate_token</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.validate_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.validate_token" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method which can be used to validate the token. 
+<dd><p>Method which can be used to validate the token.
 Returns the JWT Claims. Which contains the role assigned to the user.</p>
 </dd></dl>
 
@@ -582,7 +910,7 @@ Returns the JWT Claims. Which contains the role assigned to the user.</p>
 <span id="dkube-resources"></span><h2><a class="toc-backref" href="#id4">DKube Resources</a><a class="headerlink" href="#module-dkube.sdk.rsrcs.dataset" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="dkube.sdk.rsrcs.dataset.DkubeDataset">
-<em class="property">class </em><code class="sig-prename descclassname">dkube.sdk.rsrcs.dataset.</code><code class="sig-name descname">DkubeDataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'dataset-8668'</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/dataset.html#DkubeDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.dataset.DkubeDataset" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dkube.sdk.rsrcs.dataset.</code><code class="sig-name descname">DkubeDataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'dataset-9614'</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/dataset.html#DkubeDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.dataset.DkubeDataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class defines the DKube dataset with helper functions to set properties of dataset.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dkube.sdk</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">mnist</span> <span class="o">=</span> <span class="n">DkubeDataset</span><span class="p">(</span><span class="s2">&quot;oneconv&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mnist&quot;</span><span class="p">)</span>
@@ -714,6 +1042,25 @@ Default value is <strong>git</strong></p>
 </dd></dl>
 
 <dl class="py method">
+<dt id="dkube.sdk.rsrcs.dataset.DkubeDataset.update_redshift_details">
+<code class="sig-name descname">update_redshift_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">endpoint</span></em>, <em class="sig-param"><span class="n">password</span></em>, <em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">region</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/dataset.html#DkubeDataset.update_redshift_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.dataset.DkubeDataset.update_redshift_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to update details of redshift data source.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>endpoint</dt><dd><p>Redshift endpoint</p>
+</dd>
+<dt>password</dt><dd><p>Login password. Username is picked up from the login name in DKube.</p>
+</dd>
+<dt>database</dt><dd><p>Database in redshift to connect to.</p>
+</dd>
+<dt>region</dt><dd><p>AWS region in which the redshift is setup.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
 <dt id="dkube.sdk.rsrcs.dataset.DkubeDataset.update_s3_details">
 <code class="sig-name descname">update_s3_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">endpoint</span></em>, <em class="sig-param"><span class="n">bucket</span></em>, <em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="n">key</span></em>, <em class="sig-param"><span class="n">secret</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/dataset.html#DkubeDataset.update_s3_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.dataset.DkubeDataset.update_s3_details" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to update details of s3 data source like minio.</p>
@@ -734,7 +1081,208 @@ Default value is <strong>git</strong></p>
 
 </dd></dl>
 
-<span class="target" id="module-dkube.sdk.rsrcs.project"></span></div>
+<span class="target" id="module-dkube.sdk.rsrcs.project"></span><dl class="py class">
+<dt id="dkube.sdk.rsrcs.project.DkubeProject">
+<em class="property">class </em><code class="sig-prename descclassname">dkube.sdk.rsrcs.project.</code><code class="sig-name descname">DkubeProject</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'project-3979'</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/project.html#DkubeProject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.project.DkubeProject" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class defines the DKube project with helper functions to set properties of project.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dkube.sdk</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">mnist</span> <span class="o">=</span> <span class="n">DkubeProject</span><span class="p">(</span><span class="s2">&quot;oneconv&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mnist&quot;</span><span class="p">)</span>
+
+<span class="n">Where</span> <span class="n">first</span> <span class="n">argument</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">user</span> <span class="n">of</span> <span class="n">this</span> <span class="n">project</span><span class="o">.</span> <span class="n">User</span> <span class="n">should</span> <span class="n">be</span> <span class="n">a</span> <span class="n">valid</span> <span class="n">onboarded</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">dkube</span><span class="o">.</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt id="dkube.sdk.rsrcs.project.DkubeProject.GIT_ACCESS_OPTS">
+<code class="sig-name descname">GIT_ACCESS_OPTS</code><em class="property"> = ['apikey', 'sshkey', 'password']</em><a class="headerlink" href="#dkube.sdk.rsrcs.project.DkubeProject.GIT_ACCESS_OPTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of authentication options supported for git data source.</p>
+<p><code class="code bash docutils literal notranslate"><span class="pre">apikey</span></code> :- Github APIKey based authentication. This must have permission on the repo to clone and checkout.</p>
+<p><code class="code bash docutils literal notranslate"><span class="pre">sshkey</span></code> :- Git SSH key based authentication.</p>
+<p><code class="code bash docutils literal notranslate"><span class="pre">password</span></code> :- Standard username/password based.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.rsrcs.project.DkubeProject.update_git_details">
+<code class="sig-name descname">update_git_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="n">branch</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">authopt</span><span class="o">=</span><span class="default_value">'apikey'</span></em>, <em class="sig-param"><span class="n">authval</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/project.html#DkubeProject.update_git_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.project.DkubeProject.update_git_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to update the details of git datasource.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>url</dt><dd><p>A valid Git URL. Following are considered as valid URLs.</p>
+<ul class="simple">
+<li><p>CloneURL : <a class="reference external" href="https://github.com/oneconvergence/dkube.git">https://github.com/oneconvergence/dkube.git</a></p></li>
+<li><p>TreeURL : <a class="reference external" href="https://github.com/oneconvergence/dkube/tree/2.1.dev/dkube">https://github.com/oneconvergence/dkube/tree/2.1.dev/dkube</a></p></li>
+<li><p>BlobURL : <a class="reference external" href="https://github.com/oneconvergence/dkube/blob/2.1.dev/dkube/sdk/api.py">https://github.com/oneconvergence/dkube/blob/2.1.dev/dkube/sdk/api.py</a></p></li>
+<li><p>ZipURL : <a class="reference external" href="https://github.com/oneconvergence/dkube/archive/2.1.dev.zip">https://github.com/oneconvergence/dkube/archive/2.1.dev.zip</a></p></li>
+</ul>
+</dd>
+<dt>branch</dt><dd><p>Valid branch of git repo. If not provided then <strong>master</strong> branch is used by default.</p>
+</dd>
+<dt>authopt</dt><dd><p>One of the valid option from <strong>GIT_ACCESS_OPTS</strong></p>
+</dd>
+<dt>authval</dt><dd><p>Value corresponding to the authopt</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-dkube.sdk.rsrcs.model"></span><dl class="py class">
+<dt id="dkube.sdk.rsrcs.model.DkubeModel">
+<em class="property">class </em><code class="sig-prename descclassname">dkube.sdk.rsrcs.model.</code><code class="sig-name descname">DkubeModel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'dataset-9379'</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/model.html#DkubeModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.model.DkubeModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class defines the DKube model with helper functions to set properties of model.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dkube.sdk</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">mnist</span> <span class="o">=</span> <span class="n">DkubeModel</span><span class="p">(</span><span class="s2">&quot;oneconv&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mnist&quot;</span><span class="p">)</span>
+
+<span class="n">Where</span> <span class="n">first</span> <span class="n">argument</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">owner</span> <span class="n">of</span> <span class="n">this</span> <span class="n">model</span><span class="o">.</span> <span class="n">User</span> <span class="n">should</span> <span class="n">be</span> <span class="n">a</span> <span class="n">valid</span> <span class="n">onboarded</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">dkube</span><span class="o">.</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt id="dkube.sdk.rsrcs.model.DkubeModel.GIT_ACCESS_OPTS">
+<code class="sig-name descname">GIT_ACCESS_OPTS</code><em class="property"> = ['apikey', 'sshkey', 'password']</em><a class="headerlink" href="#dkube.sdk.rsrcs.model.DkubeModel.GIT_ACCESS_OPTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of authentication options supported for git data source.</p>
+<p><code class="code bash docutils literal notranslate"><span class="pre">apikey</span></code> :- Github APIKey based authentication. This must have permission on the repo to clone and checkout.</p>
+<p><code class="code bash docutils literal notranslate"><span class="pre">sshkey</span></code> :- Git SSH key based authentication.</p>
+<p><code class="code bash docutils literal notranslate"><span class="pre">password</span></code> :- Standard username/password based.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="dkube.sdk.rsrcs.model.DkubeModel.MODEL_SOURCES">
+<code class="sig-name descname">MODEL_SOURCES</code><em class="property"> = ['dvs', 'git', 'aws_s3', 's3', 'gcs', 'nfs', 'k8svolume']</em><a class="headerlink" href="#dkube.sdk.rsrcs.model.DkubeModel.MODEL_SOURCES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of valid model sources in DKube.
+Some sources are downloaded while some are remotely referenced.</p>
+<p><code class="code bash docutils literal notranslate"><span class="pre">dvs</span></code> :- To create an empty repository which can be used in future runs.</p>
+<p><code class="code bash docutils literal notranslate"><span class="pre">git</span></code> :- If data is in the git repo. All git compatible repos are supported - github, bitbucket, gitlab. <code class="code bash docutils literal notranslate"><span class="pre">Downloaded</span></code></p>
+<p><code class="code bash docutils literal notranslate"><span class="pre">aws_s3</span></code> :- If the data is in AWS s3 bucket. <code class="code bash docutils literal notranslate"><span class="pre">Downloaded</span> <span class="punctuation"><span class="pre">|</span></span> <span class="pre">Remote</span></code></p>
+<p><code class="code bash docutils literal notranslate"><span class="pre">s3</span></code> :- Non aws s3 data source. Like MinIO deployed on internal cluster. <code class="code bash docutils literal notranslate"><span class="pre">Downloaded</span> <span class="punctuation"><span class="pre">|</span></span> <span class="pre">Remote</span></code></p>
+<p><code class="code bash docutils literal notranslate"><span class="pre">gcs</span></code> :- Google cloud storage as data source. <code class="code bash docutils literal notranslate"><span class="pre">Downloaded</span></code></p>
+<p><code class="code bash docutils literal notranslate"><span class="pre">nfs</span></code> :- External NFS server as data source. <code class="code bash docutils literal notranslate"><span class="pre">Remote</span></code></p>
+<p><code class="code bash docutils literal notranslate"><span class="pre">k8svolume</span></code> :- Kubernetes volume as data source. <code class="code bash docutils literal notranslate"><span class="pre">Remote</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.rsrcs.model.DkubeModel.update_awss3_details">
+<code class="sig-name descname">update_awss3_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bucket</span></em>, <em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="n">key</span></em>, <em class="sig-param"><span class="n">secret</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/model.html#DkubeModel.update_awss3_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.model.DkubeModel.update_awss3_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to update details of aws s3 data source.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>bucket</dt><dd><p>Valid bucket in aws s3</p>
+</dd>
+<dt>prefix</dt><dd><p>Path to an object in the bucket. Dkube will fetch recursively all objects under this prefix.</p>
+</dd>
+<dt>key</dt><dd><p>AWS s3 access key id</p>
+</dd>
+<dt>secret</dt><dd><p>AWS s3 access key secret</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.rsrcs.model.DkubeModel.update_gcs_details">
+<code class="sig-name descname">update_gcs_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bucket</span></em>, <em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="n">key</span></em>, <em class="sig-param"><span class="n">secret</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/model.html#DkubeModel.update_gcs_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.model.DkubeModel.update_gcs_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to update details of google cloud storage.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>bucket</dt><dd><p>Valid bucket in GCS</p>
+</dd>
+<dt>prefix</dt><dd><p>Path to an object in bucket. Dkube will fetch recursively all objects under this prefix.</p>
+</dd>
+<dt>key</dt><dd><p>Name of the GCS secret</p>
+</dd>
+<dt>secret</dt><dd><p>Content of the secret</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.rsrcs.model.DkubeModel.update_git_details">
+<code class="sig-name descname">update_git_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="n">branch</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">authopt</span><span class="o">=</span><span class="default_value">'apikey'</span></em>, <em class="sig-param"><span class="n">authval</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/model.html#DkubeModel.update_git_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.model.DkubeModel.update_git_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>i            Method to update the details of git source.</p>
+<blockquote>
+<div><p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>url</dt><dd><p>A valid Git URL. Following are considered as valid URLs.</p>
+<ul class="simple">
+<li><p>CloneURL : <a class="reference external" href="https://github.com/oneconvergence/dkube.git">https://github.com/oneconvergence/dkube.git</a></p></li>
+<li><p>TreeURL : <a class="reference external" href="https://github.com/oneconvergence/dkube/tree/2.1.dev/dkube">https://github.com/oneconvergence/dkube/tree/2.1.dev/dkube</a></p></li>
+<li><p>BlobURL : <a class="reference external" href="https://github.com/oneconvergence/dkube/blob/2.1.dev/dkube/sdk/api.py">https://github.com/oneconvergence/dkube/blob/2.1.dev/dkube/sdk/api.py</a></p></li>
+<li><p>ZipURL : <a class="reference external" href="https://github.com/oneconvergence/dkube/archive/2.1.dev.zip">https://github.com/oneconvergence/dkube/archive/2.1.dev.zip</a></p></li>
+</ul>
+</dd>
+<dt>branch</dt><dd><p>Valid branch of git repo. If not provided then <strong>master</strong> branch is used by default.</p>
+</dd>
+<dt>authopt</dt><dd><p>One of the valid option from <strong>GIT_ACCESS_OPTS</strong></p>
+</dd>
+<dt>authval</dt><dd><p>Value corresponding to the authopt</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.rsrcs.model.DkubeModel.update_k8svolume_details">
+<code class="sig-name descname">update_k8svolume_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/model.html#DkubeModel.update_k8svolume_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.model.DkubeModel.update_k8svolume_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to update details of k8s volume data source.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>name</dt><dd><p>Name of the kubernetes volume. Volume should not be already <strong>Bound</strong>.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.rsrcs.model.DkubeModel.update_model_source">
+<code class="sig-name descname">update_model_source</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span><span class="o">=</span><span class="default_value">'dvs'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/model.html#DkubeModel.update_model_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.model.DkubeModel.update_model_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to update the source for this model.
+It should be one of the choice mentioned in MODEL_SOURCES
+Default value is <strong>git</strong></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.rsrcs.model.DkubeModel.update_nfs_details">
+<code class="sig-name descname">update_nfs_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">server</span></em>, <em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">'/'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/model.html#DkubeModel.update_nfs_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.model.DkubeModel.update_nfs_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to update details of nfs data source.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>server</dt><dd><p>IP address of the nfs server.</p>
+</dd>
+<dt>path</dt><dd><p>Path in the nfs export. This path is directly mounted for the user program.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.rsrcs.model.DkubeModel.update_s3_details">
+<code class="sig-name descname">update_s3_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">endpoint</span></em>, <em class="sig-param"><span class="n">bucket</span></em>, <em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="n">key</span></em>, <em class="sig-param"><span class="n">secret</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/model.html#DkubeModel.update_s3_details"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.model.DkubeModel.update_s3_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to update details of s3 data source like minio.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>bucket</dt><dd><p>Valid bucket name in s3 store</p>
+</dd>
+<dt>prefix</dt><dd><p>Path to an object in the bucket. Dkube will fetch recursively all objects under this prefix.</p>
+</dd>
+<dt>key</dt><dd><p>S3 access key id</p>
+</dd>
+<dt>secret</dt><dd><p>s3 access key secret</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="dkube-api-swagger-spec">
 <h2><a class="toc-backref" href="#id5">DKube API Swagger Spec</a><a class="headerlink" href="#dkube-api-swagger-spec" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -804,7 +1352,7 @@ Default value is <strong>git</strong></p>
       &copy;2020, OneConvergence.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
