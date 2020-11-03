@@ -31,78 +31,36 @@ class JobModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'version': 'str',
-        'name': 'str',
         'description': 'str',
-        'parameters': 'JobModelParameters'
+        'name': 'str',
+        'parameters': 'JobModelParameters',
+        'version': 'str'
     }
 
     attribute_map = {
-        'version': 'version',
-        'name': 'name',
         'description': 'description',
-        'parameters': 'parameters'
+        'name': 'name',
+        'parameters': 'parameters',
+        'version': 'version'
     }
 
-    def __init__(self, version=None, name=None, description=None, parameters=None):  # noqa: E501
+    def __init__(self, description=None, name=None, parameters=None, version=None):  # noqa: E501
         """JobModel - a model defined in Swagger"""  # noqa: E501
 
-        self._version = None
-        self._name = None
         self._description = None
+        self._name = None
         self._parameters = None
+        self._version = None
         self.discriminator = None
 
-        if version is not None:
-            self.version = version
-        if name is not None:
-            self.name = name
         if description is not None:
             self.description = description
+        if name is not None:
+            self.name = name
         if parameters is not None:
             self.parameters = parameters
-
-    @property
-    def version(self):
-        """Gets the version of this JobModel.  # noqa: E501
-
-
-        :return: The version of this JobModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version):
-        """Sets the version of this JobModel.
-
-
-        :param version: The version of this JobModel.  # noqa: E501
-        :type: str
-        """
-
-        self._version = version
-
-    @property
-    def name(self):
-        """Gets the name of this JobModel.  # noqa: E501
-
-
-        :return: The name of this JobModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this JobModel.
-
-
-        :param name: The name of this JobModel.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
+        if version is not None:
+            self.version = version
 
     @property
     def description(self):
@@ -126,6 +84,27 @@ class JobModel(object):
         self._description = description
 
     @property
+    def name(self):
+        """Gets the name of this JobModel.  # noqa: E501
+
+
+        :return: The name of this JobModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this JobModel.
+
+
+        :param name: The name of this JobModel.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
+
+    @property
     def parameters(self):
         """Gets the parameters of this JobModel.  # noqa: E501
 
@@ -145,6 +124,27 @@ class JobModel(object):
         """
 
         self._parameters = parameters
+
+    @property
+    def version(self):
+        """Gets the version of this JobModel.  # noqa: E501
+
+
+        :return: The version of this JobModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._version
+
+    @version.setter
+    def version(self, version):
+        """Sets the version of this JobModel.
+
+
+        :param version: The version of this JobModel.  # noqa: E501
+        :type: str
+        """
+
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

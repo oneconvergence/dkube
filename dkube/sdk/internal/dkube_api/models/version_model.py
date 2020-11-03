@@ -31,160 +31,190 @@ class VersionModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'name': 'str',
-        'uuid': 'str',
-        'tags': 'list[str]',
+        'commit_id': 'str',
+        'datum_name': 'str',
+        'datum_type': 'str',
+        'datum_uuid': 'str',
         'description': 'str',
         'index': 'int',
-        'timestamps': 'TimeStamps',
-        'sync_state': 'str',
+        'model': 'VersionModelModel',
+        'name': 'str',
+        'run_uuid': 'str',
         'storage_path': 'str',
-        'user': 'str',
-        'datum_name': 'str',
-        'datum_uuid': 'str',
+        'sync_state': 'str',
+        'tags': 'list[str]',
+        'timestamps': 'TimeStamps',
         'tracking_uuid': 'str',
-        'commit_id': 'str',
-        'datum_type': 'str',
-        'model': 'VersionModelModel'
+        'user': 'str',
+        'uuid': 'str'
     }
 
     attribute_map = {
-        'name': 'name',
-        'uuid': 'uuid',
-        'tags': 'tags',
+        'commit_id': 'commitID',
+        'datum_name': 'datumName',
+        'datum_type': 'datumType',
+        'datum_uuid': 'datumUUID',
         'description': 'description',
         'index': 'index',
-        'timestamps': 'timestamps',
-        'sync_state': 'syncState',
+        'model': 'model',
+        'name': 'name',
+        'run_uuid': 'runUUID',
         'storage_path': 'storagePath',
-        'user': 'user',
-        'datum_name': 'datumName',
-        'datum_uuid': 'datumUUID',
+        'sync_state': 'syncState',
+        'tags': 'tags',
+        'timestamps': 'timestamps',
         'tracking_uuid': 'trackingUUID',
-        'commit_id': 'commitID',
-        'datum_type': 'datumType',
-        'model': 'model'
+        'user': 'user',
+        'uuid': 'uuid'
     }
 
-    def __init__(self, name=None, uuid=None, tags=None, description=None, index=None, timestamps=None, sync_state=None, storage_path=None, user=None, datum_name=None, datum_uuid=None, tracking_uuid=None, commit_id=None, datum_type=None, model=None):  # noqa: E501
+    def __init__(self, commit_id=None, datum_name=None, datum_type=None, datum_uuid=None, description=None, index=None, model=None, name=None, run_uuid=None, storage_path=None, sync_state=None, tags=None, timestamps=None, tracking_uuid=None, user=None, uuid=None):  # noqa: E501
         """VersionModel - a model defined in Swagger"""  # noqa: E501
 
-        self._name = None
-        self._uuid = None
-        self._tags = None
+        self._commit_id = None
+        self._datum_name = None
+        self._datum_type = None
+        self._datum_uuid = None
         self._description = None
         self._index = None
-        self._timestamps = None
-        self._sync_state = None
-        self._storage_path = None
-        self._user = None
-        self._datum_name = None
-        self._datum_uuid = None
-        self._tracking_uuid = None
-        self._commit_id = None
-        self._datum_type = None
         self._model = None
+        self._name = None
+        self._run_uuid = None
+        self._storage_path = None
+        self._sync_state = None
+        self._tags = None
+        self._timestamps = None
+        self._tracking_uuid = None
+        self._user = None
+        self._uuid = None
         self.discriminator = None
 
-        if name is not None:
-            self.name = name
-        if uuid is not None:
-            self.uuid = uuid
-        if tags is not None:
-            self.tags = tags
+        if commit_id is not None:
+            self.commit_id = commit_id
+        if datum_name is not None:
+            self.datum_name = datum_name
+        if datum_type is not None:
+            self.datum_type = datum_type
+        if datum_uuid is not None:
+            self.datum_uuid = datum_uuid
         if description is not None:
             self.description = description
         if index is not None:
             self.index = index
-        if timestamps is not None:
-            self.timestamps = timestamps
-        if sync_state is not None:
-            self.sync_state = sync_state
-        if storage_path is not None:
-            self.storage_path = storage_path
-        if user is not None:
-            self.user = user
-        if datum_name is not None:
-            self.datum_name = datum_name
-        if datum_uuid is not None:
-            self.datum_uuid = datum_uuid
-        if tracking_uuid is not None:
-            self.tracking_uuid = tracking_uuid
-        if commit_id is not None:
-            self.commit_id = commit_id
-        if datum_type is not None:
-            self.datum_type = datum_type
         if model is not None:
             self.model = model
+        if name is not None:
+            self.name = name
+        if run_uuid is not None:
+            self.run_uuid = run_uuid
+        if storage_path is not None:
+            self.storage_path = storage_path
+        if sync_state is not None:
+            self.sync_state = sync_state
+        if tags is not None:
+            self.tags = tags
+        if timestamps is not None:
+            self.timestamps = timestamps
+        if tracking_uuid is not None:
+            self.tracking_uuid = tracking_uuid
+        if user is not None:
+            self.user = user
+        if uuid is not None:
+            self.uuid = uuid
 
     @property
-    def name(self):
-        """Gets the name of this VersionModel.  # noqa: E501
+    def commit_id(self):
+        """Gets the commit_id of this VersionModel.  # noqa: E501
 
-        Name of the version given by user  # noqa: E501
 
-        :return: The name of this VersionModel.  # noqa: E501
+        :return: The commit_id of this VersionModel.  # noqa: E501
         :rtype: str
         """
-        return self._name
+        return self._commit_id
 
-    @name.setter
-    def name(self, name):
-        """Sets the name of this VersionModel.
+    @commit_id.setter
+    def commit_id(self, commit_id):
+        """Sets the commit_id of this VersionModel.
 
-        Name of the version given by user  # noqa: E501
 
-        :param name: The name of this VersionModel.  # noqa: E501
+        :param commit_id: The commit_id of this VersionModel.  # noqa: E501
         :type: str
         """
 
-        self._name = name
+        self._commit_id = commit_id
 
     @property
-    def uuid(self):
-        """Gets the uuid of this VersionModel.  # noqa: E501
+    def datum_name(self):
+        """Gets the datum_name of this VersionModel.  # noqa: E501
 
-        Unique id generated by system (timestamp in milliseconds)  # noqa: E501
+        Name of the datum  # noqa: E501
 
-        :return: The uuid of this VersionModel.  # noqa: E501
+        :return: The datum_name of this VersionModel.  # noqa: E501
         :rtype: str
         """
-        return self._uuid
+        return self._datum_name
 
-    @uuid.setter
-    def uuid(self, uuid):
-        """Sets the uuid of this VersionModel.
+    @datum_name.setter
+    def datum_name(self, datum_name):
+        """Sets the datum_name of this VersionModel.
 
-        Unique id generated by system (timestamp in milliseconds)  # noqa: E501
+        Name of the datum  # noqa: E501
 
-        :param uuid: The uuid of this VersionModel.  # noqa: E501
+        :param datum_name: The datum_name of this VersionModel.  # noqa: E501
         :type: str
         """
 
-        self._uuid = uuid
+        self._datum_name = datum_name
 
     @property
-    def tags(self):
-        """Gets the tags of this VersionModel.  # noqa: E501
+    def datum_type(self):
+        """Gets the datum_type of this VersionModel.  # noqa: E501
 
-        Unique tags provided by user  # noqa: E501
 
-        :return: The tags of this VersionModel.  # noqa: E501
-        :rtype: list[str]
+        :return: The datum_type of this VersionModel.  # noqa: E501
+        :rtype: str
         """
-        return self._tags
+        return self._datum_type
 
-    @tags.setter
-    def tags(self, tags):
-        """Sets the tags of this VersionModel.
+    @datum_type.setter
+    def datum_type(self, datum_type):
+        """Sets the datum_type of this VersionModel.
 
-        Unique tags provided by user  # noqa: E501
 
-        :param tags: The tags of this VersionModel.  # noqa: E501
-        :type: list[str]
+        :param datum_type: The datum_type of this VersionModel.  # noqa: E501
+        :type: str
+        """
+        allowed_values = ["model", "dataset", "program"]  # noqa: E501
+        if datum_type not in allowed_values:
+            raise ValueError(
+                "Invalid value for `datum_type` ({0}), must be one of {1}"  # noqa: E501
+                .format(datum_type, allowed_values)
+            )
+
+        self._datum_type = datum_type
+
+    @property
+    def datum_uuid(self):
+        """Gets the datum_uuid of this VersionModel.  # noqa: E501
+
+        UUID of dataset/model.  # noqa: E501
+
+        :return: The datum_uuid of this VersionModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._datum_uuid
+
+    @datum_uuid.setter
+    def datum_uuid(self, datum_uuid):
+        """Sets the datum_uuid of this VersionModel.
+
+        UUID of dataset/model.  # noqa: E501
+
+        :param datum_uuid: The datum_uuid of this VersionModel.  # noqa: E501
+        :type: str
         """
 
-        self._tags = tags
+        self._datum_uuid = datum_uuid
 
     @property
     def description(self):
@@ -233,48 +263,71 @@ class VersionModel(object):
         self._index = index
 
     @property
-    def timestamps(self):
-        """Gets the timestamps of this VersionModel.  # noqa: E501
+    def model(self):
+        """Gets the model of this VersionModel.  # noqa: E501
 
 
-        :return: The timestamps of this VersionModel.  # noqa: E501
-        :rtype: TimeStamps
+        :return: The model of this VersionModel.  # noqa: E501
+        :rtype: VersionModelModel
         """
-        return self._timestamps
+        return self._model
 
-    @timestamps.setter
-    def timestamps(self, timestamps):
-        """Sets the timestamps of this VersionModel.
+    @model.setter
+    def model(self, model):
+        """Sets the model of this VersionModel.
 
 
-        :param timestamps: The timestamps of this VersionModel.  # noqa: E501
-        :type: TimeStamps
+        :param model: The model of this VersionModel.  # noqa: E501
+        :type: VersionModelModel
         """
 
-        self._timestamps = timestamps
+        self._model = model
 
     @property
-    def sync_state(self):
-        """Gets the sync_state of this VersionModel.  # noqa: E501
+    def name(self):
+        """Gets the name of this VersionModel.  # noqa: E501
 
-        State of syncing data from cache to remote  # noqa: E501
+        Name of the version given by user  # noqa: E501
 
-        :return: The sync_state of this VersionModel.  # noqa: E501
+        :return: The name of this VersionModel.  # noqa: E501
         :rtype: str
         """
-        return self._sync_state
+        return self._name
 
-    @sync_state.setter
-    def sync_state(self, sync_state):
-        """Sets the sync_state of this VersionModel.
+    @name.setter
+    def name(self, name):
+        """Sets the name of this VersionModel.
 
-        State of syncing data from cache to remote  # noqa: E501
+        Name of the version given by user  # noqa: E501
 
-        :param sync_state: The sync_state of this VersionModel.  # noqa: E501
+        :param name: The name of this VersionModel.  # noqa: E501
         :type: str
         """
 
-        self._sync_state = sync_state
+        self._name = name
+
+    @property
+    def run_uuid(self):
+        """Gets the run_uuid of this VersionModel.  # noqa: E501
+
+        UUID of run.  # noqa: E501
+
+        :return: The run_uuid of this VersionModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._run_uuid
+
+    @run_uuid.setter
+    def run_uuid(self, run_uuid):
+        """Sets the run_uuid of this VersionModel.
+
+        UUID of run.  # noqa: E501
+
+        :param run_uuid: The run_uuid of this VersionModel.  # noqa: E501
+        :type: str
+        """
+
+        self._run_uuid = run_uuid
 
     @property
     def storage_path(self):
@@ -300,73 +353,71 @@ class VersionModel(object):
         self._storage_path = storage_path
 
     @property
-    def user(self):
-        """Gets the user of this VersionModel.  # noqa: E501
+    def sync_state(self):
+        """Gets the sync_state of this VersionModel.  # noqa: E501
 
-        Name of the owner  # noqa: E501
+        State of syncing data from cache to remote  # noqa: E501
 
-        :return: The user of this VersionModel.  # noqa: E501
+        :return: The sync_state of this VersionModel.  # noqa: E501
         :rtype: str
         """
-        return self._user
+        return self._sync_state
 
-    @user.setter
-    def user(self, user):
-        """Sets the user of this VersionModel.
+    @sync_state.setter
+    def sync_state(self, sync_state):
+        """Sets the sync_state of this VersionModel.
 
-        Name of the owner  # noqa: E501
+        State of syncing data from cache to remote  # noqa: E501
 
-        :param user: The user of this VersionModel.  # noqa: E501
+        :param sync_state: The sync_state of this VersionModel.  # noqa: E501
         :type: str
         """
 
-        self._user = user
+        self._sync_state = sync_state
 
     @property
-    def datum_name(self):
-        """Gets the datum_name of this VersionModel.  # noqa: E501
+    def tags(self):
+        """Gets the tags of this VersionModel.  # noqa: E501
 
-        Name of the datum  # noqa: E501
+        Unique tags provided by user  # noqa: E501
 
-        :return: The datum_name of this VersionModel.  # noqa: E501
-        :rtype: str
+        :return: The tags of this VersionModel.  # noqa: E501
+        :rtype: list[str]
         """
-        return self._datum_name
+        return self._tags
 
-    @datum_name.setter
-    def datum_name(self, datum_name):
-        """Sets the datum_name of this VersionModel.
+    @tags.setter
+    def tags(self, tags):
+        """Sets the tags of this VersionModel.
 
-        Name of the datum  # noqa: E501
+        Unique tags provided by user  # noqa: E501
 
-        :param datum_name: The datum_name of this VersionModel.  # noqa: E501
-        :type: str
+        :param tags: The tags of this VersionModel.  # noqa: E501
+        :type: list[str]
         """
 
-        self._datum_name = datum_name
+        self._tags = tags
 
     @property
-    def datum_uuid(self):
-        """Gets the datum_uuid of this VersionModel.  # noqa: E501
+    def timestamps(self):
+        """Gets the timestamps of this VersionModel.  # noqa: E501
 
-        UUID of dataset/model.  # noqa: E501
 
-        :return: The datum_uuid of this VersionModel.  # noqa: E501
-        :rtype: str
+        :return: The timestamps of this VersionModel.  # noqa: E501
+        :rtype: TimeStamps
         """
-        return self._datum_uuid
+        return self._timestamps
 
-    @datum_uuid.setter
-    def datum_uuid(self, datum_uuid):
-        """Sets the datum_uuid of this VersionModel.
+    @timestamps.setter
+    def timestamps(self, timestamps):
+        """Sets the timestamps of this VersionModel.
 
-        UUID of dataset/model.  # noqa: E501
 
-        :param datum_uuid: The datum_uuid of this VersionModel.  # noqa: E501
-        :type: str
+        :param timestamps: The timestamps of this VersionModel.  # noqa: E501
+        :type: TimeStamps
         """
 
-        self._datum_uuid = datum_uuid
+        self._timestamps = timestamps
 
     @property
     def tracking_uuid(self):
@@ -390,73 +441,50 @@ class VersionModel(object):
         self._tracking_uuid = tracking_uuid
 
     @property
-    def commit_id(self):
-        """Gets the commit_id of this VersionModel.  # noqa: E501
+    def user(self):
+        """Gets the user of this VersionModel.  # noqa: E501
 
+        Name of the owner  # noqa: E501
 
-        :return: The commit_id of this VersionModel.  # noqa: E501
+        :return: The user of this VersionModel.  # noqa: E501
         :rtype: str
         """
-        return self._commit_id
+        return self._user
 
-    @commit_id.setter
-    def commit_id(self, commit_id):
-        """Sets the commit_id of this VersionModel.
+    @user.setter
+    def user(self, user):
+        """Sets the user of this VersionModel.
 
+        Name of the owner  # noqa: E501
 
-        :param commit_id: The commit_id of this VersionModel.  # noqa: E501
+        :param user: The user of this VersionModel.  # noqa: E501
         :type: str
         """
 
-        self._commit_id = commit_id
+        self._user = user
 
     @property
-    def datum_type(self):
-        """Gets the datum_type of this VersionModel.  # noqa: E501
+    def uuid(self):
+        """Gets the uuid of this VersionModel.  # noqa: E501
 
+        Unique id generated by system (timestamp in milliseconds)  # noqa: E501
 
-        :return: The datum_type of this VersionModel.  # noqa: E501
+        :return: The uuid of this VersionModel.  # noqa: E501
         :rtype: str
         """
-        return self._datum_type
+        return self._uuid
 
-    @datum_type.setter
-    def datum_type(self, datum_type):
-        """Sets the datum_type of this VersionModel.
+    @uuid.setter
+    def uuid(self, uuid):
+        """Sets the uuid of this VersionModel.
 
+        Unique id generated by system (timestamp in milliseconds)  # noqa: E501
 
-        :param datum_type: The datum_type of this VersionModel.  # noqa: E501
+        :param uuid: The uuid of this VersionModel.  # noqa: E501
         :type: str
         """
-        allowed_values = ["model", "dataset", "program"]  # noqa: E501
-        if datum_type not in allowed_values:
-            raise ValueError(
-                "Invalid value for `datum_type` ({0}), must be one of {1}"  # noqa: E501
-                .format(datum_type, allowed_values)
-            )
 
-        self._datum_type = datum_type
-
-    @property
-    def model(self):
-        """Gets the model of this VersionModel.  # noqa: E501
-
-
-        :return: The model of this VersionModel.  # noqa: E501
-        :rtype: VersionModelModel
-        """
-        return self._model
-
-    @model.setter
-    def model(self, model):
-        """Sets the model of this VersionModel.
-
-
-        :param model: The model of this VersionModel.  # noqa: E501
-        :type: VersionModelModel
-        """
-
-        self._model = model
+        self._uuid = uuid
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,47 +31,26 @@ class PoolCollection(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'pool': 'DevicePoolModel',
-        'devices': 'PoolCollectionDevices'
+        'devices': 'PoolCollectionDevices',
+        'pool': 'DevicePoolModel'
     }
 
     attribute_map = {
-        'pool': 'pool',
-        'devices': 'devices'
+        'devices': 'devices',
+        'pool': 'pool'
     }
 
-    def __init__(self, pool=None, devices=None):  # noqa: E501
+    def __init__(self, devices=None, pool=None):  # noqa: E501
         """PoolCollection - a model defined in Swagger"""  # noqa: E501
 
-        self._pool = None
         self._devices = None
+        self._pool = None
         self.discriminator = None
 
-        if pool is not None:
-            self.pool = pool
         if devices is not None:
             self.devices = devices
-
-    @property
-    def pool(self):
-        """Gets the pool of this PoolCollection.  # noqa: E501
-
-
-        :return: The pool of this PoolCollection.  # noqa: E501
-        :rtype: DevicePoolModel
-        """
-        return self._pool
-
-    @pool.setter
-    def pool(self, pool):
-        """Sets the pool of this PoolCollection.
-
-
-        :param pool: The pool of this PoolCollection.  # noqa: E501
-        :type: DevicePoolModel
-        """
-
-        self._pool = pool
+        if pool is not None:
+            self.pool = pool
 
     @property
     def devices(self):
@@ -93,6 +72,27 @@ class PoolCollection(object):
         """
 
         self._devices = devices
+
+    @property
+    def pool(self):
+        """Gets the pool of this PoolCollection.  # noqa: E501
+
+
+        :return: The pool of this PoolCollection.  # noqa: E501
+        :rtype: DevicePoolModel
+        """
+        return self._pool
+
+    @pool.setter
+    def pool(self, pool):
+        """Sets the pool of this PoolCollection.
+
+
+        :param pool: The pool of this PoolCollection.  # noqa: E501
+        :type: DevicePoolModel
+        """
+
+        self._pool = pool
 
     def to_dict(self):
         """Returns the model properties as a dict"""

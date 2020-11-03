@@ -31,67 +31,88 @@ class UserModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'version': 'str',
+        'created_at': 'TimeStamps',
+        'generated': 'UserModelGenerated',
         'name': 'str',
         'role': 'str',
-        'created_at': 'TimeStamps',
         'status': 'str',
-        'generated': 'UserModelGenerated'
+        'version': 'str'
     }
 
     attribute_map = {
-        'version': 'version',
+        'created_at': 'created_at',
+        'generated': 'generated',
         'name': 'name',
         'role': 'role',
-        'created_at': 'created_at',
         'status': 'status',
-        'generated': 'generated'
+        'version': 'version'
     }
 
-    def __init__(self, version=None, name=None, role=None, created_at=None, status=None, generated=None):  # noqa: E501
+    def __init__(self, created_at=None, generated=None, name=None, role=None, status=None, version=None):  # noqa: E501
         """UserModel - a model defined in Swagger"""  # noqa: E501
 
-        self._version = None
+        self._created_at = None
+        self._generated = None
         self._name = None
         self._role = None
-        self._created_at = None
         self._status = None
-        self._generated = None
+        self._version = None
         self.discriminator = None
 
-        if version is not None:
-            self.version = version
+        if created_at is not None:
+            self.created_at = created_at
+        if generated is not None:
+            self.generated = generated
         if name is not None:
             self.name = name
         if role is not None:
             self.role = role
-        if created_at is not None:
-            self.created_at = created_at
         if status is not None:
             self.status = status
-        if generated is not None:
-            self.generated = generated
+        if version is not None:
+            self.version = version
 
     @property
-    def version(self):
-        """Gets the version of this UserModel.  # noqa: E501
+    def created_at(self):
+        """Gets the created_at of this UserModel.  # noqa: E501
 
 
-        :return: The version of this UserModel.  # noqa: E501
-        :rtype: str
+        :return: The created_at of this UserModel.  # noqa: E501
+        :rtype: TimeStamps
         """
-        return self._version
+        return self._created_at
 
-    @version.setter
-    def version(self, version):
-        """Sets the version of this UserModel.
+    @created_at.setter
+    def created_at(self, created_at):
+        """Sets the created_at of this UserModel.
 
 
-        :param version: The version of this UserModel.  # noqa: E501
-        :type: str
+        :param created_at: The created_at of this UserModel.  # noqa: E501
+        :type: TimeStamps
         """
 
-        self._version = version
+        self._created_at = created_at
+
+    @property
+    def generated(self):
+        """Gets the generated of this UserModel.  # noqa: E501
+
+
+        :return: The generated of this UserModel.  # noqa: E501
+        :rtype: UserModelGenerated
+        """
+        return self._generated
+
+    @generated.setter
+    def generated(self, generated):
+        """Sets the generated of this UserModel.
+
+
+        :param generated: The generated of this UserModel.  # noqa: E501
+        :type: UserModelGenerated
+        """
+
+        self._generated = generated
 
     @property
     def name(self):
@@ -146,27 +167,6 @@ class UserModel(object):
         self._role = role
 
     @property
-    def created_at(self):
-        """Gets the created_at of this UserModel.  # noqa: E501
-
-
-        :return: The created_at of this UserModel.  # noqa: E501
-        :rtype: TimeStamps
-        """
-        return self._created_at
-
-    @created_at.setter
-    def created_at(self, created_at):
-        """Sets the created_at of this UserModel.
-
-
-        :param created_at: The created_at of this UserModel.  # noqa: E501
-        :type: TimeStamps
-        """
-
-        self._created_at = created_at
-
-    @property
     def status(self):
         """Gets the status of this UserModel.  # noqa: E501
 
@@ -194,25 +194,25 @@ class UserModel(object):
         self._status = status
 
     @property
-    def generated(self):
-        """Gets the generated of this UserModel.  # noqa: E501
+    def version(self):
+        """Gets the version of this UserModel.  # noqa: E501
 
 
-        :return: The generated of this UserModel.  # noqa: E501
-        :rtype: UserModelGenerated
+        :return: The version of this UserModel.  # noqa: E501
+        :rtype: str
         """
-        return self._generated
+        return self._version
 
-    @generated.setter
-    def generated(self, generated):
-        """Sets the generated of this UserModel.
+    @version.setter
+    def version(self, version):
+        """Sets the version of this UserModel.
 
 
-        :param generated: The generated of this UserModel.  # noqa: E501
-        :type: UserModelGenerated
+        :param version: The version of this UserModel.  # noqa: E501
+        :type: str
         """
 
-        self._generated = generated
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

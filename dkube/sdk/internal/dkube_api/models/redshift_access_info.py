@@ -31,166 +31,51 @@ class RedshiftAccessInfo(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'endpoint': 'str',
-        'username': 'str',
-        'password': 'str',
-        'database': 'str',
-        'region': 'str',
         'cacert': 'CertFileModel',
-        'insecure_ssl': 'bool'
+        'database': 'str',
+        'endpoint': 'str',
+        'insecure_ssl': 'bool',
+        'password': 'str',
+        'region': 'str',
+        'username': 'str'
     }
 
     attribute_map = {
-        'endpoint': 'endpoint',
-        'username': 'username',
-        'password': 'password',
-        'database': 'database',
-        'region': 'region',
         'cacert': 'cacert',
-        'insecure_ssl': 'insecureSSL'
+        'database': 'database',
+        'endpoint': 'endpoint',
+        'insecure_ssl': 'insecureSSL',
+        'password': 'password',
+        'region': 'region',
+        'username': 'username'
     }
 
-    def __init__(self, endpoint=None, username=None, password=None, database=None, region=None, cacert=None, insecure_ssl=None):  # noqa: E501
+    def __init__(self, cacert=None, database=None, endpoint=None, insecure_ssl=None, password=None, region=None, username=None):  # noqa: E501
         """RedshiftAccessInfo - a model defined in Swagger"""  # noqa: E501
 
-        self._endpoint = None
-        self._username = None
-        self._password = None
-        self._database = None
-        self._region = None
         self._cacert = None
+        self._database = None
+        self._endpoint = None
         self._insecure_ssl = None
+        self._password = None
+        self._region = None
+        self._username = None
         self.discriminator = None
 
-        if endpoint is not None:
-            self.endpoint = endpoint
-        if username is not None:
-            self.username = username
-        if password is not None:
-            self.password = password
-        if database is not None:
-            self.database = database
-        if region is not None:
-            self.region = region
         if cacert is not None:
             self.cacert = cacert
+        if database is not None:
+            self.database = database
+        if endpoint is not None:
+            self.endpoint = endpoint
         if insecure_ssl is not None:
             self.insecure_ssl = insecure_ssl
-
-    @property
-    def endpoint(self):
-        """Gets the endpoint of this RedshiftAccessInfo.  # noqa: E501
-
-        Redshift endpoint to connect to. Should be with protocol, host and port.  # noqa: E501
-
-        :return: The endpoint of this RedshiftAccessInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._endpoint
-
-    @endpoint.setter
-    def endpoint(self, endpoint):
-        """Sets the endpoint of this RedshiftAccessInfo.
-
-        Redshift endpoint to connect to. Should be with protocol, host and port.  # noqa: E501
-
-        :param endpoint: The endpoint of this RedshiftAccessInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._endpoint = endpoint
-
-    @property
-    def username(self):
-        """Gets the username of this RedshiftAccessInfo.  # noqa: E501
-
-        User authorized to connect to database.  # noqa: E501
-
-        :return: The username of this RedshiftAccessInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._username
-
-    @username.setter
-    def username(self, username):
-        """Sets the username of this RedshiftAccessInfo.
-
-        User authorized to connect to database.  # noqa: E501
-
-        :param username: The username of this RedshiftAccessInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._username = username
-
-    @property
-    def password(self):
-        """Gets the password of this RedshiftAccessInfo.  # noqa: E501
-
-        Password to be used to connect to redshift.  # noqa: E501
-
-        :return: The password of this RedshiftAccessInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._password
-
-    @password.setter
-    def password(self, password):
-        """Sets the password of this RedshiftAccessInfo.
-
-        Password to be used to connect to redshift.  # noqa: E501
-
-        :param password: The password of this RedshiftAccessInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._password = password
-
-    @property
-    def database(self):
-        """Gets the database of this RedshiftAccessInfo.  # noqa: E501
-
-        Database in the redshift that this dataset should point to.  # noqa: E501
-
-        :return: The database of this RedshiftAccessInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._database
-
-    @database.setter
-    def database(self, database):
-        """Sets the database of this RedshiftAccessInfo.
-
-        Database in the redshift that this dataset should point to.  # noqa: E501
-
-        :param database: The database of this RedshiftAccessInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._database = database
-
-    @property
-    def region(self):
-        """Gets the region of this RedshiftAccessInfo.  # noqa: E501
-
-        Region where this database resides.  # noqa: E501
-
-        :return: The region of this RedshiftAccessInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._region
-
-    @region.setter
-    def region(self, region):
-        """Sets the region of this RedshiftAccessInfo.
-
-        Region where this database resides.  # noqa: E501
-
-        :param region: The region of this RedshiftAccessInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._region = region
+        if password is not None:
+            self.password = password
+        if region is not None:
+            self.region = region
+        if username is not None:
+            self.username = username
 
     @property
     def cacert(self):
@@ -216,6 +101,52 @@ class RedshiftAccessInfo(object):
         self._cacert = cacert
 
     @property
+    def database(self):
+        """Gets the database of this RedshiftAccessInfo.  # noqa: E501
+
+        Database in the redshift that this dataset should point to.  # noqa: E501
+
+        :return: The database of this RedshiftAccessInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._database
+
+    @database.setter
+    def database(self, database):
+        """Sets the database of this RedshiftAccessInfo.
+
+        Database in the redshift that this dataset should point to.  # noqa: E501
+
+        :param database: The database of this RedshiftAccessInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._database = database
+
+    @property
+    def endpoint(self):
+        """Gets the endpoint of this RedshiftAccessInfo.  # noqa: E501
+
+        Redshift endpoint to connect to. Should be with protocol, host and port.  # noqa: E501
+
+        :return: The endpoint of this RedshiftAccessInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._endpoint
+
+    @endpoint.setter
+    def endpoint(self, endpoint):
+        """Sets the endpoint of this RedshiftAccessInfo.
+
+        Redshift endpoint to connect to. Should be with protocol, host and port.  # noqa: E501
+
+        :param endpoint: The endpoint of this RedshiftAccessInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._endpoint = endpoint
+
+    @property
     def insecure_ssl(self):
         """Gets the insecure_ssl of this RedshiftAccessInfo.  # noqa: E501
 
@@ -235,6 +166,75 @@ class RedshiftAccessInfo(object):
         """
 
         self._insecure_ssl = insecure_ssl
+
+    @property
+    def password(self):
+        """Gets the password of this RedshiftAccessInfo.  # noqa: E501
+
+        Password to be used to connect to redshift.  # noqa: E501
+
+        :return: The password of this RedshiftAccessInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._password
+
+    @password.setter
+    def password(self, password):
+        """Sets the password of this RedshiftAccessInfo.
+
+        Password to be used to connect to redshift.  # noqa: E501
+
+        :param password: The password of this RedshiftAccessInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._password = password
+
+    @property
+    def region(self):
+        """Gets the region of this RedshiftAccessInfo.  # noqa: E501
+
+        Region where this database resides.  # noqa: E501
+
+        :return: The region of this RedshiftAccessInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._region
+
+    @region.setter
+    def region(self, region):
+        """Sets the region of this RedshiftAccessInfo.
+
+        Region where this database resides.  # noqa: E501
+
+        :param region: The region of this RedshiftAccessInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._region = region
+
+    @property
+    def username(self):
+        """Gets the username of this RedshiftAccessInfo.  # noqa: E501
+
+        User authorized to connect to database.  # noqa: E501
+
+        :return: The username of this RedshiftAccessInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._username
+
+    @username.setter
+    def username(self, username):
+        """Sets the username of this RedshiftAccessInfo.
+
+        User authorized to connect to database.  # noqa: E501
+
+        :param username: The username of this RedshiftAccessInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._username = username
 
     def to_dict(self):
         """Returns the model properties as a dict"""

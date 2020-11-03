@@ -31,47 +31,26 @@ class GpuAllocation(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'manual': 'bool',
-        'auto': 'bool'
+        'auto': 'bool',
+        'manual': 'bool'
     }
 
     attribute_map = {
-        'manual': 'manual',
-        'auto': 'auto'
+        'auto': 'auto',
+        'manual': 'manual'
     }
 
-    def __init__(self, manual=None, auto=None):  # noqa: E501
+    def __init__(self, auto=None, manual=None):  # noqa: E501
         """GpuAllocation - a model defined in Swagger"""  # noqa: E501
 
-        self._manual = None
         self._auto = None
+        self._manual = None
         self.discriminator = None
 
-        if manual is not None:
-            self.manual = manual
         if auto is not None:
             self.auto = auto
-
-    @property
-    def manual(self):
-        """Gets the manual of this GpuAllocation.  # noqa: E501
-
-
-        :return: The manual of this GpuAllocation.  # noqa: E501
-        :rtype: bool
-        """
-        return self._manual
-
-    @manual.setter
-    def manual(self, manual):
-        """Sets the manual of this GpuAllocation.
-
-
-        :param manual: The manual of this GpuAllocation.  # noqa: E501
-        :type: bool
-        """
-
-        self._manual = manual
+        if manual is not None:
+            self.manual = manual
 
     @property
     def auto(self):
@@ -93,6 +72,27 @@ class GpuAllocation(object):
         """
 
         self._auto = auto
+
+    @property
+    def manual(self):
+        """Gets the manual of this GpuAllocation.  # noqa: E501
+
+
+        :return: The manual of this GpuAllocation.  # noqa: E501
+        :rtype: bool
+        """
+        return self._manual
+
+    @manual.setter
+    def manual(self, manual):
+        """Sets the manual of this GpuAllocation.
+
+
+        :param manual: The manual of this GpuAllocation.  # noqa: E501
+        :type: bool
+        """
+
+        self._manual = manual
 
     def to_dict(self):
         """Returns the model properties as a dict"""

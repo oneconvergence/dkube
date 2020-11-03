@@ -33,34 +33,34 @@ class DatumModelGeneratedDetails(object):
     swagger_types = {
         'git': 'GitDetails',
         'model': 'ModelDetails',
-        'tensorboard': 'TensorboardModel',
-        'source': 'DatumSourceDetails'
+        'source': 'DatumSourceDetails',
+        'tensorboard': 'TensorboardModel'
     }
 
     attribute_map = {
         'git': 'git',
         'model': 'model',
-        'tensorboard': 'tensorboard',
-        'source': 'source'
+        'source': 'source',
+        'tensorboard': 'tensorboard'
     }
 
-    def __init__(self, git=None, model=None, tensorboard=None, source=None):  # noqa: E501
+    def __init__(self, git=None, model=None, source=None, tensorboard=None):  # noqa: E501
         """DatumModelGeneratedDetails - a model defined in Swagger"""  # noqa: E501
 
         self._git = None
         self._model = None
-        self._tensorboard = None
         self._source = None
+        self._tensorboard = None
         self.discriminator = None
 
         if git is not None:
             self.git = git
         if model is not None:
             self.model = model
-        if tensorboard is not None:
-            self.tensorboard = tensorboard
         if source is not None:
             self.source = source
+        if tensorboard is not None:
+            self.tensorboard = tensorboard
 
     @property
     def git(self):
@@ -105,27 +105,6 @@ class DatumModelGeneratedDetails(object):
         self._model = model
 
     @property
-    def tensorboard(self):
-        """Gets the tensorboard of this DatumModelGeneratedDetails.  # noqa: E501
-
-
-        :return: The tensorboard of this DatumModelGeneratedDetails.  # noqa: E501
-        :rtype: TensorboardModel
-        """
-        return self._tensorboard
-
-    @tensorboard.setter
-    def tensorboard(self, tensorboard):
-        """Sets the tensorboard of this DatumModelGeneratedDetails.
-
-
-        :param tensorboard: The tensorboard of this DatumModelGeneratedDetails.  # noqa: E501
-        :type: TensorboardModel
-        """
-
-        self._tensorboard = tensorboard
-
-    @property
     def source(self):
         """Gets the source of this DatumModelGeneratedDetails.  # noqa: E501
 
@@ -145,6 +124,27 @@ class DatumModelGeneratedDetails(object):
         """
 
         self._source = source
+
+    @property
+    def tensorboard(self):
+        """Gets the tensorboard of this DatumModelGeneratedDetails.  # noqa: E501
+
+
+        :return: The tensorboard of this DatumModelGeneratedDetails.  # noqa: E501
+        :rtype: TensorboardModel
+        """
+        return self._tensorboard
+
+    @tensorboard.setter
+    def tensorboard(self, tensorboard):
+        """Sets the tensorboard of this DatumModelGeneratedDetails.
+
+
+        :param tensorboard: The tensorboard of this DatumModelGeneratedDetails.  # noqa: E501
+        :type: TensorboardModel
+        """
+
+        self._tensorboard = tensorboard
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,47 +31,26 @@ class NodeCollection(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'node': 'NodeModel',
-        'devices': 'NodeCollectionDevices'
+        'devices': 'NodeCollectionDevices',
+        'node': 'NodeModel'
     }
 
     attribute_map = {
-        'node': 'node',
-        'devices': 'devices'
+        'devices': 'devices',
+        'node': 'node'
     }
 
-    def __init__(self, node=None, devices=None):  # noqa: E501
+    def __init__(self, devices=None, node=None):  # noqa: E501
         """NodeCollection - a model defined in Swagger"""  # noqa: E501
 
-        self._node = None
         self._devices = None
+        self._node = None
         self.discriminator = None
 
-        if node is not None:
-            self.node = node
         if devices is not None:
             self.devices = devices
-
-    @property
-    def node(self):
-        """Gets the node of this NodeCollection.  # noqa: E501
-
-
-        :return: The node of this NodeCollection.  # noqa: E501
-        :rtype: NodeModel
-        """
-        return self._node
-
-    @node.setter
-    def node(self, node):
-        """Sets the node of this NodeCollection.
-
-
-        :param node: The node of this NodeCollection.  # noqa: E501
-        :type: NodeModel
-        """
-
-        self._node = node
+        if node is not None:
+            self.node = node
 
     @property
     def devices(self):
@@ -93,6 +72,27 @@ class NodeCollection(object):
         """
 
         self._devices = devices
+
+    @property
+    def node(self):
+        """Gets the node of this NodeCollection.  # noqa: E501
+
+
+        :return: The node of this NodeCollection.  # noqa: E501
+        :rtype: NodeModel
+        """
+        return self._node
+
+    @node.setter
+    def node(self, node):
+        """Sets the node of this NodeCollection.
+
+
+        :param node: The node of this NodeCollection.  # noqa: E501
+        :type: NodeModel
+        """
+
+        self._node = node
 
     def to_dict(self):
         """Returns the model properties as a dict"""

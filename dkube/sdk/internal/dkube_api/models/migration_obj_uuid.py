@@ -32,33 +32,33 @@ class MigrationObjUUID(object):
     """
     swagger_types = {
         'src_uuid': 'str',
-        'tgt_uuid': 'str',
         'src_name': 'str',
+        'tgt_uuid': 'str',
         'tgt_name': 'str'
     }
 
     attribute_map = {
         'src_uuid': 'src_UUID',
-        'tgt_uuid': 'tgt_UUID',
         'src_name': 'src_name',
+        'tgt_uuid': 'tgt_UUID',
         'tgt_name': 'tgt_name'
     }
 
-    def __init__(self, src_uuid=None, tgt_uuid=None, src_name=None, tgt_name=None):  # noqa: E501
+    def __init__(self, src_uuid=None, src_name=None, tgt_uuid=None, tgt_name=None):  # noqa: E501
         """MigrationObjUUID - a model defined in Swagger"""  # noqa: E501
 
         self._src_uuid = None
-        self._tgt_uuid = None
         self._src_name = None
+        self._tgt_uuid = None
         self._tgt_name = None
         self.discriminator = None
 
         if src_uuid is not None:
             self.src_uuid = src_uuid
-        if tgt_uuid is not None:
-            self.tgt_uuid = tgt_uuid
         if src_name is not None:
             self.src_name = src_name
+        if tgt_uuid is not None:
+            self.tgt_uuid = tgt_uuid
         if tgt_name is not None:
             self.tgt_name = tgt_name
 
@@ -84,27 +84,6 @@ class MigrationObjUUID(object):
         self._src_uuid = src_uuid
 
     @property
-    def tgt_uuid(self):
-        """Gets the tgt_uuid of this MigrationObjUUID.  # noqa: E501
-
-
-        :return: The tgt_uuid of this MigrationObjUUID.  # noqa: E501
-        :rtype: str
-        """
-        return self._tgt_uuid
-
-    @tgt_uuid.setter
-    def tgt_uuid(self, tgt_uuid):
-        """Sets the tgt_uuid of this MigrationObjUUID.
-
-
-        :param tgt_uuid: The tgt_uuid of this MigrationObjUUID.  # noqa: E501
-        :type: str
-        """
-
-        self._tgt_uuid = tgt_uuid
-
-    @property
     def src_name(self):
         """Gets the src_name of this MigrationObjUUID.  # noqa: E501
 
@@ -124,6 +103,27 @@ class MigrationObjUUID(object):
         """
 
         self._src_name = src_name
+
+    @property
+    def tgt_uuid(self):
+        """Gets the tgt_uuid of this MigrationObjUUID.  # noqa: E501
+
+
+        :return: The tgt_uuid of this MigrationObjUUID.  # noqa: E501
+        :rtype: str
+        """
+        return self._tgt_uuid
+
+    @tgt_uuid.setter
+    def tgt_uuid(self, tgt_uuid):
+        """Sets the tgt_uuid of this MigrationObjUUID.
+
+
+        :param tgt_uuid: The tgt_uuid of this MigrationObjUUID.  # noqa: E501
+        :type: str
+        """
+
+        self._tgt_uuid = tgt_uuid
 
     @property
     def tgt_name(self):

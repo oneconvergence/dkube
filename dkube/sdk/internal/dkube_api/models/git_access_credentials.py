@@ -31,83 +31,41 @@ class GitAccessCredentials(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'username': 'str',
-        'password': 'str',
         'apikey': 'str',
+        'password': 'str',
+        'private': 'bool',
         'sshkey': 'str',
-        'private': 'bool'
+        'username': 'str'
     }
 
     attribute_map = {
-        'username': 'username',
-        'password': 'password',
         'apikey': 'apikey',
+        'password': 'password',
+        'private': 'private',
         'sshkey': 'sshkey',
-        'private': 'private'
+        'username': 'username'
     }
 
-    def __init__(self, username=None, password=None, apikey=None, sshkey=None, private=False):  # noqa: E501
+    def __init__(self, apikey=None, password=None, private=False, sshkey=None, username=None):  # noqa: E501
         """GitAccessCredentials - a model defined in Swagger"""  # noqa: E501
 
-        self._username = None
-        self._password = None
         self._apikey = None
-        self._sshkey = None
+        self._password = None
         self._private = None
+        self._sshkey = None
+        self._username = None
         self.discriminator = None
 
-        if username is not None:
-            self.username = username
-        if password is not None:
-            self.password = password
         if apikey is not None:
             self.apikey = apikey
-        if sshkey is not None:
-            self.sshkey = sshkey
+        if password is not None:
+            self.password = password
         if private is not None:
             self.private = private
-
-    @property
-    def username(self):
-        """Gets the username of this GitAccessCredentials.  # noqa: E501
-
-
-        :return: The username of this GitAccessCredentials.  # noqa: E501
-        :rtype: str
-        """
-        return self._username
-
-    @username.setter
-    def username(self, username):
-        """Sets the username of this GitAccessCredentials.
-
-
-        :param username: The username of this GitAccessCredentials.  # noqa: E501
-        :type: str
-        """
-
-        self._username = username
-
-    @property
-    def password(self):
-        """Gets the password of this GitAccessCredentials.  # noqa: E501
-
-
-        :return: The password of this GitAccessCredentials.  # noqa: E501
-        :rtype: str
-        """
-        return self._password
-
-    @password.setter
-    def password(self, password):
-        """Sets the password of this GitAccessCredentials.
-
-
-        :param password: The password of this GitAccessCredentials.  # noqa: E501
-        :type: str
-        """
-
-        self._password = password
+        if sshkey is not None:
+            self.sshkey = sshkey
+        if username is not None:
+            self.username = username
 
     @property
     def apikey(self):
@@ -131,25 +89,25 @@ class GitAccessCredentials(object):
         self._apikey = apikey
 
     @property
-    def sshkey(self):
-        """Gets the sshkey of this GitAccessCredentials.  # noqa: E501
+    def password(self):
+        """Gets the password of this GitAccessCredentials.  # noqa: E501
 
 
-        :return: The sshkey of this GitAccessCredentials.  # noqa: E501
+        :return: The password of this GitAccessCredentials.  # noqa: E501
         :rtype: str
         """
-        return self._sshkey
+        return self._password
 
-    @sshkey.setter
-    def sshkey(self, sshkey):
-        """Sets the sshkey of this GitAccessCredentials.
+    @password.setter
+    def password(self, password):
+        """Sets the password of this GitAccessCredentials.
 
 
-        :param sshkey: The sshkey of this GitAccessCredentials.  # noqa: E501
+        :param password: The password of this GitAccessCredentials.  # noqa: E501
         :type: str
         """
 
-        self._sshkey = sshkey
+        self._password = password
 
     @property
     def private(self):
@@ -171,6 +129,48 @@ class GitAccessCredentials(object):
         """
 
         self._private = private
+
+    @property
+    def sshkey(self):
+        """Gets the sshkey of this GitAccessCredentials.  # noqa: E501
+
+
+        :return: The sshkey of this GitAccessCredentials.  # noqa: E501
+        :rtype: str
+        """
+        return self._sshkey
+
+    @sshkey.setter
+    def sshkey(self, sshkey):
+        """Sets the sshkey of this GitAccessCredentials.
+
+
+        :param sshkey: The sshkey of this GitAccessCredentials.  # noqa: E501
+        :type: str
+        """
+
+        self._sshkey = sshkey
+
+    @property
+    def username(self):
+        """Gets the username of this GitAccessCredentials.  # noqa: E501
+
+
+        :return: The username of this GitAccessCredentials.  # noqa: E501
+        :rtype: str
+        """
+        return self._username
+
+    @username.setter
+    def username(self, username):
+        """Sets the username of this GitAccessCredentials.
+
+
+        :param username: The username of this GitAccessCredentials.  # noqa: E501
+        :type: str
+        """
+
+        self._username = username
 
     def to_dict(self):
         """Returns the model properties as a dict"""

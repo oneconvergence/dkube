@@ -31,47 +31,26 @@ class ModelCatalogMetricsInner(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'name': 'str',
-        'metrics': 'Metrics'
+        'metrics': 'Metrics',
+        'name': 'str'
     }
 
     attribute_map = {
-        'name': 'name',
-        'metrics': 'metrics'
+        'metrics': 'metrics',
+        'name': 'name'
     }
 
-    def __init__(self, name=None, metrics=None):  # noqa: E501
+    def __init__(self, metrics=None, name=None):  # noqa: E501
         """ModelCatalogMetricsInner - a model defined in Swagger"""  # noqa: E501
 
-        self._name = None
         self._metrics = None
+        self._name = None
         self.discriminator = None
 
-        if name is not None:
-            self.name = name
         if metrics is not None:
             self.metrics = metrics
-
-    @property
-    def name(self):
-        """Gets the name of this ModelCatalogMetricsInner.  # noqa: E501
-
-
-        :return: The name of this ModelCatalogMetricsInner.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this ModelCatalogMetricsInner.
-
-
-        :param name: The name of this ModelCatalogMetricsInner.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
+        if name is not None:
+            self.name = name
 
     @property
     def metrics(self):
@@ -93,6 +72,27 @@ class ModelCatalogMetricsInner(object):
         """
 
         self._metrics = metrics
+
+    @property
+    def name(self):
+        """Gets the name of this ModelCatalogMetricsInner.  # noqa: E501
+
+
+        :return: The name of this ModelCatalogMetricsInner.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this ModelCatalogMetricsInner.
+
+
+        :param name: The name of this ModelCatalogMetricsInner.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
 
     def to_dict(self):
         """Returns the model properties as a dict"""

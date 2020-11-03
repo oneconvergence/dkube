@@ -31,42 +31,68 @@ class Data20(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'user': 'str'
+        'description': 'str',
+        'tags': 'list[str]'
     }
 
     attribute_map = {
-        'user': 'user'
+        'description': 'description',
+        'tags': 'tags'
     }
 
-    def __init__(self, user=None):  # noqa: E501
+    def __init__(self, description=None, tags=None):  # noqa: E501
         """Data20 - a model defined in Swagger"""  # noqa: E501
 
-        self._user = None
+        self._description = None
+        self._tags = None
         self.discriminator = None
 
-        if user is not None:
-            self.user = user
+        if description is not None:
+            self.description = description
+        if tags is not None:
+            self.tags = tags
 
     @property
-    def user(self):
-        """Gets the user of this Data20.  # noqa: E501
+    def description(self):
+        """Gets the description of this Data20.  # noqa: E501
 
 
-        :return: The user of this Data20.  # noqa: E501
+        :return: The description of this Data20.  # noqa: E501
         :rtype: str
         """
-        return self._user
+        return self._description
 
-    @user.setter
-    def user(self, user):
-        """Sets the user of this Data20.
+    @description.setter
+    def description(self, description):
+        """Sets the description of this Data20.
 
 
-        :param user: The user of this Data20.  # noqa: E501
+        :param description: The description of this Data20.  # noqa: E501
         :type: str
         """
 
-        self._user = user
+        self._description = description
+
+    @property
+    def tags(self):
+        """Gets the tags of this Data20.  # noqa: E501
+
+
+        :return: The tags of this Data20.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._tags
+
+    @tags.setter
+    def tags(self, tags):
+        """Sets the tags of this Data20.
+
+
+        :param tags: The tags of this Data20.  # noqa: E501
+        :type: list[str]
+        """
+
+        self._tags = tags
 
     def to_dict(self):
         """Returns the model properties as a dict"""

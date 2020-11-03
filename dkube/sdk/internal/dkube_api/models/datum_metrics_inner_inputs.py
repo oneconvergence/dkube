@@ -31,52 +31,54 @@ class DatumMetricsInnerInputs(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'workspace': 'JobInputDatumModel',
+        'datasets': 'list[JobInputDatumModel]',
         'models': 'list[JobInputDatumModel]',
-        'datasets': 'list[JobInputDatumModel]'
+        'workspace': 'JobInputDatumModel'
     }
 
     attribute_map = {
-        'workspace': 'workspace',
+        'datasets': 'datasets',
         'models': 'models',
-        'datasets': 'datasets'
+        'workspace': 'workspace'
     }
 
-    def __init__(self, workspace=None, models=None, datasets=None):  # noqa: E501
+    def __init__(self, datasets=None, models=None, workspace=None):  # noqa: E501
         """DatumMetricsInnerInputs - a model defined in Swagger"""  # noqa: E501
 
-        self._workspace = None
-        self._models = None
         self._datasets = None
+        self._models = None
+        self._workspace = None
         self.discriminator = None
 
-        if workspace is not None:
-            self.workspace = workspace
-        if models is not None:
-            self.models = models
         if datasets is not None:
             self.datasets = datasets
+        if models is not None:
+            self.models = models
+        if workspace is not None:
+            self.workspace = workspace
 
     @property
-    def workspace(self):
-        """Gets the workspace of this DatumMetricsInnerInputs.  # noqa: E501
+    def datasets(self):
+        """Gets the datasets of this DatumMetricsInnerInputs.  # noqa: E501
 
+        List of dataset names the job would use.  # noqa: E501
 
-        :return: The workspace of this DatumMetricsInnerInputs.  # noqa: E501
-        :rtype: JobInputDatumModel
+        :return: The datasets of this DatumMetricsInnerInputs.  # noqa: E501
+        :rtype: list[JobInputDatumModel]
         """
-        return self._workspace
+        return self._datasets
 
-    @workspace.setter
-    def workspace(self, workspace):
-        """Sets the workspace of this DatumMetricsInnerInputs.
+    @datasets.setter
+    def datasets(self, datasets):
+        """Sets the datasets of this DatumMetricsInnerInputs.
 
+        List of dataset names the job would use.  # noqa: E501
 
-        :param workspace: The workspace of this DatumMetricsInnerInputs.  # noqa: E501
-        :type: JobInputDatumModel
+        :param datasets: The datasets of this DatumMetricsInnerInputs.  # noqa: E501
+        :type: list[JobInputDatumModel]
         """
 
-        self._workspace = workspace
+        self._datasets = datasets
 
     @property
     def models(self):
@@ -102,27 +104,25 @@ class DatumMetricsInnerInputs(object):
         self._models = models
 
     @property
-    def datasets(self):
-        """Gets the datasets of this DatumMetricsInnerInputs.  # noqa: E501
+    def workspace(self):
+        """Gets the workspace of this DatumMetricsInnerInputs.  # noqa: E501
 
-        List of dataset names the job would use.  # noqa: E501
 
-        :return: The datasets of this DatumMetricsInnerInputs.  # noqa: E501
-        :rtype: list[JobInputDatumModel]
+        :return: The workspace of this DatumMetricsInnerInputs.  # noqa: E501
+        :rtype: JobInputDatumModel
         """
-        return self._datasets
+        return self._workspace
 
-    @datasets.setter
-    def datasets(self, datasets):
-        """Sets the datasets of this DatumMetricsInnerInputs.
+    @workspace.setter
+    def workspace(self, workspace):
+        """Sets the workspace of this DatumMetricsInnerInputs.
 
-        List of dataset names the job would use.  # noqa: E501
 
-        :param datasets: The datasets of this DatumMetricsInnerInputs.  # noqa: E501
-        :type: list[JobInputDatumModel]
+        :param workspace: The workspace of this DatumMetricsInnerInputs.  # noqa: E501
+        :type: JobInputDatumModel
         """
 
-        self._datasets = datasets
+        self._workspace = workspace
 
     def to_dict(self):
         """Returns the model properties as a dict"""

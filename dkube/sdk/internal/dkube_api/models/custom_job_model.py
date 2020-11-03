@@ -31,85 +31,41 @@ class CustomJobModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'datums': 'JobDatumModel',
-        'tags': 'list[str]',
         'config': 'JobConfigModel',
+        'container': 'CustomContainerModel',
+        'datums': 'JobDatumModel',
         'service': 'CustomJobModelService',
-        'container': 'CustomContainerModel'
+        'tags': 'list[str]'
     }
 
     attribute_map = {
-        'datums': 'datums',
-        'tags': 'tags',
         'config': 'config',
+        'container': 'container',
+        'datums': 'datums',
         'service': 'service',
-        'container': 'container'
+        'tags': 'tags'
     }
 
-    def __init__(self, datums=None, tags=None, config=None, service=None, container=None):  # noqa: E501
+    def __init__(self, config=None, container=None, datums=None, service=None, tags=None):  # noqa: E501
         """CustomJobModel - a model defined in Swagger"""  # noqa: E501
 
-        self._datums = None
-        self._tags = None
         self._config = None
-        self._service = None
         self._container = None
+        self._datums = None
+        self._service = None
+        self._tags = None
         self.discriminator = None
 
-        if datums is not None:
-            self.datums = datums
-        if tags is not None:
-            self.tags = tags
         if config is not None:
             self.config = config
-        if service is not None:
-            self.service = service
         if container is not None:
             self.container = container
-
-    @property
-    def datums(self):
-        """Gets the datums of this CustomJobModel.  # noqa: E501
-
-
-        :return: The datums of this CustomJobModel.  # noqa: E501
-        :rtype: JobDatumModel
-        """
-        return self._datums
-
-    @datums.setter
-    def datums(self, datums):
-        """Sets the datums of this CustomJobModel.
-
-
-        :param datums: The datums of this CustomJobModel.  # noqa: E501
-        :type: JobDatumModel
-        """
-
-        self._datums = datums
-
-    @property
-    def tags(self):
-        """Gets the tags of this CustomJobModel.  # noqa: E501
-
-        Custom tags set by user for the job.  # noqa: E501
-
-        :return: The tags of this CustomJobModel.  # noqa: E501
-        :rtype: list[str]
-        """
-        return self._tags
-
-    @tags.setter
-    def tags(self, tags):
-        """Sets the tags of this CustomJobModel.
-
-        Custom tags set by user for the job.  # noqa: E501
-
-        :param tags: The tags of this CustomJobModel.  # noqa: E501
-        :type: list[str]
-        """
-
-        self._tags = tags
+        if datums is not None:
+            self.datums = datums
+        if service is not None:
+            self.service = service
+        if tags is not None:
+            self.tags = tags
 
     @property
     def config(self):
@@ -133,6 +89,48 @@ class CustomJobModel(object):
         self._config = config
 
     @property
+    def container(self):
+        """Gets the container of this CustomJobModel.  # noqa: E501
+
+
+        :return: The container of this CustomJobModel.  # noqa: E501
+        :rtype: CustomContainerModel
+        """
+        return self._container
+
+    @container.setter
+    def container(self, container):
+        """Sets the container of this CustomJobModel.
+
+
+        :param container: The container of this CustomJobModel.  # noqa: E501
+        :type: CustomContainerModel
+        """
+
+        self._container = container
+
+    @property
+    def datums(self):
+        """Gets the datums of this CustomJobModel.  # noqa: E501
+
+
+        :return: The datums of this CustomJobModel.  # noqa: E501
+        :rtype: JobDatumModel
+        """
+        return self._datums
+
+    @datums.setter
+    def datums(self, datums):
+        """Sets the datums of this CustomJobModel.
+
+
+        :param datums: The datums of this CustomJobModel.  # noqa: E501
+        :type: JobDatumModel
+        """
+
+        self._datums = datums
+
+    @property
     def service(self):
         """Gets the service of this CustomJobModel.  # noqa: E501
 
@@ -154,25 +152,27 @@ class CustomJobModel(object):
         self._service = service
 
     @property
-    def container(self):
-        """Gets the container of this CustomJobModel.  # noqa: E501
+    def tags(self):
+        """Gets the tags of this CustomJobModel.  # noqa: E501
 
+        Custom tags set by user for the job.  # noqa: E501
 
-        :return: The container of this CustomJobModel.  # noqa: E501
-        :rtype: CustomContainerModel
+        :return: The tags of this CustomJobModel.  # noqa: E501
+        :rtype: list[str]
         """
-        return self._container
+        return self._tags
 
-    @container.setter
-    def container(self, container):
-        """Sets the container of this CustomJobModel.
+    @tags.setter
+    def tags(self, tags):
+        """Sets the tags of this CustomJobModel.
 
+        Custom tags set by user for the job.  # noqa: E501
 
-        :param container: The container of this CustomJobModel.  # noqa: E501
-        :type: CustomContainerModel
+        :param tags: The tags of this CustomJobModel.  # noqa: E501
+        :type: list[str]
         """
 
-        self._container = container
+        self._tags = tags
 
     def to_dict(self):
         """Returns the model properties as a dict"""

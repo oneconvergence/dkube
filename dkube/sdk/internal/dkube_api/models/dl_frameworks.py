@@ -31,51 +31,72 @@ class DLFrameworks(object):
                             and the value is json key in definition.
     """
     swagger_types = {
+        'frameworks': 'list[DLFramework]',
         'nb_ide': 'DLFrameworkModel',
-        'r_ide': 'DLFrameworkModel',
-        'training': 'DLFrameworkModel',
         'preprocessing': 'DLFrameworkModel',
-        'serving': 'DLFrameworkModel',
         'project': 'DLFrameworkProject',
-        'frameworks': 'list[DLFramework]'
+        'r_ide': 'DLFrameworkModel',
+        'serving': 'DLFrameworkModel',
+        'training': 'DLFrameworkModel'
     }
 
     attribute_map = {
+        'frameworks': 'frameworks',
         'nb_ide': 'nb-ide',
-        'r_ide': 'r-ide',
-        'training': 'training',
         'preprocessing': 'preprocessing',
-        'serving': 'serving',
         'project': 'project',
-        'frameworks': 'frameworks'
+        'r_ide': 'r-ide',
+        'serving': 'serving',
+        'training': 'training'
     }
 
-    def __init__(self, nb_ide=None, r_ide=None, training=None, preprocessing=None, serving=None, project=None, frameworks=None):  # noqa: E501
+    def __init__(self, frameworks=None, nb_ide=None, preprocessing=None, project=None, r_ide=None, serving=None, training=None):  # noqa: E501
         """DLFrameworks - a model defined in Swagger"""  # noqa: E501
 
-        self._nb_ide = None
-        self._r_ide = None
-        self._training = None
-        self._preprocessing = None
-        self._serving = None
-        self._project = None
         self._frameworks = None
+        self._nb_ide = None
+        self._preprocessing = None
+        self._project = None
+        self._r_ide = None
+        self._serving = None
+        self._training = None
         self.discriminator = None
 
-        if nb_ide is not None:
-            self.nb_ide = nb_ide
-        if r_ide is not None:
-            self.r_ide = r_ide
-        if training is not None:
-            self.training = training
-        if preprocessing is not None:
-            self.preprocessing = preprocessing
-        if serving is not None:
-            self.serving = serving
-        if project is not None:
-            self.project = project
         if frameworks is not None:
             self.frameworks = frameworks
+        if nb_ide is not None:
+            self.nb_ide = nb_ide
+        if preprocessing is not None:
+            self.preprocessing = preprocessing
+        if project is not None:
+            self.project = project
+        if r_ide is not None:
+            self.r_ide = r_ide
+        if serving is not None:
+            self.serving = serving
+        if training is not None:
+            self.training = training
+
+    @property
+    def frameworks(self):
+        """Gets the frameworks of this DLFrameworks.  # noqa: E501
+
+
+        :return: The frameworks of this DLFrameworks.  # noqa: E501
+        :rtype: list[DLFramework]
+        """
+        return self._frameworks
+
+    @frameworks.setter
+    def frameworks(self, frameworks):
+        """Sets the frameworks of this DLFrameworks.
+
+
+        :param frameworks: The frameworks of this DLFrameworks.  # noqa: E501
+        :type: list[DLFramework]
+        """
+
+        self._frameworks = frameworks
 
     @property
     def nb_ide(self):
@@ -99,48 +120,6 @@ class DLFrameworks(object):
         self._nb_ide = nb_ide
 
     @property
-    def r_ide(self):
-        """Gets the r_ide of this DLFrameworks.  # noqa: E501
-
-
-        :return: The r_ide of this DLFrameworks.  # noqa: E501
-        :rtype: DLFrameworkModel
-        """
-        return self._r_ide
-
-    @r_ide.setter
-    def r_ide(self, r_ide):
-        """Sets the r_ide of this DLFrameworks.
-
-
-        :param r_ide: The r_ide of this DLFrameworks.  # noqa: E501
-        :type: DLFrameworkModel
-        """
-
-        self._r_ide = r_ide
-
-    @property
-    def training(self):
-        """Gets the training of this DLFrameworks.  # noqa: E501
-
-
-        :return: The training of this DLFrameworks.  # noqa: E501
-        :rtype: DLFrameworkModel
-        """
-        return self._training
-
-    @training.setter
-    def training(self, training):
-        """Sets the training of this DLFrameworks.
-
-
-        :param training: The training of this DLFrameworks.  # noqa: E501
-        :type: DLFrameworkModel
-        """
-
-        self._training = training
-
-    @property
     def preprocessing(self):
         """Gets the preprocessing of this DLFrameworks.  # noqa: E501
 
@@ -160,27 +139,6 @@ class DLFrameworks(object):
         """
 
         self._preprocessing = preprocessing
-
-    @property
-    def serving(self):
-        """Gets the serving of this DLFrameworks.  # noqa: E501
-
-
-        :return: The serving of this DLFrameworks.  # noqa: E501
-        :rtype: DLFrameworkModel
-        """
-        return self._serving
-
-    @serving.setter
-    def serving(self, serving):
-        """Sets the serving of this DLFrameworks.
-
-
-        :param serving: The serving of this DLFrameworks.  # noqa: E501
-        :type: DLFrameworkModel
-        """
-
-        self._serving = serving
 
     @property
     def project(self):
@@ -204,25 +162,67 @@ class DLFrameworks(object):
         self._project = project
 
     @property
-    def frameworks(self):
-        """Gets the frameworks of this DLFrameworks.  # noqa: E501
+    def r_ide(self):
+        """Gets the r_ide of this DLFrameworks.  # noqa: E501
 
 
-        :return: The frameworks of this DLFrameworks.  # noqa: E501
-        :rtype: list[DLFramework]
+        :return: The r_ide of this DLFrameworks.  # noqa: E501
+        :rtype: DLFrameworkModel
         """
-        return self._frameworks
+        return self._r_ide
 
-    @frameworks.setter
-    def frameworks(self, frameworks):
-        """Sets the frameworks of this DLFrameworks.
+    @r_ide.setter
+    def r_ide(self, r_ide):
+        """Sets the r_ide of this DLFrameworks.
 
 
-        :param frameworks: The frameworks of this DLFrameworks.  # noqa: E501
-        :type: list[DLFramework]
+        :param r_ide: The r_ide of this DLFrameworks.  # noqa: E501
+        :type: DLFrameworkModel
         """
 
-        self._frameworks = frameworks
+        self._r_ide = r_ide
+
+    @property
+    def serving(self):
+        """Gets the serving of this DLFrameworks.  # noqa: E501
+
+
+        :return: The serving of this DLFrameworks.  # noqa: E501
+        :rtype: DLFrameworkModel
+        """
+        return self._serving
+
+    @serving.setter
+    def serving(self, serving):
+        """Sets the serving of this DLFrameworks.
+
+
+        :param serving: The serving of this DLFrameworks.  # noqa: E501
+        :type: DLFrameworkModel
+        """
+
+        self._serving = serving
+
+    @property
+    def training(self):
+        """Gets the training of this DLFrameworks.  # noqa: E501
+
+
+        :return: The training of this DLFrameworks.  # noqa: E501
+        :rtype: DLFrameworkModel
+        """
+        return self._training
+
+    @training.setter
+    def training(self, training):
+        """Sets the training of this DLFrameworks.
+
+
+        :param training: The training of this DLFrameworks.  # noqa: E501
+        :type: DLFrameworkModel
+        """
+
+        self._training = training
 
     def to_dict(self):
         """Returns the model properties as a dict"""

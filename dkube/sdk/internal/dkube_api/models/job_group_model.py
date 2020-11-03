@@ -31,57 +31,36 @@ class JobGroupModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'name': 'str',
         'description': 'str',
         'generated': 'JobGroupModelGenerated',
+        'name': 'str',
         'user': 'str'
     }
 
     attribute_map = {
-        'name': 'name',
         'description': 'description',
         'generated': 'generated',
+        'name': 'name',
         'user': 'user'
     }
 
-    def __init__(self, name=None, description=None, generated=None, user=None):  # noqa: E501
+    def __init__(self, description=None, generated=None, name=None, user=None):  # noqa: E501
         """JobGroupModel - a model defined in Swagger"""  # noqa: E501
 
-        self._name = None
         self._description = None
         self._generated = None
+        self._name = None
         self._user = None
         self.discriminator = None
 
-        if name is not None:
-            self.name = name
         if description is not None:
             self.description = description
         if generated is not None:
             self.generated = generated
+        if name is not None:
+            self.name = name
         if user is not None:
             self.user = user
-
-    @property
-    def name(self):
-        """Gets the name of this JobGroupModel.  # noqa: E501
-
-
-        :return: The name of this JobGroupModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this JobGroupModel.
-
-
-        :param name: The name of this JobGroupModel.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
 
     @property
     def description(self):
@@ -124,6 +103,27 @@ class JobGroupModel(object):
         """
 
         self._generated = generated
+
+    @property
+    def name(self):
+        """Gets the name of this JobGroupModel.  # noqa: E501
+
+
+        :return: The name of this JobGroupModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this JobGroupModel.
+
+
+        :param name: The name of this JobGroupModel.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
 
     @property
     def user(self):

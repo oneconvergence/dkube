@@ -31,109 +31,46 @@ class VersionModelModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'released_timestamp': 'TimeStamps',
-        'published_timestamp': 'TimeStamps',
-        'published_name': 'str',
         'published_description': 'str',
+        'published_name': 'str',
+        'published_timestamp': 'TimeStamps',
         'reason': 'str',
+        'released_timestamp': 'TimeStamps',
         'stage': 'str'
     }
 
     attribute_map = {
-        'released_timestamp': 'releasedTimestamp',
-        'published_timestamp': 'publishedTimestamp',
-        'published_name': 'publishedName',
         'published_description': 'publishedDescription',
+        'published_name': 'publishedName',
+        'published_timestamp': 'publishedTimestamp',
         'reason': 'reason',
+        'released_timestamp': 'releasedTimestamp',
         'stage': 'stage'
     }
 
-    def __init__(self, released_timestamp=None, published_timestamp=None, published_name=None, published_description=None, reason=None, stage=None):  # noqa: E501
+    def __init__(self, published_description=None, published_name=None, published_timestamp=None, reason=None, released_timestamp=None, stage=None):  # noqa: E501
         """VersionModelModel - a model defined in Swagger"""  # noqa: E501
 
-        self._released_timestamp = None
-        self._published_timestamp = None
-        self._published_name = None
         self._published_description = None
+        self._published_name = None
+        self._published_timestamp = None
         self._reason = None
+        self._released_timestamp = None
         self._stage = None
         self.discriminator = None
 
-        if released_timestamp is not None:
-            self.released_timestamp = released_timestamp
-        if published_timestamp is not None:
-            self.published_timestamp = published_timestamp
-        if published_name is not None:
-            self.published_name = published_name
         if published_description is not None:
             self.published_description = published_description
+        if published_name is not None:
+            self.published_name = published_name
+        if published_timestamp is not None:
+            self.published_timestamp = published_timestamp
         if reason is not None:
             self.reason = reason
+        if released_timestamp is not None:
+            self.released_timestamp = released_timestamp
         if stage is not None:
             self.stage = stage
-
-    @property
-    def released_timestamp(self):
-        """Gets the released_timestamp of this VersionModelModel.  # noqa: E501
-
-
-        :return: The released_timestamp of this VersionModelModel.  # noqa: E501
-        :rtype: TimeStamps
-        """
-        return self._released_timestamp
-
-    @released_timestamp.setter
-    def released_timestamp(self, released_timestamp):
-        """Sets the released_timestamp of this VersionModelModel.
-
-
-        :param released_timestamp: The released_timestamp of this VersionModelModel.  # noqa: E501
-        :type: TimeStamps
-        """
-
-        self._released_timestamp = released_timestamp
-
-    @property
-    def published_timestamp(self):
-        """Gets the published_timestamp of this VersionModelModel.  # noqa: E501
-
-
-        :return: The published_timestamp of this VersionModelModel.  # noqa: E501
-        :rtype: TimeStamps
-        """
-        return self._published_timestamp
-
-    @published_timestamp.setter
-    def published_timestamp(self, published_timestamp):
-        """Sets the published_timestamp of this VersionModelModel.
-
-
-        :param published_timestamp: The published_timestamp of this VersionModelModel.  # noqa: E501
-        :type: TimeStamps
-        """
-
-        self._published_timestamp = published_timestamp
-
-    @property
-    def published_name(self):
-        """Gets the published_name of this VersionModelModel.  # noqa: E501
-
-
-        :return: The published_name of this VersionModelModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._published_name
-
-    @published_name.setter
-    def published_name(self, published_name):
-        """Sets the published_name of this VersionModelModel.
-
-
-        :param published_name: The published_name of this VersionModelModel.  # noqa: E501
-        :type: str
-        """
-
-        self._published_name = published_name
 
     @property
     def published_description(self):
@@ -157,6 +94,48 @@ class VersionModelModel(object):
         self._published_description = published_description
 
     @property
+    def published_name(self):
+        """Gets the published_name of this VersionModelModel.  # noqa: E501
+
+
+        :return: The published_name of this VersionModelModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._published_name
+
+    @published_name.setter
+    def published_name(self, published_name):
+        """Sets the published_name of this VersionModelModel.
+
+
+        :param published_name: The published_name of this VersionModelModel.  # noqa: E501
+        :type: str
+        """
+
+        self._published_name = published_name
+
+    @property
+    def published_timestamp(self):
+        """Gets the published_timestamp of this VersionModelModel.  # noqa: E501
+
+
+        :return: The published_timestamp of this VersionModelModel.  # noqa: E501
+        :rtype: TimeStamps
+        """
+        return self._published_timestamp
+
+    @published_timestamp.setter
+    def published_timestamp(self, published_timestamp):
+        """Sets the published_timestamp of this VersionModelModel.
+
+
+        :param published_timestamp: The published_timestamp of this VersionModelModel.  # noqa: E501
+        :type: TimeStamps
+        """
+
+        self._published_timestamp = published_timestamp
+
+    @property
     def reason(self):
         """Gets the reason of this VersionModelModel.  # noqa: E501
 
@@ -176,6 +155,27 @@ class VersionModelModel(object):
         """
 
         self._reason = reason
+
+    @property
+    def released_timestamp(self):
+        """Gets the released_timestamp of this VersionModelModel.  # noqa: E501
+
+
+        :return: The released_timestamp of this VersionModelModel.  # noqa: E501
+        :rtype: TimeStamps
+        """
+        return self._released_timestamp
+
+    @released_timestamp.setter
+    def released_timestamp(self, released_timestamp):
+        """Sets the released_timestamp of this VersionModelModel.
+
+
+        :param released_timestamp: The released_timestamp of this VersionModelModel.  # noqa: E501
+        :type: TimeStamps
+        """
+
+        self._released_timestamp = released_timestamp
 
     @property
     def stage(self):

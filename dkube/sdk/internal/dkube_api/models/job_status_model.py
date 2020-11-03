@@ -31,53 +31,26 @@ class JobStatusModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'state': 'str',
-        'reason': 'str'
+        'reason': 'str',
+        'state': 'str'
     }
 
     attribute_map = {
-        'state': 'state',
-        'reason': 'reason'
+        'reason': 'reason',
+        'state': 'state'
     }
 
-    def __init__(self, state=None, reason=None):  # noqa: E501
+    def __init__(self, reason=None, state=None):  # noqa: E501
         """JobStatusModel - a model defined in Swagger"""  # noqa: E501
 
-        self._state = None
         self._reason = None
+        self._state = None
         self.discriminator = None
 
-        if state is not None:
-            self.state = state
         if reason is not None:
             self.reason = reason
-
-    @property
-    def state(self):
-        """Gets the state of this JobStatusModel.  # noqa: E501
-
-
-        :return: The state of this JobStatusModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._state
-
-    @state.setter
-    def state(self, state):
-        """Sets the state of this JobStatusModel.
-
-
-        :param state: The state of this JobStatusModel.  # noqa: E501
-        :type: str
-        """
-        allowed_values = ["QUEUED", "STARTING", "TRAINING", "RUNNING", "COMPLETE", "STOPPED", "STOPPING", "DELETING", "ERROR"]  # noqa: E501
-        if state not in allowed_values:
-            raise ValueError(
-                "Invalid value for `state` ({0}), must be one of {1}"  # noqa: E501
-                .format(state, allowed_values)
-            )
-
-        self._state = state
+        if state is not None:
+            self.state = state
 
     @property
     def reason(self):
@@ -99,6 +72,33 @@ class JobStatusModel(object):
         """
 
         self._reason = reason
+
+    @property
+    def state(self):
+        """Gets the state of this JobStatusModel.  # noqa: E501
+
+
+        :return: The state of this JobStatusModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._state
+
+    @state.setter
+    def state(self, state):
+        """Sets the state of this JobStatusModel.
+
+
+        :param state: The state of this JobStatusModel.  # noqa: E501
+        :type: str
+        """
+        allowed_values = ["QUEUED", "STARTING", "TRAINING", "RUNNING", "COMPLETE", "STOPPED", "STOPPING", "DELETING", "ERROR", "IMAGEBUILDINPROGRESS"]  # noqa: E501
+        if state not in allowed_values:
+            raise ValueError(
+                "Invalid value for `state` ({0}), must be one of {1}"  # noqa: E501
+                .format(state, allowed_values)
+            )
+
+        self._state = state
 
     def to_dict(self):
         """Returns the model properties as a dict"""

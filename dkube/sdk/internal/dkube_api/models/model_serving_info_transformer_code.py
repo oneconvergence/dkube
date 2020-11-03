@@ -31,57 +31,36 @@ class ModelServingInfoTransformerCode(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'repo': 'str',
         'commit': 'str',
-        'transformer_code': 'str',
-        'project': 'str'
+        'project': 'str',
+        'repo': 'str',
+        'transformer_code': 'str'
     }
 
     attribute_map = {
-        'repo': 'repo',
         'commit': 'commit',
-        'transformer_code': 'transformer_code',
-        'project': 'project'
+        'project': 'project',
+        'repo': 'repo',
+        'transformer_code': 'transformer_code'
     }
 
-    def __init__(self, repo=None, commit=None, transformer_code=None, project=None):  # noqa: E501
+    def __init__(self, commit=None, project=None, repo=None, transformer_code=None):  # noqa: E501
         """ModelServingInfoTransformerCode - a model defined in Swagger"""  # noqa: E501
 
-        self._repo = None
         self._commit = None
-        self._transformer_code = None
         self._project = None
+        self._repo = None
+        self._transformer_code = None
         self.discriminator = None
 
-        if repo is not None:
-            self.repo = repo
         if commit is not None:
             self.commit = commit
-        if transformer_code is not None:
-            self.transformer_code = transformer_code
         if project is not None:
             self.project = project
-
-    @property
-    def repo(self):
-        """Gets the repo of this ModelServingInfoTransformerCode.  # noqa: E501
-
-
-        :return: The repo of this ModelServingInfoTransformerCode.  # noqa: E501
-        :rtype: str
-        """
-        return self._repo
-
-    @repo.setter
-    def repo(self, repo):
-        """Sets the repo of this ModelServingInfoTransformerCode.
-
-
-        :param repo: The repo of this ModelServingInfoTransformerCode.  # noqa: E501
-        :type: str
-        """
-
-        self._repo = repo
+        if repo is not None:
+            self.repo = repo
+        if transformer_code is not None:
+            self.transformer_code = transformer_code
 
     @property
     def commit(self):
@@ -105,27 +84,6 @@ class ModelServingInfoTransformerCode(object):
         self._commit = commit
 
     @property
-    def transformer_code(self):
-        """Gets the transformer_code of this ModelServingInfoTransformerCode.  # noqa: E501
-
-
-        :return: The transformer_code of this ModelServingInfoTransformerCode.  # noqa: E501
-        :rtype: str
-        """
-        return self._transformer_code
-
-    @transformer_code.setter
-    def transformer_code(self, transformer_code):
-        """Sets the transformer_code of this ModelServingInfoTransformerCode.
-
-
-        :param transformer_code: The transformer_code of this ModelServingInfoTransformerCode.  # noqa: E501
-        :type: str
-        """
-
-        self._transformer_code = transformer_code
-
-    @property
     def project(self):
         """Gets the project of this ModelServingInfoTransformerCode.  # noqa: E501
 
@@ -145,6 +103,48 @@ class ModelServingInfoTransformerCode(object):
         """
 
         self._project = project
+
+    @property
+    def repo(self):
+        """Gets the repo of this ModelServingInfoTransformerCode.  # noqa: E501
+
+
+        :return: The repo of this ModelServingInfoTransformerCode.  # noqa: E501
+        :rtype: str
+        """
+        return self._repo
+
+    @repo.setter
+    def repo(self, repo):
+        """Sets the repo of this ModelServingInfoTransformerCode.
+
+
+        :param repo: The repo of this ModelServingInfoTransformerCode.  # noqa: E501
+        :type: str
+        """
+
+        self._repo = repo
+
+    @property
+    def transformer_code(self):
+        """Gets the transformer_code of this ModelServingInfoTransformerCode.  # noqa: E501
+
+
+        :return: The transformer_code of this ModelServingInfoTransformerCode.  # noqa: E501
+        :rtype: str
+        """
+        return self._transformer_code
+
+    @transformer_code.setter
+    def transformer_code(self, transformer_code):
+        """Sets the transformer_code of this ModelServingInfoTransformerCode.
+
+
+        :param transformer_code: The transformer_code of this ModelServingInfoTransformerCode.  # noqa: E501
+        :type: str
+        """
+
+        self._transformer_code = transformer_code
 
     def to_dict(self):
         """Returns the model properties as a dict"""

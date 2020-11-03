@@ -32,45 +32,45 @@ class UserCollection(object):
     """
     swagger_types = {
         'counters': 'UserCollectionCounters',
-        'user': 'UserModel',
-        'models': 'list[DatumModel]',
         'datasets': 'list[DatumModel]',
+        'jobs': 'UserCollectionJobs',
+        'models': 'list[DatumModel]',
         'programs': 'list[DatumModel]',
-        'jobs': 'UserCollectionJobs'
+        'user': 'UserModel'
     }
 
     attribute_map = {
         'counters': 'counters',
-        'user': 'user',
-        'models': 'models',
         'datasets': 'datasets',
+        'jobs': 'jobs',
+        'models': 'models',
         'programs': 'programs',
-        'jobs': 'jobs'
+        'user': 'user'
     }
 
-    def __init__(self, counters=None, user=None, models=None, datasets=None, programs=None, jobs=None):  # noqa: E501
+    def __init__(self, counters=None, datasets=None, jobs=None, models=None, programs=None, user=None):  # noqa: E501
         """UserCollection - a model defined in Swagger"""  # noqa: E501
 
         self._counters = None
-        self._user = None
-        self._models = None
         self._datasets = None
-        self._programs = None
         self._jobs = None
+        self._models = None
+        self._programs = None
+        self._user = None
         self.discriminator = None
 
         if counters is not None:
             self.counters = counters
-        if user is not None:
-            self.user = user
-        if models is not None:
-            self.models = models
         if datasets is not None:
             self.datasets = datasets
-        if programs is not None:
-            self.programs = programs
         if jobs is not None:
             self.jobs = jobs
+        if models is not None:
+            self.models = models
+        if programs is not None:
+            self.programs = programs
+        if user is not None:
+            self.user = user
 
     @property
     def counters(self):
@@ -94,25 +94,46 @@ class UserCollection(object):
         self._counters = counters
 
     @property
-    def user(self):
-        """Gets the user of this UserCollection.  # noqa: E501
+    def datasets(self):
+        """Gets the datasets of this UserCollection.  # noqa: E501
 
 
-        :return: The user of this UserCollection.  # noqa: E501
-        :rtype: UserModel
+        :return: The datasets of this UserCollection.  # noqa: E501
+        :rtype: list[DatumModel]
         """
-        return self._user
+        return self._datasets
 
-    @user.setter
-    def user(self, user):
-        """Sets the user of this UserCollection.
+    @datasets.setter
+    def datasets(self, datasets):
+        """Sets the datasets of this UserCollection.
 
 
-        :param user: The user of this UserCollection.  # noqa: E501
-        :type: UserModel
+        :param datasets: The datasets of this UserCollection.  # noqa: E501
+        :type: list[DatumModel]
         """
 
-        self._user = user
+        self._datasets = datasets
+
+    @property
+    def jobs(self):
+        """Gets the jobs of this UserCollection.  # noqa: E501
+
+
+        :return: The jobs of this UserCollection.  # noqa: E501
+        :rtype: UserCollectionJobs
+        """
+        return self._jobs
+
+    @jobs.setter
+    def jobs(self, jobs):
+        """Sets the jobs of this UserCollection.
+
+
+        :param jobs: The jobs of this UserCollection.  # noqa: E501
+        :type: UserCollectionJobs
+        """
+
+        self._jobs = jobs
 
     @property
     def models(self):
@@ -136,27 +157,6 @@ class UserCollection(object):
         self._models = models
 
     @property
-    def datasets(self):
-        """Gets the datasets of this UserCollection.  # noqa: E501
-
-
-        :return: The datasets of this UserCollection.  # noqa: E501
-        :rtype: list[DatumModel]
-        """
-        return self._datasets
-
-    @datasets.setter
-    def datasets(self, datasets):
-        """Sets the datasets of this UserCollection.
-
-
-        :param datasets: The datasets of this UserCollection.  # noqa: E501
-        :type: list[DatumModel]
-        """
-
-        self._datasets = datasets
-
-    @property
     def programs(self):
         """Gets the programs of this UserCollection.  # noqa: E501
 
@@ -178,25 +178,25 @@ class UserCollection(object):
         self._programs = programs
 
     @property
-    def jobs(self):
-        """Gets the jobs of this UserCollection.  # noqa: E501
+    def user(self):
+        """Gets the user of this UserCollection.  # noqa: E501
 
 
-        :return: The jobs of this UserCollection.  # noqa: E501
-        :rtype: UserCollectionJobs
+        :return: The user of this UserCollection.  # noqa: E501
+        :rtype: UserModel
         """
-        return self._jobs
+        return self._user
 
-    @jobs.setter
-    def jobs(self, jobs):
-        """Sets the jobs of this UserCollection.
+    @user.setter
+    def user(self, user):
+        """Sets the user of this UserCollection.
 
 
-        :param jobs: The jobs of this UserCollection.  # noqa: E501
-        :type: UserCollectionJobs
+        :param user: The user of this UserCollection.  # noqa: E501
+        :type: UserModel
         """
 
-        self._jobs = jobs
+        self._user = user
 
     def to_dict(self):
         """Returns the model properties as a dict"""

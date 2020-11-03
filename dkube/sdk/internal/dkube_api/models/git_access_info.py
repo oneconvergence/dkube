@@ -31,78 +31,36 @@ class GitAccessInfo(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'path': 'str',
-        'url': 'str',
         'branch': 'str',
-        'credentials': 'GitAccessCredentials'
+        'credentials': 'GitAccessCredentials',
+        'path': 'str',
+        'url': 'str'
     }
 
     attribute_map = {
-        'path': 'path',
-        'url': 'url',
         'branch': 'branch',
-        'credentials': 'credentials'
+        'credentials': 'credentials',
+        'path': 'path',
+        'url': 'url'
     }
 
-    def __init__(self, path=None, url=None, branch=None, credentials=None):  # noqa: E501
+    def __init__(self, branch=None, credentials=None, path=None, url=None):  # noqa: E501
         """GitAccessInfo - a model defined in Swagger"""  # noqa: E501
 
-        self._path = None
-        self._url = None
         self._branch = None
         self._credentials = None
+        self._path = None
+        self._url = None
         self.discriminator = None
 
-        if path is not None:
-            self.path = path
-        if url is not None:
-            self.url = url
         if branch is not None:
             self.branch = branch
         if credentials is not None:
             self.credentials = credentials
-
-    @property
-    def path(self):
-        """Gets the path of this GitAccessInfo.  # noqa: E501
-
-
-        :return: The path of this GitAccessInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._path
-
-    @path.setter
-    def path(self, path):
-        """Sets the path of this GitAccessInfo.
-
-
-        :param path: The path of this GitAccessInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._path = path
-
-    @property
-    def url(self):
-        """Gets the url of this GitAccessInfo.  # noqa: E501
-
-
-        :return: The url of this GitAccessInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._url
-
-    @url.setter
-    def url(self, url):
-        """Sets the url of this GitAccessInfo.
-
-
-        :param url: The url of this GitAccessInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._url = url
+        if path is not None:
+            self.path = path
+        if url is not None:
+            self.url = url
 
     @property
     def branch(self):
@@ -145,6 +103,48 @@ class GitAccessInfo(object):
         """
 
         self._credentials = credentials
+
+    @property
+    def path(self):
+        """Gets the path of this GitAccessInfo.  # noqa: E501
+
+
+        :return: The path of this GitAccessInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._path
+
+    @path.setter
+    def path(self, path):
+        """Sets the path of this GitAccessInfo.
+
+
+        :param path: The path of this GitAccessInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._path = path
+
+    @property
+    def url(self):
+        """Gets the url of this GitAccessInfo.  # noqa: E501
+
+
+        :return: The url of this GitAccessInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._url
+
+    @url.setter
+    def url(self, url):
+        """Sets the url of this GitAccessInfo.
+
+
+        :param url: The url of this GitAccessInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._url = url
 
     def to_dict(self):
         """Returns the model properties as a dict"""

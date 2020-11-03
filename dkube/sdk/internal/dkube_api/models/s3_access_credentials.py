@@ -31,62 +31,41 @@ class S3AccessCredentials(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'access_key_id': 'str',
         'access_key': 'str',
+        'access_key_id': 'str',
         'bucket': 'str',
-        'prefix': 'str',
-        'endpoint': 'str'
+        'endpoint': 'str',
+        'prefix': 'str'
     }
 
     attribute_map = {
-        'access_key_id': 'AccessKeyId',
         'access_key': 'AccessKey',
+        'access_key_id': 'AccessKeyId',
         'bucket': 'bucket',
-        'prefix': 'prefix',
-        'endpoint': 'endpoint'
+        'endpoint': 'endpoint',
+        'prefix': 'prefix'
     }
 
-    def __init__(self, access_key_id=None, access_key=None, bucket=None, prefix=None, endpoint=None):  # noqa: E501
+    def __init__(self, access_key=None, access_key_id=None, bucket=None, endpoint=None, prefix=None):  # noqa: E501
         """S3AccessCredentials - a model defined in Swagger"""  # noqa: E501
 
-        self._access_key_id = None
         self._access_key = None
+        self._access_key_id = None
         self._bucket = None
-        self._prefix = None
         self._endpoint = None
+        self._prefix = None
         self.discriminator = None
 
-        if access_key_id is not None:
-            self.access_key_id = access_key_id
         if access_key is not None:
             self.access_key = access_key
+        if access_key_id is not None:
+            self.access_key_id = access_key_id
         if bucket is not None:
             self.bucket = bucket
-        if prefix is not None:
-            self.prefix = prefix
         if endpoint is not None:
             self.endpoint = endpoint
-
-    @property
-    def access_key_id(self):
-        """Gets the access_key_id of this S3AccessCredentials.  # noqa: E501
-
-
-        :return: The access_key_id of this S3AccessCredentials.  # noqa: E501
-        :rtype: str
-        """
-        return self._access_key_id
-
-    @access_key_id.setter
-    def access_key_id(self, access_key_id):
-        """Sets the access_key_id of this S3AccessCredentials.
-
-
-        :param access_key_id: The access_key_id of this S3AccessCredentials.  # noqa: E501
-        :type: str
-        """
-
-        self._access_key_id = access_key_id
+        if prefix is not None:
+            self.prefix = prefix
 
     @property
     def access_key(self):
@@ -110,6 +89,27 @@ class S3AccessCredentials(object):
         self._access_key = access_key
 
     @property
+    def access_key_id(self):
+        """Gets the access_key_id of this S3AccessCredentials.  # noqa: E501
+
+
+        :return: The access_key_id of this S3AccessCredentials.  # noqa: E501
+        :rtype: str
+        """
+        return self._access_key_id
+
+    @access_key_id.setter
+    def access_key_id(self, access_key_id):
+        """Sets the access_key_id of this S3AccessCredentials.
+
+
+        :param access_key_id: The access_key_id of this S3AccessCredentials.  # noqa: E501
+        :type: str
+        """
+
+        self._access_key_id = access_key_id
+
+    @property
     def bucket(self):
         """Gets the bucket of this S3AccessCredentials.  # noqa: E501
 
@@ -131,27 +131,6 @@ class S3AccessCredentials(object):
         self._bucket = bucket
 
     @property
-    def prefix(self):
-        """Gets the prefix of this S3AccessCredentials.  # noqa: E501
-
-
-        :return: The prefix of this S3AccessCredentials.  # noqa: E501
-        :rtype: str
-        """
-        return self._prefix
-
-    @prefix.setter
-    def prefix(self, prefix):
-        """Sets the prefix of this S3AccessCredentials.
-
-
-        :param prefix: The prefix of this S3AccessCredentials.  # noqa: E501
-        :type: str
-        """
-
-        self._prefix = prefix
-
-    @property
     def endpoint(self):
         """Gets the endpoint of this S3AccessCredentials.  # noqa: E501
 
@@ -171,6 +150,27 @@ class S3AccessCredentials(object):
         """
 
         self._endpoint = endpoint
+
+    @property
+    def prefix(self):
+        """Gets the prefix of this S3AccessCredentials.  # noqa: E501
+
+
+        :return: The prefix of this S3AccessCredentials.  # noqa: E501
+        :rtype: str
+        """
+        return self._prefix
+
+    @prefix.setter
+    def prefix(self, prefix):
+        """Sets the prefix of this S3AccessCredentials.
+
+
+        :param prefix: The prefix of this S3AccessCredentials.  # noqa: E501
+        :type: str
+        """
+
+        self._prefix = prefix
 
     def to_dict(self):
         """Returns the model properties as a dict"""

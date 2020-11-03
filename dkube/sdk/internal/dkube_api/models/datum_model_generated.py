@@ -31,245 +31,101 @@ class DatumModelGenerated(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'deleted': 'bool',
-        'archived': 'bool',
-        'private': 'str',
-        'head_version_index': 'int',
-        'head_version': 'str',
-        'updated_time': 'TimeStamps',
-        'storage_path': 'str',
         'affinity': 'str',
-        'uuid': 'str',
-        'status': 'DatumStatusModel',
-        'size': 'str',
+        'archived': 'bool',
+        'deleted': 'bool',
+        'details': 'DatumModelGeneratedDetails',
+        'head_version': 'str',
+        'head_version_index': 'int',
+        'original_name': 'str',
+        'private': 'str',
         'progress': 'int',
-        'timestamps': 'TimeStamps',
+        'size': 'str',
+        'status': 'DatumStatusModel',
+        'storage_path': 'str',
         'tbref': 'str',
+        'timestamps': 'TimeStamps',
+        'updated_time': 'TimeStamps',
         'user': 'str',
-        'details': 'DatumModelGeneratedDetails'
+        'uuid': 'str'
     }
 
     attribute_map = {
-        'deleted': 'deleted',
-        'archived': 'archived',
-        'private': 'private',
-        'head_version_index': 'head_version_index',
-        'head_version': 'head_version',
-        'updated_time': 'updated_time',
-        'storage_path': 'storage_path',
         'affinity': 'affinity',
-        'uuid': 'uuid',
-        'status': 'status',
-        'size': 'size',
+        'archived': 'archived',
+        'deleted': 'deleted',
+        'details': 'details',
+        'head_version': 'head_version',
+        'head_version_index': 'head_version_index',
+        'original_name': 'originalName',
+        'private': 'private',
         'progress': 'progress',
-        'timestamps': 'timestamps',
+        'size': 'size',
+        'status': 'status',
+        'storage_path': 'storage_path',
         'tbref': 'tbref',
+        'timestamps': 'timestamps',
+        'updated_time': 'updated_time',
         'user': 'user',
-        'details': 'details'
+        'uuid': 'uuid'
     }
 
-    def __init__(self, deleted=False, archived=False, private=None, head_version_index=None, head_version=None, updated_time=None, storage_path=None, affinity=None, uuid=None, status=None, size=None, progress=None, timestamps=None, tbref=None, user=None, details=None):  # noqa: E501
+    def __init__(self, affinity=None, archived=False, deleted=False, details=None, head_version=None, head_version_index=None, original_name=None, private=None, progress=None, size=None, status=None, storage_path=None, tbref=None, timestamps=None, updated_time=None, user=None, uuid=None):  # noqa: E501
         """DatumModelGenerated - a model defined in Swagger"""  # noqa: E501
 
-        self._deleted = None
-        self._archived = None
-        self._private = None
-        self._head_version_index = None
-        self._head_version = None
-        self._updated_time = None
-        self._storage_path = None
         self._affinity = None
-        self._uuid = None
-        self._status = None
-        self._size = None
-        self._progress = None
-        self._timestamps = None
-        self._tbref = None
-        self._user = None
+        self._archived = None
+        self._deleted = None
         self._details = None
+        self._head_version = None
+        self._head_version_index = None
+        self._original_name = None
+        self._private = None
+        self._progress = None
+        self._size = None
+        self._status = None
+        self._storage_path = None
+        self._tbref = None
+        self._timestamps = None
+        self._updated_time = None
+        self._user = None
+        self._uuid = None
         self.discriminator = None
 
-        if deleted is not None:
-            self.deleted = deleted
-        if archived is not None:
-            self.archived = archived
-        if private is not None:
-            self.private = private
-        if head_version_index is not None:
-            self.head_version_index = head_version_index
-        if head_version is not None:
-            self.head_version = head_version
-        if updated_time is not None:
-            self.updated_time = updated_time
-        if storage_path is not None:
-            self.storage_path = storage_path
         if affinity is not None:
             self.affinity = affinity
-        if uuid is not None:
-            self.uuid = uuid
-        if status is not None:
-            self.status = status
-        if size is not None:
-            self.size = size
-        if progress is not None:
-            self.progress = progress
-        if timestamps is not None:
-            self.timestamps = timestamps
-        if tbref is not None:
-            self.tbref = tbref
-        if user is not None:
-            self.user = user
+        if archived is not None:
+            self.archived = archived
+        if deleted is not None:
+            self.deleted = deleted
         if details is not None:
             self.details = details
-
-    @property
-    def deleted(self):
-        """Gets the deleted of this DatumModelGenerated.  # noqa: E501
-
-
-        :return: The deleted of this DatumModelGenerated.  # noqa: E501
-        :rtype: bool
-        """
-        return self._deleted
-
-    @deleted.setter
-    def deleted(self, deleted):
-        """Sets the deleted of this DatumModelGenerated.
-
-
-        :param deleted: The deleted of this DatumModelGenerated.  # noqa: E501
-        :type: bool
-        """
-
-        self._deleted = deleted
-
-    @property
-    def archived(self):
-        """Gets the archived of this DatumModelGenerated.  # noqa: E501
-
-
-        :return: The archived of this DatumModelGenerated.  # noqa: E501
-        :rtype: bool
-        """
-        return self._archived
-
-    @archived.setter
-    def archived(self, archived):
-        """Sets the archived of this DatumModelGenerated.
-
-
-        :param archived: The archived of this DatumModelGenerated.  # noqa: E501
-        :type: bool
-        """
-
-        self._archived = archived
-
-    @property
-    def private(self):
-        """Gets the private of this DatumModelGenerated.  # noqa: E501
-
-
-        :return: The private of this DatumModelGenerated.  # noqa: E501
-        :rtype: str
-        """
-        return self._private
-
-    @private.setter
-    def private(self, private):
-        """Sets the private of this DatumModelGenerated.
-
-
-        :param private: The private of this DatumModelGenerated.  # noqa: E501
-        :type: str
-        """
-
-        self._private = private
-
-    @property
-    def head_version_index(self):
-        """Gets the head_version_index of this DatumModelGenerated.  # noqa: E501
-
-
-        :return: The head_version_index of this DatumModelGenerated.  # noqa: E501
-        :rtype: int
-        """
-        return self._head_version_index
-
-    @head_version_index.setter
-    def head_version_index(self, head_version_index):
-        """Sets the head_version_index of this DatumModelGenerated.
-
-
-        :param head_version_index: The head_version_index of this DatumModelGenerated.  # noqa: E501
-        :type: int
-        """
-
-        self._head_version_index = head_version_index
-
-    @property
-    def head_version(self):
-        """Gets the head_version of this DatumModelGenerated.  # noqa: E501
-
-
-        :return: The head_version of this DatumModelGenerated.  # noqa: E501
-        :rtype: str
-        """
-        return self._head_version
-
-    @head_version.setter
-    def head_version(self, head_version):
-        """Sets the head_version of this DatumModelGenerated.
-
-
-        :param head_version: The head_version of this DatumModelGenerated.  # noqa: E501
-        :type: str
-        """
-
-        self._head_version = head_version
-
-    @property
-    def updated_time(self):
-        """Gets the updated_time of this DatumModelGenerated.  # noqa: E501
-
-
-        :return: The updated_time of this DatumModelGenerated.  # noqa: E501
-        :rtype: TimeStamps
-        """
-        return self._updated_time
-
-    @updated_time.setter
-    def updated_time(self, updated_time):
-        """Sets the updated_time of this DatumModelGenerated.
-
-
-        :param updated_time: The updated_time of this DatumModelGenerated.  # noqa: E501
-        :type: TimeStamps
-        """
-
-        self._updated_time = updated_time
-
-    @property
-    def storage_path(self):
-        """Gets the storage_path of this DatumModelGenerated.  # noqa: E501
-
-        Local path of datum stored in dkube storage  # noqa: E501
-
-        :return: The storage_path of this DatumModelGenerated.  # noqa: E501
-        :rtype: str
-        """
-        return self._storage_path
-
-    @storage_path.setter
-    def storage_path(self, storage_path):
-        """Sets the storage_path of this DatumModelGenerated.
-
-        Local path of datum stored in dkube storage  # noqa: E501
-
-        :param storage_path: The storage_path of this DatumModelGenerated.  # noqa: E501
-        :type: str
-        """
-
-        self._storage_path = storage_path
+        if head_version is not None:
+            self.head_version = head_version
+        if head_version_index is not None:
+            self.head_version_index = head_version_index
+        if original_name is not None:
+            self.original_name = original_name
+        if private is not None:
+            self.private = private
+        if progress is not None:
+            self.progress = progress
+        if size is not None:
+            self.size = size
+        if status is not None:
+            self.status = status
+        if storage_path is not None:
+            self.storage_path = storage_path
+        if tbref is not None:
+            self.tbref = tbref
+        if timestamps is not None:
+            self.timestamps = timestamps
+        if updated_time is not None:
+            self.updated_time = updated_time
+        if user is not None:
+            self.user = user
+        if uuid is not None:
+            self.uuid = uuid
 
     @property
     def affinity(self):
@@ -295,69 +151,151 @@ class DatumModelGenerated(object):
         self._affinity = affinity
 
     @property
-    def uuid(self):
-        """Gets the uuid of this DatumModelGenerated.  # noqa: E501
+    def archived(self):
+        """Gets the archived of this DatumModelGenerated.  # noqa: E501
 
 
-        :return: The uuid of this DatumModelGenerated.  # noqa: E501
+        :return: The archived of this DatumModelGenerated.  # noqa: E501
+        :rtype: bool
+        """
+        return self._archived
+
+    @archived.setter
+    def archived(self, archived):
+        """Sets the archived of this DatumModelGenerated.
+
+
+        :param archived: The archived of this DatumModelGenerated.  # noqa: E501
+        :type: bool
+        """
+
+        self._archived = archived
+
+    @property
+    def deleted(self):
+        """Gets the deleted of this DatumModelGenerated.  # noqa: E501
+
+
+        :return: The deleted of this DatumModelGenerated.  # noqa: E501
+        :rtype: bool
+        """
+        return self._deleted
+
+    @deleted.setter
+    def deleted(self, deleted):
+        """Sets the deleted of this DatumModelGenerated.
+
+
+        :param deleted: The deleted of this DatumModelGenerated.  # noqa: E501
+        :type: bool
+        """
+
+        self._deleted = deleted
+
+    @property
+    def details(self):
+        """Gets the details of this DatumModelGenerated.  # noqa: E501
+
+
+        :return: The details of this DatumModelGenerated.  # noqa: E501
+        :rtype: DatumModelGeneratedDetails
+        """
+        return self._details
+
+    @details.setter
+    def details(self, details):
+        """Sets the details of this DatumModelGenerated.
+
+
+        :param details: The details of this DatumModelGenerated.  # noqa: E501
+        :type: DatumModelGeneratedDetails
+        """
+
+        self._details = details
+
+    @property
+    def head_version(self):
+        """Gets the head_version of this DatumModelGenerated.  # noqa: E501
+
+
+        :return: The head_version of this DatumModelGenerated.  # noqa: E501
         :rtype: str
         """
-        return self._uuid
+        return self._head_version
 
-    @uuid.setter
-    def uuid(self, uuid):
-        """Sets the uuid of this DatumModelGenerated.
+    @head_version.setter
+    def head_version(self, head_version):
+        """Sets the head_version of this DatumModelGenerated.
 
 
-        :param uuid: The uuid of this DatumModelGenerated.  # noqa: E501
+        :param head_version: The head_version of this DatumModelGenerated.  # noqa: E501
         :type: str
         """
 
-        self._uuid = uuid
+        self._head_version = head_version
 
     @property
-    def status(self):
-        """Gets the status of this DatumModelGenerated.  # noqa: E501
+    def head_version_index(self):
+        """Gets the head_version_index of this DatumModelGenerated.  # noqa: E501
 
 
-        :return: The status of this DatumModelGenerated.  # noqa: E501
-        :rtype: DatumStatusModel
+        :return: The head_version_index of this DatumModelGenerated.  # noqa: E501
+        :rtype: int
         """
-        return self._status
+        return self._head_version_index
 
-    @status.setter
-    def status(self, status):
-        """Sets the status of this DatumModelGenerated.
+    @head_version_index.setter
+    def head_version_index(self, head_version_index):
+        """Sets the head_version_index of this DatumModelGenerated.
 
 
-        :param status: The status of this DatumModelGenerated.  # noqa: E501
-        :type: DatumStatusModel
+        :param head_version_index: The head_version_index of this DatumModelGenerated.  # noqa: E501
+        :type: int
         """
 
-        self._status = status
+        self._head_version_index = head_version_index
 
     @property
-    def size(self):
-        """Gets the size of this DatumModelGenerated.  # noqa: E501
+    def original_name(self):
+        """Gets the original_name of this DatumModelGenerated.  # noqa: E501
 
-        Size in bytes  # noqa: E501
 
-        :return: The size of this DatumModelGenerated.  # noqa: E501
+        :return: The original_name of this DatumModelGenerated.  # noqa: E501
         :rtype: str
         """
-        return self._size
+        return self._original_name
 
-    @size.setter
-    def size(self, size):
-        """Sets the size of this DatumModelGenerated.
+    @original_name.setter
+    def original_name(self, original_name):
+        """Sets the original_name of this DatumModelGenerated.
 
-        Size in bytes  # noqa: E501
 
-        :param size: The size of this DatumModelGenerated.  # noqa: E501
+        :param original_name: The original_name of this DatumModelGenerated.  # noqa: E501
         :type: str
         """
 
-        self._size = size
+        self._original_name = original_name
+
+    @property
+    def private(self):
+        """Gets the private of this DatumModelGenerated.  # noqa: E501
+
+
+        :return: The private of this DatumModelGenerated.  # noqa: E501
+        :rtype: str
+        """
+        return self._private
+
+    @private.setter
+    def private(self, private):
+        """Sets the private of this DatumModelGenerated.
+
+
+        :param private: The private of this DatumModelGenerated.  # noqa: E501
+        :type: str
+        """
+
+        self._private = private
 
     @property
     def progress(self):
@@ -383,25 +321,71 @@ class DatumModelGenerated(object):
         self._progress = progress
 
     @property
-    def timestamps(self):
-        """Gets the timestamps of this DatumModelGenerated.  # noqa: E501
+    def size(self):
+        """Gets the size of this DatumModelGenerated.  # noqa: E501
 
+        Size in bytes  # noqa: E501
 
-        :return: The timestamps of this DatumModelGenerated.  # noqa: E501
-        :rtype: TimeStamps
+        :return: The size of this DatumModelGenerated.  # noqa: E501
+        :rtype: str
         """
-        return self._timestamps
+        return self._size
 
-    @timestamps.setter
-    def timestamps(self, timestamps):
-        """Sets the timestamps of this DatumModelGenerated.
+    @size.setter
+    def size(self, size):
+        """Sets the size of this DatumModelGenerated.
 
+        Size in bytes  # noqa: E501
 
-        :param timestamps: The timestamps of this DatumModelGenerated.  # noqa: E501
-        :type: TimeStamps
+        :param size: The size of this DatumModelGenerated.  # noqa: E501
+        :type: str
         """
 
-        self._timestamps = timestamps
+        self._size = size
+
+    @property
+    def status(self):
+        """Gets the status of this DatumModelGenerated.  # noqa: E501
+
+
+        :return: The status of this DatumModelGenerated.  # noqa: E501
+        :rtype: DatumStatusModel
+        """
+        return self._status
+
+    @status.setter
+    def status(self, status):
+        """Sets the status of this DatumModelGenerated.
+
+
+        :param status: The status of this DatumModelGenerated.  # noqa: E501
+        :type: DatumStatusModel
+        """
+
+        self._status = status
+
+    @property
+    def storage_path(self):
+        """Gets the storage_path of this DatumModelGenerated.  # noqa: E501
+
+        Local path of datum stored in dkube storage  # noqa: E501
+
+        :return: The storage_path of this DatumModelGenerated.  # noqa: E501
+        :rtype: str
+        """
+        return self._storage_path
+
+    @storage_path.setter
+    def storage_path(self, storage_path):
+        """Sets the storage_path of this DatumModelGenerated.
+
+        Local path of datum stored in dkube storage  # noqa: E501
+
+        :param storage_path: The storage_path of this DatumModelGenerated.  # noqa: E501
+        :type: str
+        """
+
+        self._storage_path = storage_path
 
     @property
     def tbref(self):
@@ -423,6 +407,48 @@ class DatumModelGenerated(object):
         """
 
         self._tbref = tbref
+
+    @property
+    def timestamps(self):
+        """Gets the timestamps of this DatumModelGenerated.  # noqa: E501
+
+
+        :return: The timestamps of this DatumModelGenerated.  # noqa: E501
+        :rtype: TimeStamps
+        """
+        return self._timestamps
+
+    @timestamps.setter
+    def timestamps(self, timestamps):
+        """Sets the timestamps of this DatumModelGenerated.
+
+
+        :param timestamps: The timestamps of this DatumModelGenerated.  # noqa: E501
+        :type: TimeStamps
+        """
+
+        self._timestamps = timestamps
+
+    @property
+    def updated_time(self):
+        """Gets the updated_time of this DatumModelGenerated.  # noqa: E501
+
+
+        :return: The updated_time of this DatumModelGenerated.  # noqa: E501
+        :rtype: TimeStamps
+        """
+        return self._updated_time
+
+    @updated_time.setter
+    def updated_time(self, updated_time):
+        """Sets the updated_time of this DatumModelGenerated.
+
+
+        :param updated_time: The updated_time of this DatumModelGenerated.  # noqa: E501
+        :type: TimeStamps
+        """
+
+        self._updated_time = updated_time
 
     @property
     def user(self):
@@ -448,25 +474,25 @@ class DatumModelGenerated(object):
         self._user = user
 
     @property
-    def details(self):
-        """Gets the details of this DatumModelGenerated.  # noqa: E501
+    def uuid(self):
+        """Gets the uuid of this DatumModelGenerated.  # noqa: E501
 
 
-        :return: The details of this DatumModelGenerated.  # noqa: E501
-        :rtype: DatumModelGeneratedDetails
+        :return: The uuid of this DatumModelGenerated.  # noqa: E501
+        :rtype: str
         """
-        return self._details
+        return self._uuid
 
-    @details.setter
-    def details(self, details):
-        """Sets the details of this DatumModelGenerated.
+    @uuid.setter
+    def uuid(self, uuid):
+        """Sets the uuid of this DatumModelGenerated.
 
 
-        :param details: The details of this DatumModelGenerated.  # noqa: E501
-        :type: DatumModelGeneratedDetails
+        :param uuid: The uuid of this DatumModelGenerated.  # noqa: E501
+        :type: str
         """
 
-        self._details = details
+        self._uuid = uuid
 
     def to_dict(self):
         """Returns the model properties as a dict"""

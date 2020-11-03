@@ -31,68 +31,73 @@ class Data7(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'description': 'str',
-        'tags': 'list[str]'
+        'group': 'str',
+        'users': 'list[str]'
     }
 
     attribute_map = {
-        'description': 'description',
-        'tags': 'tags'
+        'group': 'group',
+        'users': 'users'
     }
 
-    def __init__(self, description=None, tags=None):  # noqa: E501
+    def __init__(self, group=None, users=None):  # noqa: E501
         """Data7 - a model defined in Swagger"""  # noqa: E501
 
-        self._description = None
-        self._tags = None
+        self._group = None
+        self._users = None
         self.discriminator = None
 
-        if description is not None:
-            self.description = description
-        if tags is not None:
-            self.tags = tags
+        if group is not None:
+            self.group = group
+        self.users = users
 
     @property
-    def description(self):
-        """Gets the description of this Data7.  # noqa: E501
+    def group(self):
+        """Gets the group of this Data7.  # noqa: E501
 
+        Name of the valid group. This should be a valid group existing in dkube.  # noqa: E501
 
-        :return: The description of this Data7.  # noqa: E501
+        :return: The group of this Data7.  # noqa: E501
         :rtype: str
         """
-        return self._description
+        return self._group
 
-    @description.setter
-    def description(self, description):
-        """Sets the description of this Data7.
+    @group.setter
+    def group(self, group):
+        """Sets the group of this Data7.
 
+        Name of the valid group. This should be a valid group existing in dkube.  # noqa: E501
 
-        :param description: The description of this Data7.  # noqa: E501
+        :param group: The group of this Data7.  # noqa: E501
         :type: str
         """
 
-        self._description = description
+        self._group = group
 
     @property
-    def tags(self):
-        """Gets the tags of this Data7.  # noqa: E501
+    def users(self):
+        """Gets the users of this Data7.  # noqa: E501
 
+        Name of the valid users. Each  user should be a valid github user.  # noqa: E501
 
-        :return: The tags of this Data7.  # noqa: E501
+        :return: The users of this Data7.  # noqa: E501
         :rtype: list[str]
         """
-        return self._tags
+        return self._users
 
-    @tags.setter
-    def tags(self, tags):
-        """Sets the tags of this Data7.
+    @users.setter
+    def users(self, users):
+        """Sets the users of this Data7.
 
+        Name of the valid users. Each  user should be a valid github user.  # noqa: E501
 
-        :param tags: The tags of this Data7.  # noqa: E501
+        :param users: The users of this Data7.  # noqa: E501
         :type: list[str]
         """
+        if users is None:
+            raise ValueError("Invalid value for `users`, must not be `None`")  # noqa: E501
 
-        self._tags = tags
+        self._users = users
 
     def to_dict(self):
         """Returns the model properties as a dict"""

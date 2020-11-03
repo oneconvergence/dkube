@@ -31,177 +31,212 @@ class JobModelParametersGenerated(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'deleted': 'bool',
-        'archived': 'bool',
-        'private': 'str',
-        'category': 'str',
-        'pipeline': 'JobModelParametersGeneratedPipeline',
-        'subclass': 'str',
-        'hp_tuning_info': 'str',
-        'training_image': 'CustomContainerModel',
-        'serving_image': 'CustomContainerModel',
-        'scheduled': 'bool',
+        'accelerator': 'str',
         'affinity': 'str',
-        'user': 'str',
+        'archived': 'bool',
+        'best_objective_value': 'float',
+        'best_trial_id': 'str',
+        'category': 'str',
+        'cicdstatus': 'CICDStatusModel',
+        'deleted': 'bool',
+        'details': 'JobModelParametersGeneratedDetails',
+        'hp_tuning_info': 'str',
+        'input_datum_refs': 'list[JobModelParametersGeneratedInputDatumRefs]',
         'jobid': 'str',
-        'uuid': 'str',
-        'status': 'JobStatusModel',
-        'timestamps': 'TimeStamps',
-        'runtime': 'TimeStamps',
         'ngpus_alloc': 'int',
         'ngpus_max': 'int',
-        'tbref': 'str',
+        'pipeline': 'DatumJobDetailsPipeline',
+        'private': 'str',
+        'runtime': 'TimeStamps',
+        'scheduled': 'bool',
+        'serving_image': 'CustomContainerModel',
+        'status': 'JobStatusModel',
         'studyref': 'str',
-        'trialref': 'str',
-        'best_trial_id': 'str',
-        'best_objective_value': 'float',
-        'accelerator': 'str',
-        'versions': 'JobModelParametersGeneratedVersions',
+        'subclass': 'str',
+        'tbref': 'str',
+        'timestamps': 'TimeStamps',
         'tracking': 'list[str]',
-        'details': 'JobModelParametersGeneratedDetails'
+        'training_image': 'CustomContainerModel',
+        'trialref': 'str',
+        'user': 'str',
+        'uuid': 'str',
+        'versions': 'JobModelParametersGeneratedVersions'
     }
 
     attribute_map = {
-        'deleted': 'deleted',
-        'archived': 'archived',
-        'private': 'private',
-        'category': 'category',
-        'pipeline': 'pipeline',
-        'subclass': 'subclass',
-        'hp_tuning_info': 'hp_tuning_info',
-        'training_image': 'training_image',
-        'serving_image': 'serving_image',
-        'scheduled': 'scheduled',
+        'accelerator': 'accelerator',
         'affinity': 'affinity',
-        'user': 'user',
+        'archived': 'archived',
+        'best_objective_value': 'best_objective_value',
+        'best_trial_id': 'best_trial_id',
+        'category': 'category',
+        'cicdstatus': 'cicdstatus',
+        'deleted': 'deleted',
+        'details': 'details',
+        'hp_tuning_info': 'hp_tuning_info',
+        'input_datum_refs': 'inputDatumRefs',
         'jobid': 'jobid',
-        'uuid': 'uuid',
-        'status': 'status',
-        'timestamps': 'timestamps',
-        'runtime': 'runtime',
         'ngpus_alloc': 'ngpus_alloc',
         'ngpus_max': 'ngpus_max',
-        'tbref': 'tbref',
+        'pipeline': 'pipeline',
+        'private': 'private',
+        'runtime': 'runtime',
+        'scheduled': 'scheduled',
+        'serving_image': 'serving_image',
+        'status': 'status',
         'studyref': 'studyref',
-        'trialref': 'trialref',
-        'best_trial_id': 'best_trial_id',
-        'best_objective_value': 'best_objective_value',
-        'accelerator': 'accelerator',
-        'versions': 'versions',
+        'subclass': 'subclass',
+        'tbref': 'tbref',
+        'timestamps': 'timestamps',
         'tracking': 'tracking',
-        'details': 'details'
+        'training_image': 'training_image',
+        'trialref': 'trialref',
+        'user': 'user',
+        'uuid': 'uuid',
+        'versions': 'versions'
     }
 
-    def __init__(self, deleted=False, archived=False, private=None, category=None, pipeline=None, subclass=None, hp_tuning_info=None, training_image=None, serving_image=None, scheduled=None, affinity=None, user=None, jobid=None, uuid=None, status=None, timestamps=None, runtime=None, ngpus_alloc=None, ngpus_max=None, tbref=None, studyref=None, trialref=None, best_trial_id=None, best_objective_value=None, accelerator=None, versions=None, tracking=None, details=None):  # noqa: E501
+    def __init__(self, accelerator=None, affinity=None, archived=False, best_objective_value=None, best_trial_id=None, category=None, cicdstatus=None, deleted=False, details=None, hp_tuning_info=None, input_datum_refs=None, jobid=None, ngpus_alloc=None, ngpus_max=None, pipeline=None, private=None, runtime=None, scheduled=None, serving_image=None, status=None, studyref=None, subclass=None, tbref=None, timestamps=None, tracking=None, training_image=None, trialref=None, user=None, uuid=None, versions=None):  # noqa: E501
         """JobModelParametersGenerated - a model defined in Swagger"""  # noqa: E501
 
-        self._deleted = None
-        self._archived = None
-        self._private = None
-        self._category = None
-        self._pipeline = None
-        self._subclass = None
-        self._hp_tuning_info = None
-        self._training_image = None
-        self._serving_image = None
-        self._scheduled = None
+        self._accelerator = None
         self._affinity = None
-        self._user = None
+        self._archived = None
+        self._best_objective_value = None
+        self._best_trial_id = None
+        self._category = None
+        self._cicdstatus = None
+        self._deleted = None
+        self._details = None
+        self._hp_tuning_info = None
+        self._input_datum_refs = None
         self._jobid = None
-        self._uuid = None
-        self._status = None
-        self._timestamps = None
-        self._runtime = None
         self._ngpus_alloc = None
         self._ngpus_max = None
-        self._tbref = None
+        self._pipeline = None
+        self._private = None
+        self._runtime = None
+        self._scheduled = None
+        self._serving_image = None
+        self._status = None
         self._studyref = None
-        self._trialref = None
-        self._best_trial_id = None
-        self._best_objective_value = None
-        self._accelerator = None
-        self._versions = None
+        self._subclass = None
+        self._tbref = None
+        self._timestamps = None
         self._tracking = None
-        self._details = None
+        self._training_image = None
+        self._trialref = None
+        self._user = None
+        self._uuid = None
+        self._versions = None
         self.discriminator = None
 
-        if deleted is not None:
-            self.deleted = deleted
-        if archived is not None:
-            self.archived = archived
-        if private is not None:
-            self.private = private
-        if category is not None:
-            self.category = category
-        if pipeline is not None:
-            self.pipeline = pipeline
-        if subclass is not None:
-            self.subclass = subclass
-        if hp_tuning_info is not None:
-            self.hp_tuning_info = hp_tuning_info
-        if training_image is not None:
-            self.training_image = training_image
-        if serving_image is not None:
-            self.serving_image = serving_image
-        if scheduled is not None:
-            self.scheduled = scheduled
+        if accelerator is not None:
+            self.accelerator = accelerator
         if affinity is not None:
             self.affinity = affinity
-        if user is not None:
-            self.user = user
+        if archived is not None:
+            self.archived = archived
+        if best_objective_value is not None:
+            self.best_objective_value = best_objective_value
+        if best_trial_id is not None:
+            self.best_trial_id = best_trial_id
+        if category is not None:
+            self.category = category
+        if cicdstatus is not None:
+            self.cicdstatus = cicdstatus
+        if deleted is not None:
+            self.deleted = deleted
+        if details is not None:
+            self.details = details
+        if hp_tuning_info is not None:
+            self.hp_tuning_info = hp_tuning_info
+        if input_datum_refs is not None:
+            self.input_datum_refs = input_datum_refs
         if jobid is not None:
             self.jobid = jobid
-        if uuid is not None:
-            self.uuid = uuid
-        if status is not None:
-            self.status = status
-        if timestamps is not None:
-            self.timestamps = timestamps
-        if runtime is not None:
-            self.runtime = runtime
         if ngpus_alloc is not None:
             self.ngpus_alloc = ngpus_alloc
         if ngpus_max is not None:
             self.ngpus_max = ngpus_max
-        if tbref is not None:
-            self.tbref = tbref
+        if pipeline is not None:
+            self.pipeline = pipeline
+        if private is not None:
+            self.private = private
+        if runtime is not None:
+            self.runtime = runtime
+        if scheduled is not None:
+            self.scheduled = scheduled
+        if serving_image is not None:
+            self.serving_image = serving_image
+        if status is not None:
+            self.status = status
         if studyref is not None:
             self.studyref = studyref
-        if trialref is not None:
-            self.trialref = trialref
-        if best_trial_id is not None:
-            self.best_trial_id = best_trial_id
-        if best_objective_value is not None:
-            self.best_objective_value = best_objective_value
-        if accelerator is not None:
-            self.accelerator = accelerator
-        if versions is not None:
-            self.versions = versions
+        if subclass is not None:
+            self.subclass = subclass
+        if tbref is not None:
+            self.tbref = tbref
+        if timestamps is not None:
+            self.timestamps = timestamps
         if tracking is not None:
             self.tracking = tracking
-        if details is not None:
-            self.details = details
+        if training_image is not None:
+            self.training_image = training_image
+        if trialref is not None:
+            self.trialref = trialref
+        if user is not None:
+            self.user = user
+        if uuid is not None:
+            self.uuid = uuid
+        if versions is not None:
+            self.versions = versions
 
     @property
-    def deleted(self):
-        """Gets the deleted of this JobModelParametersGenerated.  # noqa: E501
+    def accelerator(self):
+        """Gets the accelerator of this JobModelParametersGenerated.  # noqa: E501
 
+        Node affinity  # noqa: E501
 
-        :return: The deleted of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: bool
+        :return: The accelerator of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: str
         """
-        return self._deleted
+        return self._accelerator
 
-    @deleted.setter
-    def deleted(self, deleted):
-        """Sets the deleted of this JobModelParametersGenerated.
+    @accelerator.setter
+    def accelerator(self, accelerator):
+        """Sets the accelerator of this JobModelParametersGenerated.
 
+        Node affinity  # noqa: E501
 
-        :param deleted: The deleted of this JobModelParametersGenerated.  # noqa: E501
-        :type: bool
+        :param accelerator: The accelerator of this JobModelParametersGenerated.  # noqa: E501
+        :type: str
         """
 
-        self._deleted = deleted
+        self._accelerator = accelerator
+
+    @property
+    def affinity(self):
+        """Gets the affinity of this JobModelParametersGenerated.  # noqa: E501
+
+        Affinity of this job.  # noqa: E501
+
+        :return: The affinity of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: str
+        """
+        return self._affinity
+
+    @affinity.setter
+    def affinity(self, affinity):
+        """Sets the affinity of this JobModelParametersGenerated.
+
+        Affinity of this job.  # noqa: E501
+
+        :param affinity: The affinity of this JobModelParametersGenerated.  # noqa: E501
+        :type: str
+        """
+
+        self._affinity = affinity
 
     @property
     def archived(self):
@@ -225,25 +260,50 @@ class JobModelParametersGenerated(object):
         self._archived = archived
 
     @property
-    def private(self):
-        """Gets the private of this JobModelParametersGenerated.  # noqa: E501
+    def best_objective_value(self):
+        """Gets the best_objective_value of this JobModelParametersGenerated.  # noqa: E501
 
+        Objective value of best studyjob trial  # noqa: E501
 
-        :return: The private of this JobModelParametersGenerated.  # noqa: E501
+        :return: The best_objective_value of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: float
+        """
+        return self._best_objective_value
+
+    @best_objective_value.setter
+    def best_objective_value(self, best_objective_value):
+        """Sets the best_objective_value of this JobModelParametersGenerated.
+
+        Objective value of best studyjob trial  # noqa: E501
+
+        :param best_objective_value: The best_objective_value of this JobModelParametersGenerated.  # noqa: E501
+        :type: float
+        """
+
+        self._best_objective_value = best_objective_value
+
+    @property
+    def best_trial_id(self):
+        """Gets the best_trial_id of this JobModelParametersGenerated.  # noqa: E501
+
+        Unique id of best studyjob trial  # noqa: E501
+
+        :return: The best_trial_id of this JobModelParametersGenerated.  # noqa: E501
         :rtype: str
         """
-        return self._private
+        return self._best_trial_id
 
-    @private.setter
-    def private(self, private):
-        """Sets the private of this JobModelParametersGenerated.
+    @best_trial_id.setter
+    def best_trial_id(self, best_trial_id):
+        """Sets the best_trial_id of this JobModelParametersGenerated.
 
+        Unique id of best studyjob trial  # noqa: E501
 
-        :param private: The private of this JobModelParametersGenerated.  # noqa: E501
+        :param best_trial_id: The best_trial_id of this JobModelParametersGenerated.  # noqa: E501
         :type: str
         """
 
-        self._private = private
+        self._best_trial_id = best_trial_id
 
     @property
     def category(self):
@@ -273,52 +333,67 @@ class JobModelParametersGenerated(object):
         self._category = category
 
     @property
-    def pipeline(self):
-        """Gets the pipeline of this JobModelParametersGenerated.  # noqa: E501
+    def cicdstatus(self):
+        """Gets the cicdstatus of this JobModelParametersGenerated.  # noqa: E501
 
 
-        :return: The pipeline of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: JobModelParametersGeneratedPipeline
+        :return: The cicdstatus of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: CICDStatusModel
         """
-        return self._pipeline
+        return self._cicdstatus
 
-    @pipeline.setter
-    def pipeline(self, pipeline):
-        """Sets the pipeline of this JobModelParametersGenerated.
+    @cicdstatus.setter
+    def cicdstatus(self, cicdstatus):
+        """Sets the cicdstatus of this JobModelParametersGenerated.
 
 
-        :param pipeline: The pipeline of this JobModelParametersGenerated.  # noqa: E501
-        :type: JobModelParametersGeneratedPipeline
+        :param cicdstatus: The cicdstatus of this JobModelParametersGenerated.  # noqa: E501
+        :type: CICDStatusModel
         """
 
-        self._pipeline = pipeline
+        self._cicdstatus = cicdstatus
 
     @property
-    def subclass(self):
-        """Gets the subclass of this JobModelParametersGenerated.  # noqa: E501
+    def deleted(self):
+        """Gets the deleted of this JobModelParametersGenerated.  # noqa: E501
 
 
-        :return: The subclass of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: str
+        :return: The deleted of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: bool
         """
-        return self._subclass
+        return self._deleted
 
-    @subclass.setter
-    def subclass(self, subclass):
-        """Sets the subclass of this JobModelParametersGenerated.
+    @deleted.setter
+    def deleted(self, deleted):
+        """Sets the deleted of this JobModelParametersGenerated.
 
 
-        :param subclass: The subclass of this JobModelParametersGenerated.  # noqa: E501
-        :type: str
+        :param deleted: The deleted of this JobModelParametersGenerated.  # noqa: E501
+        :type: bool
         """
-        allowed_values = ["training", "inference", "notebook", "rstudio", "study", "studytrial", "dkube"]  # noqa: E501
-        if subclass not in allowed_values:
-            raise ValueError(
-                "Invalid value for `subclass` ({0}), must be one of {1}"  # noqa: E501
-                .format(subclass, allowed_values)
-            )
 
-        self._subclass = subclass
+        self._deleted = deleted
+
+    @property
+    def details(self):
+        """Gets the details of this JobModelParametersGenerated.  # noqa: E501
+
+
+        :return: The details of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: JobModelParametersGeneratedDetails
+        """
+        return self._details
+
+    @details.setter
+    def details(self, details):
+        """Sets the details of this JobModelParametersGenerated.
+
+
+        :param details: The details of this JobModelParametersGenerated.  # noqa: E501
+        :type: JobModelParametersGeneratedDetails
+        """
+
+        self._details = details
 
     @property
     def hp_tuning_info(self):
@@ -344,115 +419,25 @@ class JobModelParametersGenerated(object):
         self._hp_tuning_info = hp_tuning_info
 
     @property
-    def training_image(self):
-        """Gets the training_image of this JobModelParametersGenerated.  # noqa: E501
+    def input_datum_refs(self):
+        """Gets the input_datum_refs of this JobModelParametersGenerated.  # noqa: E501
 
 
-        :return: The training_image of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: CustomContainerModel
+        :return: The input_datum_refs of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: list[JobModelParametersGeneratedInputDatumRefs]
         """
-        return self._training_image
+        return self._input_datum_refs
 
-    @training_image.setter
-    def training_image(self, training_image):
-        """Sets the training_image of this JobModelParametersGenerated.
-
-
-        :param training_image: The training_image of this JobModelParametersGenerated.  # noqa: E501
-        :type: CustomContainerModel
-        """
-
-        self._training_image = training_image
-
-    @property
-    def serving_image(self):
-        """Gets the serving_image of this JobModelParametersGenerated.  # noqa: E501
+    @input_datum_refs.setter
+    def input_datum_refs(self, input_datum_refs):
+        """Sets the input_datum_refs of this JobModelParametersGenerated.
 
 
-        :return: The serving_image of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: CustomContainerModel
-        """
-        return self._serving_image
-
-    @serving_image.setter
-    def serving_image(self, serving_image):
-        """Sets the serving_image of this JobModelParametersGenerated.
-
-
-        :param serving_image: The serving_image of this JobModelParametersGenerated.  # noqa: E501
-        :type: CustomContainerModel
+        :param input_datum_refs: The input_datum_refs of this JobModelParametersGenerated.  # noqa: E501
+        :type: list[JobModelParametersGeneratedInputDatumRefs]
         """
 
-        self._serving_image = serving_image
-
-    @property
-    def scheduled(self):
-        """Gets the scheduled of this JobModelParametersGenerated.  # noqa: E501
-
-        identifing job scheduled or not  # noqa: E501
-
-        :return: The scheduled of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: bool
-        """
-        return self._scheduled
-
-    @scheduled.setter
-    def scheduled(self, scheduled):
-        """Sets the scheduled of this JobModelParametersGenerated.
-
-        identifing job scheduled or not  # noqa: E501
-
-        :param scheduled: The scheduled of this JobModelParametersGenerated.  # noqa: E501
-        :type: bool
-        """
-
-        self._scheduled = scheduled
-
-    @property
-    def affinity(self):
-        """Gets the affinity of this JobModelParametersGenerated.  # noqa: E501
-
-        Affinity of this job.  # noqa: E501
-
-        :return: The affinity of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: str
-        """
-        return self._affinity
-
-    @affinity.setter
-    def affinity(self, affinity):
-        """Sets the affinity of this JobModelParametersGenerated.
-
-        Affinity of this job.  # noqa: E501
-
-        :param affinity: The affinity of this JobModelParametersGenerated.  # noqa: E501
-        :type: str
-        """
-
-        self._affinity = affinity
-
-    @property
-    def user(self):
-        """Gets the user of this JobModelParametersGenerated.  # noqa: E501
-
-        user to which this job belongs  # noqa: E501
-
-        :return: The user of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: str
-        """
-        return self._user
-
-    @user.setter
-    def user(self, user):
-        """Sets the user of this JobModelParametersGenerated.
-
-        user to which this job belongs  # noqa: E501
-
-        :param user: The user of this JobModelParametersGenerated.  # noqa: E501
-        :type: str
-        """
-
-        self._user = user
+        self._input_datum_refs = input_datum_refs
 
     @property
     def jobid(self):
@@ -476,90 +461,6 @@ class JobModelParametersGenerated(object):
         """
 
         self._jobid = jobid
-
-    @property
-    def uuid(self):
-        """Gets the uuid of this JobModelParametersGenerated.  # noqa: E501
-
-
-        :return: The uuid of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: str
-        """
-        return self._uuid
-
-    @uuid.setter
-    def uuid(self, uuid):
-        """Sets the uuid of this JobModelParametersGenerated.
-
-
-        :param uuid: The uuid of this JobModelParametersGenerated.  # noqa: E501
-        :type: str
-        """
-
-        self._uuid = uuid
-
-    @property
-    def status(self):
-        """Gets the status of this JobModelParametersGenerated.  # noqa: E501
-
-
-        :return: The status of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: JobStatusModel
-        """
-        return self._status
-
-    @status.setter
-    def status(self, status):
-        """Sets the status of this JobModelParametersGenerated.
-
-
-        :param status: The status of this JobModelParametersGenerated.  # noqa: E501
-        :type: JobStatusModel
-        """
-
-        self._status = status
-
-    @property
-    def timestamps(self):
-        """Gets the timestamps of this JobModelParametersGenerated.  # noqa: E501
-
-
-        :return: The timestamps of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: TimeStamps
-        """
-        return self._timestamps
-
-    @timestamps.setter
-    def timestamps(self, timestamps):
-        """Sets the timestamps of this JobModelParametersGenerated.
-
-
-        :param timestamps: The timestamps of this JobModelParametersGenerated.  # noqa: E501
-        :type: TimeStamps
-        """
-
-        self._timestamps = timestamps
-
-    @property
-    def runtime(self):
-        """Gets the runtime of this JobModelParametersGenerated.  # noqa: E501
-
-
-        :return: The runtime of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: TimeStamps
-        """
-        return self._runtime
-
-    @runtime.setter
-    def runtime(self, runtime):
-        """Sets the runtime of this JobModelParametersGenerated.
-
-
-        :param runtime: The runtime of this JobModelParametersGenerated.  # noqa: E501
-        :type: TimeStamps
-        """
-
-        self._runtime = runtime
 
     @property
     def ngpus_alloc(self):
@@ -608,27 +509,132 @@ class JobModelParametersGenerated(object):
         self._ngpus_max = ngpus_max
 
     @property
-    def tbref(self):
-        """Gets the tbref of this JobModelParametersGenerated.  # noqa: E501
+    def pipeline(self):
+        """Gets the pipeline of this JobModelParametersGenerated.  # noqa: E501
 
-        UUID of TB resouruce  # noqa: E501
 
-        :return: The tbref of this JobModelParametersGenerated.  # noqa: E501
+        :return: The pipeline of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: DatumJobDetailsPipeline
+        """
+        return self._pipeline
+
+    @pipeline.setter
+    def pipeline(self, pipeline):
+        """Sets the pipeline of this JobModelParametersGenerated.
+
+
+        :param pipeline: The pipeline of this JobModelParametersGenerated.  # noqa: E501
+        :type: DatumJobDetailsPipeline
+        """
+
+        self._pipeline = pipeline
+
+    @property
+    def private(self):
+        """Gets the private of this JobModelParametersGenerated.  # noqa: E501
+
+
+        :return: The private of this JobModelParametersGenerated.  # noqa: E501
         :rtype: str
         """
-        return self._tbref
+        return self._private
 
-    @tbref.setter
-    def tbref(self, tbref):
-        """Sets the tbref of this JobModelParametersGenerated.
+    @private.setter
+    def private(self, private):
+        """Sets the private of this JobModelParametersGenerated.
 
-        UUID of TB resouruce  # noqa: E501
 
-        :param tbref: The tbref of this JobModelParametersGenerated.  # noqa: E501
+        :param private: The private of this JobModelParametersGenerated.  # noqa: E501
         :type: str
         """
 
-        self._tbref = tbref
+        self._private = private
+
+    @property
+    def runtime(self):
+        """Gets the runtime of this JobModelParametersGenerated.  # noqa: E501
+
+
+        :return: The runtime of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: TimeStamps
+        """
+        return self._runtime
+
+    @runtime.setter
+    def runtime(self, runtime):
+        """Sets the runtime of this JobModelParametersGenerated.
+
+
+        :param runtime: The runtime of this JobModelParametersGenerated.  # noqa: E501
+        :type: TimeStamps
+        """
+
+        self._runtime = runtime
+
+    @property
+    def scheduled(self):
+        """Gets the scheduled of this JobModelParametersGenerated.  # noqa: E501
+
+        identifing job scheduled or not  # noqa: E501
+
+        :return: The scheduled of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: bool
+        """
+        return self._scheduled
+
+    @scheduled.setter
+    def scheduled(self, scheduled):
+        """Sets the scheduled of this JobModelParametersGenerated.
+
+        identifing job scheduled or not  # noqa: E501
+
+        :param scheduled: The scheduled of this JobModelParametersGenerated.  # noqa: E501
+        :type: bool
+        """
+
+        self._scheduled = scheduled
+
+    @property
+    def serving_image(self):
+        """Gets the serving_image of this JobModelParametersGenerated.  # noqa: E501
+
+
+        :return: The serving_image of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: CustomContainerModel
+        """
+        return self._serving_image
+
+    @serving_image.setter
+    def serving_image(self, serving_image):
+        """Sets the serving_image of this JobModelParametersGenerated.
+
+
+        :param serving_image: The serving_image of this JobModelParametersGenerated.  # noqa: E501
+        :type: CustomContainerModel
+        """
+
+        self._serving_image = serving_image
+
+    @property
+    def status(self):
+        """Gets the status of this JobModelParametersGenerated.  # noqa: E501
+
+
+        :return: The status of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: JobStatusModel
+        """
+        return self._status
+
+    @status.setter
+    def status(self, status):
+        """Sets the status of this JobModelParametersGenerated.
+
+
+        :param status: The status of this JobModelParametersGenerated.  # noqa: E501
+        :type: JobStatusModel
+        """
+
+        self._status = status
 
     @property
     def studyref(self):
@@ -654,117 +660,75 @@ class JobModelParametersGenerated(object):
         self._studyref = studyref
 
     @property
-    def trialref(self):
-        """Gets the trialref of this JobModelParametersGenerated.  # noqa: E501
+    def subclass(self):
+        """Gets the subclass of this JobModelParametersGenerated.  # noqa: E501
 
-        Unique id of a studyjob trial  # noqa: E501
 
-        :return: The trialref of this JobModelParametersGenerated.  # noqa: E501
+        :return: The subclass of this JobModelParametersGenerated.  # noqa: E501
         :rtype: str
         """
-        return self._trialref
+        return self._subclass
 
-    @trialref.setter
-    def trialref(self, trialref):
-        """Sets the trialref of this JobModelParametersGenerated.
+    @subclass.setter
+    def subclass(self, subclass):
+        """Sets the subclass of this JobModelParametersGenerated.
 
-        Unique id of a studyjob trial  # noqa: E501
 
-        :param trialref: The trialref of this JobModelParametersGenerated.  # noqa: E501
+        :param subclass: The subclass of this JobModelParametersGenerated.  # noqa: E501
+        :type: str
+        """
+        allowed_values = ["training", "inference", "notebook", "rstudio", "study", "studytrial", "dkube"]  # noqa: E501
+        if subclass not in allowed_values:
+            raise ValueError(
+                "Invalid value for `subclass` ({0}), must be one of {1}"  # noqa: E501
+                .format(subclass, allowed_values)
+            )
+
+        self._subclass = subclass
+
+    @property
+    def tbref(self):
+        """Gets the tbref of this JobModelParametersGenerated.  # noqa: E501
+
+        UUID of TB resouruce  # noqa: E501
+
+        :return: The tbref of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: str
+        """
+        return self._tbref
+
+    @tbref.setter
+    def tbref(self, tbref):
+        """Sets the tbref of this JobModelParametersGenerated.
+
+        UUID of TB resouruce  # noqa: E501
+
+        :param tbref: The tbref of this JobModelParametersGenerated.  # noqa: E501
         :type: str
         """
 
-        self._trialref = trialref
+        self._tbref = tbref
 
     @property
-    def best_trial_id(self):
-        """Gets the best_trial_id of this JobModelParametersGenerated.  # noqa: E501
+    def timestamps(self):
+        """Gets the timestamps of this JobModelParametersGenerated.  # noqa: E501
 
-        Unique id of best studyjob trial  # noqa: E501
 
-        :return: The best_trial_id of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: str
+        :return: The timestamps of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: TimeStamps
         """
-        return self._best_trial_id
+        return self._timestamps
 
-    @best_trial_id.setter
-    def best_trial_id(self, best_trial_id):
-        """Sets the best_trial_id of this JobModelParametersGenerated.
+    @timestamps.setter
+    def timestamps(self, timestamps):
+        """Sets the timestamps of this JobModelParametersGenerated.
 
-        Unique id of best studyjob trial  # noqa: E501
 
-        :param best_trial_id: The best_trial_id of this JobModelParametersGenerated.  # noqa: E501
-        :type: str
+        :param timestamps: The timestamps of this JobModelParametersGenerated.  # noqa: E501
+        :type: TimeStamps
         """
 
-        self._best_trial_id = best_trial_id
-
-    @property
-    def best_objective_value(self):
-        """Gets the best_objective_value of this JobModelParametersGenerated.  # noqa: E501
-
-        Objective value of best studyjob trial  # noqa: E501
-
-        :return: The best_objective_value of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: float
-        """
-        return self._best_objective_value
-
-    @best_objective_value.setter
-    def best_objective_value(self, best_objective_value):
-        """Sets the best_objective_value of this JobModelParametersGenerated.
-
-        Objective value of best studyjob trial  # noqa: E501
-
-        :param best_objective_value: The best_objective_value of this JobModelParametersGenerated.  # noqa: E501
-        :type: float
-        """
-
-        self._best_objective_value = best_objective_value
-
-    @property
-    def accelerator(self):
-        """Gets the accelerator of this JobModelParametersGenerated.  # noqa: E501
-
-        Node affinity  # noqa: E501
-
-        :return: The accelerator of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: str
-        """
-        return self._accelerator
-
-    @accelerator.setter
-    def accelerator(self, accelerator):
-        """Sets the accelerator of this JobModelParametersGenerated.
-
-        Node affinity  # noqa: E501
-
-        :param accelerator: The accelerator of this JobModelParametersGenerated.  # noqa: E501
-        :type: str
-        """
-
-        self._accelerator = accelerator
-
-    @property
-    def versions(self):
-        """Gets the versions of this JobModelParametersGenerated.  # noqa: E501
-
-
-        :return: The versions of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: JobModelParametersGeneratedVersions
-        """
-        return self._versions
-
-    @versions.setter
-    def versions(self, versions):
-        """Sets the versions of this JobModelParametersGenerated.
-
-
-        :param versions: The versions of this JobModelParametersGenerated.  # noqa: E501
-        :type: JobModelParametersGeneratedVersions
-        """
-
-        self._versions = versions
+        self._timestamps = timestamps
 
     @property
     def tracking(self):
@@ -788,25 +752,113 @@ class JobModelParametersGenerated(object):
         self._tracking = tracking
 
     @property
-    def details(self):
-        """Gets the details of this JobModelParametersGenerated.  # noqa: E501
+    def training_image(self):
+        """Gets the training_image of this JobModelParametersGenerated.  # noqa: E501
 
 
-        :return: The details of this JobModelParametersGenerated.  # noqa: E501
-        :rtype: JobModelParametersGeneratedDetails
+        :return: The training_image of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: CustomContainerModel
         """
-        return self._details
+        return self._training_image
 
-    @details.setter
-    def details(self, details):
-        """Sets the details of this JobModelParametersGenerated.
+    @training_image.setter
+    def training_image(self, training_image):
+        """Sets the training_image of this JobModelParametersGenerated.
 
 
-        :param details: The details of this JobModelParametersGenerated.  # noqa: E501
-        :type: JobModelParametersGeneratedDetails
+        :param training_image: The training_image of this JobModelParametersGenerated.  # noqa: E501
+        :type: CustomContainerModel
         """
 
-        self._details = details
+        self._training_image = training_image
+
+    @property
+    def trialref(self):
+        """Gets the trialref of this JobModelParametersGenerated.  # noqa: E501
+
+        Unique id of a studyjob trial  # noqa: E501
+
+        :return: The trialref of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: str
+        """
+        return self._trialref
+
+    @trialref.setter
+    def trialref(self, trialref):
+        """Sets the trialref of this JobModelParametersGenerated.
+
+        Unique id of a studyjob trial  # noqa: E501
+
+        :param trialref: The trialref of this JobModelParametersGenerated.  # noqa: E501
+        :type: str
+        """
+
+        self._trialref = trialref
+
+    @property
+    def user(self):
+        """Gets the user of this JobModelParametersGenerated.  # noqa: E501
+
+        user to which this job belongs  # noqa: E501
+
+        :return: The user of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: str
+        """
+        return self._user
+
+    @user.setter
+    def user(self, user):
+        """Sets the user of this JobModelParametersGenerated.
+
+        user to which this job belongs  # noqa: E501
+
+        :param user: The user of this JobModelParametersGenerated.  # noqa: E501
+        :type: str
+        """
+
+        self._user = user
+
+    @property
+    def uuid(self):
+        """Gets the uuid of this JobModelParametersGenerated.  # noqa: E501
+
+
+        :return: The uuid of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: str
+        """
+        return self._uuid
+
+    @uuid.setter
+    def uuid(self, uuid):
+        """Sets the uuid of this JobModelParametersGenerated.
+
+
+        :param uuid: The uuid of this JobModelParametersGenerated.  # noqa: E501
+        :type: str
+        """
+
+        self._uuid = uuid
+
+    @property
+    def versions(self):
+        """Gets the versions of this JobModelParametersGenerated.  # noqa: E501
+
+
+        :return: The versions of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: JobModelParametersGeneratedVersions
+        """
+        return self._versions
+
+    @versions.setter
+    def versions(self, versions):
+        """Sets the versions of this JobModelParametersGenerated.
+
+
+        :param versions: The versions of this JobModelParametersGenerated.  # noqa: E501
+        :type: JobModelParametersGeneratedVersions
+        """
+
+        self._versions = versions
 
     def to_dict(self):
         """Returns the model properties as a dict"""

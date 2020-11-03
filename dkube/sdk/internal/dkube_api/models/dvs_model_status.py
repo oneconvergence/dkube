@@ -31,26 +31,47 @@ class DVSModelStatus(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'state': 'str',
-        'reason': 'str'
+        'reason': 'str',
+        'state': 'str'
     }
 
     attribute_map = {
-        'state': 'state',
-        'reason': 'reason'
+        'reason': 'reason',
+        'state': 'state'
     }
 
-    def __init__(self, state=None, reason=None):  # noqa: E501
+    def __init__(self, reason=None, state=None):  # noqa: E501
         """DVSModelStatus - a model defined in Swagger"""  # noqa: E501
 
-        self._state = None
         self._reason = None
+        self._state = None
         self.discriminator = None
 
-        if state is not None:
-            self.state = state
         if reason is not None:
             self.reason = reason
+        if state is not None:
+            self.state = state
+
+    @property
+    def reason(self):
+        """Gets the reason of this DVSModelStatus.  # noqa: E501
+
+
+        :return: The reason of this DVSModelStatus.  # noqa: E501
+        :rtype: str
+        """
+        return self._reason
+
+    @reason.setter
+    def reason(self, reason):
+        """Sets the reason of this DVSModelStatus.
+
+
+        :param reason: The reason of this DVSModelStatus.  # noqa: E501
+        :type: str
+        """
+
+        self._reason = reason
 
     @property
     def state(self):
@@ -78,27 +99,6 @@ class DVSModelStatus(object):
             )
 
         self._state = state
-
-    @property
-    def reason(self):
-        """Gets the reason of this DVSModelStatus.  # noqa: E501
-
-
-        :return: The reason of this DVSModelStatus.  # noqa: E501
-        :rtype: str
-        """
-        return self._reason
-
-    @reason.setter
-    def reason(self, reason):
-        """Sets the reason of this DVSModelStatus.
-
-
-        :param reason: The reason of this DVSModelStatus.  # noqa: E501
-        :type: str
-        """
-
-        self._reason = reason
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,234 +31,71 @@ class ModelCatalogItemVersion(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'version': 'str',
-        'name': 'str',
-        'publisher': 'str',
-        'owner': 'str',
-        'model': 'ModelCatalogItemVersionModel',
-        'serving': 'ModelServingInfo',
-        'training': 'ModelTrainingInfo',
-        'stage': 'str',
         'description': 'str',
-        'published_timestamp': 'TimeStamps'
+        'model': 'ModelCatalogItemVersionModel',
+        'name': 'str',
+        'owner': 'str',
+        'published_timestamp': 'TimeStamps',
+        'publisher': 'str',
+        'serving': 'ModelServingInfo',
+        'stage': 'str',
+        'staged': 'bool',
+        'training': 'ModelTrainingInfo',
+        'version': 'str'
     }
 
     attribute_map = {
-        'version': 'version',
-        'name': 'name',
-        'publisher': 'publisher',
-        'owner': 'owner',
-        'model': 'model',
-        'serving': 'serving',
-        'training': 'training',
-        'stage': 'stage',
         'description': 'description',
-        'published_timestamp': 'publishedTimestamp'
+        'model': 'model',
+        'name': 'name',
+        'owner': 'owner',
+        'published_timestamp': 'publishedTimestamp',
+        'publisher': 'publisher',
+        'serving': 'serving',
+        'stage': 'stage',
+        'staged': 'staged',
+        'training': 'training',
+        'version': 'version'
     }
 
-    def __init__(self, version=None, name=None, publisher=None, owner=None, model=None, serving=None, training=None, stage=None, description=None, published_timestamp=None):  # noqa: E501
+    def __init__(self, description=None, model=None, name=None, owner=None, published_timestamp=None, publisher=None, serving=None, stage=None, staged=None, training=None, version=None):  # noqa: E501
         """ModelCatalogItemVersion - a model defined in Swagger"""  # noqa: E501
 
-        self._version = None
-        self._name = None
-        self._publisher = None
-        self._owner = None
-        self._model = None
-        self._serving = None
-        self._training = None
-        self._stage = None
         self._description = None
+        self._model = None
+        self._name = None
+        self._owner = None
         self._published_timestamp = None
+        self._publisher = None
+        self._serving = None
+        self._stage = None
+        self._staged = None
+        self._training = None
+        self._version = None
         self.discriminator = None
 
-        if version is not None:
-            self.version = version
-        if name is not None:
-            self.name = name
-        if publisher is not None:
-            self.publisher = publisher
-        if owner is not None:
-            self.owner = owner
-        if model is not None:
-            self.model = model
-        if serving is not None:
-            self.serving = serving
-        if training is not None:
-            self.training = training
-        if stage is not None:
-            self.stage = stage
         if description is not None:
             self.description = description
+        if model is not None:
+            self.model = model
+        if name is not None:
+            self.name = name
+        if owner is not None:
+            self.owner = owner
         if published_timestamp is not None:
             self.published_timestamp = published_timestamp
-
-    @property
-    def version(self):
-        """Gets the version of this ModelCatalogItemVersion.  # noqa: E501
-
-
-        :return: The version of this ModelCatalogItemVersion.  # noqa: E501
-        :rtype: str
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version):
-        """Sets the version of this ModelCatalogItemVersion.
-
-
-        :param version: The version of this ModelCatalogItemVersion.  # noqa: E501
-        :type: str
-        """
-
-        self._version = version
-
-    @property
-    def name(self):
-        """Gets the name of this ModelCatalogItemVersion.  # noqa: E501
-
-
-        :return: The name of this ModelCatalogItemVersion.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this ModelCatalogItemVersion.
-
-
-        :param name: The name of this ModelCatalogItemVersion.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
-
-    @property
-    def publisher(self):
-        """Gets the publisher of this ModelCatalogItemVersion.  # noqa: E501
-
-
-        :return: The publisher of this ModelCatalogItemVersion.  # noqa: E501
-        :rtype: str
-        """
-        return self._publisher
-
-    @publisher.setter
-    def publisher(self, publisher):
-        """Sets the publisher of this ModelCatalogItemVersion.
-
-
-        :param publisher: The publisher of this ModelCatalogItemVersion.  # noqa: E501
-        :type: str
-        """
-
-        self._publisher = publisher
-
-    @property
-    def owner(self):
-        """Gets the owner of this ModelCatalogItemVersion.  # noqa: E501
-
-
-        :return: The owner of this ModelCatalogItemVersion.  # noqa: E501
-        :rtype: str
-        """
-        return self._owner
-
-    @owner.setter
-    def owner(self, owner):
-        """Sets the owner of this ModelCatalogItemVersion.
-
-
-        :param owner: The owner of this ModelCatalogItemVersion.  # noqa: E501
-        :type: str
-        """
-
-        self._owner = owner
-
-    @property
-    def model(self):
-        """Gets the model of this ModelCatalogItemVersion.  # noqa: E501
-
-
-        :return: The model of this ModelCatalogItemVersion.  # noqa: E501
-        :rtype: ModelCatalogItemVersionModel
-        """
-        return self._model
-
-    @model.setter
-    def model(self, model):
-        """Sets the model of this ModelCatalogItemVersion.
-
-
-        :param model: The model of this ModelCatalogItemVersion.  # noqa: E501
-        :type: ModelCatalogItemVersionModel
-        """
-
-        self._model = model
-
-    @property
-    def serving(self):
-        """Gets the serving of this ModelCatalogItemVersion.  # noqa: E501
-
-
-        :return: The serving of this ModelCatalogItemVersion.  # noqa: E501
-        :rtype: ModelServingInfo
-        """
-        return self._serving
-
-    @serving.setter
-    def serving(self, serving):
-        """Sets the serving of this ModelCatalogItemVersion.
-
-
-        :param serving: The serving of this ModelCatalogItemVersion.  # noqa: E501
-        :type: ModelServingInfo
-        """
-
-        self._serving = serving
-
-    @property
-    def training(self):
-        """Gets the training of this ModelCatalogItemVersion.  # noqa: E501
-
-
-        :return: The training of this ModelCatalogItemVersion.  # noqa: E501
-        :rtype: ModelTrainingInfo
-        """
-        return self._training
-
-    @training.setter
-    def training(self, training):
-        """Sets the training of this ModelCatalogItemVersion.
-
-
-        :param training: The training of this ModelCatalogItemVersion.  # noqa: E501
-        :type: ModelTrainingInfo
-        """
-
-        self._training = training
-
-    @property
-    def stage(self):
-        """Gets the stage of this ModelCatalogItemVersion.  # noqa: E501
-
-
-        :return: The stage of this ModelCatalogItemVersion.  # noqa: E501
-        :rtype: str
-        """
-        return self._stage
-
-    @stage.setter
-    def stage(self, stage):
-        """Sets the stage of this ModelCatalogItemVersion.
-
-
-        :param stage: The stage of this ModelCatalogItemVersion.  # noqa: E501
-        :type: str
-        """
-
-        self._stage = stage
+        if publisher is not None:
+            self.publisher = publisher
+        if serving is not None:
+            self.serving = serving
+        if stage is not None:
+            self.stage = stage
+        if staged is not None:
+            self.staged = staged
+        if training is not None:
+            self.training = training
+        if version is not None:
+            self.version = version
 
     @property
     def description(self):
@@ -282,6 +119,69 @@ class ModelCatalogItemVersion(object):
         self._description = description
 
     @property
+    def model(self):
+        """Gets the model of this ModelCatalogItemVersion.  # noqa: E501
+
+
+        :return: The model of this ModelCatalogItemVersion.  # noqa: E501
+        :rtype: ModelCatalogItemVersionModel
+        """
+        return self._model
+
+    @model.setter
+    def model(self, model):
+        """Sets the model of this ModelCatalogItemVersion.
+
+
+        :param model: The model of this ModelCatalogItemVersion.  # noqa: E501
+        :type: ModelCatalogItemVersionModel
+        """
+
+        self._model = model
+
+    @property
+    def name(self):
+        """Gets the name of this ModelCatalogItemVersion.  # noqa: E501
+
+
+        :return: The name of this ModelCatalogItemVersion.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this ModelCatalogItemVersion.
+
+
+        :param name: The name of this ModelCatalogItemVersion.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
+
+    @property
+    def owner(self):
+        """Gets the owner of this ModelCatalogItemVersion.  # noqa: E501
+
+
+        :return: The owner of this ModelCatalogItemVersion.  # noqa: E501
+        :rtype: str
+        """
+        return self._owner
+
+    @owner.setter
+    def owner(self, owner):
+        """Sets the owner of this ModelCatalogItemVersion.
+
+
+        :param owner: The owner of this ModelCatalogItemVersion.  # noqa: E501
+        :type: str
+        """
+
+        self._owner = owner
+
+    @property
     def published_timestamp(self):
         """Gets the published_timestamp of this ModelCatalogItemVersion.  # noqa: E501
 
@@ -301,6 +201,132 @@ class ModelCatalogItemVersion(object):
         """
 
         self._published_timestamp = published_timestamp
+
+    @property
+    def publisher(self):
+        """Gets the publisher of this ModelCatalogItemVersion.  # noqa: E501
+
+
+        :return: The publisher of this ModelCatalogItemVersion.  # noqa: E501
+        :rtype: str
+        """
+        return self._publisher
+
+    @publisher.setter
+    def publisher(self, publisher):
+        """Sets the publisher of this ModelCatalogItemVersion.
+
+
+        :param publisher: The publisher of this ModelCatalogItemVersion.  # noqa: E501
+        :type: str
+        """
+
+        self._publisher = publisher
+
+    @property
+    def serving(self):
+        """Gets the serving of this ModelCatalogItemVersion.  # noqa: E501
+
+
+        :return: The serving of this ModelCatalogItemVersion.  # noqa: E501
+        :rtype: ModelServingInfo
+        """
+        return self._serving
+
+    @serving.setter
+    def serving(self, serving):
+        """Sets the serving of this ModelCatalogItemVersion.
+
+
+        :param serving: The serving of this ModelCatalogItemVersion.  # noqa: E501
+        :type: ModelServingInfo
+        """
+
+        self._serving = serving
+
+    @property
+    def stage(self):
+        """Gets the stage of this ModelCatalogItemVersion.  # noqa: E501
+
+
+        :return: The stage of this ModelCatalogItemVersion.  # noqa: E501
+        :rtype: str
+        """
+        return self._stage
+
+    @stage.setter
+    def stage(self, stage):
+        """Sets the stage of this ModelCatalogItemVersion.
+
+
+        :param stage: The stage of this ModelCatalogItemVersion.  # noqa: E501
+        :type: str
+        """
+
+        self._stage = stage
+
+    @property
+    def staged(self):
+        """Gets the staged of this ModelCatalogItemVersion.  # noqa: E501
+
+
+        :return: The staged of this ModelCatalogItemVersion.  # noqa: E501
+        :rtype: bool
+        """
+        return self._staged
+
+    @staged.setter
+    def staged(self, staged):
+        """Sets the staged of this ModelCatalogItemVersion.
+
+
+        :param staged: The staged of this ModelCatalogItemVersion.  # noqa: E501
+        :type: bool
+        """
+
+        self._staged = staged
+
+    @property
+    def training(self):
+        """Gets the training of this ModelCatalogItemVersion.  # noqa: E501
+
+
+        :return: The training of this ModelCatalogItemVersion.  # noqa: E501
+        :rtype: ModelTrainingInfo
+        """
+        return self._training
+
+    @training.setter
+    def training(self, training):
+        """Sets the training of this ModelCatalogItemVersion.
+
+
+        :param training: The training of this ModelCatalogItemVersion.  # noqa: E501
+        :type: ModelTrainingInfo
+        """
+
+        self._training = training
+
+    @property
+    def version(self):
+        """Gets the version of this ModelCatalogItemVersion.  # noqa: E501
+
+
+        :return: The version of this ModelCatalogItemVersion.  # noqa: E501
+        :rtype: str
+        """
+        return self._version
+
+    @version.setter
+    def version(self, version):
+        """Sets the version of this ModelCatalogItemVersion.
+
+
+        :param version: The version of this ModelCatalogItemVersion.  # noqa: E501
+        :type: str
+        """
+
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

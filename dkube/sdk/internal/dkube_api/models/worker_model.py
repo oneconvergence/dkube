@@ -31,155 +31,71 @@ class WorkerModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'version': 'str',
-        'name': 'str',
-        'role': 'str',
-        'uuid': 'str',
         'containers': 'list[WorkerModelContainers]',
-        'status': 'str',
-        'reason': 'str',
         'event': 'str',
-        'poduuid': 'str',
         'exit_code': 'int',
-        'node': 'str'
+        'name': 'str',
+        'node': 'str',
+        'poduuid': 'str',
+        'reason': 'str',
+        'role': 'str',
+        'status': 'str',
+        'uuid': 'str',
+        'version': 'str'
     }
 
     attribute_map = {
-        'version': 'version',
-        'name': 'name',
-        'role': 'role',
-        'uuid': 'uuid',
         'containers': 'containers',
-        'status': 'status',
-        'reason': 'reason',
         'event': 'event',
-        'poduuid': 'poduuid',
         'exit_code': 'exit_code',
-        'node': 'node'
+        'name': 'name',
+        'node': 'node',
+        'poduuid': 'poduuid',
+        'reason': 'reason',
+        'role': 'role',
+        'status': 'status',
+        'uuid': 'uuid',
+        'version': 'version'
     }
 
-    def __init__(self, version=None, name=None, role='SINGLETON', uuid=None, containers=None, status=None, reason=None, event=None, poduuid=None, exit_code=None, node=None):  # noqa: E501
+    def __init__(self, containers=None, event=None, exit_code=None, name=None, node=None, poduuid=None, reason=None, role='SINGLETON', status=None, uuid=None, version=None):  # noqa: E501
         """WorkerModel - a model defined in Swagger"""  # noqa: E501
 
-        self._version = None
-        self._name = None
-        self._role = None
-        self._uuid = None
         self._containers = None
-        self._status = None
-        self._reason = None
         self._event = None
-        self._poduuid = None
         self._exit_code = None
+        self._name = None
         self._node = None
+        self._poduuid = None
+        self._reason = None
+        self._role = None
+        self._status = None
+        self._uuid = None
+        self._version = None
         self.discriminator = None
 
-        if version is not None:
-            self.version = version
-        if name is not None:
-            self.name = name
-        if role is not None:
-            self.role = role
-        if uuid is not None:
-            self.uuid = uuid
         if containers is not None:
             self.containers = containers
-        if status is not None:
-            self.status = status
-        if reason is not None:
-            self.reason = reason
         if event is not None:
             self.event = event
-        if poduuid is not None:
-            self.poduuid = poduuid
         if exit_code is not None:
             self.exit_code = exit_code
+        if name is not None:
+            self.name = name
         if node is not None:
             self.node = node
-
-    @property
-    def version(self):
-        """Gets the version of this WorkerModel.  # noqa: E501
-
-
-        :return: The version of this WorkerModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version):
-        """Sets the version of this WorkerModel.
-
-
-        :param version: The version of this WorkerModel.  # noqa: E501
-        :type: str
-        """
-
-        self._version = version
-
-    @property
-    def name(self):
-        """Gets the name of this WorkerModel.  # noqa: E501
-
-
-        :return: The name of this WorkerModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this WorkerModel.
-
-
-        :param name: The name of this WorkerModel.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
-
-    @property
-    def role(self):
-        """Gets the role of this WorkerModel.  # noqa: E501
-
-
-        :return: The role of this WorkerModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._role
-
-    @role.setter
-    def role(self, role):
-        """Sets the role of this WorkerModel.
-
-
-        :param role: The role of this WorkerModel.  # noqa: E501
-        :type: str
-        """
-
-        self._role = role
-
-    @property
-    def uuid(self):
-        """Gets the uuid of this WorkerModel.  # noqa: E501
-
-
-        :return: The uuid of this WorkerModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._uuid
-
-    @uuid.setter
-    def uuid(self, uuid):
-        """Sets the uuid of this WorkerModel.
-
-
-        :param uuid: The uuid of this WorkerModel.  # noqa: E501
-        :type: str
-        """
-
-        self._uuid = uuid
+        if poduuid is not None:
+            self.poduuid = poduuid
+        if reason is not None:
+            self.reason = reason
+        if role is not None:
+            self.role = role
+        if status is not None:
+            self.status = status
+        if uuid is not None:
+            self.uuid = uuid
+        if version is not None:
+            self.version = version
 
     @property
     def containers(self):
@@ -203,48 +119,6 @@ class WorkerModel(object):
         self._containers = containers
 
     @property
-    def status(self):
-        """Gets the status of this WorkerModel.  # noqa: E501
-
-
-        :return: The status of this WorkerModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._status
-
-    @status.setter
-    def status(self, status):
-        """Sets the status of this WorkerModel.
-
-
-        :param status: The status of this WorkerModel.  # noqa: E501
-        :type: str
-        """
-
-        self._status = status
-
-    @property
-    def reason(self):
-        """Gets the reason of this WorkerModel.  # noqa: E501
-
-
-        :return: The reason of this WorkerModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._reason
-
-    @reason.setter
-    def reason(self, reason):
-        """Sets the reason of this WorkerModel.
-
-
-        :param reason: The reason of this WorkerModel.  # noqa: E501
-        :type: str
-        """
-
-        self._reason = reason
-
-    @property
     def event(self):
         """Gets the event of this WorkerModel.  # noqa: E501
 
@@ -264,27 +138,6 @@ class WorkerModel(object):
         """
 
         self._event = event
-
-    @property
-    def poduuid(self):
-        """Gets the poduuid of this WorkerModel.  # noqa: E501
-
-
-        :return: The poduuid of this WorkerModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._poduuid
-
-    @poduuid.setter
-    def poduuid(self, poduuid):
-        """Sets the poduuid of this WorkerModel.
-
-
-        :param poduuid: The poduuid of this WorkerModel.  # noqa: E501
-        :type: str
-        """
-
-        self._poduuid = poduuid
 
     @property
     def exit_code(self):
@@ -308,6 +161,27 @@ class WorkerModel(object):
         self._exit_code = exit_code
 
     @property
+    def name(self):
+        """Gets the name of this WorkerModel.  # noqa: E501
+
+
+        :return: The name of this WorkerModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this WorkerModel.
+
+
+        :param name: The name of this WorkerModel.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
+
+    @property
     def node(self):
         """Gets the node of this WorkerModel.  # noqa: E501
 
@@ -327,6 +201,132 @@ class WorkerModel(object):
         """
 
         self._node = node
+
+    @property
+    def poduuid(self):
+        """Gets the poduuid of this WorkerModel.  # noqa: E501
+
+
+        :return: The poduuid of this WorkerModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._poduuid
+
+    @poduuid.setter
+    def poduuid(self, poduuid):
+        """Sets the poduuid of this WorkerModel.
+
+
+        :param poduuid: The poduuid of this WorkerModel.  # noqa: E501
+        :type: str
+        """
+
+        self._poduuid = poduuid
+
+    @property
+    def reason(self):
+        """Gets the reason of this WorkerModel.  # noqa: E501
+
+
+        :return: The reason of this WorkerModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._reason
+
+    @reason.setter
+    def reason(self, reason):
+        """Sets the reason of this WorkerModel.
+
+
+        :param reason: The reason of this WorkerModel.  # noqa: E501
+        :type: str
+        """
+
+        self._reason = reason
+
+    @property
+    def role(self):
+        """Gets the role of this WorkerModel.  # noqa: E501
+
+
+        :return: The role of this WorkerModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._role
+
+    @role.setter
+    def role(self, role):
+        """Sets the role of this WorkerModel.
+
+
+        :param role: The role of this WorkerModel.  # noqa: E501
+        :type: str
+        """
+
+        self._role = role
+
+    @property
+    def status(self):
+        """Gets the status of this WorkerModel.  # noqa: E501
+
+
+        :return: The status of this WorkerModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._status
+
+    @status.setter
+    def status(self, status):
+        """Sets the status of this WorkerModel.
+
+
+        :param status: The status of this WorkerModel.  # noqa: E501
+        :type: str
+        """
+
+        self._status = status
+
+    @property
+    def uuid(self):
+        """Gets the uuid of this WorkerModel.  # noqa: E501
+
+
+        :return: The uuid of this WorkerModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._uuid
+
+    @uuid.setter
+    def uuid(self, uuid):
+        """Sets the uuid of this WorkerModel.
+
+
+        :param uuid: The uuid of this WorkerModel.  # noqa: E501
+        :type: str
+        """
+
+        self._uuid = uuid
+
+    @property
+    def version(self):
+        """Gets the version of this WorkerModel.  # noqa: E501
+
+
+        :return: The version of this WorkerModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._version
+
+    @version.setter
+    def version(self, version):
+        """Sets the version of this WorkerModel.
+
+
+        :param version: The version of this WorkerModel.  # noqa: E501
+        :type: str
+        """
+
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

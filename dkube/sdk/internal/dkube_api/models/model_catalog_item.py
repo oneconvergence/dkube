@@ -31,72 +31,51 @@ class ModelCatalogItem(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'name': 'str',
         'description': 'str',
-        'generated': 'ModelCatalogItemGenerated',
+        'generated': 'D3APIKeyModelGenerated',
         'model': 'ModelCatalogItemModel',
-        'update_timestamp': 'TimeStamps',
+        'name': 'str',
         'publisher': 'str',
+        'update_timestamp': 'TimeStamps',
         'versions': 'list[ModelCatalogItemVersion]'
     }
 
     attribute_map = {
-        'name': 'name',
         'description': 'description',
         'generated': 'generated',
         'model': 'model',
-        'update_timestamp': 'updateTimestamp',
+        'name': 'name',
         'publisher': 'publisher',
+        'update_timestamp': 'updateTimestamp',
         'versions': 'versions'
     }
 
-    def __init__(self, name=None, description=None, generated=None, model=None, update_timestamp=None, publisher=None, versions=None):  # noqa: E501
+    def __init__(self, description=None, generated=None, model=None, name=None, publisher=None, update_timestamp=None, versions=None):  # noqa: E501
         """ModelCatalogItem - a model defined in Swagger"""  # noqa: E501
 
-        self._name = None
         self._description = None
         self._generated = None
         self._model = None
-        self._update_timestamp = None
+        self._name = None
         self._publisher = None
+        self._update_timestamp = None
         self._versions = None
         self.discriminator = None
 
-        if name is not None:
-            self.name = name
         if description is not None:
             self.description = description
         if generated is not None:
             self.generated = generated
         if model is not None:
             self.model = model
-        if update_timestamp is not None:
-            self.update_timestamp = update_timestamp
+        if name is not None:
+            self.name = name
         if publisher is not None:
             self.publisher = publisher
+        if update_timestamp is not None:
+            self.update_timestamp = update_timestamp
         if versions is not None:
             self.versions = versions
-
-    @property
-    def name(self):
-        """Gets the name of this ModelCatalogItem.  # noqa: E501
-
-
-        :return: The name of this ModelCatalogItem.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this ModelCatalogItem.
-
-
-        :param name: The name of this ModelCatalogItem.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
 
     @property
     def description(self):
@@ -125,7 +104,7 @@ class ModelCatalogItem(object):
 
 
         :return: The generated of this ModelCatalogItem.  # noqa: E501
-        :rtype: ModelCatalogItemGenerated
+        :rtype: D3APIKeyModelGenerated
         """
         return self._generated
 
@@ -135,7 +114,7 @@ class ModelCatalogItem(object):
 
 
         :param generated: The generated of this ModelCatalogItem.  # noqa: E501
-        :type: ModelCatalogItemGenerated
+        :type: D3APIKeyModelGenerated
         """
 
         self._generated = generated
@@ -162,25 +141,25 @@ class ModelCatalogItem(object):
         self._model = model
 
     @property
-    def update_timestamp(self):
-        """Gets the update_timestamp of this ModelCatalogItem.  # noqa: E501
+    def name(self):
+        """Gets the name of this ModelCatalogItem.  # noqa: E501
 
 
-        :return: The update_timestamp of this ModelCatalogItem.  # noqa: E501
-        :rtype: TimeStamps
+        :return: The name of this ModelCatalogItem.  # noqa: E501
+        :rtype: str
         """
-        return self._update_timestamp
+        return self._name
 
-    @update_timestamp.setter
-    def update_timestamp(self, update_timestamp):
-        """Sets the update_timestamp of this ModelCatalogItem.
+    @name.setter
+    def name(self, name):
+        """Sets the name of this ModelCatalogItem.
 
 
-        :param update_timestamp: The update_timestamp of this ModelCatalogItem.  # noqa: E501
-        :type: TimeStamps
+        :param name: The name of this ModelCatalogItem.  # noqa: E501
+        :type: str
         """
 
-        self._update_timestamp = update_timestamp
+        self._name = name
 
     @property
     def publisher(self):
@@ -202,6 +181,27 @@ class ModelCatalogItem(object):
         """
 
         self._publisher = publisher
+
+    @property
+    def update_timestamp(self):
+        """Gets the update_timestamp of this ModelCatalogItem.  # noqa: E501
+
+
+        :return: The update_timestamp of this ModelCatalogItem.  # noqa: E501
+        :rtype: TimeStamps
+        """
+        return self._update_timestamp
+
+    @update_timestamp.setter
+    def update_timestamp(self, update_timestamp):
+        """Sets the update_timestamp of this ModelCatalogItem.
+
+
+        :param update_timestamp: The update_timestamp of this ModelCatalogItem.  # noqa: E501
+        :type: TimeStamps
+        """
+
+        self._update_timestamp = update_timestamp
 
     @property
     def versions(self):

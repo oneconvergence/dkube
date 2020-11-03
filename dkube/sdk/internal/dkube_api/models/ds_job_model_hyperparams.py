@@ -31,88 +31,46 @@ class DSJobModelHyperparams(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'epochs': 'int',
-        'steps': 'int',
         'batchsize': 'int',
         'custom': 'list[str]',
         'customkv': 'CustomKVModel',
-        'file': 'ConfigFileModel'
+        'epochs': 'int',
+        'file': 'ConfigFileModel',
+        'steps': 'int'
     }
 
     attribute_map = {
-        'epochs': 'epochs',
-        'steps': 'steps',
         'batchsize': 'batchsize',
         'custom': 'custom',
         'customkv': 'customkv',
-        'file': 'file'
+        'epochs': 'epochs',
+        'file': 'file',
+        'steps': 'steps'
     }
 
-    def __init__(self, epochs=None, steps=None, batchsize=None, custom=None, customkv=None, file=None):  # noqa: E501
+    def __init__(self, batchsize=None, custom=None, customkv=None, epochs=None, file=None, steps=None):  # noqa: E501
         """DSJobModelHyperparams - a model defined in Swagger"""  # noqa: E501
 
-        self._epochs = None
-        self._steps = None
         self._batchsize = None
         self._custom = None
         self._customkv = None
+        self._epochs = None
         self._file = None
+        self._steps = None
         self.discriminator = None
 
-        if epochs is not None:
-            self.epochs = epochs
-        if steps is not None:
-            self.steps = steps
         if batchsize is not None:
             self.batchsize = batchsize
         if custom is not None:
             self.custom = custom
         if customkv is not None:
             self.customkv = customkv
+        if epochs is not None:
+            self.epochs = epochs
         if file is not None:
             self.file = file
-
-    @property
-    def epochs(self):
-        """Gets the epochs of this DSJobModelHyperparams.  # noqa: E501
-
-
-        :return: The epochs of this DSJobModelHyperparams.  # noqa: E501
-        :rtype: int
-        """
-        return self._epochs
-
-    @epochs.setter
-    def epochs(self, epochs):
-        """Sets the epochs of this DSJobModelHyperparams.
-
-
-        :param epochs: The epochs of this DSJobModelHyperparams.  # noqa: E501
-        :type: int
-        """
-
-        self._epochs = epochs
-
-    @property
-    def steps(self):
-        """Gets the steps of this DSJobModelHyperparams.  # noqa: E501
-
-
-        :return: The steps of this DSJobModelHyperparams.  # noqa: E501
-        :rtype: int
-        """
-        return self._steps
-
-    @steps.setter
-    def steps(self, steps):
-        """Sets the steps of this DSJobModelHyperparams.
-
-
-        :param steps: The steps of this DSJobModelHyperparams.  # noqa: E501
-        :type: int
-        """
-
-        self._steps = steps
+        if steps is not None:
+            self.steps = steps
 
     @property
     def batchsize(self):
@@ -180,6 +138,27 @@ class DSJobModelHyperparams(object):
         self._customkv = customkv
 
     @property
+    def epochs(self):
+        """Gets the epochs of this DSJobModelHyperparams.  # noqa: E501
+
+
+        :return: The epochs of this DSJobModelHyperparams.  # noqa: E501
+        :rtype: int
+        """
+        return self._epochs
+
+    @epochs.setter
+    def epochs(self, epochs):
+        """Sets the epochs of this DSJobModelHyperparams.
+
+
+        :param epochs: The epochs of this DSJobModelHyperparams.  # noqa: E501
+        :type: int
+        """
+
+        self._epochs = epochs
+
+    @property
     def file(self):
         """Gets the file of this DSJobModelHyperparams.  # noqa: E501
 
@@ -199,6 +178,27 @@ class DSJobModelHyperparams(object):
         """
 
         self._file = file
+
+    @property
+    def steps(self):
+        """Gets the steps of this DSJobModelHyperparams.  # noqa: E501
+
+
+        :return: The steps of this DSJobModelHyperparams.  # noqa: E501
+        :rtype: int
+        """
+        return self._steps
+
+    @steps.setter
+    def steps(self, steps):
+        """Sets the steps of this DSJobModelHyperparams.
+
+
+        :param steps: The steps of this DSJobModelHyperparams.  # noqa: E501
+        :type: int
+        """
+
+        self._steps = steps
 
     def to_dict(self):
         """Returns the model properties as a dict"""

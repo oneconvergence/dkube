@@ -31,53 +31,24 @@ class AuthModelLocal(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'username': 'str',
-        'password': 'str'
+        'password': 'str',
+        'username': 'str'
     }
 
     attribute_map = {
-        'username': 'username',
-        'password': 'password'
+        'password': 'password',
+        'username': 'username'
     }
 
-    def __init__(self, username=None, password=None):  # noqa: E501
+    def __init__(self, password=None, username=None):  # noqa: E501
         """AuthModelLocal - a model defined in Swagger"""  # noqa: E501
 
-        self._username = None
         self._password = None
+        self._username = None
         self.discriminator = None
 
-        self.username = username
         self.password = password
-
-    @property
-    def username(self):
-        """Gets the username of this AuthModelLocal.  # noqa: E501
-
-        Username of the operator.  # noqa: E501
-
-        :return: The username of this AuthModelLocal.  # noqa: E501
-        :rtype: str
-        """
-        return self._username
-
-    @username.setter
-    def username(self, username):
-        """Sets the username of this AuthModelLocal.
-
-        Username of the operator.  # noqa: E501
-
-        :param username: The username of this AuthModelLocal.  # noqa: E501
-        :type: str
-        """
-        if username is None:
-            raise ValueError("Invalid value for `username`, must not be `None`")  # noqa: E501
-        if username is not None and len(username) > 255:
-            raise ValueError("Invalid value for `username`, length must be less than or equal to `255`")  # noqa: E501
-        if username is not None and len(username) < 1:
-            raise ValueError("Invalid value for `username`, length must be greater than or equal to `1`")  # noqa: E501
-
-        self._username = username
+        self.username = username
 
     @property
     def password(self):
@@ -107,6 +78,35 @@ class AuthModelLocal(object):
             raise ValueError("Invalid value for `password`, length must be greater than or equal to `1`")  # noqa: E501
 
         self._password = password
+
+    @property
+    def username(self):
+        """Gets the username of this AuthModelLocal.  # noqa: E501
+
+        Username of the operator.  # noqa: E501
+
+        :return: The username of this AuthModelLocal.  # noqa: E501
+        :rtype: str
+        """
+        return self._username
+
+    @username.setter
+    def username(self, username):
+        """Sets the username of this AuthModelLocal.
+
+        Username of the operator.  # noqa: E501
+
+        :param username: The username of this AuthModelLocal.  # noqa: E501
+        :type: str
+        """
+        if username is None:
+            raise ValueError("Invalid value for `username`, must not be `None`")  # noqa: E501
+        if username is not None and len(username) > 255:
+            raise ValueError("Invalid value for `username`, length must be less than or equal to `255`")  # noqa: E501
+        if username is not None and len(username) < 1:
+            raise ValueError("Invalid value for `username`, length must be greater than or equal to `1`")  # noqa: E501
+
+        self._username = username
 
     def to_dict(self):
         """Returns the model properties as a dict"""

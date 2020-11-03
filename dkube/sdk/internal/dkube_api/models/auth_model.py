@@ -31,76 +31,50 @@ class AuthModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'mode': 'str',
         'code': 'str',
-        'providers': 'list[str]',
-        'ldap': 'AuthModelLdap',
         'github': 'AuthModelGithub',
-        'local': 'AuthModelLocal'
+        'keycloak': 'AuthModelKeycloak',
+        'ldap': 'AuthModelLdap',
+        'local': 'AuthModelLocal',
+        'mode': 'str',
+        'providers': 'list[str]'
     }
 
     attribute_map = {
-        'mode': 'mode',
         'code': 'code',
-        'providers': 'providers',
-        'ldap': 'ldap',
         'github': 'github',
-        'local': 'local'
+        'keycloak': 'keycloak',
+        'ldap': 'ldap',
+        'local': 'local',
+        'mode': 'mode',
+        'providers': 'providers'
     }
 
-    def __init__(self, mode=None, code=None, providers=None, ldap=None, github=None, local=None):  # noqa: E501
+    def __init__(self, code=None, github=None, keycloak=None, ldap=None, local=None, mode=None, providers=None):  # noqa: E501
         """AuthModel - a model defined in Swagger"""  # noqa: E501
 
-        self._mode = None
         self._code = None
-        self._providers = None
-        self._ldap = None
         self._github = None
+        self._keycloak = None
+        self._ldap = None
         self._local = None
+        self._mode = None
+        self._providers = None
         self.discriminator = None
 
-        self.mode = mode
         if code is not None:
             self.code = code
-        if providers is not None:
-            self.providers = providers
-        if ldap is not None:
-            self.ldap = ldap
         if github is not None:
             self.github = github
+        if keycloak is not None:
+            self.keycloak = keycloak
+        if ldap is not None:
+            self.ldap = ldap
         if local is not None:
             self.local = local
-
-    @property
-    def mode(self):
-        """Gets the mode of this AuthModel.  # noqa: E501
-
-        The authorization mode to switch to.  # noqa: E501
-
-        :return: The mode of this AuthModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._mode
-
-    @mode.setter
-    def mode(self, mode):
-        """Sets the mode of this AuthModel.
-
-        The authorization mode to switch to.  # noqa: E501
-
-        :param mode: The mode of this AuthModel.  # noqa: E501
-        :type: str
-        """
-        if mode is None:
-            raise ValueError("Invalid value for `mode`, must not be `None`")  # noqa: E501
-        allowed_values = ["github", "local", "ldap"]  # noqa: E501
-        if mode not in allowed_values:
-            raise ValueError(
-                "Invalid value for `mode` ({0}), must be one of {1}"  # noqa: E501
-                .format(mode, allowed_values)
-            )
-
-        self._mode = mode
+        self.mode = mode
+        if providers is not None:
+            self.providers = providers
 
     @property
     def code(self):
@@ -126,27 +100,46 @@ class AuthModel(object):
         self._code = code
 
     @property
-    def providers(self):
-        """Gets the providers of this AuthModel.  # noqa: E501
+    def github(self):
+        """Gets the github of this AuthModel.  # noqa: E501
 
-        The modes of authorization that supports changing to from operator dashboard.  # noqa: E501
 
-        :return: The providers of this AuthModel.  # noqa: E501
-        :rtype: list[str]
+        :return: The github of this AuthModel.  # noqa: E501
+        :rtype: AuthModelGithub
         """
-        return self._providers
+        return self._github
 
-    @providers.setter
-    def providers(self, providers):
-        """Sets the providers of this AuthModel.
+    @github.setter
+    def github(self, github):
+        """Sets the github of this AuthModel.
 
-        The modes of authorization that supports changing to from operator dashboard.  # noqa: E501
 
-        :param providers: The providers of this AuthModel.  # noqa: E501
-        :type: list[str]
+        :param github: The github of this AuthModel.  # noqa: E501
+        :type: AuthModelGithub
         """
 
-        self._providers = providers
+        self._github = github
+
+    @property
+    def keycloak(self):
+        """Gets the keycloak of this AuthModel.  # noqa: E501
+
+
+        :return: The keycloak of this AuthModel.  # noqa: E501
+        :rtype: AuthModelKeycloak
+        """
+        return self._keycloak
+
+    @keycloak.setter
+    def keycloak(self, keycloak):
+        """Sets the keycloak of this AuthModel.
+
+
+        :param keycloak: The keycloak of this AuthModel.  # noqa: E501
+        :type: AuthModelKeycloak
+        """
+
+        self._keycloak = keycloak
 
     @property
     def ldap(self):
@@ -170,27 +163,6 @@ class AuthModel(object):
         self._ldap = ldap
 
     @property
-    def github(self):
-        """Gets the github of this AuthModel.  # noqa: E501
-
-
-        :return: The github of this AuthModel.  # noqa: E501
-        :rtype: AuthModelGithub
-        """
-        return self._github
-
-    @github.setter
-    def github(self, github):
-        """Sets the github of this AuthModel.
-
-
-        :param github: The github of this AuthModel.  # noqa: E501
-        :type: AuthModelGithub
-        """
-
-        self._github = github
-
-    @property
     def local(self):
         """Gets the local of this AuthModel.  # noqa: E501
 
@@ -210,6 +182,60 @@ class AuthModel(object):
         """
 
         self._local = local
+
+    @property
+    def mode(self):
+        """Gets the mode of this AuthModel.  # noqa: E501
+
+        The authorization mode to switch to.  # noqa: E501
+
+        :return: The mode of this AuthModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._mode
+
+    @mode.setter
+    def mode(self, mode):
+        """Sets the mode of this AuthModel.
+
+        The authorization mode to switch to.  # noqa: E501
+
+        :param mode: The mode of this AuthModel.  # noqa: E501
+        :type: str
+        """
+        if mode is None:
+            raise ValueError("Invalid value for `mode`, must not be `None`")  # noqa: E501
+        allowed_values = ["github", "local", "ldap", "keycloak"]  # noqa: E501
+        if mode not in allowed_values:
+            raise ValueError(
+                "Invalid value for `mode` ({0}), must be one of {1}"  # noqa: E501
+                .format(mode, allowed_values)
+            )
+
+        self._mode = mode
+
+    @property
+    def providers(self):
+        """Gets the providers of this AuthModel.  # noqa: E501
+
+        The modes of authorization that supports changing to from operator dashboard.  # noqa: E501
+
+        :return: The providers of this AuthModel.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._providers
+
+    @providers.setter
+    def providers(self, providers):
+        """Sets the providers of this AuthModel.
+
+        The modes of authorization that supports changing to from operator dashboard.  # noqa: E501
+
+        :param providers: The providers of this AuthModel.  # noqa: E501
+        :type: list[str]
+        """
+
+        self._providers = providers
 
     def to_dict(self):
         """Returns the model properties as a dict"""

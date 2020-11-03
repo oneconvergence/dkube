@@ -31,46 +31,88 @@ class UserProfile(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'name': 'str',
-        'uid': 'str',
-        'user': 'str',
         'homedir': 'str',
+        'limits': 'UserProfileLimits',
+        'name': 'str',
         'shareddir': 'str',
-        'limits': 'UserProfileLimits'
+        'uid': 'str',
+        'user': 'str'
     }
 
     attribute_map = {
-        'name': 'name',
-        'uid': 'uid',
-        'user': 'user',
         'homedir': 'homedir',
+        'limits': 'limits',
+        'name': 'name',
         'shareddir': 'shareddir',
-        'limits': 'limits'
+        'uid': 'uid',
+        'user': 'user'
     }
 
-    def __init__(self, name=None, uid=None, user=None, homedir=None, shareddir=None, limits=None):  # noqa: E501
+    def __init__(self, homedir=None, limits=None, name=None, shareddir=None, uid=None, user=None):  # noqa: E501
         """UserProfile - a model defined in Swagger"""  # noqa: E501
 
+        self._homedir = None
+        self._limits = None
         self._name = None
+        self._shareddir = None
         self._uid = None
         self._user = None
-        self._homedir = None
-        self._shareddir = None
-        self._limits = None
         self.discriminator = None
 
+        if homedir is not None:
+            self.homedir = homedir
+        if limits is not None:
+            self.limits = limits
         if name is not None:
             self.name = name
+        if shareddir is not None:
+            self.shareddir = shareddir
         if uid is not None:
             self.uid = uid
         if user is not None:
             self.user = user
-        if homedir is not None:
-            self.homedir = homedir
-        if shareddir is not None:
-            self.shareddir = shareddir
-        if limits is not None:
-            self.limits = limits
+
+    @property
+    def homedir(self):
+        """Gets the homedir of this UserProfile.  # noqa: E501
+
+
+        :return: The homedir of this UserProfile.  # noqa: E501
+        :rtype: str
+        """
+        return self._homedir
+
+    @homedir.setter
+    def homedir(self, homedir):
+        """Sets the homedir of this UserProfile.
+
+
+        :param homedir: The homedir of this UserProfile.  # noqa: E501
+        :type: str
+        """
+
+        self._homedir = homedir
+
+    @property
+    def limits(self):
+        """Gets the limits of this UserProfile.  # noqa: E501
+
+
+        :return: The limits of this UserProfile.  # noqa: E501
+        :rtype: UserProfileLimits
+        """
+        return self._limits
+
+    @limits.setter
+    def limits(self, limits):
+        """Sets the limits of this UserProfile.
+
+
+        :param limits: The limits of this UserProfile.  # noqa: E501
+        :type: UserProfileLimits
+        """
+
+        self._limits = limits
 
     @property
     def name(self):
@@ -94,6 +136,27 @@ class UserProfile(object):
         """
 
         self._name = name
+
+    @property
+    def shareddir(self):
+        """Gets the shareddir of this UserProfile.  # noqa: E501
+
+
+        :return: The shareddir of this UserProfile.  # noqa: E501
+        :rtype: str
+        """
+        return self._shareddir
+
+    @shareddir.setter
+    def shareddir(self, shareddir):
+        """Sets the shareddir of this UserProfile.
+
+
+        :param shareddir: The shareddir of this UserProfile.  # noqa: E501
+        :type: str
+        """
+
+        self._shareddir = shareddir
 
     @property
     def uid(self):
@@ -136,69 +199,6 @@ class UserProfile(object):
         """
 
         self._user = user
-
-    @property
-    def homedir(self):
-        """Gets the homedir of this UserProfile.  # noqa: E501
-
-
-        :return: The homedir of this UserProfile.  # noqa: E501
-        :rtype: str
-        """
-        return self._homedir
-
-    @homedir.setter
-    def homedir(self, homedir):
-        """Sets the homedir of this UserProfile.
-
-
-        :param homedir: The homedir of this UserProfile.  # noqa: E501
-        :type: str
-        """
-
-        self._homedir = homedir
-
-    @property
-    def shareddir(self):
-        """Gets the shareddir of this UserProfile.  # noqa: E501
-
-
-        :return: The shareddir of this UserProfile.  # noqa: E501
-        :rtype: str
-        """
-        return self._shareddir
-
-    @shareddir.setter
-    def shareddir(self, shareddir):
-        """Sets the shareddir of this UserProfile.
-
-
-        :param shareddir: The shareddir of this UserProfile.  # noqa: E501
-        :type: str
-        """
-
-        self._shareddir = shareddir
-
-    @property
-    def limits(self):
-        """Gets the limits of this UserProfile.  # noqa: E501
-
-
-        :return: The limits of this UserProfile.  # noqa: E501
-        :rtype: UserProfileLimits
-        """
-        return self._limits
-
-    @limits.setter
-    def limits(self, limits):
-        """Sets the limits of this UserProfile.
-
-
-        :param limits: The limits of this UserProfile.  # noqa: E501
-        :type: UserProfileLimits
-        """
-
-        self._limits = limits
 
     def to_dict(self):
         """Returns the model properties as a dict"""

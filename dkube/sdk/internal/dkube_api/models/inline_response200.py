@@ -31,47 +31,26 @@ class InlineResponse200(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'response': 'ApiResponse',
-        'components': 'ClusterStatus'
+        'components': 'ClusterStatus',
+        'response': 'ApiResponse'
     }
 
     attribute_map = {
-        'response': 'response',
-        'components': 'components'
+        'components': 'components',
+        'response': 'response'
     }
 
-    def __init__(self, response=None, components=None):  # noqa: E501
+    def __init__(self, components=None, response=None):  # noqa: E501
         """InlineResponse200 - a model defined in Swagger"""  # noqa: E501
 
-        self._response = None
         self._components = None
+        self._response = None
         self.discriminator = None
 
-        if response is not None:
-            self.response = response
         if components is not None:
             self.components = components
-
-    @property
-    def response(self):
-        """Gets the response of this InlineResponse200.  # noqa: E501
-
-
-        :return: The response of this InlineResponse200.  # noqa: E501
-        :rtype: ApiResponse
-        """
-        return self._response
-
-    @response.setter
-    def response(self, response):
-        """Sets the response of this InlineResponse200.
-
-
-        :param response: The response of this InlineResponse200.  # noqa: E501
-        :type: ApiResponse
-        """
-
-        self._response = response
+        if response is not None:
+            self.response = response
 
     @property
     def components(self):
@@ -93,6 +72,27 @@ class InlineResponse200(object):
         """
 
         self._components = components
+
+    @property
+    def response(self):
+        """Gets the response of this InlineResponse200.  # noqa: E501
+
+
+        :return: The response of this InlineResponse200.  # noqa: E501
+        :rtype: ApiResponse
+        """
+        return self._response
+
+    @response.setter
+    def response(self, response):
+        """Sets the response of this InlineResponse200.
+
+
+        :param response: The response of this InlineResponse200.  # noqa: E501
+        :type: ApiResponse
+        """
+
+        self._response = response
 
     def to_dict(self):
         """Returns the model properties as a dict"""

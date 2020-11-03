@@ -32,35 +32,35 @@ class JobCollection(object):
     """
     swagger_types = {
         'children': 'list[JobModel]',
+        'devices': 'list[JobCollectionDevices]',
         'job': 'JobModel',
-        'workers': 'list[WorkerModel]',
-        'devices': 'list[JobCollectionDevices]'
+        'workers': 'list[WorkerModel]'
     }
 
     attribute_map = {
         'children': 'children',
+        'devices': 'devices',
         'job': 'job',
-        'workers': 'workers',
-        'devices': 'devices'
+        'workers': 'workers'
     }
 
-    def __init__(self, children=None, job=None, workers=None, devices=None):  # noqa: E501
+    def __init__(self, children=None, devices=None, job=None, workers=None):  # noqa: E501
         """JobCollection - a model defined in Swagger"""  # noqa: E501
 
         self._children = None
+        self._devices = None
         self._job = None
         self._workers = None
-        self._devices = None
         self.discriminator = None
 
         if children is not None:
             self.children = children
+        if devices is not None:
+            self.devices = devices
         if job is not None:
             self.job = job
         if workers is not None:
             self.workers = workers
-        if devices is not None:
-            self.devices = devices
 
     @property
     def children(self):
@@ -82,6 +82,27 @@ class JobCollection(object):
         """
 
         self._children = children
+
+    @property
+    def devices(self):
+        """Gets the devices of this JobCollection.  # noqa: E501
+
+
+        :return: The devices of this JobCollection.  # noqa: E501
+        :rtype: list[JobCollectionDevices]
+        """
+        return self._devices
+
+    @devices.setter
+    def devices(self, devices):
+        """Sets the devices of this JobCollection.
+
+
+        :param devices: The devices of this JobCollection.  # noqa: E501
+        :type: list[JobCollectionDevices]
+        """
+
+        self._devices = devices
 
     @property
     def job(self):
@@ -124,27 +145,6 @@ class JobCollection(object):
         """
 
         self._workers = workers
-
-    @property
-    def devices(self):
-        """Gets the devices of this JobCollection.  # noqa: E501
-
-
-        :return: The devices of this JobCollection.  # noqa: E501
-        :rtype: list[JobCollectionDevices]
-        """
-        return self._devices
-
-    @devices.setter
-    def devices(self, devices):
-        """Sets the devices of this JobCollection.
-
-
-        :param devices: The devices of this JobCollection.  # noqa: E501
-        :type: list[JobCollectionDevices]
-        """
-
-        self._devices = devices
 
     def to_dict(self):
         """Returns the model properties as a dict"""

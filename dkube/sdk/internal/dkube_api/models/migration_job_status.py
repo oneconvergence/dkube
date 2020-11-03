@@ -31,47 +31,26 @@ class MigrationJobStatus(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'job': 'MigrationJobModel',
-        'datums': 'list[MigrationDatumModel]'
+        'datums': 'list[MigrationDatumModel]',
+        'job': 'MigrationJobModel'
     }
 
     attribute_map = {
-        'job': 'job',
-        'datums': 'datums'
+        'datums': 'datums',
+        'job': 'job'
     }
 
-    def __init__(self, job=None, datums=None):  # noqa: E501
+    def __init__(self, datums=None, job=None):  # noqa: E501
         """MigrationJobStatus - a model defined in Swagger"""  # noqa: E501
 
-        self._job = None
         self._datums = None
+        self._job = None
         self.discriminator = None
 
-        if job is not None:
-            self.job = job
         if datums is not None:
             self.datums = datums
-
-    @property
-    def job(self):
-        """Gets the job of this MigrationJobStatus.  # noqa: E501
-
-
-        :return: The job of this MigrationJobStatus.  # noqa: E501
-        :rtype: MigrationJobModel
-        """
-        return self._job
-
-    @job.setter
-    def job(self, job):
-        """Sets the job of this MigrationJobStatus.
-
-
-        :param job: The job of this MigrationJobStatus.  # noqa: E501
-        :type: MigrationJobModel
-        """
-
-        self._job = job
+        if job is not None:
+            self.job = job
 
     @property
     def datums(self):
@@ -93,6 +72,27 @@ class MigrationJobStatus(object):
         """
 
         self._datums = datums
+
+    @property
+    def job(self):
+        """Gets the job of this MigrationJobStatus.  # noqa: E501
+
+
+        :return: The job of this MigrationJobStatus.  # noqa: E501
+        :rtype: MigrationJobModel
+        """
+        return self._job
+
+    @job.setter
+    def job(self, job):
+        """Sets the job of this MigrationJobStatus.
+
+
+        :param job: The job of this MigrationJobStatus.  # noqa: E501
+        :type: MigrationJobModel
+        """
+
+        self._job = job
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,103 +31,61 @@ class RepoModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'name': 'str',
-        'tags': 'list[str]',
         'description': 'str',
-        'gitaccess': 'GitAccessCredentials',
-        's3access': 'RepoS3AccessCredentials',
-        'k8svolume': 'K8SVolumeInfo',
-        'nfsaccess': 'NFSAccessInfo',
         'gcsaccess': 'RepoGCSAccessInfo',
-        'redshift': 'RedshiftAccessInfo'
+        'gitaccess': 'GitAccessCredentials',
+        'k8svolume': 'K8SVolumeInfo',
+        'name': 'str',
+        'nfsaccess': 'NFSAccessInfo',
+        'redshift': 'RedshiftAccessInfo',
+        's3access': 'RepoS3AccessCredentials',
+        'tags': 'list[str]'
     }
 
     attribute_map = {
-        'name': 'name',
-        'tags': 'tags',
         'description': 'description',
-        'gitaccess': 'gitaccess',
-        's3access': 's3access',
-        'k8svolume': 'k8svolume',
-        'nfsaccess': 'nfsaccess',
         'gcsaccess': 'gcsaccess',
-        'redshift': 'redshift'
+        'gitaccess': 'gitaccess',
+        'k8svolume': 'k8svolume',
+        'name': 'name',
+        'nfsaccess': 'nfsaccess',
+        'redshift': 'redshift',
+        's3access': 's3access',
+        'tags': 'tags'
     }
 
-    def __init__(self, name=None, tags=None, description=None, gitaccess=None, s3access=None, k8svolume=None, nfsaccess=None, gcsaccess=None, redshift=None):  # noqa: E501
+    def __init__(self, description=None, gcsaccess=None, gitaccess=None, k8svolume=None, name=None, nfsaccess=None, redshift=None, s3access=None, tags=None):  # noqa: E501
         """RepoModel - a model defined in Swagger"""  # noqa: E501
 
-        self._name = None
-        self._tags = None
         self._description = None
-        self._gitaccess = None
-        self._s3access = None
-        self._k8svolume = None
-        self._nfsaccess = None
         self._gcsaccess = None
+        self._gitaccess = None
+        self._k8svolume = None
+        self._name = None
+        self._nfsaccess = None
         self._redshift = None
+        self._s3access = None
+        self._tags = None
         self.discriminator = None
 
-        if name is not None:
-            self.name = name
-        if tags is not None:
-            self.tags = tags
         if description is not None:
             self.description = description
-        if gitaccess is not None:
-            self.gitaccess = gitaccess
-        if s3access is not None:
-            self.s3access = s3access
-        if k8svolume is not None:
-            self.k8svolume = k8svolume
-        if nfsaccess is not None:
-            self.nfsaccess = nfsaccess
         if gcsaccess is not None:
             self.gcsaccess = gcsaccess
+        if gitaccess is not None:
+            self.gitaccess = gitaccess
+        if k8svolume is not None:
+            self.k8svolume = k8svolume
+        if name is not None:
+            self.name = name
+        if nfsaccess is not None:
+            self.nfsaccess = nfsaccess
         if redshift is not None:
             self.redshift = redshift
-
-    @property
-    def name(self):
-        """Gets the name of this RepoModel.  # noqa: E501
-
-
-        :return: The name of this RepoModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this RepoModel.
-
-
-        :param name: The name of this RepoModel.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
-
-    @property
-    def tags(self):
-        """Gets the tags of this RepoModel.  # noqa: E501
-
-
-        :return: The tags of this RepoModel.  # noqa: E501
-        :rtype: list[str]
-        """
-        return self._tags
-
-    @tags.setter
-    def tags(self, tags):
-        """Sets the tags of this RepoModel.
-
-
-        :param tags: The tags of this RepoModel.  # noqa: E501
-        :type: list[str]
-        """
-
-        self._tags = tags
+        if s3access is not None:
+            self.s3access = s3access
+        if tags is not None:
+            self.tags = tags
 
     @property
     def description(self):
@@ -151,6 +109,27 @@ class RepoModel(object):
         self._description = description
 
     @property
+    def gcsaccess(self):
+        """Gets the gcsaccess of this RepoModel.  # noqa: E501
+
+
+        :return: The gcsaccess of this RepoModel.  # noqa: E501
+        :rtype: RepoGCSAccessInfo
+        """
+        return self._gcsaccess
+
+    @gcsaccess.setter
+    def gcsaccess(self, gcsaccess):
+        """Sets the gcsaccess of this RepoModel.
+
+
+        :param gcsaccess: The gcsaccess of this RepoModel.  # noqa: E501
+        :type: RepoGCSAccessInfo
+        """
+
+        self._gcsaccess = gcsaccess
+
+    @property
     def gitaccess(self):
         """Gets the gitaccess of this RepoModel.  # noqa: E501
 
@@ -170,27 +149,6 @@ class RepoModel(object):
         """
 
         self._gitaccess = gitaccess
-
-    @property
-    def s3access(self):
-        """Gets the s3access of this RepoModel.  # noqa: E501
-
-
-        :return: The s3access of this RepoModel.  # noqa: E501
-        :rtype: RepoS3AccessCredentials
-        """
-        return self._s3access
-
-    @s3access.setter
-    def s3access(self, s3access):
-        """Sets the s3access of this RepoModel.
-
-
-        :param s3access: The s3access of this RepoModel.  # noqa: E501
-        :type: RepoS3AccessCredentials
-        """
-
-        self._s3access = s3access
 
     @property
     def k8svolume(self):
@@ -214,6 +172,27 @@ class RepoModel(object):
         self._k8svolume = k8svolume
 
     @property
+    def name(self):
+        """Gets the name of this RepoModel.  # noqa: E501
+
+
+        :return: The name of this RepoModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this RepoModel.
+
+
+        :param name: The name of this RepoModel.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
+
+    @property
     def nfsaccess(self):
         """Gets the nfsaccess of this RepoModel.  # noqa: E501
 
@@ -235,27 +214,6 @@ class RepoModel(object):
         self._nfsaccess = nfsaccess
 
     @property
-    def gcsaccess(self):
-        """Gets the gcsaccess of this RepoModel.  # noqa: E501
-
-
-        :return: The gcsaccess of this RepoModel.  # noqa: E501
-        :rtype: RepoGCSAccessInfo
-        """
-        return self._gcsaccess
-
-    @gcsaccess.setter
-    def gcsaccess(self, gcsaccess):
-        """Sets the gcsaccess of this RepoModel.
-
-
-        :param gcsaccess: The gcsaccess of this RepoModel.  # noqa: E501
-        :type: RepoGCSAccessInfo
-        """
-
-        self._gcsaccess = gcsaccess
-
-    @property
     def redshift(self):
         """Gets the redshift of this RepoModel.  # noqa: E501
 
@@ -275,6 +233,48 @@ class RepoModel(object):
         """
 
         self._redshift = redshift
+
+    @property
+    def s3access(self):
+        """Gets the s3access of this RepoModel.  # noqa: E501
+
+
+        :return: The s3access of this RepoModel.  # noqa: E501
+        :rtype: RepoS3AccessCredentials
+        """
+        return self._s3access
+
+    @s3access.setter
+    def s3access(self, s3access):
+        """Sets the s3access of this RepoModel.
+
+
+        :param s3access: The s3access of this RepoModel.  # noqa: E501
+        :type: RepoS3AccessCredentials
+        """
+
+        self._s3access = s3access
+
+    @property
+    def tags(self):
+        """Gets the tags of this RepoModel.  # noqa: E501
+
+
+        :return: The tags of this RepoModel.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._tags
+
+    @tags.setter
+    def tags(self, tags):
+        """Sets the tags of this RepoModel.
+
+
+        :param tags: The tags of this RepoModel.  # noqa: E501
+        :type: list[str]
+        """
+
+        self._tags = tags
 
     def to_dict(self):
         """Returns the model properties as a dict"""

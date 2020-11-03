@@ -31,135 +31,102 @@ class AuthModelLdap(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'username': 'str',
-        'password': 'str',
+        'advanced': 'AuthModelLdapAdvanced',
         'basedn': 'str',
+        'binddn': 'str',
         'cacert': 'CertFileModel',
-        'scope': 'str',
-        'user_attr': 'str',
+        'endpoint': 'str',
         'group_attr': 'str',
         'group_filter': 'str',
+        'password': 'str',
+        'scope': 'str',
+        'updated_at': 'str',
+        'user_attr': 'str',
         'user_filter': 'str',
-        'binddn': 'str',
-        'endpoint': 'str',
-        'advanced': 'AuthModelLdapAdvanced',
-        'updated_at': 'str'
+        'username': 'str'
     }
 
     attribute_map = {
-        'username': 'username',
-        'password': 'password',
+        'advanced': 'advanced',
         'basedn': 'basedn',
+        'binddn': 'binddn',
         'cacert': 'cacert',
-        'scope': 'scope',
-        'user_attr': 'userAttr',
+        'endpoint': 'endpoint',
         'group_attr': 'groupAttr',
         'group_filter': 'groupFilter',
+        'password': 'password',
+        'scope': 'scope',
+        'updated_at': 'updatedAt',
+        'user_attr': 'userAttr',
         'user_filter': 'userFilter',
-        'binddn': 'binddn',
-        'endpoint': 'endpoint',
-        'advanced': 'advanced',
-        'updated_at': 'updatedAt'
+        'username': 'username'
     }
 
-    def __init__(self, username=None, password=None, basedn=None, cacert=None, scope=None, user_attr=None, group_attr=None, group_filter=None, user_filter=None, binddn=None, endpoint=None, advanced=None, updated_at=None):  # noqa: E501
+    def __init__(self, advanced=None, basedn=None, binddn=None, cacert=None, endpoint=None, group_attr=None, group_filter=None, password=None, scope=None, updated_at=None, user_attr=None, user_filter=None, username=None):  # noqa: E501
         """AuthModelLdap - a model defined in Swagger"""  # noqa: E501
 
-        self._username = None
-        self._password = None
+        self._advanced = None
         self._basedn = None
+        self._binddn = None
         self._cacert = None
-        self._scope = None
-        self._user_attr = None
+        self._endpoint = None
         self._group_attr = None
         self._group_filter = None
-        self._user_filter = None
-        self._binddn = None
-        self._endpoint = None
-        self._advanced = None
+        self._password = None
+        self._scope = None
         self._updated_at = None
+        self._user_attr = None
+        self._user_filter = None
+        self._username = None
         self.discriminator = None
 
-        if username is not None:
-            self.username = username
-        if password is not None:
-            self.password = password
+        if advanced is not None:
+            self.advanced = advanced
         if basedn is not None:
             self.basedn = basedn
+        if binddn is not None:
+            self.binddn = binddn
         if cacert is not None:
             self.cacert = cacert
-        if scope is not None:
-            self.scope = scope
-        if user_attr is not None:
-            self.user_attr = user_attr
+        if endpoint is not None:
+            self.endpoint = endpoint
         if group_attr is not None:
             self.group_attr = group_attr
         if group_filter is not None:
             self.group_filter = group_filter
-        if user_filter is not None:
-            self.user_filter = user_filter
-        if binddn is not None:
-            self.binddn = binddn
-        if endpoint is not None:
-            self.endpoint = endpoint
-        if advanced is not None:
-            self.advanced = advanced
+        if password is not None:
+            self.password = password
+        if scope is not None:
+            self.scope = scope
         if updated_at is not None:
             self.updated_at = updated_at
+        if user_attr is not None:
+            self.user_attr = user_attr
+        if user_filter is not None:
+            self.user_filter = user_filter
+        if username is not None:
+            self.username = username
 
     @property
-    def username(self):
-        """Gets the username of this AuthModelLdap.  # noqa: E501
+    def advanced(self):
+        """Gets the advanced of this AuthModelLdap.  # noqa: E501
 
-        Name of the valid user. This user must be present in LDAP server.  # noqa: E501
 
-        :return: The username of this AuthModelLdap.  # noqa: E501
-        :rtype: str
+        :return: The advanced of this AuthModelLdap.  # noqa: E501
+        :rtype: AuthModelLdapAdvanced
         """
-        return self._username
+        return self._advanced
 
-    @username.setter
-    def username(self, username):
-        """Sets the username of this AuthModelLdap.
+    @advanced.setter
+    def advanced(self, advanced):
+        """Sets the advanced of this AuthModelLdap.
 
-        Name of the valid user. This user must be present in LDAP server.  # noqa: E501
 
-        :param username: The username of this AuthModelLdap.  # noqa: E501
-        :type: str
+        :param advanced: The advanced of this AuthModelLdap.  # noqa: E501
+        :type: AuthModelLdapAdvanced
         """
-        if username is not None and len(username) > 255:
-            raise ValueError("Invalid value for `username`, length must be less than or equal to `255`")  # noqa: E501
-        if username is not None and len(username) < 1:
-            raise ValueError("Invalid value for `username`, length must be greater than or equal to `1`")  # noqa: E501
 
-        self._username = username
-
-    @property
-    def password(self):
-        """Gets the password of this AuthModelLdap.  # noqa: E501
-
-        Password of the user.  # noqa: E501
-
-        :return: The password of this AuthModelLdap.  # noqa: E501
-        :rtype: str
-        """
-        return self._password
-
-    @password.setter
-    def password(self, password):
-        """Sets the password of this AuthModelLdap.
-
-        Password of the user.  # noqa: E501
-
-        :param password: The password of this AuthModelLdap.  # noqa: E501
-        :type: str
-        """
-        if password is not None and len(password) > 255:
-            raise ValueError("Invalid value for `password`, length must be less than or equal to `255`")  # noqa: E501
-        if password is not None and len(password) < 1:
-            raise ValueError("Invalid value for `password`, length must be greater than or equal to `1`")  # noqa: E501
-
-        self._password = password
+        self._advanced = advanced
 
     @property
     def basedn(self):
@@ -185,6 +152,29 @@ class AuthModelLdap(object):
         self._basedn = basedn
 
     @property
+    def binddn(self):
+        """Gets the binddn of this AuthModelLdap.  # noqa: E501
+
+        LDAP BindDN.  # noqa: E501
+
+        :return: The binddn of this AuthModelLdap.  # noqa: E501
+        :rtype: str
+        """
+        return self._binddn
+
+    @binddn.setter
+    def binddn(self, binddn):
+        """Sets the binddn of this AuthModelLdap.
+
+        LDAP BindDN.  # noqa: E501
+
+        :param binddn: The binddn of this AuthModelLdap.  # noqa: E501
+        :type: str
+        """
+
+        self._binddn = binddn
+
+    @property
     def cacert(self):
         """Gets the cacert of this AuthModelLdap.  # noqa: E501
 
@@ -206,56 +196,27 @@ class AuthModelLdap(object):
         self._cacert = cacert
 
     @property
-    def scope(self):
-        """Gets the scope of this AuthModelLdap.  # noqa: E501
+    def endpoint(self):
+        """Gets the endpoint of this AuthModelLdap.  # noqa: E501
 
-        Search scope  # noqa: E501
+        AD IP Address without protocol and port.  # noqa: E501
 
-        :return: The scope of this AuthModelLdap.  # noqa: E501
+        :return: The endpoint of this AuthModelLdap.  # noqa: E501
         :rtype: str
         """
-        return self._scope
+        return self._endpoint
 
-    @scope.setter
-    def scope(self, scope):
-        """Sets the scope of this AuthModelLdap.
+    @endpoint.setter
+    def endpoint(self, endpoint):
+        """Sets the endpoint of this AuthModelLdap.
 
-        Search scope  # noqa: E501
+        AD IP Address without protocol and port.  # noqa: E501
 
-        :param scope: The scope of this AuthModelLdap.  # noqa: E501
-        :type: str
-        """
-        allowed_values = ["base", "singlelevel", "wholesubtree"]  # noqa: E501
-        if scope not in allowed_values:
-            raise ValueError(
-                "Invalid value for `scope` ({0}), must be one of {1}"  # noqa: E501
-                .format(scope, allowed_values)
-            )
-
-        self._scope = scope
-
-    @property
-    def user_attr(self):
-        """Gets the user_attr of this AuthModelLdap.  # noqa: E501
-
-        Search scope  # noqa: E501
-
-        :return: The user_attr of this AuthModelLdap.  # noqa: E501
-        :rtype: str
-        """
-        return self._user_attr
-
-    @user_attr.setter
-    def user_attr(self, user_attr):
-        """Sets the user_attr of this AuthModelLdap.
-
-        Search scope  # noqa: E501
-
-        :param user_attr: The user_attr of this AuthModelLdap.  # noqa: E501
+        :param endpoint: The endpoint of this AuthModelLdap.  # noqa: E501
         :type: str
         """
 
-        self._user_attr = user_attr
+        self._endpoint = endpoint
 
     @property
     def group_attr(self):
@@ -304,94 +265,60 @@ class AuthModelLdap(object):
         self._group_filter = group_filter
 
     @property
-    def user_filter(self):
-        """Gets the user_filter of this AuthModelLdap.  # noqa: E501
+    def password(self):
+        """Gets the password of this AuthModelLdap.  # noqa: E501
 
-        Optional LDAP user search filter  # noqa: E501
+        Password of the user.  # noqa: E501
 
-        :return: The user_filter of this AuthModelLdap.  # noqa: E501
+        :return: The password of this AuthModelLdap.  # noqa: E501
         :rtype: str
         """
-        return self._user_filter
+        return self._password
 
-    @user_filter.setter
-    def user_filter(self, user_filter):
-        """Sets the user_filter of this AuthModelLdap.
+    @password.setter
+    def password(self, password):
+        """Sets the password of this AuthModelLdap.
 
-        Optional LDAP user search filter  # noqa: E501
+        Password of the user.  # noqa: E501
 
-        :param user_filter: The user_filter of this AuthModelLdap.  # noqa: E501
+        :param password: The password of this AuthModelLdap.  # noqa: E501
         :type: str
         """
+        if password is not None and len(password) > 255:
+            raise ValueError("Invalid value for `password`, length must be less than or equal to `255`")  # noqa: E501
+        if password is not None and len(password) < 1:
+            raise ValueError("Invalid value for `password`, length must be greater than or equal to `1`")  # noqa: E501
 
-        self._user_filter = user_filter
+        self._password = password
 
     @property
-    def binddn(self):
-        """Gets the binddn of this AuthModelLdap.  # noqa: E501
+    def scope(self):
+        """Gets the scope of this AuthModelLdap.  # noqa: E501
 
-        LDAP BindDN.  # noqa: E501
+        Search scope  # noqa: E501
 
-        :return: The binddn of this AuthModelLdap.  # noqa: E501
+        :return: The scope of this AuthModelLdap.  # noqa: E501
         :rtype: str
         """
-        return self._binddn
+        return self._scope
 
-    @binddn.setter
-    def binddn(self, binddn):
-        """Sets the binddn of this AuthModelLdap.
+    @scope.setter
+    def scope(self, scope):
+        """Sets the scope of this AuthModelLdap.
 
-        LDAP BindDN.  # noqa: E501
+        Search scope  # noqa: E501
 
-        :param binddn: The binddn of this AuthModelLdap.  # noqa: E501
+        :param scope: The scope of this AuthModelLdap.  # noqa: E501
         :type: str
         """
+        allowed_values = ["base", "singlelevel", "wholesubtree"]  # noqa: E501
+        if scope not in allowed_values:
+            raise ValueError(
+                "Invalid value for `scope` ({0}), must be one of {1}"  # noqa: E501
+                .format(scope, allowed_values)
+            )
 
-        self._binddn = binddn
-
-    @property
-    def endpoint(self):
-        """Gets the endpoint of this AuthModelLdap.  # noqa: E501
-
-        AD IP Address without protocol and port.  # noqa: E501
-
-        :return: The endpoint of this AuthModelLdap.  # noqa: E501
-        :rtype: str
-        """
-        return self._endpoint
-
-    @endpoint.setter
-    def endpoint(self, endpoint):
-        """Sets the endpoint of this AuthModelLdap.
-
-        AD IP Address without protocol and port.  # noqa: E501
-
-        :param endpoint: The endpoint of this AuthModelLdap.  # noqa: E501
-        :type: str
-        """
-
-        self._endpoint = endpoint
-
-    @property
-    def advanced(self):
-        """Gets the advanced of this AuthModelLdap.  # noqa: E501
-
-
-        :return: The advanced of this AuthModelLdap.  # noqa: E501
-        :rtype: AuthModelLdapAdvanced
-        """
-        return self._advanced
-
-    @advanced.setter
-    def advanced(self, advanced):
-        """Sets the advanced of this AuthModelLdap.
-
-
-        :param advanced: The advanced of this AuthModelLdap.  # noqa: E501
-        :type: AuthModelLdapAdvanced
-        """
-
-        self._advanced = advanced
+        self._scope = scope
 
     @property
     def updated_at(self):
@@ -415,6 +342,79 @@ class AuthModelLdap(object):
         """
 
         self._updated_at = updated_at
+
+    @property
+    def user_attr(self):
+        """Gets the user_attr of this AuthModelLdap.  # noqa: E501
+
+        Search scope  # noqa: E501
+
+        :return: The user_attr of this AuthModelLdap.  # noqa: E501
+        :rtype: str
+        """
+        return self._user_attr
+
+    @user_attr.setter
+    def user_attr(self, user_attr):
+        """Sets the user_attr of this AuthModelLdap.
+
+        Search scope  # noqa: E501
+
+        :param user_attr: The user_attr of this AuthModelLdap.  # noqa: E501
+        :type: str
+        """
+
+        self._user_attr = user_attr
+
+    @property
+    def user_filter(self):
+        """Gets the user_filter of this AuthModelLdap.  # noqa: E501
+
+        Optional LDAP user search filter  # noqa: E501
+
+        :return: The user_filter of this AuthModelLdap.  # noqa: E501
+        :rtype: str
+        """
+        return self._user_filter
+
+    @user_filter.setter
+    def user_filter(self, user_filter):
+        """Sets the user_filter of this AuthModelLdap.
+
+        Optional LDAP user search filter  # noqa: E501
+
+        :param user_filter: The user_filter of this AuthModelLdap.  # noqa: E501
+        :type: str
+        """
+
+        self._user_filter = user_filter
+
+    @property
+    def username(self):
+        """Gets the username of this AuthModelLdap.  # noqa: E501
+
+        Name of the valid user. This user must be present in LDAP server.  # noqa: E501
+
+        :return: The username of this AuthModelLdap.  # noqa: E501
+        :rtype: str
+        """
+        return self._username
+
+    @username.setter
+    def username(self, username):
+        """Sets the username of this AuthModelLdap.
+
+        Name of the valid user. This user must be present in LDAP server.  # noqa: E501
+
+        :param username: The username of this AuthModelLdap.  # noqa: E501
+        :type: str
+        """
+        if username is not None and len(username) > 255:
+            raise ValueError("Invalid value for `username`, length must be less than or equal to `255`")  # noqa: E501
+        if username is not None and len(username) < 1:
+            raise ValueError("Invalid value for `username`, length must be greater than or equal to `1`")  # noqa: E501
+
+        self._username = username
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,26 +31,47 @@ class ModelDetailsKind(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'value': 'str',
-        'dkube_trained': 'ModelDetailsKindDkubeTrained'
+        'dkube_trained': 'ModelDetailsKindDkubeTrained',
+        'value': 'str'
     }
 
     attribute_map = {
-        'value': 'value',
-        'dkube_trained': 'dkube_trained'
+        'dkube_trained': 'dkube_trained',
+        'value': 'value'
     }
 
-    def __init__(self, value=None, dkube_trained=None):  # noqa: E501
+    def __init__(self, dkube_trained=None, value=None):  # noqa: E501
         """ModelDetailsKind - a model defined in Swagger"""  # noqa: E501
 
-        self._value = None
         self._dkube_trained = None
+        self._value = None
         self.discriminator = None
 
-        if value is not None:
-            self.value = value
         if dkube_trained is not None:
             self.dkube_trained = dkube_trained
+        if value is not None:
+            self.value = value
+
+    @property
+    def dkube_trained(self):
+        """Gets the dkube_trained of this ModelDetailsKind.  # noqa: E501
+
+
+        :return: The dkube_trained of this ModelDetailsKind.  # noqa: E501
+        :rtype: ModelDetailsKindDkubeTrained
+        """
+        return self._dkube_trained
+
+    @dkube_trained.setter
+    def dkube_trained(self, dkube_trained):
+        """Sets the dkube_trained of this ModelDetailsKind.
+
+
+        :param dkube_trained: The dkube_trained of this ModelDetailsKind.  # noqa: E501
+        :type: ModelDetailsKindDkubeTrained
+        """
+
+        self._dkube_trained = dkube_trained
 
     @property
     def value(self):
@@ -78,27 +99,6 @@ class ModelDetailsKind(object):
             )
 
         self._value = value
-
-    @property
-    def dkube_trained(self):
-        """Gets the dkube_trained of this ModelDetailsKind.  # noqa: E501
-
-
-        :return: The dkube_trained of this ModelDetailsKind.  # noqa: E501
-        :rtype: ModelDetailsKindDkubeTrained
-        """
-        return self._dkube_trained
-
-    @dkube_trained.setter
-    def dkube_trained(self, dkube_trained):
-        """Sets the dkube_trained of this ModelDetailsKind.
-
-
-        :param dkube_trained: The dkube_trained of this ModelDetailsKind.  # noqa: E501
-        :type: ModelDetailsKindDkubeTrained
-        """
-
-        self._dkube_trained = dkube_trained
 
     def to_dict(self):
         """Returns the model properties as a dict"""

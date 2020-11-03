@@ -31,47 +31,26 @@ class DLFrameworkModelVersions(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'name': 'str',
-        'image': 'str'
+        'image': 'str',
+        'name': 'str'
     }
 
     attribute_map = {
-        'name': 'name',
-        'image': 'image'
+        'image': 'image',
+        'name': 'name'
     }
 
-    def __init__(self, name=None, image=None):  # noqa: E501
+    def __init__(self, image=None, name=None):  # noqa: E501
         """DLFrameworkModelVersions - a model defined in Swagger"""  # noqa: E501
 
-        self._name = None
         self._image = None
+        self._name = None
         self.discriminator = None
 
-        if name is not None:
-            self.name = name
         if image is not None:
             self.image = image
-
-    @property
-    def name(self):
-        """Gets the name of this DLFrameworkModelVersions.  # noqa: E501
-
-
-        :return: The name of this DLFrameworkModelVersions.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this DLFrameworkModelVersions.
-
-
-        :param name: The name of this DLFrameworkModelVersions.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
+        if name is not None:
+            self.name = name
 
     @property
     def image(self):
@@ -93,6 +72,27 @@ class DLFrameworkModelVersions(object):
         """
 
         self._image = image
+
+    @property
+    def name(self):
+        """Gets the name of this DLFrameworkModelVersions.  # noqa: E501
+
+
+        :return: The name of this DLFrameworkModelVersions.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this DLFrameworkModelVersions.
+
+
+        :param name: The name of this DLFrameworkModelVersions.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
 
     def to_dict(self):
         """Returns the model properties as a dict"""

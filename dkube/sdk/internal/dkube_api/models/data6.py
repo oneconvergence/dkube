@@ -31,68 +31,45 @@ class Data6(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'description': 'str',
-        'tags': 'list[str]'
+        'users': 'list[str]'
     }
 
     attribute_map = {
-        'description': 'description',
-        'tags': 'tags'
+        'users': 'users'
     }
 
-    def __init__(self, description=None, tags=None):  # noqa: E501
+    def __init__(self, users=None):  # noqa: E501
         """Data6 - a model defined in Swagger"""  # noqa: E501
 
-        self._description = None
-        self._tags = None
+        self._users = None
         self.discriminator = None
 
-        if description is not None:
-            self.description = description
-        if tags is not None:
-            self.tags = tags
+        self.users = users
 
     @property
-    def description(self):
-        """Gets the description of this Data6.  # noqa: E501
+    def users(self):
+        """Gets the users of this Data6.  # noqa: E501
 
+        Name of the valid users. Each  user should be a valid github user.  # noqa: E501
 
-        :return: The description of this Data6.  # noqa: E501
-        :rtype: str
-        """
-        return self._description
-
-    @description.setter
-    def description(self, description):
-        """Sets the description of this Data6.
-
-
-        :param description: The description of this Data6.  # noqa: E501
-        :type: str
-        """
-
-        self._description = description
-
-    @property
-    def tags(self):
-        """Gets the tags of this Data6.  # noqa: E501
-
-
-        :return: The tags of this Data6.  # noqa: E501
+        :return: The users of this Data6.  # noqa: E501
         :rtype: list[str]
         """
-        return self._tags
+        return self._users
 
-    @tags.setter
-    def tags(self, tags):
-        """Sets the tags of this Data6.
+    @users.setter
+    def users(self, users):
+        """Sets the users of this Data6.
 
+        Name of the valid users. Each  user should be a valid github user.  # noqa: E501
 
-        :param tags: The tags of this Data6.  # noqa: E501
+        :param users: The users of this Data6.  # noqa: E501
         :type: list[str]
         """
+        if users is None:
+            raise ValueError("Invalid value for `users`, must not be `None`")  # noqa: E501
 
-        self._tags = tags
+        self._users = users
 
     def to_dict(self):
         """Returns the model properties as a dict"""

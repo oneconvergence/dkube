@@ -31,68 +31,68 @@ class InlineResponse20039Data(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'healthy': 'list[NodeCollection]',
-        'unhealthy': 'list[NodeCollection]'
+        '_class': 'str',
+        'jobs': 'list[JobCollection]'
     }
 
     attribute_map = {
-        'healthy': 'healthy',
-        'unhealthy': 'unhealthy'
+        '_class': 'class',
+        'jobs': 'jobs'
     }
 
-    def __init__(self, healthy=None, unhealthy=None):  # noqa: E501
+    def __init__(self, _class=None, jobs=None):  # noqa: E501
         """InlineResponse20039Data - a model defined in Swagger"""  # noqa: E501
 
-        self._healthy = None
-        self._unhealthy = None
+        self.__class = None
+        self._jobs = None
         self.discriminator = None
 
-        if healthy is not None:
-            self.healthy = healthy
-        if unhealthy is not None:
-            self.unhealthy = unhealthy
+        if _class is not None:
+            self._class = _class
+        if jobs is not None:
+            self.jobs = jobs
 
     @property
-    def healthy(self):
-        """Gets the healthy of this InlineResponse20039Data.  # noqa: E501
+    def _class(self):
+        """Gets the _class of this InlineResponse20039Data.  # noqa: E501
 
 
-        :return: The healthy of this InlineResponse20039Data.  # noqa: E501
-        :rtype: list[NodeCollection]
+        :return: The _class of this InlineResponse20039Data.  # noqa: E501
+        :rtype: str
         """
-        return self._healthy
+        return self.__class
 
-    @healthy.setter
-    def healthy(self, healthy):
-        """Sets the healthy of this InlineResponse20039Data.
+    @_class.setter
+    def _class(self, _class):
+        """Sets the _class of this InlineResponse20039Data.
 
 
-        :param healthy: The healthy of this InlineResponse20039Data.  # noqa: E501
-        :type: list[NodeCollection]
+        :param _class: The _class of this InlineResponse20039Data.  # noqa: E501
+        :type: str
         """
 
-        self._healthy = healthy
+        self.__class = _class
 
     @property
-    def unhealthy(self):
-        """Gets the unhealthy of this InlineResponse20039Data.  # noqa: E501
+    def jobs(self):
+        """Gets the jobs of this InlineResponse20039Data.  # noqa: E501
 
 
-        :return: The unhealthy of this InlineResponse20039Data.  # noqa: E501
-        :rtype: list[NodeCollection]
+        :return: The jobs of this InlineResponse20039Data.  # noqa: E501
+        :rtype: list[JobCollection]
         """
-        return self._unhealthy
+        return self._jobs
 
-    @unhealthy.setter
-    def unhealthy(self, unhealthy):
-        """Sets the unhealthy of this InlineResponse20039Data.
+    @jobs.setter
+    def jobs(self, jobs):
+        """Sets the jobs of this InlineResponse20039Data.
 
 
-        :param unhealthy: The unhealthy of this InlineResponse20039Data.  # noqa: E501
-        :type: list[NodeCollection]
+        :param jobs: The jobs of this InlineResponse20039Data.  # noqa: E501
+        :type: list[JobCollection]
         """
 
-        self._unhealthy = unhealthy
+        self._jobs = jobs
 
     def to_dict(self):
         """Returns the model properties as a dict"""

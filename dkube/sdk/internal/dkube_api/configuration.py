@@ -40,7 +40,7 @@ class Configuration(object):
             return
 
         # Default Base url
-        self.host = "https://34.66.186.4:32222/dkube/v2/controller"
+        self.host = "https://34.86.197.28:32222/dkube/v2/controller"
         # Temp file folder for downloading files
         self.temp_folder_path = None
 

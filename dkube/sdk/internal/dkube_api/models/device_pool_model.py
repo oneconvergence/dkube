@@ -31,92 +31,46 @@ class DevicePoolModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'version': 'str',
-        'name': 'str',
         '_class': 'str',
-        'ndevices': 'int',
         'created_at': 'TimeStamps',
-        'generated': 'ModelCatalogItemGenerated'
+        'generated': 'D3APIKeyModelGenerated',
+        'name': 'str',
+        'ndevices': 'int',
+        'version': 'str'
     }
 
     attribute_map = {
-        'version': 'version',
-        'name': 'name',
         '_class': 'class',
-        'ndevices': 'ndevices',
         'created_at': 'created_at',
-        'generated': 'generated'
+        'generated': 'generated',
+        'name': 'name',
+        'ndevices': 'ndevices',
+        'version': 'version'
     }
 
-    def __init__(self, version=None, name=None, _class=None, ndevices=None, created_at=None, generated=None):  # noqa: E501
+    def __init__(self, _class=None, created_at=None, generated=None, name=None, ndevices=None, version=None):  # noqa: E501
         """DevicePoolModel - a model defined in Swagger"""  # noqa: E501
 
-        self._version = None
-        self._name = None
         self.__class = None
-        self._ndevices = None
         self._created_at = None
         self._generated = None
+        self._name = None
+        self._ndevices = None
+        self._version = None
         self.discriminator = None
 
-        if version is not None:
-            self.version = version
-        if name is not None:
-            self.name = name
         if _class is not None:
             self._class = _class
-        if ndevices is not None:
-            self.ndevices = ndevices
         if created_at is not None:
             self.created_at = created_at
         if generated is not None:
             self.generated = generated
-
-    @property
-    def version(self):
-        """Gets the version of this DevicePoolModel.  # noqa: E501
-
-
-        :return: The version of this DevicePoolModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version):
-        """Sets the version of this DevicePoolModel.
-
-
-        :param version: The version of this DevicePoolModel.  # noqa: E501
-        :type: str
-        """
-
-        self._version = version
-
-    @property
-    def name(self):
-        """Gets the name of this DevicePoolModel.  # noqa: E501
-
-
-        :return: The name of this DevicePoolModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this DevicePoolModel.
-
-
-        :param name: The name of this DevicePoolModel.  # noqa: E501
-        :type: str
-        """
-        if name is not None and len(name) > 255:
-            raise ValueError("Invalid value for `name`, length must be less than or equal to `255`")  # noqa: E501
-        if name is not None and len(name) < 1:
-            raise ValueError("Invalid value for `name`, length must be greater than or equal to `1`")  # noqa: E501
-
-        self._name = name
+        if name is not None:
+            self.name = name
+        if ndevices is not None:
+            self.ndevices = ndevices
+        if version is not None:
+            self.version = version
 
     @property
     def _class(self):
@@ -140,29 +94,6 @@ class DevicePoolModel(object):
         """
 
         self.__class = _class
-
-    @property
-    def ndevices(self):
-        """Gets the ndevices of this DevicePoolModel.  # noqa: E501
-
-        Number of devices in the pool  # noqa: E501
-
-        :return: The ndevices of this DevicePoolModel.  # noqa: E501
-        :rtype: int
-        """
-        return self._ndevices
-
-    @ndevices.setter
-    def ndevices(self, ndevices):
-        """Sets the ndevices of this DevicePoolModel.
-
-        Number of devices in the pool  # noqa: E501
-
-        :param ndevices: The ndevices of this DevicePoolModel.  # noqa: E501
-        :type: int
-        """
-
-        self._ndevices = ndevices
 
     @property
     def created_at(self):
@@ -191,7 +122,7 @@ class DevicePoolModel(object):
 
 
         :return: The generated of this DevicePoolModel.  # noqa: E501
-        :rtype: ModelCatalogItemGenerated
+        :rtype: D3APIKeyModelGenerated
         """
         return self._generated
 
@@ -201,10 +132,79 @@ class DevicePoolModel(object):
 
 
         :param generated: The generated of this DevicePoolModel.  # noqa: E501
-        :type: ModelCatalogItemGenerated
+        :type: D3APIKeyModelGenerated
         """
 
         self._generated = generated
+
+    @property
+    def name(self):
+        """Gets the name of this DevicePoolModel.  # noqa: E501
+
+
+        :return: The name of this DevicePoolModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this DevicePoolModel.
+
+
+        :param name: The name of this DevicePoolModel.  # noqa: E501
+        :type: str
+        """
+        if name is not None and len(name) > 255:
+            raise ValueError("Invalid value for `name`, length must be less than or equal to `255`")  # noqa: E501
+        if name is not None and len(name) < 1:
+            raise ValueError("Invalid value for `name`, length must be greater than or equal to `1`")  # noqa: E501
+
+        self._name = name
+
+    @property
+    def ndevices(self):
+        """Gets the ndevices of this DevicePoolModel.  # noqa: E501
+
+        Number of devices in the pool  # noqa: E501
+
+        :return: The ndevices of this DevicePoolModel.  # noqa: E501
+        :rtype: int
+        """
+        return self._ndevices
+
+    @ndevices.setter
+    def ndevices(self, ndevices):
+        """Sets the ndevices of this DevicePoolModel.
+
+        Number of devices in the pool  # noqa: E501
+
+        :param ndevices: The ndevices of this DevicePoolModel.  # noqa: E501
+        :type: int
+        """
+
+        self._ndevices = ndevices
+
+    @property
+    def version(self):
+        """Gets the version of this DevicePoolModel.  # noqa: E501
+
+
+        :return: The version of this DevicePoolModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._version
+
+    @version.setter
+    def version(self, version):
+        """Sets the version of this DevicePoolModel.
+
+
+        :param version: The version of this DevicePoolModel.  # noqa: E501
+        :type: str
+        """
+
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

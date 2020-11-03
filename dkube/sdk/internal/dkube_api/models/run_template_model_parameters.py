@@ -32,35 +32,35 @@ class RunTemplateModelParameters(object):
     """
     swagger_types = {
         'gpu_allocation': 'GpuAllocation',
-        'priority': 'RunTemplateModelParametersPriority',
-        'training': 'DSJobModel',
-        'preprocessing': 'PreprocessingJobModel'
+        'preprocessing': 'PreprocessingJobModel',
+        'priority': 'JobModelParametersPriority',
+        'training': 'DSJobModel'
     }
 
     attribute_map = {
         'gpu_allocation': 'gpu_allocation',
+        'preprocessing': 'preprocessing',
         'priority': 'priority',
-        'training': 'training',
-        'preprocessing': 'preprocessing'
+        'training': 'training'
     }
 
-    def __init__(self, gpu_allocation=None, priority=None, training=None, preprocessing=None):  # noqa: E501
+    def __init__(self, gpu_allocation=None, preprocessing=None, priority=None, training=None):  # noqa: E501
         """RunTemplateModelParameters - a model defined in Swagger"""  # noqa: E501
 
         self._gpu_allocation = None
+        self._preprocessing = None
         self._priority = None
         self._training = None
-        self._preprocessing = None
         self.discriminator = None
 
         if gpu_allocation is not None:
             self.gpu_allocation = gpu_allocation
+        if preprocessing is not None:
+            self.preprocessing = preprocessing
         if priority is not None:
             self.priority = priority
         if training is not None:
             self.training = training
-        if preprocessing is not None:
-            self.preprocessing = preprocessing
 
     @property
     def gpu_allocation(self):
@@ -84,12 +84,35 @@ class RunTemplateModelParameters(object):
         self._gpu_allocation = gpu_allocation
 
     @property
+    def preprocessing(self):
+        """Gets the preprocessing of this RunTemplateModelParameters.  # noqa: E501
+
+        Data processing job related inputs.  # noqa: E501
+
+        :return: The preprocessing of this RunTemplateModelParameters.  # noqa: E501
+        :rtype: PreprocessingJobModel
+        """
+        return self._preprocessing
+
+    @preprocessing.setter
+    def preprocessing(self, preprocessing):
+        """Sets the preprocessing of this RunTemplateModelParameters.
+
+        Data processing job related inputs.  # noqa: E501
+
+        :param preprocessing: The preprocessing of this RunTemplateModelParameters.  # noqa: E501
+        :type: PreprocessingJobModel
+        """
+
+        self._preprocessing = preprocessing
+
+    @property
     def priority(self):
         """Gets the priority of this RunTemplateModelParameters.  # noqa: E501
 
 
         :return: The priority of this RunTemplateModelParameters.  # noqa: E501
-        :rtype: RunTemplateModelParametersPriority
+        :rtype: JobModelParametersPriority
         """
         return self._priority
 
@@ -99,7 +122,7 @@ class RunTemplateModelParameters(object):
 
 
         :param priority: The priority of this RunTemplateModelParameters.  # noqa: E501
-        :type: RunTemplateModelParametersPriority
+        :type: JobModelParametersPriority
         """
 
         self._priority = priority
@@ -126,29 +149,6 @@ class RunTemplateModelParameters(object):
         """
 
         self._training = training
-
-    @property
-    def preprocessing(self):
-        """Gets the preprocessing of this RunTemplateModelParameters.  # noqa: E501
-
-        Data processing job related inputs.  # noqa: E501
-
-        :return: The preprocessing of this RunTemplateModelParameters.  # noqa: E501
-        :rtype: PreprocessingJobModel
-        """
-        return self._preprocessing
-
-    @preprocessing.setter
-    def preprocessing(self, preprocessing):
-        """Sets the preprocessing of this RunTemplateModelParameters.
-
-        Data processing job related inputs.  # noqa: E501
-
-        :param preprocessing: The preprocessing of this RunTemplateModelParameters.  # noqa: E501
-        :type: PreprocessingJobModel
-        """
-
-        self._preprocessing = preprocessing
 
     def to_dict(self):
         """Returns the model properties as a dict"""

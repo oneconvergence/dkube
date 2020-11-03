@@ -31,47 +31,26 @@ class LastUsedCredentialsInner(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'host': 'str',
-        'credentials': 'GitAccessCredentials'
+        'credentials': 'GitAccessCredentials',
+        'host': 'str'
     }
 
     attribute_map = {
-        'host': 'host',
-        'credentials': 'credentials'
+        'credentials': 'credentials',
+        'host': 'host'
     }
 
-    def __init__(self, host=None, credentials=None):  # noqa: E501
+    def __init__(self, credentials=None, host=None):  # noqa: E501
         """LastUsedCredentialsInner - a model defined in Swagger"""  # noqa: E501
 
-        self._host = None
         self._credentials = None
+        self._host = None
         self.discriminator = None
 
-        if host is not None:
-            self.host = host
         if credentials is not None:
             self.credentials = credentials
-
-    @property
-    def host(self):
-        """Gets the host of this LastUsedCredentialsInner.  # noqa: E501
-
-
-        :return: The host of this LastUsedCredentialsInner.  # noqa: E501
-        :rtype: str
-        """
-        return self._host
-
-    @host.setter
-    def host(self, host):
-        """Sets the host of this LastUsedCredentialsInner.
-
-
-        :param host: The host of this LastUsedCredentialsInner.  # noqa: E501
-        :type: str
-        """
-
-        self._host = host
+        if host is not None:
+            self.host = host
 
     @property
     def credentials(self):
@@ -93,6 +72,27 @@ class LastUsedCredentialsInner(object):
         """
 
         self._credentials = credentials
+
+    @property
+    def host(self):
+        """Gets the host of this LastUsedCredentialsInner.  # noqa: E501
+
+
+        :return: The host of this LastUsedCredentialsInner.  # noqa: E501
+        :rtype: str
+        """
+        return self._host
+
+    @host.setter
+    def host(self, host):
+        """Sets the host of this LastUsedCredentialsInner.
+
+
+        :param host: The host of this LastUsedCredentialsInner.  # noqa: E501
+        :type: str
+        """
+
+        self._host = host
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,67 +31,88 @@ class GroupModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'version': 'str',
-        'name': 'str',
-        'providertype': 'str',
-        'provider': 'str',
         'created_at': 'TimeStamps',
-        'generated': 'ModelCatalogItemGenerated'
+        'generated': 'D3APIKeyModelGenerated',
+        'name': 'str',
+        'provider': 'str',
+        'providertype': 'str',
+        'version': 'str'
     }
 
     attribute_map = {
-        'version': 'version',
-        'name': 'name',
-        'providertype': 'providertype',
-        'provider': 'provider',
         'created_at': 'created_at',
-        'generated': 'generated'
+        'generated': 'generated',
+        'name': 'name',
+        'provider': 'provider',
+        'providertype': 'providertype',
+        'version': 'version'
     }
 
-    def __init__(self, version=None, name=None, providertype=None, provider=None, created_at=None, generated=None):  # noqa: E501
+    def __init__(self, created_at=None, generated=None, name=None, provider=None, providertype=None, version=None):  # noqa: E501
         """GroupModel - a model defined in Swagger"""  # noqa: E501
 
-        self._version = None
-        self._name = None
-        self._providertype = None
-        self._provider = None
         self._created_at = None
         self._generated = None
+        self._name = None
+        self._provider = None
+        self._providertype = None
+        self._version = None
         self.discriminator = None
 
-        if version is not None:
-            self.version = version
-        if name is not None:
-            self.name = name
-        if providertype is not None:
-            self.providertype = providertype
-        if provider is not None:
-            self.provider = provider
         if created_at is not None:
             self.created_at = created_at
         if generated is not None:
             self.generated = generated
+        if name is not None:
+            self.name = name
+        if provider is not None:
+            self.provider = provider
+        if providertype is not None:
+            self.providertype = providertype
+        if version is not None:
+            self.version = version
 
     @property
-    def version(self):
-        """Gets the version of this GroupModel.  # noqa: E501
+    def created_at(self):
+        """Gets the created_at of this GroupModel.  # noqa: E501
 
 
-        :return: The version of this GroupModel.  # noqa: E501
-        :rtype: str
+        :return: The created_at of this GroupModel.  # noqa: E501
+        :rtype: TimeStamps
         """
-        return self._version
+        return self._created_at
 
-    @version.setter
-    def version(self, version):
-        """Sets the version of this GroupModel.
+    @created_at.setter
+    def created_at(self, created_at):
+        """Sets the created_at of this GroupModel.
 
 
-        :param version: The version of this GroupModel.  # noqa: E501
-        :type: str
+        :param created_at: The created_at of this GroupModel.  # noqa: E501
+        :type: TimeStamps
         """
 
-        self._version = version
+        self._created_at = created_at
+
+    @property
+    def generated(self):
+        """Gets the generated of this GroupModel.  # noqa: E501
+
+
+        :return: The generated of this GroupModel.  # noqa: E501
+        :rtype: D3APIKeyModelGenerated
+        """
+        return self._generated
+
+    @generated.setter
+    def generated(self, generated):
+        """Sets the generated of this GroupModel.
+
+
+        :param generated: The generated of this GroupModel.  # noqa: E501
+        :type: D3APIKeyModelGenerated
+        """
+
+        self._generated = generated
 
     @property
     def name(self):
@@ -117,33 +138,6 @@ class GroupModel(object):
             raise ValueError("Invalid value for `name`, length must be greater than or equal to `1`")  # noqa: E501
 
         self._name = name
-
-    @property
-    def providertype(self):
-        """Gets the providertype of this GroupModel.  # noqa: E501
-
-
-        :return: The providertype of this GroupModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._providertype
-
-    @providertype.setter
-    def providertype(self, providertype):
-        """Sets the providertype of this GroupModel.
-
-
-        :param providertype: The providertype of this GroupModel.  # noqa: E501
-        :type: str
-        """
-        allowed_values = ["external"]  # noqa: E501
-        if providertype not in allowed_values:
-            raise ValueError(
-                "Invalid value for `providertype` ({0}), must be one of {1}"  # noqa: E501
-                .format(providertype, allowed_values)
-            )
-
-        self._providertype = providertype
 
     @property
     def provider(self):
@@ -173,46 +167,52 @@ class GroupModel(object):
         self._provider = provider
 
     @property
-    def created_at(self):
-        """Gets the created_at of this GroupModel.  # noqa: E501
+    def providertype(self):
+        """Gets the providertype of this GroupModel.  # noqa: E501
 
 
-        :return: The created_at of this GroupModel.  # noqa: E501
-        :rtype: TimeStamps
+        :return: The providertype of this GroupModel.  # noqa: E501
+        :rtype: str
         """
-        return self._created_at
+        return self._providertype
 
-    @created_at.setter
-    def created_at(self, created_at):
-        """Sets the created_at of this GroupModel.
+    @providertype.setter
+    def providertype(self, providertype):
+        """Sets the providertype of this GroupModel.
 
 
-        :param created_at: The created_at of this GroupModel.  # noqa: E501
-        :type: TimeStamps
+        :param providertype: The providertype of this GroupModel.  # noqa: E501
+        :type: str
         """
+        allowed_values = ["external"]  # noqa: E501
+        if providertype not in allowed_values:
+            raise ValueError(
+                "Invalid value for `providertype` ({0}), must be one of {1}"  # noqa: E501
+                .format(providertype, allowed_values)
+            )
 
-        self._created_at = created_at
+        self._providertype = providertype
 
     @property
-    def generated(self):
-        """Gets the generated of this GroupModel.  # noqa: E501
+    def version(self):
+        """Gets the version of this GroupModel.  # noqa: E501
 
 
-        :return: The generated of this GroupModel.  # noqa: E501
-        :rtype: ModelCatalogItemGenerated
+        :return: The version of this GroupModel.  # noqa: E501
+        :rtype: str
         """
-        return self._generated
+        return self._version
 
-    @generated.setter
-    def generated(self, generated):
-        """Sets the generated of this GroupModel.
+    @version.setter
+    def version(self, version):
+        """Sets the version of this GroupModel.
 
 
-        :param generated: The generated of this GroupModel.  # noqa: E501
-        :type: ModelCatalogItemGenerated
+        :param version: The version of this GroupModel.  # noqa: E501
+        :type: str
         """
 
-        self._generated = generated
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,49 +31,26 @@ class DatumSourceDetailsJob(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'name': 'str',
-        'jobid': 'str'
+        'jobid': 'str',
+        'name': 'str'
     }
 
     attribute_map = {
-        'name': 'name',
-        'jobid': 'jobid'
+        'jobid': 'jobid',
+        'name': 'name'
     }
 
-    def __init__(self, name=None, jobid=None):  # noqa: E501
+    def __init__(self, jobid=None, name=None):  # noqa: E501
         """DatumSourceDetailsJob - a model defined in Swagger"""  # noqa: E501
 
-        self._name = None
         self._jobid = None
+        self._name = None
         self.discriminator = None
 
-        if name is not None:
-            self.name = name
         if jobid is not None:
             self.jobid = jobid
-
-    @property
-    def name(self):
-        """Gets the name of this DatumSourceDetailsJob.  # noqa: E501
-
-        Name of the job that generated this datum.  # noqa: E501
-
-        :return: The name of this DatumSourceDetailsJob.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this DatumSourceDetailsJob.
-
-        Name of the job that generated this datum.  # noqa: E501
-
-        :param name: The name of this DatumSourceDetailsJob.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
+        if name is not None:
+            self.name = name
 
     @property
     def jobid(self):
@@ -97,6 +74,29 @@ class DatumSourceDetailsJob(object):
         """
 
         self._jobid = jobid
+
+    @property
+    def name(self):
+        """Gets the name of this DatumSourceDetailsJob.  # noqa: E501
+
+        Name of the job that generated this datum.  # noqa: E501
+
+        :return: The name of this DatumSourceDetailsJob.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this DatumSourceDetailsJob.
+
+        Name of the job that generated this datum.  # noqa: E501
+
+        :param name: The name of this DatumSourceDetailsJob.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
 
     def to_dict(self):
         """Returns the model properties as a dict"""

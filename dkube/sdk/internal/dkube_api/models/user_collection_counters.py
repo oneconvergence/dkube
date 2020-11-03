@@ -31,67 +31,67 @@ class UserCollectionCounters(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'notebooks': 'Counters',
-        'jobs': 'Counters',
         'inferences': 'Counters',
+        'jobs': 'Counters',
+        'ngpus': 'str',
+        'notebooks': 'Counters',
         'preprocessing': 'Counters',
-        'rstudio': 'Counters',
-        'ngpus': 'str'
+        'rstudio': 'Counters'
     }
 
     attribute_map = {
-        'notebooks': 'notebooks',
-        'jobs': 'jobs',
         'inferences': 'inferences',
+        'jobs': 'jobs',
+        'ngpus': 'ngpus',
+        'notebooks': 'notebooks',
         'preprocessing': 'preprocessing',
-        'rstudio': 'rstudio',
-        'ngpus': 'ngpus'
+        'rstudio': 'rstudio'
     }
 
-    def __init__(self, notebooks=None, jobs=None, inferences=None, preprocessing=None, rstudio=None, ngpus=None):  # noqa: E501
+    def __init__(self, inferences=None, jobs=None, ngpus=None, notebooks=None, preprocessing=None, rstudio=None):  # noqa: E501
         """UserCollectionCounters - a model defined in Swagger"""  # noqa: E501
 
-        self._notebooks = None
-        self._jobs = None
         self._inferences = None
+        self._jobs = None
+        self._ngpus = None
+        self._notebooks = None
         self._preprocessing = None
         self._rstudio = None
-        self._ngpus = None
         self.discriminator = None
 
-        if notebooks is not None:
-            self.notebooks = notebooks
-        if jobs is not None:
-            self.jobs = jobs
         if inferences is not None:
             self.inferences = inferences
+        if jobs is not None:
+            self.jobs = jobs
+        if ngpus is not None:
+            self.ngpus = ngpus
+        if notebooks is not None:
+            self.notebooks = notebooks
         if preprocessing is not None:
             self.preprocessing = preprocessing
         if rstudio is not None:
             self.rstudio = rstudio
-        if ngpus is not None:
-            self.ngpus = ngpus
 
     @property
-    def notebooks(self):
-        """Gets the notebooks of this UserCollectionCounters.  # noqa: E501
+    def inferences(self):
+        """Gets the inferences of this UserCollectionCounters.  # noqa: E501
 
 
-        :return: The notebooks of this UserCollectionCounters.  # noqa: E501
+        :return: The inferences of this UserCollectionCounters.  # noqa: E501
         :rtype: Counters
         """
-        return self._notebooks
+        return self._inferences
 
-    @notebooks.setter
-    def notebooks(self, notebooks):
-        """Sets the notebooks of this UserCollectionCounters.
+    @inferences.setter
+    def inferences(self, inferences):
+        """Sets the inferences of this UserCollectionCounters.
 
 
-        :param notebooks: The notebooks of this UserCollectionCounters.  # noqa: E501
+        :param inferences: The inferences of this UserCollectionCounters.  # noqa: E501
         :type: Counters
         """
 
-        self._notebooks = notebooks
+        self._inferences = inferences
 
     @property
     def jobs(self):
@@ -115,25 +115,46 @@ class UserCollectionCounters(object):
         self._jobs = jobs
 
     @property
-    def inferences(self):
-        """Gets the inferences of this UserCollectionCounters.  # noqa: E501
+    def ngpus(self):
+        """Gets the ngpus of this UserCollectionCounters.  # noqa: E501
 
 
-        :return: The inferences of this UserCollectionCounters.  # noqa: E501
+        :return: The ngpus of this UserCollectionCounters.  # noqa: E501
+        :rtype: str
+        """
+        return self._ngpus
+
+    @ngpus.setter
+    def ngpus(self, ngpus):
+        """Sets the ngpus of this UserCollectionCounters.
+
+
+        :param ngpus: The ngpus of this UserCollectionCounters.  # noqa: E501
+        :type: str
+        """
+
+        self._ngpus = ngpus
+
+    @property
+    def notebooks(self):
+        """Gets the notebooks of this UserCollectionCounters.  # noqa: E501
+
+
+        :return: The notebooks of this UserCollectionCounters.  # noqa: E501
         :rtype: Counters
         """
-        return self._inferences
+        return self._notebooks
 
-    @inferences.setter
-    def inferences(self, inferences):
-        """Sets the inferences of this UserCollectionCounters.
+    @notebooks.setter
+    def notebooks(self, notebooks):
+        """Sets the notebooks of this UserCollectionCounters.
 
 
-        :param inferences: The inferences of this UserCollectionCounters.  # noqa: E501
+        :param notebooks: The notebooks of this UserCollectionCounters.  # noqa: E501
         :type: Counters
         """
 
-        self._inferences = inferences
+        self._notebooks = notebooks
 
     @property
     def preprocessing(self):
@@ -176,27 +197,6 @@ class UserCollectionCounters(object):
         """
 
         self._rstudio = rstudio
-
-    @property
-    def ngpus(self):
-        """Gets the ngpus of this UserCollectionCounters.  # noqa: E501
-
-
-        :return: The ngpus of this UserCollectionCounters.  # noqa: E501
-        :rtype: str
-        """
-        return self._ngpus
-
-    @ngpus.setter
-    def ngpus(self, ngpus):
-        """Sets the ngpus of this UserCollectionCounters.
-
-
-        :param ngpus: The ngpus of this UserCollectionCounters.  # noqa: E501
-        :type: str
-        """
-
-        self._ngpus = ngpus
 
     def to_dict(self):
         """Returns the model properties as a dict"""

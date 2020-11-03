@@ -31,128 +31,86 @@ class NotificationData(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'username': 'str',
-        'job_uuid': 'str',
         '_class': 'str',
-        'subclass': 'str',
-        'status': 'str',
-        'reason': 'str',
-        'notebook_url': 'str',
-        'serving_url': 'str',
-        'tensorboard_url': 'str',
-        'is_tensorboard': 'bool',
-        'study': 'NotificationDataStudy',
-        'worker': 'WorkerModel',
         'datum': 'DatumModel',
-        'version': 'VersionModel'
+        'is_tensorboard': 'bool',
+        'job_uuid': 'str',
+        'notebook_url': 'str',
+        'reason': 'str',
+        'serving_url': 'str',
+        'status': 'str',
+        'study': 'NotificationDataStudy',
+        'subclass': 'str',
+        'tensorboard_url': 'str',
+        'username': 'str',
+        'version': 'VersionModel',
+        'worker': 'WorkerModel'
     }
 
     attribute_map = {
-        'username': 'Username',
-        'job_uuid': 'JobUUID',
         '_class': 'Class',
-        'subclass': 'Subclass',
-        'status': 'Status',
-        'reason': 'Reason',
-        'notebook_url': 'NotebookUrl',
-        'serving_url': 'ServingUrl',
-        'tensorboard_url': 'TensorboardUrl',
-        'is_tensorboard': 'IsTensorboard',
-        'study': 'Study',
-        'worker': 'Worker',
         'datum': 'Datum',
-        'version': 'Version'
+        'is_tensorboard': 'IsTensorboard',
+        'job_uuid': 'JobUUID',
+        'notebook_url': 'NotebookUrl',
+        'reason': 'Reason',
+        'serving_url': 'ServingUrl',
+        'status': 'Status',
+        'study': 'Study',
+        'subclass': 'Subclass',
+        'tensorboard_url': 'TensorboardUrl',
+        'username': 'Username',
+        'version': 'Version',
+        'worker': 'Worker'
     }
 
-    def __init__(self, username=None, job_uuid=None, _class=None, subclass=None, status=None, reason=None, notebook_url=None, serving_url=None, tensorboard_url=None, is_tensorboard=None, study=None, worker=None, datum=None, version=None):  # noqa: E501
+    def __init__(self, _class=None, datum=None, is_tensorboard=None, job_uuid=None, notebook_url=None, reason=None, serving_url=None, status=None, study=None, subclass=None, tensorboard_url=None, username=None, version=None, worker=None):  # noqa: E501
         """NotificationData - a model defined in Swagger"""  # noqa: E501
 
-        self._username = None
-        self._job_uuid = None
         self.__class = None
-        self._subclass = None
-        self._status = None
-        self._reason = None
-        self._notebook_url = None
-        self._serving_url = None
-        self._tensorboard_url = None
-        self._is_tensorboard = None
-        self._study = None
-        self._worker = None
         self._datum = None
+        self._is_tensorboard = None
+        self._job_uuid = None
+        self._notebook_url = None
+        self._reason = None
+        self._serving_url = None
+        self._status = None
+        self._study = None
+        self._subclass = None
+        self._tensorboard_url = None
+        self._username = None
         self._version = None
+        self._worker = None
         self.discriminator = None
 
-        if username is not None:
-            self.username = username
-        if job_uuid is not None:
-            self.job_uuid = job_uuid
         if _class is not None:
             self._class = _class
-        if subclass is not None:
-            self.subclass = subclass
-        if status is not None:
-            self.status = status
-        if reason is not None:
-            self.reason = reason
-        if notebook_url is not None:
-            self.notebook_url = notebook_url
-        if serving_url is not None:
-            self.serving_url = serving_url
-        if tensorboard_url is not None:
-            self.tensorboard_url = tensorboard_url
-        if is_tensorboard is not None:
-            self.is_tensorboard = is_tensorboard
-        if study is not None:
-            self.study = study
-        if worker is not None:
-            self.worker = worker
         if datum is not None:
             self.datum = datum
+        if is_tensorboard is not None:
+            self.is_tensorboard = is_tensorboard
+        if job_uuid is not None:
+            self.job_uuid = job_uuid
+        if notebook_url is not None:
+            self.notebook_url = notebook_url
+        if reason is not None:
+            self.reason = reason
+        if serving_url is not None:
+            self.serving_url = serving_url
+        if status is not None:
+            self.status = status
+        if study is not None:
+            self.study = study
+        if subclass is not None:
+            self.subclass = subclass
+        if tensorboard_url is not None:
+            self.tensorboard_url = tensorboard_url
+        if username is not None:
+            self.username = username
         if version is not None:
             self.version = version
-
-    @property
-    def username(self):
-        """Gets the username of this NotificationData.  # noqa: E501
-
-
-        :return: The username of this NotificationData.  # noqa: E501
-        :rtype: str
-        """
-        return self._username
-
-    @username.setter
-    def username(self, username):
-        """Sets the username of this NotificationData.
-
-
-        :param username: The username of this NotificationData.  # noqa: E501
-        :type: str
-        """
-
-        self._username = username
-
-    @property
-    def job_uuid(self):
-        """Gets the job_uuid of this NotificationData.  # noqa: E501
-
-
-        :return: The job_uuid of this NotificationData.  # noqa: E501
-        :rtype: str
-        """
-        return self._job_uuid
-
-    @job_uuid.setter
-    def job_uuid(self, job_uuid):
-        """Sets the job_uuid of this NotificationData.
-
-
-        :param job_uuid: The job_uuid of this NotificationData.  # noqa: E501
-        :type: str
-        """
-
-        self._job_uuid = job_uuid
+        if worker is not None:
+            self.worker = worker
 
     @property
     def _class(self):
@@ -176,130 +134,25 @@ class NotificationData(object):
         self.__class = _class
 
     @property
-    def subclass(self):
-        """Gets the subclass of this NotificationData.  # noqa: E501
+    def datum(self):
+        """Gets the datum of this NotificationData.  # noqa: E501
 
 
-        :return: The subclass of this NotificationData.  # noqa: E501
-        :rtype: str
+        :return: The datum of this NotificationData.  # noqa: E501
+        :rtype: DatumModel
         """
-        return self._subclass
+        return self._datum
 
-    @subclass.setter
-    def subclass(self, subclass):
-        """Sets the subclass of this NotificationData.
-
-
-        :param subclass: The subclass of this NotificationData.  # noqa: E501
-        :type: str
-        """
-
-        self._subclass = subclass
-
-    @property
-    def status(self):
-        """Gets the status of this NotificationData.  # noqa: E501
+    @datum.setter
+    def datum(self, datum):
+        """Sets the datum of this NotificationData.
 
 
-        :return: The status of this NotificationData.  # noqa: E501
-        :rtype: str
-        """
-        return self._status
-
-    @status.setter
-    def status(self, status):
-        """Sets the status of this NotificationData.
-
-
-        :param status: The status of this NotificationData.  # noqa: E501
-        :type: str
+        :param datum: The datum of this NotificationData.  # noqa: E501
+        :type: DatumModel
         """
 
-        self._status = status
-
-    @property
-    def reason(self):
-        """Gets the reason of this NotificationData.  # noqa: E501
-
-
-        :return: The reason of this NotificationData.  # noqa: E501
-        :rtype: str
-        """
-        return self._reason
-
-    @reason.setter
-    def reason(self, reason):
-        """Sets the reason of this NotificationData.
-
-
-        :param reason: The reason of this NotificationData.  # noqa: E501
-        :type: str
-        """
-
-        self._reason = reason
-
-    @property
-    def notebook_url(self):
-        """Gets the notebook_url of this NotificationData.  # noqa: E501
-
-
-        :return: The notebook_url of this NotificationData.  # noqa: E501
-        :rtype: str
-        """
-        return self._notebook_url
-
-    @notebook_url.setter
-    def notebook_url(self, notebook_url):
-        """Sets the notebook_url of this NotificationData.
-
-
-        :param notebook_url: The notebook_url of this NotificationData.  # noqa: E501
-        :type: str
-        """
-
-        self._notebook_url = notebook_url
-
-    @property
-    def serving_url(self):
-        """Gets the serving_url of this NotificationData.  # noqa: E501
-
-
-        :return: The serving_url of this NotificationData.  # noqa: E501
-        :rtype: str
-        """
-        return self._serving_url
-
-    @serving_url.setter
-    def serving_url(self, serving_url):
-        """Sets the serving_url of this NotificationData.
-
-
-        :param serving_url: The serving_url of this NotificationData.  # noqa: E501
-        :type: str
-        """
-
-        self._serving_url = serving_url
-
-    @property
-    def tensorboard_url(self):
-        """Gets the tensorboard_url of this NotificationData.  # noqa: E501
-
-
-        :return: The tensorboard_url of this NotificationData.  # noqa: E501
-        :rtype: str
-        """
-        return self._tensorboard_url
-
-    @tensorboard_url.setter
-    def tensorboard_url(self, tensorboard_url):
-        """Sets the tensorboard_url of this NotificationData.
-
-
-        :param tensorboard_url: The tensorboard_url of this NotificationData.  # noqa: E501
-        :type: str
-        """
-
-        self._tensorboard_url = tensorboard_url
+        self._datum = datum
 
     @property
     def is_tensorboard(self):
@@ -323,6 +176,111 @@ class NotificationData(object):
         self._is_tensorboard = is_tensorboard
 
     @property
+    def job_uuid(self):
+        """Gets the job_uuid of this NotificationData.  # noqa: E501
+
+
+        :return: The job_uuid of this NotificationData.  # noqa: E501
+        :rtype: str
+        """
+        return self._job_uuid
+
+    @job_uuid.setter
+    def job_uuid(self, job_uuid):
+        """Sets the job_uuid of this NotificationData.
+
+
+        :param job_uuid: The job_uuid of this NotificationData.  # noqa: E501
+        :type: str
+        """
+
+        self._job_uuid = job_uuid
+
+    @property
+    def notebook_url(self):
+        """Gets the notebook_url of this NotificationData.  # noqa: E501
+
+
+        :return: The notebook_url of this NotificationData.  # noqa: E501
+        :rtype: str
+        """
+        return self._notebook_url
+
+    @notebook_url.setter
+    def notebook_url(self, notebook_url):
+        """Sets the notebook_url of this NotificationData.
+
+
+        :param notebook_url: The notebook_url of this NotificationData.  # noqa: E501
+        :type: str
+        """
+
+        self._notebook_url = notebook_url
+
+    @property
+    def reason(self):
+        """Gets the reason of this NotificationData.  # noqa: E501
+
+
+        :return: The reason of this NotificationData.  # noqa: E501
+        :rtype: str
+        """
+        return self._reason
+
+    @reason.setter
+    def reason(self, reason):
+        """Sets the reason of this NotificationData.
+
+
+        :param reason: The reason of this NotificationData.  # noqa: E501
+        :type: str
+        """
+
+        self._reason = reason
+
+    @property
+    def serving_url(self):
+        """Gets the serving_url of this NotificationData.  # noqa: E501
+
+
+        :return: The serving_url of this NotificationData.  # noqa: E501
+        :rtype: str
+        """
+        return self._serving_url
+
+    @serving_url.setter
+    def serving_url(self, serving_url):
+        """Sets the serving_url of this NotificationData.
+
+
+        :param serving_url: The serving_url of this NotificationData.  # noqa: E501
+        :type: str
+        """
+
+        self._serving_url = serving_url
+
+    @property
+    def status(self):
+        """Gets the status of this NotificationData.  # noqa: E501
+
+
+        :return: The status of this NotificationData.  # noqa: E501
+        :rtype: str
+        """
+        return self._status
+
+    @status.setter
+    def status(self, status):
+        """Sets the status of this NotificationData.
+
+
+        :param status: The status of this NotificationData.  # noqa: E501
+        :type: str
+        """
+
+        self._status = status
+
+    @property
     def study(self):
         """Gets the study of this NotificationData.  # noqa: E501
 
@@ -344,46 +302,67 @@ class NotificationData(object):
         self._study = study
 
     @property
-    def worker(self):
-        """Gets the worker of this NotificationData.  # noqa: E501
+    def subclass(self):
+        """Gets the subclass of this NotificationData.  # noqa: E501
 
 
-        :return: The worker of this NotificationData.  # noqa: E501
-        :rtype: WorkerModel
+        :return: The subclass of this NotificationData.  # noqa: E501
+        :rtype: str
         """
-        return self._worker
+        return self._subclass
 
-    @worker.setter
-    def worker(self, worker):
-        """Sets the worker of this NotificationData.
+    @subclass.setter
+    def subclass(self, subclass):
+        """Sets the subclass of this NotificationData.
 
 
-        :param worker: The worker of this NotificationData.  # noqa: E501
-        :type: WorkerModel
+        :param subclass: The subclass of this NotificationData.  # noqa: E501
+        :type: str
         """
 
-        self._worker = worker
+        self._subclass = subclass
 
     @property
-    def datum(self):
-        """Gets the datum of this NotificationData.  # noqa: E501
+    def tensorboard_url(self):
+        """Gets the tensorboard_url of this NotificationData.  # noqa: E501
 
 
-        :return: The datum of this NotificationData.  # noqa: E501
-        :rtype: DatumModel
+        :return: The tensorboard_url of this NotificationData.  # noqa: E501
+        :rtype: str
         """
-        return self._datum
+        return self._tensorboard_url
 
-    @datum.setter
-    def datum(self, datum):
-        """Sets the datum of this NotificationData.
+    @tensorboard_url.setter
+    def tensorboard_url(self, tensorboard_url):
+        """Sets the tensorboard_url of this NotificationData.
 
 
-        :param datum: The datum of this NotificationData.  # noqa: E501
-        :type: DatumModel
+        :param tensorboard_url: The tensorboard_url of this NotificationData.  # noqa: E501
+        :type: str
         """
 
-        self._datum = datum
+        self._tensorboard_url = tensorboard_url
+
+    @property
+    def username(self):
+        """Gets the username of this NotificationData.  # noqa: E501
+
+
+        :return: The username of this NotificationData.  # noqa: E501
+        :rtype: str
+        """
+        return self._username
+
+    @username.setter
+    def username(self, username):
+        """Sets the username of this NotificationData.
+
+
+        :param username: The username of this NotificationData.  # noqa: E501
+        :type: str
+        """
+
+        self._username = username
 
     @property
     def version(self):
@@ -405,6 +384,27 @@ class NotificationData(object):
         """
 
         self._version = version
+
+    @property
+    def worker(self):
+        """Gets the worker of this NotificationData.  # noqa: E501
+
+
+        :return: The worker of this NotificationData.  # noqa: E501
+        :rtype: WorkerModel
+        """
+        return self._worker
+
+    @worker.setter
+    def worker(self, worker):
+        """Sets the worker of this NotificationData.
+
+
+        :param worker: The worker of this NotificationData.  # noqa: E501
+        :type: WorkerModel
+        """
+
+        self._worker = worker
 
     def to_dict(self):
         """Returns the model properties as a dict"""

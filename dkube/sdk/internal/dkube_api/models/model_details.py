@@ -31,57 +31,36 @@ class ModelDetails(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'kind': 'ModelDetailsKind',
         'format': 'str',
-        'unsupported': 'ModelDetailsUnsupported',
-        'tensorpb': 'ModelDetailsTensorpb'
+        'kind': 'ModelDetailsKind',
+        'tensorpb': 'ModelDetailsTensorpb',
+        'unsupported': 'ModelDetailsUnsupported'
     }
 
     attribute_map = {
-        'kind': 'kind',
         'format': 'format',
-        'unsupported': 'unsupported',
-        'tensorpb': 'tensorpb'
+        'kind': 'kind',
+        'tensorpb': 'tensorpb',
+        'unsupported': 'unsupported'
     }
 
-    def __init__(self, kind=None, format=None, unsupported=None, tensorpb=None):  # noqa: E501
+    def __init__(self, format=None, kind=None, tensorpb=None, unsupported=None):  # noqa: E501
         """ModelDetails - a model defined in Swagger"""  # noqa: E501
 
-        self._kind = None
         self._format = None
-        self._unsupported = None
+        self._kind = None
         self._tensorpb = None
+        self._unsupported = None
         self.discriminator = None
 
-        if kind is not None:
-            self.kind = kind
         if format is not None:
             self.format = format
-        if unsupported is not None:
-            self.unsupported = unsupported
+        if kind is not None:
+            self.kind = kind
         if tensorpb is not None:
             self.tensorpb = tensorpb
-
-    @property
-    def kind(self):
-        """Gets the kind of this ModelDetails.  # noqa: E501
-
-
-        :return: The kind of this ModelDetails.  # noqa: E501
-        :rtype: ModelDetailsKind
-        """
-        return self._kind
-
-    @kind.setter
-    def kind(self, kind):
-        """Sets the kind of this ModelDetails.
-
-
-        :param kind: The kind of this ModelDetails.  # noqa: E501
-        :type: ModelDetailsKind
-        """
-
-        self._kind = kind
+        if unsupported is not None:
+            self.unsupported = unsupported
 
     @property
     def format(self):
@@ -111,25 +90,25 @@ class ModelDetails(object):
         self._format = format
 
     @property
-    def unsupported(self):
-        """Gets the unsupported of this ModelDetails.  # noqa: E501
+    def kind(self):
+        """Gets the kind of this ModelDetails.  # noqa: E501
 
 
-        :return: The unsupported of this ModelDetails.  # noqa: E501
-        :rtype: ModelDetailsUnsupported
+        :return: The kind of this ModelDetails.  # noqa: E501
+        :rtype: ModelDetailsKind
         """
-        return self._unsupported
+        return self._kind
 
-    @unsupported.setter
-    def unsupported(self, unsupported):
-        """Sets the unsupported of this ModelDetails.
+    @kind.setter
+    def kind(self, kind):
+        """Sets the kind of this ModelDetails.
 
 
-        :param unsupported: The unsupported of this ModelDetails.  # noqa: E501
-        :type: ModelDetailsUnsupported
+        :param kind: The kind of this ModelDetails.  # noqa: E501
+        :type: ModelDetailsKind
         """
 
-        self._unsupported = unsupported
+        self._kind = kind
 
     @property
     def tensorpb(self):
@@ -151,6 +130,27 @@ class ModelDetails(object):
         """
 
         self._tensorpb = tensorpb
+
+    @property
+    def unsupported(self):
+        """Gets the unsupported of this ModelDetails.  # noqa: E501
+
+
+        :return: The unsupported of this ModelDetails.  # noqa: E501
+        :rtype: ModelDetailsUnsupported
+        """
+        return self._unsupported
+
+    @unsupported.setter
+    def unsupported(self, unsupported):
+        """Sets the unsupported of this ModelDetails.
+
+
+        :param unsupported: The unsupported of this ModelDetails.  # noqa: E501
+        :type: ModelDetailsUnsupported
+        """
+
+        self._unsupported = unsupported
 
     def to_dict(self):
         """Returns the model properties as a dict"""

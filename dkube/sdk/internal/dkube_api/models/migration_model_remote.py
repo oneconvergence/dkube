@@ -31,52 +31,31 @@ class MigrationModelRemote(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'url': 'str',
         'jwt': 'str',
+        'url': 'str',
         'user': 'str'
     }
 
     attribute_map = {
-        'url': 'url',
         'jwt': 'JWT',
+        'url': 'url',
         'user': 'user'
     }
 
-    def __init__(self, url=None, jwt=None, user=None):  # noqa: E501
+    def __init__(self, jwt=None, url=None, user=None):  # noqa: E501
         """MigrationModelRemote - a model defined in Swagger"""  # noqa: E501
 
-        self._url = None
         self._jwt = None
+        self._url = None
         self._user = None
         self.discriminator = None
 
-        if url is not None:
-            self.url = url
         if jwt is not None:
             self.jwt = jwt
+        if url is not None:
+            self.url = url
         if user is not None:
             self.user = user
-
-    @property
-    def url(self):
-        """Gets the url of this MigrationModelRemote.  # noqa: E501
-
-
-        :return: The url of this MigrationModelRemote.  # noqa: E501
-        :rtype: str
-        """
-        return self._url
-
-    @url.setter
-    def url(self, url):
-        """Sets the url of this MigrationModelRemote.
-
-
-        :param url: The url of this MigrationModelRemote.  # noqa: E501
-        :type: str
-        """
-
-        self._url = url
 
     @property
     def jwt(self):
@@ -98,6 +77,27 @@ class MigrationModelRemote(object):
         """
 
         self._jwt = jwt
+
+    @property
+    def url(self):
+        """Gets the url of this MigrationModelRemote.  # noqa: E501
+
+
+        :return: The url of this MigrationModelRemote.  # noqa: E501
+        :rtype: str
+        """
+        return self._url
+
+    @url.setter
+    def url(self, url):
+        """Sets the url of this MigrationModelRemote.
+
+
+        :param url: The url of this MigrationModelRemote.  # noqa: E501
+        :type: str
+        """
+
+        self._url = url
 
     @property
     def user(self):

@@ -31,97 +31,74 @@ class DatumJobDetails(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'name': 'str',
-        'user': 'str',
-        'jobid': 'str',
         '_class': 'str',
+        'jobid': 'str',
+        'name': 'str',
+        'pipeline': 'DatumJobDetailsPipeline',
         'state': 'str',
         'tags': 'list[str]',
-        'pipeline': 'DatumJobDetailsPipeline'
+        'user': 'str'
     }
 
     attribute_map = {
-        'name': 'name',
-        'user': 'user',
-        'jobid': 'jobid',
         '_class': 'class',
+        'jobid': 'jobid',
+        'name': 'name',
+        'pipeline': 'pipeline',
         'state': 'state',
         'tags': 'tags',
-        'pipeline': 'pipeline'
+        'user': 'user'
     }
 
-    def __init__(self, name=None, user=None, jobid=None, _class=None, state=None, tags=None, pipeline=None):  # noqa: E501
+    def __init__(self, _class=None, jobid=None, name=None, pipeline=None, state=None, tags=None, user=None):  # noqa: E501
         """DatumJobDetails - a model defined in Swagger"""  # noqa: E501
 
-        self._name = None
-        self._user = None
-        self._jobid = None
         self.__class = None
+        self._jobid = None
+        self._name = None
+        self._pipeline = None
         self._state = None
         self._tags = None
-        self._pipeline = None
+        self._user = None
         self.discriminator = None
 
-        if name is not None:
-            self.name = name
-        if user is not None:
-            self.user = user
-        if jobid is not None:
-            self.jobid = jobid
         if _class is not None:
             self._class = _class
+        if jobid is not None:
+            self.jobid = jobid
+        if name is not None:
+            self.name = name
+        if pipeline is not None:
+            self.pipeline = pipeline
         if state is not None:
             self.state = state
         if tags is not None:
             self.tags = tags
-        if pipeline is not None:
-            self.pipeline = pipeline
+        if user is not None:
+            self.user = user
 
     @property
-    def name(self):
-        """Gets the name of this DatumJobDetails.  # noqa: E501
+    def _class(self):
+        """Gets the _class of this DatumJobDetails.  # noqa: E501
 
-        Name of the job that uses the datum.  # noqa: E501
+        Class of job that uses the datum.  # noqa: E501
 
-        :return: The name of this DatumJobDetails.  # noqa: E501
+        :return: The _class of this DatumJobDetails.  # noqa: E501
         :rtype: str
         """
-        return self._name
+        return self.__class
 
-    @name.setter
-    def name(self, name):
-        """Sets the name of this DatumJobDetails.
+    @_class.setter
+    def _class(self, _class):
+        """Sets the _class of this DatumJobDetails.
 
-        Name of the job that uses the datum.  # noqa: E501
+        Class of job that uses the datum.  # noqa: E501
 
-        :param name: The name of this DatumJobDetails.  # noqa: E501
+        :param _class: The _class of this DatumJobDetails.  # noqa: E501
         :type: str
         """
 
-        self._name = name
-
-    @property
-    def user(self):
-        """Gets the user of this DatumJobDetails.  # noqa: E501
-
-        User to which this job belongs.  # noqa: E501
-
-        :return: The user of this DatumJobDetails.  # noqa: E501
-        :rtype: str
-        """
-        return self._user
-
-    @user.setter
-    def user(self, user):
-        """Sets the user of this DatumJobDetails.
-
-        User to which this job belongs.  # noqa: E501
-
-        :param user: The user of this DatumJobDetails.  # noqa: E501
-        :type: str
-        """
-
-        self._user = user
+        self.__class = _class
 
     @property
     def jobid(self):
@@ -147,27 +124,48 @@ class DatumJobDetails(object):
         self._jobid = jobid
 
     @property
-    def _class(self):
-        """Gets the _class of this DatumJobDetails.  # noqa: E501
+    def name(self):
+        """Gets the name of this DatumJobDetails.  # noqa: E501
 
-        Class of job that uses the datum.  # noqa: E501
+        Name of the job that uses the datum.  # noqa: E501
 
-        :return: The _class of this DatumJobDetails.  # noqa: E501
+        :return: The name of this DatumJobDetails.  # noqa: E501
         :rtype: str
         """
-        return self.__class
+        return self._name
 
-    @_class.setter
-    def _class(self, _class):
-        """Sets the _class of this DatumJobDetails.
+    @name.setter
+    def name(self, name):
+        """Sets the name of this DatumJobDetails.
 
-        Class of job that uses the datum.  # noqa: E501
+        Name of the job that uses the datum.  # noqa: E501
 
-        :param _class: The _class of this DatumJobDetails.  # noqa: E501
+        :param name: The name of this DatumJobDetails.  # noqa: E501
         :type: str
         """
 
-        self.__class = _class
+        self._name = name
+
+    @property
+    def pipeline(self):
+        """Gets the pipeline of this DatumJobDetails.  # noqa: E501
+
+
+        :return: The pipeline of this DatumJobDetails.  # noqa: E501
+        :rtype: DatumJobDetailsPipeline
+        """
+        return self._pipeline
+
+    @pipeline.setter
+    def pipeline(self, pipeline):
+        """Sets the pipeline of this DatumJobDetails.
+
+
+        :param pipeline: The pipeline of this DatumJobDetails.  # noqa: E501
+        :type: DatumJobDetailsPipeline
+        """
+
+        self._pipeline = pipeline
 
     @property
     def state(self):
@@ -214,25 +212,27 @@ class DatumJobDetails(object):
         self._tags = tags
 
     @property
-    def pipeline(self):
-        """Gets the pipeline of this DatumJobDetails.  # noqa: E501
+    def user(self):
+        """Gets the user of this DatumJobDetails.  # noqa: E501
 
+        User to which this job belongs.  # noqa: E501
 
-        :return: The pipeline of this DatumJobDetails.  # noqa: E501
-        :rtype: DatumJobDetailsPipeline
+        :return: The user of this DatumJobDetails.  # noqa: E501
+        :rtype: str
         """
-        return self._pipeline
+        return self._user
 
-    @pipeline.setter
-    def pipeline(self, pipeline):
-        """Sets the pipeline of this DatumJobDetails.
+    @user.setter
+    def user(self, user):
+        """Sets the user of this DatumJobDetails.
 
+        User to which this job belongs.  # noqa: E501
 
-        :param pipeline: The pipeline of this DatumJobDetails.  # noqa: E501
-        :type: DatumJobDetailsPipeline
+        :param user: The user of this DatumJobDetails.  # noqa: E501
+        :type: str
         """
 
-        self._pipeline = pipeline
+        self._user = user
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,78 +31,36 @@ class UserCollectionJobs(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'notebooks': 'UserCollectionJobsNotebooks',
-        'jobs': 'UserCollectionJobsNotebooks',
-        'inferences': 'UserCollectionJobsNotebooks',
-        'preprocessing': 'UserCollectionJobsNotebooks'
+        'inferences': 'UserCollectionJobsInferences',
+        'jobs': 'UserCollectionJobsInferences',
+        'notebooks': 'UserCollectionJobsInferences',
+        'preprocessing': 'UserCollectionJobsInferences'
     }
 
     attribute_map = {
-        'notebooks': 'notebooks',
-        'jobs': 'jobs',
         'inferences': 'inferences',
+        'jobs': 'jobs',
+        'notebooks': 'notebooks',
         'preprocessing': 'preprocessing'
     }
 
-    def __init__(self, notebooks=None, jobs=None, inferences=None, preprocessing=None):  # noqa: E501
+    def __init__(self, inferences=None, jobs=None, notebooks=None, preprocessing=None):  # noqa: E501
         """UserCollectionJobs - a model defined in Swagger"""  # noqa: E501
 
-        self._notebooks = None
-        self._jobs = None
         self._inferences = None
+        self._jobs = None
+        self._notebooks = None
         self._preprocessing = None
         self.discriminator = None
 
-        if notebooks is not None:
-            self.notebooks = notebooks
-        if jobs is not None:
-            self.jobs = jobs
         if inferences is not None:
             self.inferences = inferences
+        if jobs is not None:
+            self.jobs = jobs
+        if notebooks is not None:
+            self.notebooks = notebooks
         if preprocessing is not None:
             self.preprocessing = preprocessing
-
-    @property
-    def notebooks(self):
-        """Gets the notebooks of this UserCollectionJobs.  # noqa: E501
-
-
-        :return: The notebooks of this UserCollectionJobs.  # noqa: E501
-        :rtype: UserCollectionJobsNotebooks
-        """
-        return self._notebooks
-
-    @notebooks.setter
-    def notebooks(self, notebooks):
-        """Sets the notebooks of this UserCollectionJobs.
-
-
-        :param notebooks: The notebooks of this UserCollectionJobs.  # noqa: E501
-        :type: UserCollectionJobsNotebooks
-        """
-
-        self._notebooks = notebooks
-
-    @property
-    def jobs(self):
-        """Gets the jobs of this UserCollectionJobs.  # noqa: E501
-
-
-        :return: The jobs of this UserCollectionJobs.  # noqa: E501
-        :rtype: UserCollectionJobsNotebooks
-        """
-        return self._jobs
-
-    @jobs.setter
-    def jobs(self, jobs):
-        """Sets the jobs of this UserCollectionJobs.
-
-
-        :param jobs: The jobs of this UserCollectionJobs.  # noqa: E501
-        :type: UserCollectionJobsNotebooks
-        """
-
-        self._jobs = jobs
 
     @property
     def inferences(self):
@@ -110,7 +68,7 @@ class UserCollectionJobs(object):
 
 
         :return: The inferences of this UserCollectionJobs.  # noqa: E501
-        :rtype: UserCollectionJobsNotebooks
+        :rtype: UserCollectionJobsInferences
         """
         return self._inferences
 
@@ -120,10 +78,52 @@ class UserCollectionJobs(object):
 
 
         :param inferences: The inferences of this UserCollectionJobs.  # noqa: E501
-        :type: UserCollectionJobsNotebooks
+        :type: UserCollectionJobsInferences
         """
 
         self._inferences = inferences
+
+    @property
+    def jobs(self):
+        """Gets the jobs of this UserCollectionJobs.  # noqa: E501
+
+
+        :return: The jobs of this UserCollectionJobs.  # noqa: E501
+        :rtype: UserCollectionJobsInferences
+        """
+        return self._jobs
+
+    @jobs.setter
+    def jobs(self, jobs):
+        """Sets the jobs of this UserCollectionJobs.
+
+
+        :param jobs: The jobs of this UserCollectionJobs.  # noqa: E501
+        :type: UserCollectionJobsInferences
+        """
+
+        self._jobs = jobs
+
+    @property
+    def notebooks(self):
+        """Gets the notebooks of this UserCollectionJobs.  # noqa: E501
+
+
+        :return: The notebooks of this UserCollectionJobs.  # noqa: E501
+        :rtype: UserCollectionJobsInferences
+        """
+        return self._notebooks
+
+    @notebooks.setter
+    def notebooks(self, notebooks):
+        """Sets the notebooks of this UserCollectionJobs.
+
+
+        :param notebooks: The notebooks of this UserCollectionJobs.  # noqa: E501
+        :type: UserCollectionJobsInferences
+        """
+
+        self._notebooks = notebooks
 
     @property
     def preprocessing(self):
@@ -131,7 +131,7 @@ class UserCollectionJobs(object):
 
 
         :return: The preprocessing of this UserCollectionJobs.  # noqa: E501
-        :rtype: UserCollectionJobsNotebooks
+        :rtype: UserCollectionJobsInferences
         """
         return self._preprocessing
 
@@ -141,7 +141,7 @@ class UserCollectionJobs(object):
 
 
         :param preprocessing: The preprocessing of this UserCollectionJobs.  # noqa: E501
-        :type: UserCollectionJobsNotebooks
+        :type: UserCollectionJobsInferences
         """
 
         self._preprocessing = preprocessing

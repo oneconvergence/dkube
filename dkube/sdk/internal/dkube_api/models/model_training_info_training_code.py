@@ -31,52 +31,31 @@ class ModelTrainingInfoTrainingCode(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'repo': 'str',
         'commit': 'str',
-        'project': 'str'
+        'project': 'str',
+        'repo': 'str'
     }
 
     attribute_map = {
-        'repo': 'repo',
         'commit': 'commit',
-        'project': 'project'
+        'project': 'project',
+        'repo': 'repo'
     }
 
-    def __init__(self, repo=None, commit=None, project=None):  # noqa: E501
+    def __init__(self, commit=None, project=None, repo=None):  # noqa: E501
         """ModelTrainingInfoTrainingCode - a model defined in Swagger"""  # noqa: E501
 
-        self._repo = None
         self._commit = None
         self._project = None
+        self._repo = None
         self.discriminator = None
 
-        if repo is not None:
-            self.repo = repo
         if commit is not None:
             self.commit = commit
         if project is not None:
             self.project = project
-
-    @property
-    def repo(self):
-        """Gets the repo of this ModelTrainingInfoTrainingCode.  # noqa: E501
-
-
-        :return: The repo of this ModelTrainingInfoTrainingCode.  # noqa: E501
-        :rtype: str
-        """
-        return self._repo
-
-    @repo.setter
-    def repo(self, repo):
-        """Sets the repo of this ModelTrainingInfoTrainingCode.
-
-
-        :param repo: The repo of this ModelTrainingInfoTrainingCode.  # noqa: E501
-        :type: str
-        """
-
-        self._repo = repo
+        if repo is not None:
+            self.repo = repo
 
     @property
     def commit(self):
@@ -119,6 +98,27 @@ class ModelTrainingInfoTrainingCode(object):
         """
 
         self._project = project
+
+    @property
+    def repo(self):
+        """Gets the repo of this ModelTrainingInfoTrainingCode.  # noqa: E501
+
+
+        :return: The repo of this ModelTrainingInfoTrainingCode.  # noqa: E501
+        :rtype: str
+        """
+        return self._repo
+
+    @repo.setter
+    def repo(self, repo):
+        """Sets the repo of this ModelTrainingInfoTrainingCode.
+
+
+        :param repo: The repo of this ModelTrainingInfoTrainingCode.  # noqa: E501
+        :type: str
+        """
+
+        self._repo = repo
 
     def to_dict(self):
         """Returns the model properties as a dict"""

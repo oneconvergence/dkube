@@ -31,52 +31,52 @@ class NotificationDataStudy(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'study_id': 'str',
+        'best_objective_value': 'float',
         'best_trial_id': 'str',
-        'best_objective_value': 'float'
+        'study_id': 'str'
     }
 
     attribute_map = {
-        'study_id': 'StudyID',
+        'best_objective_value': 'BestObjectiveValue',
         'best_trial_id': 'BestTrialID',
-        'best_objective_value': 'BestObjectiveValue'
+        'study_id': 'StudyID'
     }
 
-    def __init__(self, study_id=None, best_trial_id=None, best_objective_value=None):  # noqa: E501
+    def __init__(self, best_objective_value=None, best_trial_id=None, study_id=None):  # noqa: E501
         """NotificationDataStudy - a model defined in Swagger"""  # noqa: E501
 
-        self._study_id = None
-        self._best_trial_id = None
         self._best_objective_value = None
+        self._best_trial_id = None
+        self._study_id = None
         self.discriminator = None
 
-        if study_id is not None:
-            self.study_id = study_id
-        if best_trial_id is not None:
-            self.best_trial_id = best_trial_id
         if best_objective_value is not None:
             self.best_objective_value = best_objective_value
+        if best_trial_id is not None:
+            self.best_trial_id = best_trial_id
+        if study_id is not None:
+            self.study_id = study_id
 
     @property
-    def study_id(self):
-        """Gets the study_id of this NotificationDataStudy.  # noqa: E501
+    def best_objective_value(self):
+        """Gets the best_objective_value of this NotificationDataStudy.  # noqa: E501
 
 
-        :return: The study_id of this NotificationDataStudy.  # noqa: E501
-        :rtype: str
+        :return: The best_objective_value of this NotificationDataStudy.  # noqa: E501
+        :rtype: float
         """
-        return self._study_id
+        return self._best_objective_value
 
-    @study_id.setter
-    def study_id(self, study_id):
-        """Sets the study_id of this NotificationDataStudy.
+    @best_objective_value.setter
+    def best_objective_value(self, best_objective_value):
+        """Sets the best_objective_value of this NotificationDataStudy.
 
 
-        :param study_id: The study_id of this NotificationDataStudy.  # noqa: E501
-        :type: str
+        :param best_objective_value: The best_objective_value of this NotificationDataStudy.  # noqa: E501
+        :type: float
         """
 
-        self._study_id = study_id
+        self._best_objective_value = best_objective_value
 
     @property
     def best_trial_id(self):
@@ -100,25 +100,25 @@ class NotificationDataStudy(object):
         self._best_trial_id = best_trial_id
 
     @property
-    def best_objective_value(self):
-        """Gets the best_objective_value of this NotificationDataStudy.  # noqa: E501
+    def study_id(self):
+        """Gets the study_id of this NotificationDataStudy.  # noqa: E501
 
 
-        :return: The best_objective_value of this NotificationDataStudy.  # noqa: E501
-        :rtype: float
+        :return: The study_id of this NotificationDataStudy.  # noqa: E501
+        :rtype: str
         """
-        return self._best_objective_value
+        return self._study_id
 
-    @best_objective_value.setter
-    def best_objective_value(self, best_objective_value):
-        """Sets the best_objective_value of this NotificationDataStudy.
+    @study_id.setter
+    def study_id(self, study_id):
+        """Sets the study_id of this NotificationDataStudy.
 
 
-        :param best_objective_value: The best_objective_value of this NotificationDataStudy.  # noqa: E501
-        :type: float
+        :param study_id: The study_id of this NotificationDataStudy.  # noqa: E501
+        :type: str
         """
 
-        self._best_objective_value = best_objective_value
+        self._study_id = study_id
 
     def to_dict(self):
         """Returns the model properties as a dict"""

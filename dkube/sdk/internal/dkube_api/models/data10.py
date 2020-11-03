@@ -31,45 +31,70 @@ class Data10(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'datums': 'list[str]'
+        'role': 'str',
+        'username': 'str'
     }
 
     attribute_map = {
-        'datums': 'datums'
+        'role': 'role',
+        'username': 'username'
     }
 
-    def __init__(self, datums=None):  # noqa: E501
+    def __init__(self, role=None, username=None):  # noqa: E501
         """Data10 - a model defined in Swagger"""  # noqa: E501
 
-        self._datums = None
+        self._role = None
+        self._username = None
         self.discriminator = None
 
-        self.datums = datums
+        if role is not None:
+            self.role = role
+        if username is not None:
+            self.username = username
 
     @property
-    def datums(self):
-        """Gets the datums of this Data10.  # noqa: E501
+    def role(self):
+        """Gets the role of this Data10.  # noqa: E501
 
-        List of datums to archive  # noqa: E501
+        Expected role of user.  # noqa: E501
 
-        :return: The datums of this Data10.  # noqa: E501
-        :rtype: list[str]
+        :return: The role of this Data10.  # noqa: E501
+        :rtype: str
         """
-        return self._datums
+        return self._role
 
-    @datums.setter
-    def datums(self, datums):
-        """Sets the datums of this Data10.
+    @role.setter
+    def role(self, role):
+        """Sets the role of this Data10.
 
-        List of datums to archive  # noqa: E501
+        Expected role of user.  # noqa: E501
 
-        :param datums: The datums of this Data10.  # noqa: E501
-        :type: list[str]
+        :param role: The role of this Data10.  # noqa: E501
+        :type: str
         """
-        if datums is None:
-            raise ValueError("Invalid value for `datums`, must not be `None`")  # noqa: E501
 
-        self._datums = datums
+        self._role = role
+
+    @property
+    def username(self):
+        """Gets the username of this Data10.  # noqa: E501
+
+
+        :return: The username of this Data10.  # noqa: E501
+        :rtype: str
+        """
+        return self._username
+
+    @username.setter
+    def username(self, username):
+        """Sets the username of this Data10.
+
+
+        :param username: The username of this Data10.  # noqa: E501
+        :type: str
+        """
+
+        self._username = username
 
     def to_dict(self):
         """Returns the model properties as a dict"""

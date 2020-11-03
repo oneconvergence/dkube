@@ -31,7 +31,7 @@ class RepoGCSAccessInfo(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'secret': 'RepoGCSAccessInfoSecret'
+        'secret': 'GCSAccessInfoSecret'
     }
 
     attribute_map = {
@@ -53,7 +53,7 @@ class RepoGCSAccessInfo(object):
 
 
         :return: The secret of this RepoGCSAccessInfo.  # noqa: E501
-        :rtype: RepoGCSAccessInfoSecret
+        :rtype: GCSAccessInfoSecret
         """
         return self._secret
 
@@ -63,7 +63,7 @@ class RepoGCSAccessInfo(object):
 
 
         :param secret: The secret of this RepoGCSAccessInfo.  # noqa: E501
-        :type: RepoGCSAccessInfoSecret
+        :type: GCSAccessInfoSecret
         """
 
         self._secret = secret

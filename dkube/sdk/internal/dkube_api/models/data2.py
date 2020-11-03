@@ -31,70 +31,131 @@ class Data2(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'username': 'str',
-        'role': 'str'
+        'groupname': 'str',
+        'pools': 'list[str]',
+        'upsert': 'bool',
+        'users': 'list[str]'
     }
 
     attribute_map = {
-        'username': 'username',
-        'role': 'role'
+        'groupname': 'groupname',
+        'pools': 'pools',
+        'upsert': 'upsert',
+        'users': 'users'
     }
 
-    def __init__(self, username=None, role=None):  # noqa: E501
+    def __init__(self, groupname=None, pools=None, upsert=True, users=None):  # noqa: E501
         """Data2 - a model defined in Swagger"""  # noqa: E501
 
-        self._username = None
-        self._role = None
+        self._groupname = None
+        self._pools = None
+        self._upsert = None
+        self._users = None
         self.discriminator = None
 
-        if username is not None:
-            self.username = username
-        if role is not None:
-            self.role = role
+        self.groupname = groupname
+        self.pools = pools
+        if upsert is not None:
+            self.upsert = upsert
+        self.users = users
 
     @property
-    def username(self):
-        """Gets the username of this Data2.  # noqa: E501
+    def groupname(self):
+        """Gets the groupname of this Data2.  # noqa: E501
 
 
-        :return: The username of this Data2.  # noqa: E501
+        :return: The groupname of this Data2.  # noqa: E501
         :rtype: str
         """
-        return self._username
+        return self._groupname
 
-    @username.setter
-    def username(self, username):
-        """Sets the username of this Data2.
+    @groupname.setter
+    def groupname(self, groupname):
+        """Sets the groupname of this Data2.
 
 
-        :param username: The username of this Data2.  # noqa: E501
+        :param groupname: The groupname of this Data2.  # noqa: E501
         :type: str
         """
+        if groupname is None:
+            raise ValueError("Invalid value for `groupname`, must not be `None`")  # noqa: E501
+        if groupname is not None and len(groupname) > 255:
+            raise ValueError("Invalid value for `groupname`, length must be less than or equal to `255`")  # noqa: E501
+        if groupname is not None and len(groupname) < 1:
+            raise ValueError("Invalid value for `groupname`, length must be greater than or equal to `1`")  # noqa: E501
 
-        self._username = username
+        self._groupname = groupname
 
     @property
-    def role(self):
-        """Gets the role of this Data2.  # noqa: E501
+    def pools(self):
+        """Gets the pools of this Data2.  # noqa: E501
 
-        Expected role of user.  # noqa: E501
+        List of pools by names to be added into this group.  # noqa: E501
 
-        :return: The role of this Data2.  # noqa: E501
-        :rtype: str
+        :return: The pools of this Data2.  # noqa: E501
+        :rtype: list[str]
         """
-        return self._role
+        return self._pools
 
-    @role.setter
-    def role(self, role):
-        """Sets the role of this Data2.
+    @pools.setter
+    def pools(self, pools):
+        """Sets the pools of this Data2.
 
-        Expected role of user.  # noqa: E501
+        List of pools by names to be added into this group.  # noqa: E501
 
-        :param role: The role of this Data2.  # noqa: E501
-        :type: str
+        :param pools: The pools of this Data2.  # noqa: E501
+        :type: list[str]
+        """
+        if pools is None:
+            raise ValueError("Invalid value for `pools`, must not be `None`")  # noqa: E501
+
+        self._pools = pools
+
+    @property
+    def upsert(self):
+        """Gets the upsert of this Data2.  # noqa: E501
+
+
+        :return: The upsert of this Data2.  # noqa: E501
+        :rtype: bool
+        """
+        return self._upsert
+
+    @upsert.setter
+    def upsert(self, upsert):
+        """Sets the upsert of this Data2.
+
+
+        :param upsert: The upsert of this Data2.  # noqa: E501
+        :type: bool
         """
 
-        self._role = role
+        self._upsert = upsert
+
+    @property
+    def users(self):
+        """Gets the users of this Data2.  # noqa: E501
+
+        List of users by names to be added into this group.  # noqa: E501
+
+        :return: The users of this Data2.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._users
+
+    @users.setter
+    def users(self, users):
+        """Sets the users of this Data2.
+
+        List of users by names to be added into this group.  # noqa: E501
+
+        :param users: The users of this Data2.  # noqa: E501
+        :type: list[str]
+        """
+        if users is None:
+            raise ValueError("Invalid value for `users`, must not be `None`")  # noqa: E501
+
+        self._users = users
 
     def to_dict(self):
         """Returns the model properties as a dict"""

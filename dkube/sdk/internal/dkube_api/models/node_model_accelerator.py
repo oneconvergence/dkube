@@ -31,52 +31,31 @@ class NodeModelAccelerator(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'healthy': 'bool',
         '_class': 'str',
+        'healthy': 'bool',
         'name': 'str'
     }
 
     attribute_map = {
-        'healthy': 'healthy',
         '_class': 'class',
+        'healthy': 'healthy',
         'name': 'name'
     }
 
-    def __init__(self, healthy=True, _class='gpu', name=None):  # noqa: E501
+    def __init__(self, _class='gpu', healthy=True, name=None):  # noqa: E501
         """NodeModelAccelerator - a model defined in Swagger"""  # noqa: E501
 
-        self._healthy = None
         self.__class = None
+        self._healthy = None
         self._name = None
         self.discriminator = None
 
-        if healthy is not None:
-            self.healthy = healthy
         if _class is not None:
             self._class = _class
+        if healthy is not None:
+            self.healthy = healthy
         if name is not None:
             self.name = name
-
-    @property
-    def healthy(self):
-        """Gets the healthy of this NodeModelAccelerator.  # noqa: E501
-
-
-        :return: The healthy of this NodeModelAccelerator.  # noqa: E501
-        :rtype: bool
-        """
-        return self._healthy
-
-    @healthy.setter
-    def healthy(self, healthy):
-        """Sets the healthy of this NodeModelAccelerator.
-
-
-        :param healthy: The healthy of this NodeModelAccelerator.  # noqa: E501
-        :type: bool
-        """
-
-        self._healthy = healthy
 
     @property
     def _class(self):
@@ -104,6 +83,27 @@ class NodeModelAccelerator(object):
             )
 
         self.__class = _class
+
+    @property
+    def healthy(self):
+        """Gets the healthy of this NodeModelAccelerator.  # noqa: E501
+
+
+        :return: The healthy of this NodeModelAccelerator.  # noqa: E501
+        :rtype: bool
+        """
+        return self._healthy
+
+    @healthy.setter
+    def healthy(self, healthy):
+        """Sets the healthy of this NodeModelAccelerator.
+
+
+        :param healthy: The healthy of this NodeModelAccelerator.  # noqa: E501
+        :type: bool
+        """
+
+        self._healthy = healthy
 
     @property
     def name(self):

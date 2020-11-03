@@ -33,7 +33,7 @@ class GCSAccessInfo(object):
     swagger_types = {
         'bucket': 'str',
         'prefix': 'str',
-        'secret': 'RepoGCSAccessInfoSecret'
+        'secret': 'GCSAccessInfoSecret'
     }
 
     attribute_map = {
@@ -105,7 +105,7 @@ class GCSAccessInfo(object):
 
 
         :return: The secret of this GCSAccessInfo.  # noqa: E501
-        :rtype: RepoGCSAccessInfoSecret
+        :rtype: GCSAccessInfoSecret
         """
         return self._secret
 
@@ -115,7 +115,7 @@ class GCSAccessInfo(object):
 
 
         :param secret: The secret of this GCSAccessInfo.  # noqa: E501
-        :type: RepoGCSAccessInfoSecret
+        :type: GCSAccessInfoSecret
         """
 
         self._secret = secret

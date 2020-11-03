@@ -31,47 +31,26 @@ class JobModelParametersRun(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'template': 'str',
-        'group': 'str'
+        'group': 'str',
+        'template': 'str'
     }
 
     attribute_map = {
-        'template': 'template',
-        'group': 'group'
+        'group': 'group',
+        'template': 'template'
     }
 
-    def __init__(self, template=None, group=None):  # noqa: E501
+    def __init__(self, group=None, template=None):  # noqa: E501
         """JobModelParametersRun - a model defined in Swagger"""  # noqa: E501
 
-        self._template = None
         self._group = None
+        self._template = None
         self.discriminator = None
 
-        if template is not None:
-            self.template = template
         if group is not None:
             self.group = group
-
-    @property
-    def template(self):
-        """Gets the template of this JobModelParametersRun.  # noqa: E501
-
-
-        :return: The template of this JobModelParametersRun.  # noqa: E501
-        :rtype: str
-        """
-        return self._template
-
-    @template.setter
-    def template(self, template):
-        """Sets the template of this JobModelParametersRun.
-
-
-        :param template: The template of this JobModelParametersRun.  # noqa: E501
-        :type: str
-        """
-
-        self._template = template
+        if template is not None:
+            self.template = template
 
     @property
     def group(self):
@@ -93,6 +72,27 @@ class JobModelParametersRun(object):
         """
 
         self._group = group
+
+    @property
+    def template(self):
+        """Gets the template of this JobModelParametersRun.  # noqa: E501
+
+
+        :return: The template of this JobModelParametersRun.  # noqa: E501
+        :rtype: str
+        """
+        return self._template
+
+    @template.setter
+    def template(self, template):
+        """Sets the template of this JobModelParametersRun.
+
+
+        :param template: The template of this JobModelParametersRun.  # noqa: E501
+        :type: str
+        """
+
+        self._template = template
 
     def to_dict(self):
         """Returns the model properties as a dict"""

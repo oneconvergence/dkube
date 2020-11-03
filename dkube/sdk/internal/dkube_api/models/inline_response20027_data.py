@@ -31,68 +31,70 @@ class InlineResponse20027Data(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'owner': 'str',
-        'jobs': 'list[JobModel]'
+        'free_gpus': 'int',
+        'total_gpus': 'int'
     }
 
     attribute_map = {
-        'owner': 'owner',
-        'jobs': 'jobs'
+        'free_gpus': 'free_gpus',
+        'total_gpus': 'total_gpus'
     }
 
-    def __init__(self, owner=None, jobs=None):  # noqa: E501
+    def __init__(self, free_gpus=None, total_gpus=None):  # noqa: E501
         """InlineResponse20027Data - a model defined in Swagger"""  # noqa: E501
 
-        self._owner = None
-        self._jobs = None
+        self._free_gpus = None
+        self._total_gpus = None
         self.discriminator = None
 
-        if owner is not None:
-            self.owner = owner
-        if jobs is not None:
-            self.jobs = jobs
+        self.free_gpus = free_gpus
+        self.total_gpus = total_gpus
 
     @property
-    def owner(self):
-        """Gets the owner of this InlineResponse20027Data.  # noqa: E501
+    def free_gpus(self):
+        """Gets the free_gpus of this InlineResponse20027Data.  # noqa: E501
 
 
-        :return: The owner of this InlineResponse20027Data.  # noqa: E501
-        :rtype: str
+        :return: The free_gpus of this InlineResponse20027Data.  # noqa: E501
+        :rtype: int
         """
-        return self._owner
+        return self._free_gpus
 
-    @owner.setter
-    def owner(self, owner):
-        """Sets the owner of this InlineResponse20027Data.
+    @free_gpus.setter
+    def free_gpus(self, free_gpus):
+        """Sets the free_gpus of this InlineResponse20027Data.
 
 
-        :param owner: The owner of this InlineResponse20027Data.  # noqa: E501
-        :type: str
+        :param free_gpus: The free_gpus of this InlineResponse20027Data.  # noqa: E501
+        :type: int
         """
+        if free_gpus is None:
+            raise ValueError("Invalid value for `free_gpus`, must not be `None`")  # noqa: E501
 
-        self._owner = owner
+        self._free_gpus = free_gpus
 
     @property
-    def jobs(self):
-        """Gets the jobs of this InlineResponse20027Data.  # noqa: E501
+    def total_gpus(self):
+        """Gets the total_gpus of this InlineResponse20027Data.  # noqa: E501
 
 
-        :return: The jobs of this InlineResponse20027Data.  # noqa: E501
-        :rtype: list[JobModel]
+        :return: The total_gpus of this InlineResponse20027Data.  # noqa: E501
+        :rtype: int
         """
-        return self._jobs
+        return self._total_gpus
 
-    @jobs.setter
-    def jobs(self, jobs):
-        """Sets the jobs of this InlineResponse20027Data.
+    @total_gpus.setter
+    def total_gpus(self, total_gpus):
+        """Sets the total_gpus of this InlineResponse20027Data.
 
 
-        :param jobs: The jobs of this InlineResponse20027Data.  # noqa: E501
-        :type: list[JobModel]
+        :param total_gpus: The total_gpus of this InlineResponse20027Data.  # noqa: E501
+        :type: int
         """
+        if total_gpus is None:
+            raise ValueError("Invalid value for `total_gpus`, must not be `None`")  # noqa: E501
 
-        self._jobs = jobs
+        self._total_gpus = total_gpus
 
     def to_dict(self):
         """Returns the model properties as a dict"""

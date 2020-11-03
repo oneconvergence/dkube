@@ -31,31 +31,52 @@ class ModelTrainingInfo(object):
                             and the value is json key in definition.
     """
     swagger_types = {
+        'datasets': 'ModelTrainingInfoDatasets',
         'images': 'ModelTrainingInfoImages',
-        'training_code': 'ModelTrainingInfoTrainingCode',
-        'datasets': 'ModelTrainingInfoDatasets'
+        'training_code': 'ModelTrainingInfoTrainingCode'
     }
 
     attribute_map = {
+        'datasets': 'datasets',
         'images': 'images',
-        'training_code': 'training_code',
-        'datasets': 'datasets'
+        'training_code': 'training_code'
     }
 
-    def __init__(self, images=None, training_code=None, datasets=None):  # noqa: E501
+    def __init__(self, datasets=None, images=None, training_code=None):  # noqa: E501
         """ModelTrainingInfo - a model defined in Swagger"""  # noqa: E501
 
+        self._datasets = None
         self._images = None
         self._training_code = None
-        self._datasets = None
         self.discriminator = None
 
+        if datasets is not None:
+            self.datasets = datasets
         if images is not None:
             self.images = images
         if training_code is not None:
             self.training_code = training_code
-        if datasets is not None:
-            self.datasets = datasets
+
+    @property
+    def datasets(self):
+        """Gets the datasets of this ModelTrainingInfo.  # noqa: E501
+
+
+        :return: The datasets of this ModelTrainingInfo.  # noqa: E501
+        :rtype: ModelTrainingInfoDatasets
+        """
+        return self._datasets
+
+    @datasets.setter
+    def datasets(self, datasets):
+        """Sets the datasets of this ModelTrainingInfo.
+
+
+        :param datasets: The datasets of this ModelTrainingInfo.  # noqa: E501
+        :type: ModelTrainingInfoDatasets
+        """
+
+        self._datasets = datasets
 
     @property
     def images(self):
@@ -98,27 +119,6 @@ class ModelTrainingInfo(object):
         """
 
         self._training_code = training_code
-
-    @property
-    def datasets(self):
-        """Gets the datasets of this ModelTrainingInfo.  # noqa: E501
-
-
-        :return: The datasets of this ModelTrainingInfo.  # noqa: E501
-        :rtype: ModelTrainingInfoDatasets
-        """
-        return self._datasets
-
-    @datasets.setter
-    def datasets(self, datasets):
-        """Sets the datasets of this ModelTrainingInfo.
-
-
-        :param datasets: The datasets of this ModelTrainingInfo.  # noqa: E501
-        :type: ModelTrainingInfoDatasets
-        """
-
-        self._datasets = datasets
 
     def to_dict(self):
         """Returns the model properties as a dict"""

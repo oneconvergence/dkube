@@ -31,26 +31,52 @@ class PreprocessingJobModelExecutor(object):
                             and the value is json key in definition.
     """
     swagger_types = {
+        'buildfromproject': 'bool',
         'choice': 'str',
         'custom': 'CustomContainerModel'
     }
 
     attribute_map = {
+        'buildfromproject': 'buildfromproject',
         'choice': 'choice',
         'custom': 'custom'
     }
 
-    def __init__(self, choice=None, custom=None):  # noqa: E501
+    def __init__(self, buildfromproject=False, choice=None, custom=None):  # noqa: E501
         """PreprocessingJobModelExecutor - a model defined in Swagger"""  # noqa: E501
 
+        self._buildfromproject = None
         self._choice = None
         self._custom = None
         self.discriminator = None
 
+        if buildfromproject is not None:
+            self.buildfromproject = buildfromproject
         if choice is not None:
             self.choice = choice
         if custom is not None:
             self.custom = custom
+
+    @property
+    def buildfromproject(self):
+        """Gets the buildfromproject of this PreprocessingJobModelExecutor.  # noqa: E501
+
+
+        :return: The buildfromproject of this PreprocessingJobModelExecutor.  # noqa: E501
+        :rtype: bool
+        """
+        return self._buildfromproject
+
+    @buildfromproject.setter
+    def buildfromproject(self, buildfromproject):
+        """Sets the buildfromproject of this PreprocessingJobModelExecutor.
+
+
+        :param buildfromproject: The buildfromproject of this PreprocessingJobModelExecutor.  # noqa: E501
+        :type: bool
+        """
+
+        self._buildfromproject = buildfromproject
 
     @property
     def choice(self):

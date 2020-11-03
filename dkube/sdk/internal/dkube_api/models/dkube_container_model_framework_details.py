@@ -31,64 +31,41 @@ class DkubeContainerModelFrameworkDetails(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'version': 'str',
         'image': 'str',
+        'password': 'str',
         'private': 'bool',
         'username': 'str',
-        'password': 'str'
+        'version': 'str'
     }
 
     attribute_map = {
-        'version': 'version',
         'image': 'image',
+        'password': 'password',
         'private': 'private',
         'username': 'username',
-        'password': 'password'
+        'version': 'version'
     }
 
-    def __init__(self, version=None, image=None, private=False, username=None, password=None):  # noqa: E501
+    def __init__(self, image=None, password=None, private=False, username=None, version=None):  # noqa: E501
         """DkubeContainerModelFrameworkDetails - a model defined in Swagger"""  # noqa: E501
 
-        self._version = None
         self._image = None
+        self._password = None
         self._private = None
         self._username = None
-        self._password = None
+        self._version = None
         self.discriminator = None
 
-        if version is not None:
-            self.version = version
         if image is not None:
             self.image = image
+        if password is not None:
+            self.password = password
         if private is not None:
             self.private = private
         if username is not None:
             self.username = username
-        if password is not None:
-            self.password = password
-
-    @property
-    def version(self):
-        """Gets the version of this DkubeContainerModelFrameworkDetails.  # noqa: E501
-
-        Supported framework versions by dkube.  # noqa: E501
-
-        :return: The version of this DkubeContainerModelFrameworkDetails.  # noqa: E501
-        :rtype: str
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version):
-        """Sets the version of this DkubeContainerModelFrameworkDetails.
-
-        Supported framework versions by dkube.  # noqa: E501
-
-        :param version: The version of this DkubeContainerModelFrameworkDetails.  # noqa: E501
-        :type: str
-        """
-
-        self._version = version
+        if version is not None:
+            self.version = version
 
     @property
     def image(self):
@@ -110,6 +87,27 @@ class DkubeContainerModelFrameworkDetails(object):
         """
 
         self._image = image
+
+    @property
+    def password(self):
+        """Gets the password of this DkubeContainerModelFrameworkDetails.  # noqa: E501
+
+
+        :return: The password of this DkubeContainerModelFrameworkDetails.  # noqa: E501
+        :rtype: str
+        """
+        return self._password
+
+    @password.setter
+    def password(self, password):
+        """Sets the password of this DkubeContainerModelFrameworkDetails.
+
+
+        :param password: The password of this DkubeContainerModelFrameworkDetails.  # noqa: E501
+        :type: str
+        """
+
+        self._password = password
 
     @property
     def private(self):
@@ -154,25 +152,27 @@ class DkubeContainerModelFrameworkDetails(object):
         self._username = username
 
     @property
-    def password(self):
-        """Gets the password of this DkubeContainerModelFrameworkDetails.  # noqa: E501
+    def version(self):
+        """Gets the version of this DkubeContainerModelFrameworkDetails.  # noqa: E501
 
+        Supported framework versions by dkube.  # noqa: E501
 
-        :return: The password of this DkubeContainerModelFrameworkDetails.  # noqa: E501
+        :return: The version of this DkubeContainerModelFrameworkDetails.  # noqa: E501
         :rtype: str
         """
-        return self._password
+        return self._version
 
-    @password.setter
-    def password(self, password):
-        """Sets the password of this DkubeContainerModelFrameworkDetails.
+    @version.setter
+    def version(self, version):
+        """Sets the version of this DkubeContainerModelFrameworkDetails.
 
+        Supported framework versions by dkube.  # noqa: E501
 
-        :param password: The password of this DkubeContainerModelFrameworkDetails.  # noqa: E501
+        :param version: The version of this DkubeContainerModelFrameworkDetails.  # noqa: E501
         :type: str
         """
 
-        self._password = password
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

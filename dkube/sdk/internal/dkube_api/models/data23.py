@@ -31,131 +31,94 @@ class Data23(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'upsert': 'bool',
-        'poolname': 'str',
-        'pooltype': 'str',
-        'ndevices': 'int'
+        'description': 'str',
+        'name': 'str',
+        'serving': 'InferenceJobModel'
     }
 
     attribute_map = {
-        'upsert': 'upsert',
-        'poolname': 'poolname',
-        'pooltype': 'pooltype',
-        'ndevices': 'ndevices'
+        'description': 'description',
+        'name': 'name',
+        'serving': 'serving'
     }
 
-    def __init__(self, upsert=True, poolname=None, pooltype=None, ndevices=None):  # noqa: E501
+    def __init__(self, description=None, name=None, serving=None):  # noqa: E501
         """Data23 - a model defined in Swagger"""  # noqa: E501
 
-        self._upsert = None
-        self._poolname = None
-        self._pooltype = None
-        self._ndevices = None
+        self._description = None
+        self._name = None
+        self._serving = None
         self.discriminator = None
 
-        if upsert is not None:
-            self.upsert = upsert
-        self.poolname = poolname
-        self.pooltype = pooltype
-        self.ndevices = ndevices
+        if description is not None:
+            self.description = description
+        if name is not None:
+            self.name = name
+        if serving is not None:
+            self.serving = serving
 
     @property
-    def upsert(self):
-        """Gets the upsert of this Data23.  # noqa: E501
+    def description(self):
+        """Gets the description of this Data23.  # noqa: E501
 
 
-        :return: The upsert of this Data23.  # noqa: E501
-        :rtype: bool
-        """
-        return self._upsert
-
-    @upsert.setter
-    def upsert(self, upsert):
-        """Sets the upsert of this Data23.
-
-
-        :param upsert: The upsert of this Data23.  # noqa: E501
-        :type: bool
-        """
-
-        self._upsert = upsert
-
-    @property
-    def poolname(self):
-        """Gets the poolname of this Data23.  # noqa: E501
-
-
-        :return: The poolname of this Data23.  # noqa: E501
+        :return: The description of this Data23.  # noqa: E501
         :rtype: str
         """
-        return self._poolname
+        return self._description
 
-    @poolname.setter
-    def poolname(self, poolname):
-        """Sets the poolname of this Data23.
+    @description.setter
+    def description(self, description):
+        """Sets the description of this Data23.
 
 
-        :param poolname: The poolname of this Data23.  # noqa: E501
+        :param description: The description of this Data23.  # noqa: E501
         :type: str
         """
-        if poolname is None:
-            raise ValueError("Invalid value for `poolname`, must not be `None`")  # noqa: E501
-        if poolname is not None and len(poolname) > 255:
-            raise ValueError("Invalid value for `poolname`, length must be less than or equal to `255`")  # noqa: E501
-        if poolname is not None and len(poolname) < 1:
-            raise ValueError("Invalid value for `poolname`, length must be greater than or equal to `1`")  # noqa: E501
 
-        self._poolname = poolname
+        self._description = description
 
     @property
-    def pooltype(self):
-        """Gets the pooltype of this Data23.  # noqa: E501
+    def name(self):
+        """Gets the name of this Data23.  # noqa: E501
 
 
-        :return: The pooltype of this Data23.  # noqa: E501
+        :return: The name of this Data23.  # noqa: E501
         :rtype: str
         """
-        return self._pooltype
+        return self._name
 
-    @pooltype.setter
-    def pooltype(self, pooltype):
-        """Sets the pooltype of this Data23.
+    @name.setter
+    def name(self, name):
+        """Sets the name of this Data23.
 
 
-        :param pooltype: The pooltype of this Data23.  # noqa: E501
+        :param name: The name of this Data23.  # noqa: E501
         :type: str
         """
-        if pooltype is None:
-            raise ValueError("Invalid value for `pooltype`, must not be `None`")  # noqa: E501
-        if pooltype is not None and len(pooltype) > 255:
-            raise ValueError("Invalid value for `pooltype`, length must be less than or equal to `255`")  # noqa: E501
-        if pooltype is not None and len(pooltype) < 1:
-            raise ValueError("Invalid value for `pooltype`, length must be greater than or equal to `1`")  # noqa: E501
 
-        self._pooltype = pooltype
+        self._name = name
 
     @property
-    def ndevices(self):
-        """Gets the ndevices of this Data23.  # noqa: E501
+    def serving(self):
+        """Gets the serving of this Data23.  # noqa: E501
 
 
-        :return: The ndevices of this Data23.  # noqa: E501
-        :rtype: int
+        :return: The serving of this Data23.  # noqa: E501
+        :rtype: InferenceJobModel
         """
-        return self._ndevices
+        return self._serving
 
-    @ndevices.setter
-    def ndevices(self, ndevices):
-        """Sets the ndevices of this Data23.
+    @serving.setter
+    def serving(self, serving):
+        """Sets the serving of this Data23.
 
 
-        :param ndevices: The ndevices of this Data23.  # noqa: E501
-        :type: int
+        :param serving: The serving of this Data23.  # noqa: E501
+        :type: InferenceJobModel
         """
-        if ndevices is None:
-            raise ValueError("Invalid value for `ndevices`, must not be `None`")  # noqa: E501
 
-        self._ndevices = ndevices
+        self._serving = serving
 
     def to_dict(self):
         """Returns the model properties as a dict"""

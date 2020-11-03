@@ -31,57 +31,36 @@ class WorkerModelContainers(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'uuid': 'str',
         'name': 'str',
+        'reason': 'str',
         'status': 'str',
-        'reason': 'str'
+        'uuid': 'str'
     }
 
     attribute_map = {
-        'uuid': 'uuid',
         'name': 'name',
+        'reason': 'reason',
         'status': 'status',
-        'reason': 'reason'
+        'uuid': 'uuid'
     }
 
-    def __init__(self, uuid=None, name=None, status=None, reason=None):  # noqa: E501
+    def __init__(self, name=None, reason=None, status=None, uuid=None):  # noqa: E501
         """WorkerModelContainers - a model defined in Swagger"""  # noqa: E501
 
-        self._uuid = None
         self._name = None
-        self._status = None
         self._reason = None
+        self._status = None
+        self._uuid = None
         self.discriminator = None
 
-        if uuid is not None:
-            self.uuid = uuid
         if name is not None:
             self.name = name
-        if status is not None:
-            self.status = status
         if reason is not None:
             self.reason = reason
-
-    @property
-    def uuid(self):
-        """Gets the uuid of this WorkerModelContainers.  # noqa: E501
-
-
-        :return: The uuid of this WorkerModelContainers.  # noqa: E501
-        :rtype: str
-        """
-        return self._uuid
-
-    @uuid.setter
-    def uuid(self, uuid):
-        """Sets the uuid of this WorkerModelContainers.
-
-
-        :param uuid: The uuid of this WorkerModelContainers.  # noqa: E501
-        :type: str
-        """
-
-        self._uuid = uuid
+        if status is not None:
+            self.status = status
+        if uuid is not None:
+            self.uuid = uuid
 
     @property
     def name(self):
@@ -105,6 +84,27 @@ class WorkerModelContainers(object):
         self._name = name
 
     @property
+    def reason(self):
+        """Gets the reason of this WorkerModelContainers.  # noqa: E501
+
+
+        :return: The reason of this WorkerModelContainers.  # noqa: E501
+        :rtype: str
+        """
+        return self._reason
+
+    @reason.setter
+    def reason(self, reason):
+        """Sets the reason of this WorkerModelContainers.
+
+
+        :param reason: The reason of this WorkerModelContainers.  # noqa: E501
+        :type: str
+        """
+
+        self._reason = reason
+
+    @property
     def status(self):
         """Gets the status of this WorkerModelContainers.  # noqa: E501
 
@@ -126,25 +126,25 @@ class WorkerModelContainers(object):
         self._status = status
 
     @property
-    def reason(self):
-        """Gets the reason of this WorkerModelContainers.  # noqa: E501
+    def uuid(self):
+        """Gets the uuid of this WorkerModelContainers.  # noqa: E501
 
 
-        :return: The reason of this WorkerModelContainers.  # noqa: E501
+        :return: The uuid of this WorkerModelContainers.  # noqa: E501
         :rtype: str
         """
-        return self._reason
+        return self._uuid
 
-    @reason.setter
-    def reason(self, reason):
-        """Sets the reason of this WorkerModelContainers.
+    @uuid.setter
+    def uuid(self, uuid):
+        """Sets the uuid of this WorkerModelContainers.
 
 
-        :param reason: The reason of this WorkerModelContainers.  # noqa: E501
+        :param uuid: The uuid of this WorkerModelContainers.  # noqa: E501
         :type: str
         """
 
-        self._reason = reason
+        self._uuid = uuid
 
     def to_dict(self):
         """Returns the model properties as a dict"""

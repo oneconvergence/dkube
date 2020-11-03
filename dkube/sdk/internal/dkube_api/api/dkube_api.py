@@ -43,7 +43,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str migration: (required)
-        :return: InlineResponse20042
+        :return: InlineResponse20012
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -64,7 +64,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str migration: (required)
-        :return: InlineResponse20042
+        :return: InlineResponse20012
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -122,7 +122,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20042',  # noqa: E501
+            response_type='InlineResponse20012',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -140,7 +140,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str profile: (required)
-        :param Data20 data: (required)
+        :param Data12 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -162,7 +162,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str profile: (required)
-        :param Data20 data: (required)
+        :param Data12 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -244,7 +244,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param Data19 data: (required)
+        :param Data11 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -265,7 +265,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param Data19 data: (required)
+        :param Data11 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -458,6 +458,7 @@ class DkubeApi(object):
         :param str _class: (required)
         :param str datum: (required)
         :param DatumModel data: (required)
+        :param str extract:
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -482,12 +483,13 @@ class DkubeApi(object):
         :param str _class: (required)
         :param str datum: (required)
         :param DatumModel data: (required)
+        :param str extract:
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
-        all_params = ['user', '_class', 'datum', 'data']  # noqa: E501
+        all_params = ['user', '_class', 'datum', 'data', 'extract']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
         all_params.append('_preload_content')
@@ -530,6 +532,8 @@ class DkubeApi(object):
             path_params['datum'] = params['datum']  # noqa: E501
 
         query_params = []
+        if 'extract' in params:
+            query_params.append(('extract', params['extract']))  # noqa: E501
 
         header_params = {}
 
@@ -577,6 +581,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str user: (required)
         :param DatumModel data: (required)
+        :param str extract:
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -599,12 +604,13 @@ class DkubeApi(object):
         :param async_req bool
         :param str user: (required)
         :param DatumModel data: (required)
+        :param str extract:
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
-        all_params = ['user', 'data']  # noqa: E501
+        all_params = ['user', 'data', 'extract']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
         all_params.append('_preload_content')
@@ -635,6 +641,8 @@ class DkubeApi(object):
             path_params['user'] = params['user']  # noqa: E501
 
         query_params = []
+        if 'extract' in params:
+            query_params.append(('extract', params['extract']))  # noqa: E501
 
         header_params = {}
 
@@ -683,7 +691,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str _class: (required)
         :param str archive: (required)
-        :param Data10 data: (required)
+        :param Data15 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -707,7 +715,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str _class: (required)
         :param str archive: (required)
-        :param Data10 data: (required)
+        :param Data15 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -803,7 +811,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str user: (required)
         :param str _class: (required)
-        :param Data9 data: (required)
+        :param Data14 data: (required)
         :param bool force:
         :return: ApiResponse
                  If the method is called asynchronously,
@@ -827,7 +835,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str user: (required)
         :param str _class: (required)
-        :param Data9 data: (required)
+        :param Data14 data: (required)
         :param bool force:
         :return: ApiResponse
                  If the method is called asynchronously,
@@ -921,7 +929,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str model: (required)
         :param str version: (required)
-        :param Data15 data: (required)
+        :param Data22 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -945,7 +953,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str model: (required)
         :param str version: (required)
-        :param Data15 data: (required)
+        :param Data22 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -1043,7 +1051,7 @@ class DkubeApi(object):
         :param str _class: (required)
         :param bool shared: (required)
         :param str archived:
-        :return: InlineResponse20017
+        :return: InlineResponse20029
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1067,7 +1075,7 @@ class DkubeApi(object):
         :param str _class: (required)
         :param bool shared: (required)
         :param str archived:
-        :return: InlineResponse20017
+        :return: InlineResponse20029
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1139,7 +1147,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20017',  # noqa: E501
+            response_type='InlineResponse20029',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -1158,8 +1166,8 @@ class DkubeApi(object):
         :param async_req bool
         :param str user: (required)
         :param str _class: (required)
-        :param Data12 data: (required)
-        :return: InlineResponse20019
+        :param Data16 data: (required)
+        :return: InlineResponse20033
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1181,8 +1189,8 @@ class DkubeApi(object):
         :param async_req bool
         :param str user: (required)
         :param str _class: (required)
-        :param Data12 data: (required)
-        :return: InlineResponse20019
+        :param Data16 data: (required)
+        :return: InlineResponse20033
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1252,7 +1260,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20019',  # noqa: E501
+            response_type='InlineResponse20033',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -1272,7 +1280,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str _class: (required)
         :param str datum: (required)
-        :return: InlineResponse20016
+        :return: InlineResponse20030
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1295,7 +1303,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str _class: (required)
         :param str datum: (required)
-        :return: InlineResponse20016
+        :return: InlineResponse20030
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1365,7 +1373,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20016',  # noqa: E501
+            response_type='InlineResponse20030',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -1386,7 +1394,7 @@ class DkubeApi(object):
         :param str _class: (required)
         :param str datum: (required)
         :param str version: (required)
-        :return: InlineResponse20024
+        :return: InlineResponse20031
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1410,7 +1418,7 @@ class DkubeApi(object):
         :param str _class: (required)
         :param str datum: (required)
         :param str version: (required)
-        :return: InlineResponse20024
+        :return: InlineResponse20031
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1486,7 +1494,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20024',  # noqa: E501
+            response_type='InlineResponse20031',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -1507,7 +1515,7 @@ class DkubeApi(object):
         :param str _class: (required)
         :param str datum: (required)
         :param str version: (required)
-        :return: InlineResponse20020
+        :return: InlineResponse20032
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1531,7 +1539,7 @@ class DkubeApi(object):
         :param str _class: (required)
         :param str datum: (required)
         :param str version: (required)
-        :return: InlineResponse20020
+        :return: InlineResponse20032
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1607,7 +1615,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20020',  # noqa: E501
+            response_type='InlineResponse20032',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -1627,7 +1635,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str model: (required)
         :param str version: (required)
-        :param Data14 data: (required)
+        :param Data23 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -1651,7 +1659,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str model: (required)
         :param str version: (required)
-        :param Data14 data: (required)
+        :param Data23 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -1861,7 +1869,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str model: (required)
         :param str version: (required)
-        :param Data16 data: (required)
+        :param Data24 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -1885,7 +1893,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str model: (required)
         :param str version: (required)
-        :param Data16 data: (required)
+        :param Data24 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -1980,7 +1988,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str migration: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2001,7 +2009,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str migration: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2059,7 +2067,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2004',  # noqa: E501
+            response_type='InlineResponse2001',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -2077,7 +2085,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str name: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2098,7 +2106,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str name: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2156,7 +2164,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2004',  # noqa: E501
+            response_type='InlineResponse2001',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -2174,7 +2182,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str expid: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2195,7 +2203,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str expid: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2253,7 +2261,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2004',  # noqa: E501
+            response_type='InlineResponse2001',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -2270,7 +2278,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2290,7 +2298,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2342,7 +2350,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2004',  # noqa: E501
+            response_type='InlineResponse2001',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -2361,7 +2369,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str name: (required)
         :param str exp:
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2383,7 +2391,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str name: (required)
         :param str exp:
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2443,7 +2451,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2004',  # noqa: E501
+            response_type='InlineResponse2001',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -2461,7 +2469,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str runid: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2482,7 +2490,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str runid: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2540,7 +2548,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2004',  # noqa: E501
+            response_type='InlineResponse2001',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -2557,7 +2565,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2577,7 +2585,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2629,7 +2637,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2004',  # noqa: E501
+            response_type='InlineResponse2001',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -2647,7 +2655,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param Data data: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2668,7 +2676,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param Data data: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2726,7 +2734,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2004',  # noqa: E501
+            response_type='InlineResponse2001',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -2744,7 +2752,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param bool authmode:
-        :return: InlineResponse2003
+        :return: InlineResponse2004
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2765,7 +2773,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param bool authmode:
-        :return: InlineResponse2003
+        :return: InlineResponse2004
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2819,7 +2827,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2003',  # noqa: E501
+            response_type='InlineResponse2004',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -2839,7 +2847,7 @@ class DkubeApi(object):
         :param str _class:
         :param str project:
         :param str user:
-        :return: InlineResponse2002
+        :return: InlineResponse2005
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2862,7 +2870,7 @@ class DkubeApi(object):
         :param str _class:
         :param str project:
         :param str user:
-        :return: InlineResponse2002
+        :return: InlineResponse2005
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2920,7 +2928,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2002',  # noqa: E501
+            response_type='InlineResponse2005',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -2937,7 +2945,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse2001
+        :return: InlineResponse2006
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -2957,7 +2965,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse2001
+        :return: InlineResponse2006
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3009,7 +3017,815 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
+            response_type='InlineResponse2006',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def featureset_add_one(self, data, **kwargs):  # noqa: E501
+        """API to create a faturestore  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_add_one(data, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param FeatureSetInputDef data: (required)
+        :return: ApiResponse
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.featureset_add_one_with_http_info(data, **kwargs)  # noqa: E501
+        else:
+            (data) = self.featureset_add_one_with_http_info(data, **kwargs)  # noqa: E501
+            return data
+
+    def featureset_add_one_with_http_info(self, data, **kwargs):  # noqa: E501
+        """API to create a faturestore  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_add_one_with_http_info(data, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param FeatureSetInputDef data: (required)
+        :return: ApiResponse
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['data']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method featureset_add_one" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'data' is set
+        if ('data' not in params or
+                params['data'] is None):
+            raise ValueError("Missing the required parameter `data` when calling `featureset_add_one`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        if 'data' in params:
+            body_params = params['data']
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/keyauth.api.v1+json', 'application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['d3apikey']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/v1/featureset', 'POST',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='ApiResponse',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def featureset_commit_version(self, featureset, data, **kwargs):  # noqa: E501
+        """API to create a faturestore  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_commit_version(featureset, data, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str featureset: (required)
+        :param FeatureSetCommitDef data: (required)
+        :return: ApiResponse
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.featureset_commit_version_with_http_info(featureset, data, **kwargs)  # noqa: E501
+        else:
+            (data) = self.featureset_commit_version_with_http_info(featureset, data, **kwargs)  # noqa: E501
+            return data
+
+    def featureset_commit_version_with_http_info(self, featureset, data, **kwargs):  # noqa: E501
+        """API to create a faturestore  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_commit_version_with_http_info(featureset, data, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str featureset: (required)
+        :param FeatureSetCommitDef data: (required)
+        :return: ApiResponse
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['featureset', 'data']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method featureset_commit_version" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'featureset' is set
+        if ('featureset' not in params or
+                params['featureset'] is None):
+            raise ValueError("Missing the required parameter `featureset` when calling `featureset_commit_version`")  # noqa: E501
+        # verify the required parameter 'data' is set
+        if ('data' not in params or
+                params['data'] is None):
+            raise ValueError("Missing the required parameter `data` when calling `featureset_commit_version`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'featureset' in params:
+            path_params['featureset'] = params['featureset']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        if 'data' in params:
+            body_params = params['data']
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/keyauth.api.v1+json', 'application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['d3apikey']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/v1/featureset/{featureset}/commit', 'POST',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='ApiResponse',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def featureset_delete(self, featureset, **kwargs):  # noqa: E501
+        """API to delete a featureset  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_delete(featureset, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str featureset: (required)
+        :return: InlineResponse2001
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.featureset_delete_with_http_info(featureset, **kwargs)  # noqa: E501
+        else:
+            (data) = self.featureset_delete_with_http_info(featureset, **kwargs)  # noqa: E501
+            return data
+
+    def featureset_delete_with_http_info(self, featureset, **kwargs):  # noqa: E501
+        """API to delete a featureset  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_delete_with_http_info(featureset, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str featureset: (required)
+        :return: InlineResponse2001
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['featureset']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method featureset_delete" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'featureset' is set
+        if ('featureset' not in params or
+                params['featureset'] is None):
+            raise ValueError("Missing the required parameter `featureset` when calling `featureset_delete`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'featureset' in params:
+            path_params['featureset'] = params['featureset']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/keyauth.api.v1+json', 'application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['d3apikey']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/v1/featureset/{featureset}', 'DELETE',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
             response_type='InlineResponse2001',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def featureset_get(self, featureset, **kwargs):  # noqa: E501
+        """API to get featureset configuration  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_get(featureset, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str featureset: (required)
+        :return: InlineResponse20047
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.featureset_get_with_http_info(featureset, **kwargs)  # noqa: E501
+        else:
+            (data) = self.featureset_get_with_http_info(featureset, **kwargs)  # noqa: E501
+            return data
+
+    def featureset_get_with_http_info(self, featureset, **kwargs):  # noqa: E501
+        """API to get featureset configuration  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_get_with_http_info(featureset, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str featureset: (required)
+        :return: InlineResponse20047
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['featureset']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method featureset_get" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'featureset' is set
+        if ('featureset' not in params or
+                params['featureset'] is None):
+            raise ValueError("Missing the required parameter `featureset` when calling `featureset_get`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'featureset' in params:
+            path_params['featureset'] = params['featureset']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/keyauth.api.v1+json', 'application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['d3apikey']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/v1/featureset/{featureset}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='InlineResponse20047',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def featureset_get_one_version_lineage(self, featureset, version, **kwargs):  # noqa: E501
+        """API to get lineage of a featureset version  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_get_one_version_lineage(featureset, version, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str featureset: (required)
+        :param str version: (required)
+        :return: InlineResponse20049
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.featureset_get_one_version_lineage_with_http_info(featureset, version, **kwargs)  # noqa: E501
+        else:
+            (data) = self.featureset_get_one_version_lineage_with_http_info(featureset, version, **kwargs)  # noqa: E501
+            return data
+
+    def featureset_get_one_version_lineage_with_http_info(self, featureset, version, **kwargs):  # noqa: E501
+        """API to get lineage of a featureset version  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_get_one_version_lineage_with_http_info(featureset, version, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str featureset: (required)
+        :param str version: (required)
+        :return: InlineResponse20049
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['featureset', 'version']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method featureset_get_one_version_lineage" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'featureset' is set
+        if ('featureset' not in params or
+                params['featureset'] is None):
+            raise ValueError("Missing the required parameter `featureset` when calling `featureset_get_one_version_lineage`")  # noqa: E501
+        # verify the required parameter 'version' is set
+        if ('version' not in params or
+                params['version'] is None):
+            raise ValueError("Missing the required parameter `version` when calling `featureset_get_one_version_lineage`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'featureset' in params:
+            path_params['featureset'] = params['featureset']  # noqa: E501
+        if 'version' in params:
+            path_params['version'] = params['version']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/keyauth.api.v1+json', 'application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['d3apikey']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/v1/featureset/{featureset}/versions/{version}/lineage', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='InlineResponse20049',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def featureset_list(self, **kwargs):  # noqa: E501
+        """API to list faturestores  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_list(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: InlineResponse20046
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.featureset_list_with_http_info(**kwargs)  # noqa: E501
+        else:
+            (data) = self.featureset_list_with_http_info(**kwargs)  # noqa: E501
+            return data
+
+    def featureset_list_with_http_info(self, **kwargs):  # noqa: E501
+        """API to list faturestores  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_list_with_http_info(async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :return: InlineResponse20046
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = []  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method featureset_list" % key
+                )
+            params[key] = val
+        del params['kwargs']
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/keyauth.api.v1+json', 'application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['d3apikey']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/v1/featureset', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='InlineResponse20046',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def featureset_put(self, featureset, data, **kwargs):  # noqa: E501
+        """API to update featureset configuration  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_put(featureset, data, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str featureset: (required)
+        :param Data26 data: (required)
+        :return: InlineResponse20048
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.featureset_put_with_http_info(featureset, data, **kwargs)  # noqa: E501
+        else:
+            (data) = self.featureset_put_with_http_info(featureset, data, **kwargs)  # noqa: E501
+            return data
+
+    def featureset_put_with_http_info(self, featureset, data, **kwargs):  # noqa: E501
+        """API to update featureset configuration  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_put_with_http_info(featureset, data, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str featureset: (required)
+        :param Data26 data: (required)
+        :return: InlineResponse20048
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['featureset', 'data']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method featureset_put" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'featureset' is set
+        if ('featureset' not in params or
+                params['featureset'] is None):
+            raise ValueError("Missing the required parameter `featureset` when calling `featureset_put`")  # noqa: E501
+        # verify the required parameter 'data' is set
+        if ('data' not in params or
+                params['data'] is None):
+            raise ValueError("Missing the required parameter `data` when calling `featureset_put`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'featureset' in params:
+            path_params['featureset'] = params['featureset']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        if 'data' in params:
+            body_params = params['data']
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/keyauth.api.v1+json', 'application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['d3apikey']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/v1/featureset/{featureset}', 'PUT',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='InlineResponse20048',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def featureset_update_version(self, featureset, version, data, **kwargs):  # noqa: E501
+        """API to update fatureset version  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_update_version(featureset, version, data, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str featureset: (required)
+        :param str version: (required)
+        :param Data27 data: (required)
+        :return: ApiResponse
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.featureset_update_version_with_http_info(featureset, version, data, **kwargs)  # noqa: E501
+        else:
+            (data) = self.featureset_update_version_with_http_info(featureset, version, data, **kwargs)  # noqa: E501
+            return data
+
+    def featureset_update_version_with_http_info(self, featureset, version, data, **kwargs):  # noqa: E501
+        """API to update fatureset version  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.featureset_update_version_with_http_info(featureset, version, data, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str featureset: (required)
+        :param str version: (required)
+        :param Data27 data: (required)
+        :return: ApiResponse
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['featureset', 'version', 'data']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method featureset_update_version" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'featureset' is set
+        if ('featureset' not in params or
+                params['featureset'] is None):
+            raise ValueError("Missing the required parameter `featureset` when calling `featureset_update_version`")  # noqa: E501
+        # verify the required parameter 'version' is set
+        if ('version' not in params or
+                params['version'] is None):
+            raise ValueError("Missing the required parameter `version` when calling `featureset_update_version`")  # noqa: E501
+        # verify the required parameter 'data' is set
+        if ('data' not in params or
+                params['data'] is None):
+            raise ValueError("Missing the required parameter `data` when calling `featureset_update_version`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'featureset' in params:
+            path_params['featureset'] = params['featureset']  # noqa: E501
+        if 'version' in params:
+            path_params['version'] = params['version']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        if 'data' in params:
+            body_params = params['data']
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/keyauth.api.v1+json', 'application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['d3apikey']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/v1/featureset/{featureset}/version/{version}', 'PUT',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='ApiResponse',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -3030,7 +3846,7 @@ class DkubeApi(object):
         :param str value:
         :param str _class:
         :param str user:
-        :return: InlineResponse20014
+        :return: InlineResponse20018
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3054,7 +3870,7 @@ class DkubeApi(object):
         :param str value:
         :param str _class:
         :param str user:
-        :return: InlineResponse20014
+        :return: InlineResponse20018
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3118,7 +3934,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20014',  # noqa: E501
+            response_type='InlineResponse20018',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -3135,7 +3951,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20011
+        :return: InlineResponse20026
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3155,7 +3971,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20011
+        :return: InlineResponse20026
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3207,7 +4023,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20011',  # noqa: E501
+            response_type='InlineResponse20026',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -3225,7 +4041,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str user: (required)
-        :return: InlineResponse20011
+        :return: InlineResponse20026
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3246,7 +4062,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str user: (required)
-        :return: InlineResponse20011
+        :return: InlineResponse20026
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3304,7 +4120,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20011',  # noqa: E501
+            response_type='InlineResponse20026',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -3321,7 +4137,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20010
+        :return: InlineResponse2007
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3341,7 +4157,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20010
+        :return: InlineResponse2007
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3393,7 +4209,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20010',  # noqa: E501
+            response_type='InlineResponse2007',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -3411,7 +4227,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str user: (required)
-        :return: InlineResponse20012
+        :return: InlineResponse20034
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3432,7 +4248,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str user: (required)
-        :return: InlineResponse20012
+        :return: InlineResponse20034
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3490,7 +4306,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20012',  # noqa: E501
+            response_type='InlineResponse20034',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -3615,7 +4431,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str _class: (required)
         :param str runid: (required)
-        :return: InlineResponse20025
+        :return: InlineResponse20038
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3638,7 +4454,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str _class: (required)
         :param str runid: (required)
-        :return: InlineResponse20025
+        :return: InlineResponse20038
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3708,7 +4524,104 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20025',  # noqa: E501
+            response_type='InlineResponse20038',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def get_role(self, rolename, **kwargs):  # noqa: E501
+        """API to get details of a required role.  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_role(rolename, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str rolename: (required)
+        :return: InlineResponse20017
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.get_role_with_http_info(rolename, **kwargs)  # noqa: E501
+        else:
+            (data) = self.get_role_with_http_info(rolename, **kwargs)  # noqa: E501
+            return data
+
+    def get_role_with_http_info(self, rolename, **kwargs):  # noqa: E501
+        """API to get details of a required role.  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.get_role_with_http_info(rolename, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str rolename: (required)
+        :return: InlineResponse20017
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['rolename']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method get_role" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'rolename' is set
+        if ('rolename' not in params or
+                params['rolename'] is None):
+            raise ValueError("Missing the required parameter `rolename` when calling `get_role`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'rolename' in params:
+            path_params['rolename'] = params['rolename']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/keyauth.api.v1+json', 'application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['d3apikey']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/rbac/roles/{rolename}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='InlineResponse20017',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -3726,7 +4639,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str user: (required)
-        :return: InlineResponse20013
+        :return: InlineResponse20044
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3747,7 +4660,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str user: (required)
-        :return: InlineResponse20013
+        :return: InlineResponse20044
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3805,7 +4718,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20013',  # noqa: E501
+            response_type='InlineResponse20044',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -3823,7 +4736,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str profile: (required)
-        :return: InlineResponse20029
+        :return: InlineResponse20024
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3844,7 +4757,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str profile: (required)
-        :return: InlineResponse20029
+        :return: InlineResponse20024
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3902,7 +4815,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20029',  # noqa: E501
+            response_type='InlineResponse20024',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -3924,7 +4837,7 @@ class DkubeApi(object):
         :param str run:
         :param str template:
         :param str group:
-        :return: InlineResponse20032
+        :return: InlineResponse20036
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -3949,7 +4862,7 @@ class DkubeApi(object):
         :param str run:
         :param str template:
         :param str group:
-        :return: InlineResponse20032
+        :return: InlineResponse20036
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -4019,7 +4932,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20032',  # noqa: E501
+            response_type='InlineResponse20036',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -4141,8 +5054,8 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param Data25 data: (required)
-        :return: InlineResponse20042
+        :param Data5 data: (required)
+        :return: InlineResponse20012
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -4162,8 +5075,8 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param Data25 data: (required)
-        :return: InlineResponse20042
+        :param Data5 data: (required)
+        :return: InlineResponse20012
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -4221,7 +5134,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20042',  # noqa: E501
+            response_type='InlineResponse20012',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -4354,6 +5267,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param JobModel data: (required)
         :param str run:
+        :param str rerun:
         :param str subclass:
         :return: ApiResponse
                  If the method is called asynchronously,
@@ -4378,13 +5292,14 @@ class DkubeApi(object):
         :param str user: (required)
         :param JobModel data: (required)
         :param str run:
+        :param str rerun:
         :param str subclass:
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
-        all_params = ['user', 'data', 'run', 'subclass']  # noqa: E501
+        all_params = ['user', 'data', 'run', 'rerun', 'subclass']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
         all_params.append('_preload_content')
@@ -4417,6 +5332,8 @@ class DkubeApi(object):
         query_params = []
         if 'run' in params:
             query_params.append(('run', params['run']))  # noqa: E501
+        if 'rerun' in params:
+            query_params.append(('rerun', params['rerun']))  # noqa: E501
         if 'subclass' in params:
             query_params.append(('subclass', params['subclass']))  # noqa: E501
 
@@ -4466,7 +5383,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str uuid: (required)
         :param str _class: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -4488,7 +5405,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str uuid: (required)
         :param str _class: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -4552,7 +5469,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2004',  # noqa: E501
+            response_type='InlineResponse2001',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -4577,7 +5494,7 @@ class DkubeApi(object):
         :param str group:
         :param str all:
         :param str archived:
-        :return: InlineResponse20027
+        :return: InlineResponse20035
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -4605,7 +5522,7 @@ class DkubeApi(object):
         :param str group:
         :param str all:
         :param str archived:
-        :return: InlineResponse20027
+        :return: InlineResponse20035
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -4685,7 +5602,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20027',  # noqa: E501
+            response_type='InlineResponse20035',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -4703,7 +5620,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str user: (required)
-        :return: InlineResponse20030
+        :return: InlineResponse20039
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -4724,7 +5641,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str user: (required)
-        :return: InlineResponse20030
+        :return: InlineResponse20039
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -4782,7 +5699,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20030',  # noqa: E501
+            response_type='InlineResponse20039',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -4802,7 +5719,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str _class: (required)
         :param str job: (required)
-        :return: InlineResponse20031
+        :return: InlineResponse20037
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -4825,7 +5742,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str _class: (required)
         :param str job: (required)
-        :return: InlineResponse20031
+        :return: InlineResponse20037
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -4895,7 +5812,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20031',  # noqa: E501
+            response_type='InlineResponse20037',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -4913,7 +5830,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str uuid: (required)
-        :return: InlineResponse20026
+        :return: InlineResponse20010
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -4934,7 +5851,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str uuid: (required)
-        :return: InlineResponse20026
+        :return: InlineResponse20010
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -4992,7 +5909,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20026',  # noqa: E501
+            response_type='InlineResponse20010',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -5356,7 +6273,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20028
+        :return: InlineResponse20023
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -5376,7 +6293,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20028
+        :return: InlineResponse20023
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -5428,7 +6345,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20028',  # noqa: E501
+            response_type='InlineResponse20023',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -5446,7 +6363,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param AuthModel data: (required)
-        :return: InlineResponse2006
+        :return: InlineResponse20011
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -5467,7 +6384,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param AuthModel data: (required)
-        :return: InlineResponse2006
+        :return: InlineResponse20011
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -5525,7 +6442,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2006',  # noqa: E501
+            response_type='InlineResponse20011',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -5738,7 +6655,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str migration: (required)
         :param MigrationStatus data: (required)
-        :return: InlineResponse20042
+        :return: InlineResponse20012
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -5760,7 +6677,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str migration: (required)
         :param MigrationStatus data: (required)
-        :return: InlineResponse20042
+        :return: InlineResponse20012
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -5824,7 +6741,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20042',  # noqa: E501
+            response_type='InlineResponse20012',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -5843,7 +6760,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str migration: (required)
         :param MigrationStatus data: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -5865,7 +6782,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str migration: (required)
         :param MigrationStatus data: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -5929,7 +6846,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2004',  # noqa: E501
+            response_type='InlineResponse2001',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -5947,7 +6864,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str migration: (required)
-        :return: InlineResponse20042
+        :return: InlineResponse20012
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -5968,7 +6885,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str migration: (required)
-        :return: InlineResponse20042
+        :return: InlineResponse20012
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -6026,7 +6943,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20042',  # noqa: E501
+            response_type='InlineResponse20012',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -6044,7 +6961,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param Data1 data: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -6065,7 +6982,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param Data1 data: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -6123,7 +7040,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2004',  # noqa: E501
+            response_type='InlineResponse2001',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -6143,7 +7060,7 @@ class DkubeApi(object):
         :param str type: the resource type that is notified about (required)
         :param str op: the operation type this notification carries (required)
         :param NotificationData data: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -6166,7 +7083,7 @@ class DkubeApi(object):
         :param str type: the resource type that is notified about (required)
         :param str op: the operation type this notification carries (required)
         :param NotificationData data: (required)
-        :return: InlineResponse2004
+        :return: InlineResponse2001
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -6236,7 +7153,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2004',  # noqa: E501
+            response_type='InlineResponse2001',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -6375,7 +7292,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str user: (required)
-        :return: InlineResponse20013
+        :return: InlineResponse20044
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -6396,7 +7313,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str user: (required)
-        :return: InlineResponse20013
+        :return: InlineResponse20044
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -6454,7 +7371,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20013',  # noqa: E501
+            response_type='InlineResponse20044',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -6586,7 +7503,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str migration: (required)
         :param MigrationStatus data: (required)
-        :return: InlineResponse20042
+        :return: InlineResponse20012
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -6608,7 +7525,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str migration: (required)
         :param MigrationStatus data: (required)
-        :return: InlineResponse20042
+        :return: InlineResponse20012
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -6672,7 +7589,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20042',  # noqa: E501
+            response_type='InlineResponse20012',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -6917,7 +7834,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str migration: (required)
         :param file upfile: The file to upload.
-        :return: InlineResponse20042
+        :return: InlineResponse20012
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -6939,7 +7856,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str migration: (required)
         :param file upfile: The file to upload.
-        :return: InlineResponse20042
+        :return: InlineResponse20012
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -6999,7 +7916,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20042',  # noqa: E501
+            response_type='InlineResponse20012',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -7016,7 +7933,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse2007
+        :return: InlineResponse20021
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -7036,7 +7953,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse2007
+        :return: InlineResponse20021
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -7088,7 +8005,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2007',  # noqa: E501
+            response_type='InlineResponse20021',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -7106,7 +8023,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param Conditions conditions: (required)
-        :return: InlineResponse2009
+        :return: InlineResponse20022
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -7127,7 +8044,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param Conditions conditions: (required)
-        :return: InlineResponse2009
+        :return: InlineResponse20022
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -7185,7 +8102,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse2009',  # noqa: E501
+            response_type='InlineResponse20022',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -7204,7 +8121,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str user: (required)
         :param str uuid: (required)
-        :param Data8 data: (required)
+        :param Data13 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -7227,7 +8144,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str user: (required)
         :param str uuid: (required)
-        :param Data8 data: (required)
+        :param Data13 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -7318,7 +8235,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str model: (required)
         :param str version: (required)
-        :param Data13 data: (required)
+        :param Data19 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -7342,7 +8259,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str model: (required)
         :param str version: (required)
-        :param Data13 data: (required)
+        :param Data19 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -7439,7 +8356,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str _class: (required)
         :param str run: (required)
-        :param Data6 data: (required)
+        :param Data25 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -7463,7 +8380,7 @@ class DkubeApi(object):
         :param str user: (required)
         :param str _class: (required)
         :param str run: (required)
-        :param Data6 data: (required)
+        :param Data25 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -7679,7 +8596,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str user: (required)
-        :return: InlineResponse20015
+        :return: InlineResponse20027
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -7700,7 +8617,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str user: (required)
-        :return: InlineResponse20015
+        :return: InlineResponse20027
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -7758,7 +8675,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20015',  # noqa: E501
+            response_type='InlineResponse20027',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -7776,7 +8693,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str user: (required)
-        :return: InlineResponse20034
+        :return: InlineResponse20028
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -7797,7 +8714,7 @@ class DkubeApi(object):
 
         :param async_req bool
         :param str user: (required)
-        :return: InlineResponse20034
+        :return: InlineResponse20028
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -7855,7 +8772,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20034',  # noqa: E501
+            response_type='InlineResponse20028',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -7872,7 +8789,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20033
+        :return: InlineResponse20025
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -7892,7 +8809,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20033
+        :return: InlineResponse20025
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -7944,7 +8861,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20033',  # noqa: E501
+            response_type='InlineResponse20025',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -7961,7 +8878,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20041
+        :return: InlineResponse20019
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -7981,7 +8898,7 @@ class DkubeApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20041
+        :return: InlineResponse20019
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -8033,7 +8950,7 @@ class DkubeApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20041',  # noqa: E501
+            response_type='InlineResponse20019',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),

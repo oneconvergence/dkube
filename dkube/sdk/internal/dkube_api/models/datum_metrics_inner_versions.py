@@ -31,52 +31,31 @@ class DatumMetricsInnerVersions(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'uuid': 'str',
         'inputs': 'DatumMetricsInnerInputs',
-        'metrics': 'Metrics'
+        'metrics': 'Metrics',
+        'uuid': 'str'
     }
 
     attribute_map = {
-        'uuid': 'uuid',
         'inputs': 'inputs',
-        'metrics': 'metrics'
+        'metrics': 'metrics',
+        'uuid': 'uuid'
     }
 
-    def __init__(self, uuid=None, inputs=None, metrics=None):  # noqa: E501
+    def __init__(self, inputs=None, metrics=None, uuid=None):  # noqa: E501
         """DatumMetricsInnerVersions - a model defined in Swagger"""  # noqa: E501
 
-        self._uuid = None
         self._inputs = None
         self._metrics = None
+        self._uuid = None
         self.discriminator = None
 
-        if uuid is not None:
-            self.uuid = uuid
         if inputs is not None:
             self.inputs = inputs
         if metrics is not None:
             self.metrics = metrics
-
-    @property
-    def uuid(self):
-        """Gets the uuid of this DatumMetricsInnerVersions.  # noqa: E501
-
-
-        :return: The uuid of this DatumMetricsInnerVersions.  # noqa: E501
-        :rtype: str
-        """
-        return self._uuid
-
-    @uuid.setter
-    def uuid(self, uuid):
-        """Sets the uuid of this DatumMetricsInnerVersions.
-
-
-        :param uuid: The uuid of this DatumMetricsInnerVersions.  # noqa: E501
-        :type: str
-        """
-
-        self._uuid = uuid
+        if uuid is not None:
+            self.uuid = uuid
 
     @property
     def inputs(self):
@@ -119,6 +98,27 @@ class DatumMetricsInnerVersions(object):
         """
 
         self._metrics = metrics
+
+    @property
+    def uuid(self):
+        """Gets the uuid of this DatumMetricsInnerVersions.  # noqa: E501
+
+
+        :return: The uuid of this DatumMetricsInnerVersions.  # noqa: E501
+        :rtype: str
+        """
+        return self._uuid
+
+    @uuid.setter
+    def uuid(self, uuid):
+        """Sets the uuid of this DatumMetricsInnerVersions.
+
+
+        :param uuid: The uuid of this DatumMetricsInnerVersions.  # noqa: E501
+        :type: str
+        """
+
+        self._uuid = uuid
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,31 +31,52 @@ class ServingResultModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
+        'curlcmd': 'str',
         'modeldir': 'str',
-        'servingurl': 'str',
-        'curlcmd': 'str'
+        'servingurl': 'str'
     }
 
     attribute_map = {
+        'curlcmd': 'curlcmd',
         'modeldir': 'modeldir',
-        'servingurl': 'servingurl',
-        'curlcmd': 'curlcmd'
+        'servingurl': 'servingurl'
     }
 
-    def __init__(self, modeldir=None, servingurl=None, curlcmd=None):  # noqa: E501
+    def __init__(self, curlcmd=None, modeldir=None, servingurl=None):  # noqa: E501
         """ServingResultModel - a model defined in Swagger"""  # noqa: E501
 
+        self._curlcmd = None
         self._modeldir = None
         self._servingurl = None
-        self._curlcmd = None
         self.discriminator = None
 
+        if curlcmd is not None:
+            self.curlcmd = curlcmd
         if modeldir is not None:
             self.modeldir = modeldir
         if servingurl is not None:
             self.servingurl = servingurl
-        if curlcmd is not None:
-            self.curlcmd = curlcmd
+
+    @property
+    def curlcmd(self):
+        """Gets the curlcmd of this ServingResultModel.  # noqa: E501
+
+
+        :return: The curlcmd of this ServingResultModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._curlcmd
+
+    @curlcmd.setter
+    def curlcmd(self, curlcmd):
+        """Sets the curlcmd of this ServingResultModel.
+
+
+        :param curlcmd: The curlcmd of this ServingResultModel.  # noqa: E501
+        :type: str
+        """
+
+        self._curlcmd = curlcmd
 
     @property
     def modeldir(self):
@@ -100,27 +121,6 @@ class ServingResultModel(object):
         """
 
         self._servingurl = servingurl
-
-    @property
-    def curlcmd(self):
-        """Gets the curlcmd of this ServingResultModel.  # noqa: E501
-
-
-        :return: The curlcmd of this ServingResultModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._curlcmd
-
-    @curlcmd.setter
-    def curlcmd(self, curlcmd):
-        """Sets the curlcmd of this ServingResultModel.
-
-
-        :param curlcmd: The curlcmd of this ServingResultModel.  # noqa: E501
-        :type: str
-        """
-
-        self._curlcmd = curlcmd
 
     def to_dict(self):
         """Returns the model properties as a dict"""

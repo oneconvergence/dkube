@@ -31,26 +31,47 @@ class InlineResponse20023(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'response': 'ApiResponse',
-        'data': 'ReleasedModels'
+        'data': 'list[UserProfile]',
+        'response': 'ApiResponse'
     }
 
     attribute_map = {
-        'response': 'response',
-        'data': 'data'
+        'data': 'data',
+        'response': 'response'
     }
 
-    def __init__(self, response=None, data=None):  # noqa: E501
+    def __init__(self, data=None, response=None):  # noqa: E501
         """InlineResponse20023 - a model defined in Swagger"""  # noqa: E501
 
-        self._response = None
         self._data = None
+        self._response = None
         self.discriminator = None
 
-        if response is not None:
-            self.response = response
         if data is not None:
             self.data = data
+        if response is not None:
+            self.response = response
+
+    @property
+    def data(self):
+        """Gets the data of this InlineResponse20023.  # noqa: E501
+
+
+        :return: The data of this InlineResponse20023.  # noqa: E501
+        :rtype: list[UserProfile]
+        """
+        return self._data
+
+    @data.setter
+    def data(self, data):
+        """Sets the data of this InlineResponse20023.
+
+
+        :param data: The data of this InlineResponse20023.  # noqa: E501
+        :type: list[UserProfile]
+        """
+
+        self._data = data
 
     @property
     def response(self):
@@ -72,27 +93,6 @@ class InlineResponse20023(object):
         """
 
         self._response = response
-
-    @property
-    def data(self):
-        """Gets the data of this InlineResponse20023.  # noqa: E501
-
-
-        :return: The data of this InlineResponse20023.  # noqa: E501
-        :rtype: ReleasedModels
-        """
-        return self._data
-
-    @data.setter
-    def data(self, data):
-        """Sets the data of this InlineResponse20023.
-
-
-        :param data: The data of this InlineResponse20023.  # noqa: E501
-        :type: ReleasedModels
-        """
-
-        self._data = data
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,45 +31,173 @@ class Data5(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'dvs': 'list[str]'
+        'jobs': 'list[MigrationJobEntry]',
+        'name': 'str',
+        'source_jwt': 'str',
+        'source_url': 'str',
+        'target_jwt': 'str',
+        'target_url': 'str'
     }
 
     attribute_map = {
-        'dvs': 'dvs'
+        'jobs': 'jobs',
+        'name': 'name',
+        'source_jwt': 'source_JWT',
+        'source_url': 'source_url',
+        'target_jwt': 'target_JWT',
+        'target_url': 'target_url'
     }
 
-    def __init__(self, dvs=None):  # noqa: E501
+    def __init__(self, jobs=None, name=None, source_jwt=None, source_url=None, target_jwt=None, target_url=None):  # noqa: E501
         """Data5 - a model defined in Swagger"""  # noqa: E501
 
-        self._dvs = None
+        self._jobs = None
+        self._name = None
+        self._source_jwt = None
+        self._source_url = None
+        self._target_jwt = None
+        self._target_url = None
         self.discriminator = None
 
-        self.dvs = dvs
+        self.jobs = jobs
+        if name is not None:
+            self.name = name
+        if source_jwt is not None:
+            self.source_jwt = source_jwt
+        if source_url is not None:
+            self.source_url = source_url
+        if target_jwt is not None:
+            self.target_jwt = target_jwt
+        if target_url is not None:
+            self.target_url = target_url
 
     @property
-    def dvs(self):
-        """Gets the dvs of this Data5.  # noqa: E501
+    def jobs(self):
+        """Gets the jobs of this Data5.  # noqa: E501
 
-        List of DVS config to delete  # noqa: E501
 
-        :return: The dvs of this Data5.  # noqa: E501
-        :rtype: list[str]
+        :return: The jobs of this Data5.  # noqa: E501
+        :rtype: list[MigrationJobEntry]
         """
-        return self._dvs
+        return self._jobs
 
-    @dvs.setter
-    def dvs(self, dvs):
-        """Sets the dvs of this Data5.
+    @jobs.setter
+    def jobs(self, jobs):
+        """Sets the jobs of this Data5.
 
-        List of DVS config to delete  # noqa: E501
 
-        :param dvs: The dvs of this Data5.  # noqa: E501
-        :type: list[str]
+        :param jobs: The jobs of this Data5.  # noqa: E501
+        :type: list[MigrationJobEntry]
         """
-        if dvs is None:
-            raise ValueError("Invalid value for `dvs`, must not be `None`")  # noqa: E501
+        if jobs is None:
+            raise ValueError("Invalid value for `jobs`, must not be `None`")  # noqa: E501
 
-        self._dvs = dvs
+        self._jobs = jobs
+
+    @property
+    def name(self):
+        """Gets the name of this Data5.  # noqa: E501
+
+
+        :return: The name of this Data5.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this Data5.
+
+
+        :param name: The name of this Data5.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
+
+    @property
+    def source_jwt(self):
+        """Gets the source_jwt of this Data5.  # noqa: E501
+
+
+        :return: The source_jwt of this Data5.  # noqa: E501
+        :rtype: str
+        """
+        return self._source_jwt
+
+    @source_jwt.setter
+    def source_jwt(self, source_jwt):
+        """Sets the source_jwt of this Data5.
+
+
+        :param source_jwt: The source_jwt of this Data5.  # noqa: E501
+        :type: str
+        """
+
+        self._source_jwt = source_jwt
+
+    @property
+    def source_url(self):
+        """Gets the source_url of this Data5.  # noqa: E501
+
+
+        :return: The source_url of this Data5.  # noqa: E501
+        :rtype: str
+        """
+        return self._source_url
+
+    @source_url.setter
+    def source_url(self, source_url):
+        """Sets the source_url of this Data5.
+
+
+        :param source_url: The source_url of this Data5.  # noqa: E501
+        :type: str
+        """
+
+        self._source_url = source_url
+
+    @property
+    def target_jwt(self):
+        """Gets the target_jwt of this Data5.  # noqa: E501
+
+
+        :return: The target_jwt of this Data5.  # noqa: E501
+        :rtype: str
+        """
+        return self._target_jwt
+
+    @target_jwt.setter
+    def target_jwt(self, target_jwt):
+        """Sets the target_jwt of this Data5.
+
+
+        :param target_jwt: The target_jwt of this Data5.  # noqa: E501
+        :type: str
+        """
+
+        self._target_jwt = target_jwt
+
+    @property
+    def target_url(self):
+        """Gets the target_url of this Data5.  # noqa: E501
+
+
+        :return: The target_url of this Data5.  # noqa: E501
+        :rtype: str
+        """
+        return self._target_url
+
+    @target_url.setter
+    def target_url(self, target_url):
+        """Sets the target_url of this Data5.
+
+
+        :param target_url: The target_url of this Data5.  # noqa: E501
+        :type: str
+        """
+
+        self._target_url = target_url
 
     def to_dict(self):
         """Returns the model properties as a dict"""

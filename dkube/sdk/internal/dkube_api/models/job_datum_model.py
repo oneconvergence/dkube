@@ -31,80 +31,41 @@ class JobDatumModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'workspace': 'JobDatumModelWorkspace',
-        'models': 'list[JobInputDatumModel]',
         'datasets': 'list[JobInputDatumModel]',
-        'outputs': 'list[JobInputDatumModel]'
+        'featuresets': 'list[JobInputFeaturesetModel]',
+        'models': 'list[JobInputDatumModel]',
+        'outputs': 'list[JobInputDatumModel]',
+        'workspace': 'JobDatumModelWorkspace'
     }
 
     attribute_map = {
-        'workspace': 'workspace',
-        'models': 'models',
         'datasets': 'datasets',
-        'outputs': 'outputs'
+        'featuresets': 'featuresets',
+        'models': 'models',
+        'outputs': 'outputs',
+        'workspace': 'workspace'
     }
 
-    def __init__(self, workspace=None, models=None, datasets=None, outputs=None):  # noqa: E501
+    def __init__(self, datasets=None, featuresets=None, models=None, outputs=None, workspace=None):  # noqa: E501
         """JobDatumModel - a model defined in Swagger"""  # noqa: E501
 
-        self._workspace = None
-        self._models = None
         self._datasets = None
+        self._featuresets = None
+        self._models = None
         self._outputs = None
+        self._workspace = None
         self.discriminator = None
 
-        if workspace is not None:
-            self.workspace = workspace
-        if models is not None:
-            self.models = models
         if datasets is not None:
             self.datasets = datasets
+        if featuresets is not None:
+            self.featuresets = featuresets
+        if models is not None:
+            self.models = models
         if outputs is not None:
             self.outputs = outputs
-
-    @property
-    def workspace(self):
-        """Gets the workspace of this JobDatumModel.  # noqa: E501
-
-
-        :return: The workspace of this JobDatumModel.  # noqa: E501
-        :rtype: JobDatumModelWorkspace
-        """
-        return self._workspace
-
-    @workspace.setter
-    def workspace(self, workspace):
-        """Sets the workspace of this JobDatumModel.
-
-
-        :param workspace: The workspace of this JobDatumModel.  # noqa: E501
-        :type: JobDatumModelWorkspace
-        """
-
-        self._workspace = workspace
-
-    @property
-    def models(self):
-        """Gets the models of this JobDatumModel.  # noqa: E501
-
-        List of model names the job would use.  # noqa: E501
-
-        :return: The models of this JobDatumModel.  # noqa: E501
-        :rtype: list[JobInputDatumModel]
-        """
-        return self._models
-
-    @models.setter
-    def models(self, models):
-        """Sets the models of this JobDatumModel.
-
-        List of model names the job would use.  # noqa: E501
-
-        :param models: The models of this JobDatumModel.  # noqa: E501
-        :type: list[JobInputDatumModel]
-        """
-
-        self._models = models
+        if workspace is not None:
+            self.workspace = workspace
 
     @property
     def datasets(self):
@@ -130,6 +91,52 @@ class JobDatumModel(object):
         self._datasets = datasets
 
     @property
+    def featuresets(self):
+        """Gets the featuresets of this JobDatumModel.  # noqa: E501
+
+        List of featureset names the job would use.  # noqa: E501
+
+        :return: The featuresets of this JobDatumModel.  # noqa: E501
+        :rtype: list[JobInputFeaturesetModel]
+        """
+        return self._featuresets
+
+    @featuresets.setter
+    def featuresets(self, featuresets):
+        """Sets the featuresets of this JobDatumModel.
+
+        List of featureset names the job would use.  # noqa: E501
+
+        :param featuresets: The featuresets of this JobDatumModel.  # noqa: E501
+        :type: list[JobInputFeaturesetModel]
+        """
+
+        self._featuresets = featuresets
+
+    @property
+    def models(self):
+        """Gets the models of this JobDatumModel.  # noqa: E501
+
+        List of model names the job would use.  # noqa: E501
+
+        :return: The models of this JobDatumModel.  # noqa: E501
+        :rtype: list[JobInputDatumModel]
+        """
+        return self._models
+
+    @models.setter
+    def models(self, models):
+        """Sets the models of this JobDatumModel.
+
+        List of model names the job would use.  # noqa: E501
+
+        :param models: The models of this JobDatumModel.  # noqa: E501
+        :type: list[JobInputDatumModel]
+        """
+
+        self._models = models
+
+    @property
     def outputs(self):
         """Gets the outputs of this JobDatumModel.  # noqa: E501
 
@@ -151,6 +158,27 @@ class JobDatumModel(object):
         """
 
         self._outputs = outputs
+
+    @property
+    def workspace(self):
+        """Gets the workspace of this JobDatumModel.  # noqa: E501
+
+
+        :return: The workspace of this JobDatumModel.  # noqa: E501
+        :rtype: JobDatumModelWorkspace
+        """
+        return self._workspace
+
+    @workspace.setter
+    def workspace(self, workspace):
+        """Sets the workspace of this JobDatumModel.
+
+
+        :param workspace: The workspace of this JobDatumModel.  # noqa: E501
+        :type: JobDatumModelWorkspace
+        """
+
+        self._workspace = workspace
 
     def to_dict(self):
         """Returns the model properties as a dict"""

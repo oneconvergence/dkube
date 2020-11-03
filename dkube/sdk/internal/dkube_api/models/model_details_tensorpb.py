@@ -31,72 +31,51 @@ class ModelDetailsTensorpb(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'signatures': 'ModelDetailsTensorpbSignatures',
         'devicenodes': 'list[str]',
         'devices': 'ModelDetailsTensorpbDevices',
-        'parameters': 'int',
-        'weights': 'int',
         'layers': 'int',
-        'servable': 'bool'
+        'parameters': 'int',
+        'servable': 'bool',
+        'signatures': 'ModelDetailsTensorpbSignatures',
+        'weights': 'int'
     }
 
     attribute_map = {
-        'signatures': 'signatures',
         'devicenodes': 'devicenodes',
         'devices': 'devices',
-        'parameters': 'parameters',
-        'weights': 'weights',
         'layers': 'layers',
-        'servable': 'servable'
+        'parameters': 'parameters',
+        'servable': 'servable',
+        'signatures': 'signatures',
+        'weights': 'weights'
     }
 
-    def __init__(self, signatures=None, devicenodes=None, devices=None, parameters=None, weights=None, layers=None, servable=None):  # noqa: E501
+    def __init__(self, devicenodes=None, devices=None, layers=None, parameters=None, servable=None, signatures=None, weights=None):  # noqa: E501
         """ModelDetailsTensorpb - a model defined in Swagger"""  # noqa: E501
 
-        self._signatures = None
         self._devicenodes = None
         self._devices = None
-        self._parameters = None
-        self._weights = None
         self._layers = None
+        self._parameters = None
         self._servable = None
+        self._signatures = None
+        self._weights = None
         self.discriminator = None
 
-        if signatures is not None:
-            self.signatures = signatures
         if devicenodes is not None:
             self.devicenodes = devicenodes
         if devices is not None:
             self.devices = devices
-        if parameters is not None:
-            self.parameters = parameters
-        if weights is not None:
-            self.weights = weights
         if layers is not None:
             self.layers = layers
+        if parameters is not None:
+            self.parameters = parameters
         if servable is not None:
             self.servable = servable
-
-    @property
-    def signatures(self):
-        """Gets the signatures of this ModelDetailsTensorpb.  # noqa: E501
-
-
-        :return: The signatures of this ModelDetailsTensorpb.  # noqa: E501
-        :rtype: ModelDetailsTensorpbSignatures
-        """
-        return self._signatures
-
-    @signatures.setter
-    def signatures(self, signatures):
-        """Sets the signatures of this ModelDetailsTensorpb.
-
-
-        :param signatures: The signatures of this ModelDetailsTensorpb.  # noqa: E501
-        :type: ModelDetailsTensorpbSignatures
-        """
-
-        self._signatures = signatures
+        if signatures is not None:
+            self.signatures = signatures
+        if weights is not None:
+            self.weights = weights
 
     @property
     def devicenodes(self):
@@ -141,48 +120,6 @@ class ModelDetailsTensorpb(object):
         self._devices = devices
 
     @property
-    def parameters(self):
-        """Gets the parameters of this ModelDetailsTensorpb.  # noqa: E501
-
-
-        :return: The parameters of this ModelDetailsTensorpb.  # noqa: E501
-        :rtype: int
-        """
-        return self._parameters
-
-    @parameters.setter
-    def parameters(self, parameters):
-        """Sets the parameters of this ModelDetailsTensorpb.
-
-
-        :param parameters: The parameters of this ModelDetailsTensorpb.  # noqa: E501
-        :type: int
-        """
-
-        self._parameters = parameters
-
-    @property
-    def weights(self):
-        """Gets the weights of this ModelDetailsTensorpb.  # noqa: E501
-
-
-        :return: The weights of this ModelDetailsTensorpb.  # noqa: E501
-        :rtype: int
-        """
-        return self._weights
-
-    @weights.setter
-    def weights(self, weights):
-        """Sets the weights of this ModelDetailsTensorpb.
-
-
-        :param weights: The weights of this ModelDetailsTensorpb.  # noqa: E501
-        :type: int
-        """
-
-        self._weights = weights
-
-    @property
     def layers(self):
         """Gets the layers of this ModelDetailsTensorpb.  # noqa: E501
 
@@ -204,6 +141,27 @@ class ModelDetailsTensorpb(object):
         self._layers = layers
 
     @property
+    def parameters(self):
+        """Gets the parameters of this ModelDetailsTensorpb.  # noqa: E501
+
+
+        :return: The parameters of this ModelDetailsTensorpb.  # noqa: E501
+        :rtype: int
+        """
+        return self._parameters
+
+    @parameters.setter
+    def parameters(self, parameters):
+        """Sets the parameters of this ModelDetailsTensorpb.
+
+
+        :param parameters: The parameters of this ModelDetailsTensorpb.  # noqa: E501
+        :type: int
+        """
+
+        self._parameters = parameters
+
+    @property
     def servable(self):
         """Gets the servable of this ModelDetailsTensorpb.  # noqa: E501
 
@@ -223,6 +181,48 @@ class ModelDetailsTensorpb(object):
         """
 
         self._servable = servable
+
+    @property
+    def signatures(self):
+        """Gets the signatures of this ModelDetailsTensorpb.  # noqa: E501
+
+
+        :return: The signatures of this ModelDetailsTensorpb.  # noqa: E501
+        :rtype: ModelDetailsTensorpbSignatures
+        """
+        return self._signatures
+
+    @signatures.setter
+    def signatures(self, signatures):
+        """Sets the signatures of this ModelDetailsTensorpb.
+
+
+        :param signatures: The signatures of this ModelDetailsTensorpb.  # noqa: E501
+        :type: ModelDetailsTensorpbSignatures
+        """
+
+        self._signatures = signatures
+
+    @property
+    def weights(self):
+        """Gets the weights of this ModelDetailsTensorpb.  # noqa: E501
+
+
+        :return: The weights of this ModelDetailsTensorpb.  # noqa: E501
+        :rtype: int
+        """
+        return self._weights
+
+    @weights.setter
+    def weights(self, weights):
+        """Sets the weights of this ModelDetailsTensorpb.
+
+
+        :param weights: The weights of this ModelDetailsTensorpb.  # noqa: E501
+        :type: int
+        """
+
+        self._weights = weights
 
     def to_dict(self):
         """Returns the model properties as a dict"""

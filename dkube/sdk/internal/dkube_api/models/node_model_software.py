@@ -31,47 +31,26 @@ class NodeModelSoftware(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'osversion': 'str',
-        'kernel': 'str'
+        'kernel': 'str',
+        'osversion': 'str'
     }
 
     attribute_map = {
-        'osversion': 'osversion',
-        'kernel': 'kernel'
+        'kernel': 'kernel',
+        'osversion': 'osversion'
     }
 
-    def __init__(self, osversion=None, kernel=None):  # noqa: E501
+    def __init__(self, kernel=None, osversion=None):  # noqa: E501
         """NodeModelSoftware - a model defined in Swagger"""  # noqa: E501
 
-        self._osversion = None
         self._kernel = None
+        self._osversion = None
         self.discriminator = None
 
-        if osversion is not None:
-            self.osversion = osversion
         if kernel is not None:
             self.kernel = kernel
-
-    @property
-    def osversion(self):
-        """Gets the osversion of this NodeModelSoftware.  # noqa: E501
-
-
-        :return: The osversion of this NodeModelSoftware.  # noqa: E501
-        :rtype: str
-        """
-        return self._osversion
-
-    @osversion.setter
-    def osversion(self, osversion):
-        """Sets the osversion of this NodeModelSoftware.
-
-
-        :param osversion: The osversion of this NodeModelSoftware.  # noqa: E501
-        :type: str
-        """
-
-        self._osversion = osversion
+        if osversion is not None:
+            self.osversion = osversion
 
     @property
     def kernel(self):
@@ -93,6 +72,27 @@ class NodeModelSoftware(object):
         """
 
         self._kernel = kernel
+
+    @property
+    def osversion(self):
+        """Gets the osversion of this NodeModelSoftware.  # noqa: E501
+
+
+        :return: The osversion of this NodeModelSoftware.  # noqa: E501
+        :rtype: str
+        """
+        return self._osversion
+
+    @osversion.setter
+    def osversion(self, osversion):
+        """Sets the osversion of this NodeModelSoftware.
+
+
+        :param osversion: The osversion of this NodeModelSoftware.  # noqa: E501
+        :type: str
+        """
+
+        self._osversion = osversion
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -32,65 +32,65 @@ class JobModelParameters(object):
     """
     swagger_types = {
         '_class': 'str',
-        'gpu_allocation': 'GpuAllocation',
-        'priority': 'RunTemplateModelParametersPriority',
-        'training': 'DSJobModel',
-        'notebook': 'DSJobModel',
-        'inference': 'InferenceJobModel',
-        'preprocessing': 'PreprocessingJobModel',
         'custom': 'CustomJobModel',
+        'generated': 'JobModelParametersGenerated',
+        'gpu_allocation': 'GpuAllocation',
+        'inference': 'InferenceJobModel',
+        'notebook': 'DSJobModel',
+        'preprocessing': 'PreprocessingJobModel',
+        'priority': 'JobModelParametersPriority',
         'run': 'JobModelParametersRun',
-        'generated': 'JobModelParametersGenerated'
+        'training': 'DSJobModel'
     }
 
     attribute_map = {
         '_class': 'class',
-        'gpu_allocation': 'gpu_allocation',
-        'priority': 'priority',
-        'training': 'training',
-        'notebook': 'notebook',
-        'inference': 'inference',
-        'preprocessing': 'preprocessing',
         'custom': 'custom',
+        'generated': 'generated',
+        'gpu_allocation': 'gpu_allocation',
+        'inference': 'inference',
+        'notebook': 'notebook',
+        'preprocessing': 'preprocessing',
+        'priority': 'priority',
         'run': 'run',
-        'generated': 'generated'
+        'training': 'training'
     }
 
-    def __init__(self, _class=None, gpu_allocation=None, priority=None, training=None, notebook=None, inference=None, preprocessing=None, custom=None, run=None, generated=None):  # noqa: E501
+    def __init__(self, _class=None, custom=None, generated=None, gpu_allocation=None, inference=None, notebook=None, preprocessing=None, priority=None, run=None, training=None):  # noqa: E501
         """JobModelParameters - a model defined in Swagger"""  # noqa: E501
 
         self.__class = None
-        self._gpu_allocation = None
-        self._priority = None
-        self._training = None
-        self._notebook = None
-        self._inference = None
-        self._preprocessing = None
         self._custom = None
-        self._run = None
         self._generated = None
+        self._gpu_allocation = None
+        self._inference = None
+        self._notebook = None
+        self._preprocessing = None
+        self._priority = None
+        self._run = None
+        self._training = None
         self.discriminator = None
 
         if _class is not None:
             self._class = _class
-        if gpu_allocation is not None:
-            self.gpu_allocation = gpu_allocation
-        if priority is not None:
-            self.priority = priority
-        if training is not None:
-            self.training = training
-        if notebook is not None:
-            self.notebook = notebook
-        if inference is not None:
-            self.inference = inference
-        if preprocessing is not None:
-            self.preprocessing = preprocessing
         if custom is not None:
             self.custom = custom
-        if run is not None:
-            self.run = run
         if generated is not None:
             self.generated = generated
+        if gpu_allocation is not None:
+            self.gpu_allocation = gpu_allocation
+        if inference is not None:
+            self.inference = inference
+        if notebook is not None:
+            self.notebook = notebook
+        if preprocessing is not None:
+            self.preprocessing = preprocessing
+        if priority is not None:
+            self.priority = priority
+        if run is not None:
+            self.run = run
+        if training is not None:
+            self.training = training
 
     @property
     def _class(self):
@@ -120,6 +120,50 @@ class JobModelParameters(object):
         self.__class = _class
 
     @property
+    def custom(self):
+        """Gets the custom of this JobModelParameters.  # noqa: E501
+
+        Custom job related inputs. Should be provided if choice is custom. Job which does custom tasks.  # noqa: E501
+
+        :return: The custom of this JobModelParameters.  # noqa: E501
+        :rtype: CustomJobModel
+        """
+        return self._custom
+
+    @custom.setter
+    def custom(self, custom):
+        """Sets the custom of this JobModelParameters.
+
+        Custom job related inputs. Should be provided if choice is custom. Job which does custom tasks.  # noqa: E501
+
+        :param custom: The custom of this JobModelParameters.  # noqa: E501
+        :type: CustomJobModel
+        """
+
+        self._custom = custom
+
+    @property
+    def generated(self):
+        """Gets the generated of this JobModelParameters.  # noqa: E501
+
+
+        :return: The generated of this JobModelParameters.  # noqa: E501
+        :rtype: JobModelParametersGenerated
+        """
+        return self._generated
+
+    @generated.setter
+    def generated(self, generated):
+        """Sets the generated of this JobModelParameters.
+
+
+        :param generated: The generated of this JobModelParameters.  # noqa: E501
+        :type: JobModelParametersGenerated
+        """
+
+        self._generated = generated
+
+    @property
     def gpu_allocation(self):
         """Gets the gpu_allocation of this JobModelParameters.  # noqa: E501
 
@@ -139,73 +183,6 @@ class JobModelParameters(object):
         """
 
         self._gpu_allocation = gpu_allocation
-
-    @property
-    def priority(self):
-        """Gets the priority of this JobModelParameters.  # noqa: E501
-
-
-        :return: The priority of this JobModelParameters.  # noqa: E501
-        :rtype: RunTemplateModelParametersPriority
-        """
-        return self._priority
-
-    @priority.setter
-    def priority(self, priority):
-        """Sets the priority of this JobModelParameters.
-
-
-        :param priority: The priority of this JobModelParameters.  # noqa: E501
-        :type: RunTemplateModelParametersPriority
-        """
-
-        self._priority = priority
-
-    @property
-    def training(self):
-        """Gets the training of this JobModelParameters.  # noqa: E501
-
-        Training job related inputs. Should be provided if choice is training job.  # noqa: E501
-
-        :return: The training of this JobModelParameters.  # noqa: E501
-        :rtype: DSJobModel
-        """
-        return self._training
-
-    @training.setter
-    def training(self, training):
-        """Sets the training of this JobModelParameters.
-
-        Training job related inputs. Should be provided if choice is training job.  # noqa: E501
-
-        :param training: The training of this JobModelParameters.  # noqa: E501
-        :type: DSJobModel
-        """
-
-        self._training = training
-
-    @property
-    def notebook(self):
-        """Gets the notebook of this JobModelParameters.  # noqa: E501
-
-        Notebook job related inputs. Should be provided if choice is notebook job.  # noqa: E501
-
-        :return: The notebook of this JobModelParameters.  # noqa: E501
-        :rtype: DSJobModel
-        """
-        return self._notebook
-
-    @notebook.setter
-    def notebook(self, notebook):
-        """Sets the notebook of this JobModelParameters.
-
-        Notebook job related inputs. Should be provided if choice is notebook job.  # noqa: E501
-
-        :param notebook: The notebook of this JobModelParameters.  # noqa: E501
-        :type: DSJobModel
-        """
-
-        self._notebook = notebook
 
     @property
     def inference(self):
@@ -231,6 +208,29 @@ class JobModelParameters(object):
         self._inference = inference
 
     @property
+    def notebook(self):
+        """Gets the notebook of this JobModelParameters.  # noqa: E501
+
+        Notebook job related inputs. Should be provided if choice is notebook job.  # noqa: E501
+
+        :return: The notebook of this JobModelParameters.  # noqa: E501
+        :rtype: DSJobModel
+        """
+        return self._notebook
+
+    @notebook.setter
+    def notebook(self, notebook):
+        """Sets the notebook of this JobModelParameters.
+
+        Notebook job related inputs. Should be provided if choice is notebook job.  # noqa: E501
+
+        :param notebook: The notebook of this JobModelParameters.  # noqa: E501
+        :type: DSJobModel
+        """
+
+        self._notebook = notebook
+
+    @property
     def preprocessing(self):
         """Gets the preprocessing of this JobModelParameters.  # noqa: E501
 
@@ -254,27 +254,25 @@ class JobModelParameters(object):
         self._preprocessing = preprocessing
 
     @property
-    def custom(self):
-        """Gets the custom of this JobModelParameters.  # noqa: E501
+    def priority(self):
+        """Gets the priority of this JobModelParameters.  # noqa: E501
 
-        Custom job related inputs. Should be provided if choice is custom. Job which does custom tasks.  # noqa: E501
 
-        :return: The custom of this JobModelParameters.  # noqa: E501
-        :rtype: CustomJobModel
+        :return: The priority of this JobModelParameters.  # noqa: E501
+        :rtype: JobModelParametersPriority
         """
-        return self._custom
+        return self._priority
 
-    @custom.setter
-    def custom(self, custom):
-        """Sets the custom of this JobModelParameters.
+    @priority.setter
+    def priority(self, priority):
+        """Sets the priority of this JobModelParameters.
 
-        Custom job related inputs. Should be provided if choice is custom. Job which does custom tasks.  # noqa: E501
 
-        :param custom: The custom of this JobModelParameters.  # noqa: E501
-        :type: CustomJobModel
+        :param priority: The priority of this JobModelParameters.  # noqa: E501
+        :type: JobModelParametersPriority
         """
 
-        self._custom = custom
+        self._priority = priority
 
     @property
     def run(self):
@@ -298,25 +296,27 @@ class JobModelParameters(object):
         self._run = run
 
     @property
-    def generated(self):
-        """Gets the generated of this JobModelParameters.  # noqa: E501
+    def training(self):
+        """Gets the training of this JobModelParameters.  # noqa: E501
 
+        Training job related inputs. Should be provided if choice is training job.  # noqa: E501
 
-        :return: The generated of this JobModelParameters.  # noqa: E501
-        :rtype: JobModelParametersGenerated
+        :return: The training of this JobModelParameters.  # noqa: E501
+        :rtype: DSJobModel
         """
-        return self._generated
+        return self._training
 
-    @generated.setter
-    def generated(self, generated):
-        """Sets the generated of this JobModelParameters.
+    @training.setter
+    def training(self, training):
+        """Sets the training of this JobModelParameters.
 
+        Training job related inputs. Should be provided if choice is training job.  # noqa: E501
 
-        :param generated: The generated of this JobModelParameters.  # noqa: E501
-        :type: JobModelParametersGenerated
+        :param training: The training of this JobModelParameters.  # noqa: E501
+        :type: DSJobModel
         """
 
-        self._generated = generated
+        self._training = training
 
     def to_dict(self):
         """Returns the model properties as a dict"""

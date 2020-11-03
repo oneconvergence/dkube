@@ -31,47 +31,26 @@ class GitDetailsRepodetailsBranches(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'name': 'str',
-        'commits': 'list[GitCommitDetails]'
+        'commits': 'list[GitCommitDetails]',
+        'name': 'str'
     }
 
     attribute_map = {
-        'name': 'name',
-        'commits': 'commits'
+        'commits': 'commits',
+        'name': 'name'
     }
 
-    def __init__(self, name=None, commits=None):  # noqa: E501
+    def __init__(self, commits=None, name=None):  # noqa: E501
         """GitDetailsRepodetailsBranches - a model defined in Swagger"""  # noqa: E501
 
-        self._name = None
         self._commits = None
+        self._name = None
         self.discriminator = None
 
-        if name is not None:
-            self.name = name
         if commits is not None:
             self.commits = commits
-
-    @property
-    def name(self):
-        """Gets the name of this GitDetailsRepodetailsBranches.  # noqa: E501
-
-
-        :return: The name of this GitDetailsRepodetailsBranches.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this GitDetailsRepodetailsBranches.
-
-
-        :param name: The name of this GitDetailsRepodetailsBranches.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
+        if name is not None:
+            self.name = name
 
     @property
     def commits(self):
@@ -93,6 +72,27 @@ class GitDetailsRepodetailsBranches(object):
         """
 
         self._commits = commits
+
+    @property
+    def name(self):
+        """Gets the name of this GitDetailsRepodetailsBranches.  # noqa: E501
+
+
+        :return: The name of this GitDetailsRepodetailsBranches.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this GitDetailsRepodetailsBranches.
+
+
+        :param name: The name of this GitDetailsRepodetailsBranches.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
 
     def to_dict(self):
         """Returns the model properties as a dict"""

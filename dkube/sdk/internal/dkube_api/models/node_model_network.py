@@ -31,52 +31,31 @@ class NodeModelNetwork(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'hostname': 'str',
         'hostip': 'str',
-        'hostmac': 'str'
+        'hostmac': 'str',
+        'hostname': 'str'
     }
 
     attribute_map = {
-        'hostname': 'hostname',
         'hostip': 'hostip',
-        'hostmac': 'hostmac'
+        'hostmac': 'hostmac',
+        'hostname': 'hostname'
     }
 
-    def __init__(self, hostname=None, hostip=None, hostmac=None):  # noqa: E501
+    def __init__(self, hostip=None, hostmac=None, hostname=None):  # noqa: E501
         """NodeModelNetwork - a model defined in Swagger"""  # noqa: E501
 
-        self._hostname = None
         self._hostip = None
         self._hostmac = None
+        self._hostname = None
         self.discriminator = None
 
-        if hostname is not None:
-            self.hostname = hostname
         if hostip is not None:
             self.hostip = hostip
         if hostmac is not None:
             self.hostmac = hostmac
-
-    @property
-    def hostname(self):
-        """Gets the hostname of this NodeModelNetwork.  # noqa: E501
-
-
-        :return: The hostname of this NodeModelNetwork.  # noqa: E501
-        :rtype: str
-        """
-        return self._hostname
-
-    @hostname.setter
-    def hostname(self, hostname):
-        """Sets the hostname of this NodeModelNetwork.
-
-
-        :param hostname: The hostname of this NodeModelNetwork.  # noqa: E501
-        :type: str
-        """
-
-        self._hostname = hostname
+        if hostname is not None:
+            self.hostname = hostname
 
     @property
     def hostip(self):
@@ -119,6 +98,27 @@ class NodeModelNetwork(object):
         """
 
         self._hostmac = hostmac
+
+    @property
+    def hostname(self):
+        """Gets the hostname of this NodeModelNetwork.  # noqa: E501
+
+
+        :return: The hostname of this NodeModelNetwork.  # noqa: E501
+        :rtype: str
+        """
+        return self._hostname
+
+    @hostname.setter
+    def hostname(self, hostname):
+        """Sets the hostname of this NodeModelNetwork.
+
+
+        :param hostname: The hostname of this NodeModelNetwork.  # noqa: E501
+        :type: str
+        """
+
+        self._hostname = hostname
 
     def to_dict(self):
         """Returns the model properties as a dict"""

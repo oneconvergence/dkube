@@ -31,45 +31,42 @@ class Data4(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'users': 'list[str]'
+        'secret': 'str'
     }
 
     attribute_map = {
-        'users': 'users'
+        'secret': 'secret'
     }
 
-    def __init__(self, users=None):  # noqa: E501
+    def __init__(self, secret=None):  # noqa: E501
         """Data4 - a model defined in Swagger"""  # noqa: E501
 
-        self._users = None
+        self._secret = None
         self.discriminator = None
 
-        self.users = users
+        if secret is not None:
+            self.secret = secret
 
     @property
-    def users(self):
-        """Gets the users of this Data4.  # noqa: E501
+    def secret(self):
+        """Gets the secret of this Data4.  # noqa: E501
 
-        Name of the valid users. Each  user should be a valid github user.  # noqa: E501
 
-        :return: The users of this Data4.  # noqa: E501
-        :rtype: list[str]
+        :return: The secret of this Data4.  # noqa: E501
+        :rtype: str
         """
-        return self._users
+        return self._secret
 
-    @users.setter
-    def users(self, users):
-        """Sets the users of this Data4.
+    @secret.setter
+    def secret(self, secret):
+        """Sets the secret of this Data4.
 
-        Name of the valid users. Each  user should be a valid github user.  # noqa: E501
 
-        :param users: The users of this Data4.  # noqa: E501
-        :type: list[str]
+        :param secret: The secret of this Data4.  # noqa: E501
+        :type: str
         """
-        if users is None:
-            raise ValueError("Invalid value for `users`, must not be `None`")  # noqa: E501
 
-        self._users = users
+        self._secret = secret
 
     def to_dict(self):
         """Returns the model properties as a dict"""

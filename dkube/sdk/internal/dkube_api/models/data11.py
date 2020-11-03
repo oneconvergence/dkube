@@ -31,45 +31,102 @@ class Data11(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'modelcatalogs': 'list[str]'
+        'inline': 'UserProfile',
+        'kind': 'str',
+        'server': 'str'
     }
 
     attribute_map = {
-        'modelcatalogs': 'modelcatalogs'
+        'inline': 'inline',
+        'kind': 'kind',
+        'server': 'server'
     }
 
-    def __init__(self, modelcatalogs=None):  # noqa: E501
+    def __init__(self, inline=None, kind=None, server=None):  # noqa: E501
         """Data11 - a model defined in Swagger"""  # noqa: E501
 
-        self._modelcatalogs = None
+        self._inline = None
+        self._kind = None
+        self._server = None
         self.discriminator = None
 
-        self.modelcatalogs = modelcatalogs
+        if inline is not None:
+            self.inline = inline
+        if kind is not None:
+            self.kind = kind
+        if server is not None:
+            self.server = server
 
     @property
-    def modelcatalogs(self):
-        """Gets the modelcatalogs of this Data11.  # noqa: E501
+    def inline(self):
+        """Gets the inline of this Data11.  # noqa: E501
 
-        List of modelcatalogs  # noqa: E501
 
-        :return: The modelcatalogs of this Data11.  # noqa: E501
-        :rtype: list[str]
+        :return: The inline of this Data11.  # noqa: E501
+        :rtype: UserProfile
         """
-        return self._modelcatalogs
+        return self._inline
 
-    @modelcatalogs.setter
-    def modelcatalogs(self, modelcatalogs):
-        """Sets the modelcatalogs of this Data11.
+    @inline.setter
+    def inline(self, inline):
+        """Sets the inline of this Data11.
 
-        List of modelcatalogs  # noqa: E501
 
-        :param modelcatalogs: The modelcatalogs of this Data11.  # noqa: E501
-        :type: list[str]
+        :param inline: The inline of this Data11.  # noqa: E501
+        :type: UserProfile
         """
-        if modelcatalogs is None:
-            raise ValueError("Invalid value for `modelcatalogs`, must not be `None`")  # noqa: E501
 
-        self._modelcatalogs = modelcatalogs
+        self._inline = inline
+
+    @property
+    def kind(self):
+        """Gets the kind of this Data11.  # noqa: E501
+
+
+        :return: The kind of this Data11.  # noqa: E501
+        :rtype: str
+        """
+        return self._kind
+
+    @kind.setter
+    def kind(self, kind):
+        """Sets the kind of this Data11.
+
+
+        :param kind: The kind of this Data11.  # noqa: E501
+        :type: str
+        """
+        allowed_values = ["inline", "server"]  # noqa: E501
+        if kind not in allowed_values:
+            raise ValueError(
+                "Invalid value for `kind` ({0}), must be one of {1}"  # noqa: E501
+                .format(kind, allowed_values)
+            )
+
+        self._kind = kind
+
+    @property
+    def server(self):
+        """Gets the server of this Data11.  # noqa: E501
+
+        Address of server to download from  # noqa: E501
+
+        :return: The server of this Data11.  # noqa: E501
+        :rtype: str
+        """
+        return self._server
+
+    @server.setter
+    def server(self, server):
+        """Sets the server of this Data11.
+
+        Address of server to download from  # noqa: E501
+
+        :param server: The server of this Data11.  # noqa: E501
+        :type: str
+        """
+
+        self._server = server
 
     def to_dict(self):
         """Returns the model properties as a dict"""

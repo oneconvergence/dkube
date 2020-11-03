@@ -31,31 +31,57 @@ class DSJobModelExecutor(object):
                             and the value is json key in definition.
     """
     swagger_types = {
+        'buildfromproject': 'bool',
         'choice': 'str',
-        'dkube': 'DkubeContainerModel',
-        'custom': 'CustomContainerModel'
+        'custom': 'CustomContainerModel',
+        'dkube': 'DkubeContainerModel'
     }
 
     attribute_map = {
+        'buildfromproject': 'buildfromproject',
         'choice': 'choice',
-        'dkube': 'dkube',
-        'custom': 'custom'
+        'custom': 'custom',
+        'dkube': 'dkube'
     }
 
-    def __init__(self, choice=None, dkube=None, custom=None):  # noqa: E501
+    def __init__(self, buildfromproject=False, choice=None, custom=None, dkube=None):  # noqa: E501
         """DSJobModelExecutor - a model defined in Swagger"""  # noqa: E501
 
+        self._buildfromproject = None
         self._choice = None
-        self._dkube = None
         self._custom = None
+        self._dkube = None
         self.discriminator = None
 
+        if buildfromproject is not None:
+            self.buildfromproject = buildfromproject
         if choice is not None:
             self.choice = choice
-        if dkube is not None:
-            self.dkube = dkube
         if custom is not None:
             self.custom = custom
+        if dkube is not None:
+            self.dkube = dkube
+
+    @property
+    def buildfromproject(self):
+        """Gets the buildfromproject of this DSJobModelExecutor.  # noqa: E501
+
+
+        :return: The buildfromproject of this DSJobModelExecutor.  # noqa: E501
+        :rtype: bool
+        """
+        return self._buildfromproject
+
+    @buildfromproject.setter
+    def buildfromproject(self, buildfromproject):
+        """Sets the buildfromproject of this DSJobModelExecutor.
+
+
+        :param buildfromproject: The buildfromproject of this DSJobModelExecutor.  # noqa: E501
+        :type: bool
+        """
+
+        self._buildfromproject = buildfromproject
 
     @property
     def choice(self):
@@ -85,29 +111,6 @@ class DSJobModelExecutor(object):
         self._choice = choice
 
     @property
-    def dkube(self):
-        """Gets the dkube of this DSJobModelExecutor.  # noqa: E501
-
-        Executor object for dkube class  # noqa: E501
-
-        :return: The dkube of this DSJobModelExecutor.  # noqa: E501
-        :rtype: DkubeContainerModel
-        """
-        return self._dkube
-
-    @dkube.setter
-    def dkube(self, dkube):
-        """Sets the dkube of this DSJobModelExecutor.
-
-        Executor object for dkube class  # noqa: E501
-
-        :param dkube: The dkube of this DSJobModelExecutor.  # noqa: E501
-        :type: DkubeContainerModel
-        """
-
-        self._dkube = dkube
-
-    @property
     def custom(self):
         """Gets the custom of this DSJobModelExecutor.  # noqa: E501
 
@@ -129,6 +132,29 @@ class DSJobModelExecutor(object):
         """
 
         self._custom = custom
+
+    @property
+    def dkube(self):
+        """Gets the dkube of this DSJobModelExecutor.  # noqa: E501
+
+        Executor object for dkube class  # noqa: E501
+
+        :return: The dkube of this DSJobModelExecutor.  # noqa: E501
+        :rtype: DkubeContainerModel
+        """
+        return self._dkube
+
+    @dkube.setter
+    def dkube(self, dkube):
+        """Sets the dkube of this DSJobModelExecutor.
+
+        Executor object for dkube class  # noqa: E501
+
+        :param dkube: The dkube of this DSJobModelExecutor.  # noqa: E501
+        :type: DkubeContainerModel
+        """
+
+        self._dkube = dkube
 
     def to_dict(self):
         """Returns the model properties as a dict"""

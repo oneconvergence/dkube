@@ -31,42 +31,68 @@ class InlineResponse20041Data(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'volumes': 'list[str]'
+        'description': 'str',
+        'published_name': 'str'
     }
 
     attribute_map = {
-        'volumes': 'volumes'
+        'description': 'description',
+        'published_name': 'publishedName'
     }
 
-    def __init__(self, volumes=None):  # noqa: E501
+    def __init__(self, description=None, published_name=None):  # noqa: E501
         """InlineResponse20041Data - a model defined in Swagger"""  # noqa: E501
 
-        self._volumes = None
+        self._description = None
+        self._published_name = None
         self.discriminator = None
 
-        if volumes is not None:
-            self.volumes = volumes
+        if description is not None:
+            self.description = description
+        if published_name is not None:
+            self.published_name = published_name
 
     @property
-    def volumes(self):
-        """Gets the volumes of this InlineResponse20041Data.  # noqa: E501
+    def description(self):
+        """Gets the description of this InlineResponse20041Data.  # noqa: E501
 
 
-        :return: The volumes of this InlineResponse20041Data.  # noqa: E501
-        :rtype: list[str]
+        :return: The description of this InlineResponse20041Data.  # noqa: E501
+        :rtype: str
         """
-        return self._volumes
+        return self._description
 
-    @volumes.setter
-    def volumes(self, volumes):
-        """Sets the volumes of this InlineResponse20041Data.
+    @description.setter
+    def description(self, description):
+        """Sets the description of this InlineResponse20041Data.
 
 
-        :param volumes: The volumes of this InlineResponse20041Data.  # noqa: E501
-        :type: list[str]
+        :param description: The description of this InlineResponse20041Data.  # noqa: E501
+        :type: str
         """
 
-        self._volumes = volumes
+        self._description = description
+
+    @property
+    def published_name(self):
+        """Gets the published_name of this InlineResponse20041Data.  # noqa: E501
+
+
+        :return: The published_name of this InlineResponse20041Data.  # noqa: E501
+        :rtype: str
+        """
+        return self._published_name
+
+    @published_name.setter
+    def published_name(self, published_name):
+        """Sets the published_name of this InlineResponse20041Data.
+
+
+        :param published_name: The published_name of this InlineResponse20041Data.  # noqa: E501
+        :type: str
+        """
+
+        self._published_name = published_name
 
     def to_dict(self):
         """Returns the model properties as a dict"""

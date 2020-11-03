@@ -31,54 +31,31 @@ class CustomJobResultModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'url': 'str',
         'outdir': 'str',
-        'view': 'DSJobModelView'
+        'url': 'str',
+        'view': 'CustomJobResultModelView'
     }
 
     attribute_map = {
-        'url': 'url',
         'outdir': 'outdir',
+        'url': 'url',
         'view': 'view'
     }
 
-    def __init__(self, url=None, outdir=None, view=None):  # noqa: E501
+    def __init__(self, outdir=None, url=None, view=None):  # noqa: E501
         """CustomJobResultModel - a model defined in Swagger"""  # noqa: E501
 
-        self._url = None
         self._outdir = None
+        self._url = None
         self._view = None
         self.discriminator = None
 
-        if url is not None:
-            self.url = url
         if outdir is not None:
             self.outdir = outdir
+        if url is not None:
+            self.url = url
         if view is not None:
             self.view = view
-
-    @property
-    def url(self):
-        """Gets the url of this CustomJobResultModel.  # noqa: E501
-
-        Service url  # noqa: E501
-
-        :return: The url of this CustomJobResultModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._url
-
-    @url.setter
-    def url(self, url):
-        """Sets the url of this CustomJobResultModel.
-
-        Service url  # noqa: E501
-
-        :param url: The url of this CustomJobResultModel.  # noqa: E501
-        :type: str
-        """
-
-        self._url = url
 
     @property
     def outdir(self):
@@ -104,12 +81,35 @@ class CustomJobResultModel(object):
         self._outdir = outdir
 
     @property
+    def url(self):
+        """Gets the url of this CustomJobResultModel.  # noqa: E501
+
+        Service url  # noqa: E501
+
+        :return: The url of this CustomJobResultModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._url
+
+    @url.setter
+    def url(self, url):
+        """Sets the url of this CustomJobResultModel.
+
+        Service url  # noqa: E501
+
+        :param url: The url of this CustomJobResultModel.  # noqa: E501
+        :type: str
+        """
+
+        self._url = url
+
+    @property
     def view(self):
         """Gets the view of this CustomJobResultModel.  # noqa: E501
 
 
         :return: The view of this CustomJobResultModel.  # noqa: E501
-        :rtype: DSJobModelView
+        :rtype: CustomJobResultModelView
         """
         return self._view
 
@@ -119,7 +119,7 @@ class CustomJobResultModel(object):
 
 
         :param view: The view of this CustomJobResultModel.  # noqa: E501
-        :type: DSJobModelView
+        :type: CustomJobResultModelView
         """
 
         self._view = view

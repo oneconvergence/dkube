@@ -31,140 +31,56 @@ class DkubeInfo(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'version': 'str',
-        'platform': 'str',
-        'license': 'DkubeInfoLicense',
-        'release': 'DkubeInfoRelease',
         'auth': 'AuthModel',
-        'rdma': 'bool',
         'frameworks': 'list[str]',
-        'tensorflow': 'DLSupportTensorflow'
+        'license': 'DkubeInfoLicense',
+        'platform': 'str',
+        'rdma': 'bool',
+        'release': 'DkubeInfoRelease',
+        'tensorflow': 'DLSupportTensorflow',
+        'version': 'str'
     }
 
     attribute_map = {
-        'version': 'version',
-        'platform': 'platform',
-        'license': 'license',
-        'release': 'release',
         'auth': 'auth',
-        'rdma': 'rdma',
         'frameworks': 'frameworks',
-        'tensorflow': 'tensorflow'
+        'license': 'license',
+        'platform': 'platform',
+        'rdma': 'rdma',
+        'release': 'release',
+        'tensorflow': 'tensorflow',
+        'version': 'version'
     }
 
-    def __init__(self, version=None, platform=None, license=None, release=None, auth=None, rdma=False, frameworks=None, tensorflow=None):  # noqa: E501
+    def __init__(self, auth=None, frameworks=None, license=None, platform=None, rdma=False, release=None, tensorflow=None, version=None):  # noqa: E501
         """DkubeInfo - a model defined in Swagger"""  # noqa: E501
 
-        self._version = None
-        self._platform = None
-        self._license = None
-        self._release = None
         self._auth = None
-        self._rdma = None
         self._frameworks = None
+        self._license = None
+        self._platform = None
+        self._rdma = None
+        self._release = None
         self._tensorflow = None
+        self._version = None
         self.discriminator = None
 
-        if version is not None:
-            self.version = version
-        if platform is not None:
-            self.platform = platform
-        if license is not None:
-            self.license = license
-        if release is not None:
-            self.release = release
         if auth is not None:
             self.auth = auth
-        if rdma is not None:
-            self.rdma = rdma
         if frameworks is not None:
             self.frameworks = frameworks
+        if license is not None:
+            self.license = license
+        if platform is not None:
+            self.platform = platform
+        if rdma is not None:
+            self.rdma = rdma
+        if release is not None:
+            self.release = release
         if tensorflow is not None:
             self.tensorflow = tensorflow
-
-    @property
-    def version(self):
-        """Gets the version of this DkubeInfo.  # noqa: E501
-
-
-        :return: The version of this DkubeInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version):
-        """Sets the version of this DkubeInfo.
-
-
-        :param version: The version of this DkubeInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._version = version
-
-    @property
-    def platform(self):
-        """Gets the platform of this DkubeInfo.  # noqa: E501
-
-
-        :return: The platform of this DkubeInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._platform
-
-    @platform.setter
-    def platform(self, platform):
-        """Sets the platform of this DkubeInfo.
-
-
-        :param platform: The platform of this DkubeInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._platform = platform
-
-    @property
-    def license(self):
-        """Gets the license of this DkubeInfo.  # noqa: E501
-
-
-        :return: The license of this DkubeInfo.  # noqa: E501
-        :rtype: DkubeInfoLicense
-        """
-        return self._license
-
-    @license.setter
-    def license(self, license):
-        """Sets the license of this DkubeInfo.
-
-
-        :param license: The license of this DkubeInfo.  # noqa: E501
-        :type: DkubeInfoLicense
-        """
-
-        self._license = license
-
-    @property
-    def release(self):
-        """Gets the release of this DkubeInfo.  # noqa: E501
-
-
-        :return: The release of this DkubeInfo.  # noqa: E501
-        :rtype: DkubeInfoRelease
-        """
-        return self._release
-
-    @release.setter
-    def release(self, release):
-        """Sets the release of this DkubeInfo.
-
-
-        :param release: The release of this DkubeInfo.  # noqa: E501
-        :type: DkubeInfoRelease
-        """
-
-        self._release = release
+        if version is not None:
+            self.version = version
 
     @property
     def auth(self):
@@ -186,27 +102,6 @@ class DkubeInfo(object):
         """
 
         self._auth = auth
-
-    @property
-    def rdma(self):
-        """Gets the rdma of this DkubeInfo.  # noqa: E501
-
-
-        :return: The rdma of this DkubeInfo.  # noqa: E501
-        :rtype: bool
-        """
-        return self._rdma
-
-    @rdma.setter
-    def rdma(self, rdma):
-        """Sets the rdma of this DkubeInfo.
-
-
-        :param rdma: The rdma of this DkubeInfo.  # noqa: E501
-        :type: bool
-        """
-
-        self._rdma = rdma
 
     @property
     def frameworks(self):
@@ -237,6 +132,90 @@ class DkubeInfo(object):
         self._frameworks = frameworks
 
     @property
+    def license(self):
+        """Gets the license of this DkubeInfo.  # noqa: E501
+
+
+        :return: The license of this DkubeInfo.  # noqa: E501
+        :rtype: DkubeInfoLicense
+        """
+        return self._license
+
+    @license.setter
+    def license(self, license):
+        """Sets the license of this DkubeInfo.
+
+
+        :param license: The license of this DkubeInfo.  # noqa: E501
+        :type: DkubeInfoLicense
+        """
+
+        self._license = license
+
+    @property
+    def platform(self):
+        """Gets the platform of this DkubeInfo.  # noqa: E501
+
+
+        :return: The platform of this DkubeInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._platform
+
+    @platform.setter
+    def platform(self, platform):
+        """Sets the platform of this DkubeInfo.
+
+
+        :param platform: The platform of this DkubeInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._platform = platform
+
+    @property
+    def rdma(self):
+        """Gets the rdma of this DkubeInfo.  # noqa: E501
+
+
+        :return: The rdma of this DkubeInfo.  # noqa: E501
+        :rtype: bool
+        """
+        return self._rdma
+
+    @rdma.setter
+    def rdma(self, rdma):
+        """Sets the rdma of this DkubeInfo.
+
+
+        :param rdma: The rdma of this DkubeInfo.  # noqa: E501
+        :type: bool
+        """
+
+        self._rdma = rdma
+
+    @property
+    def release(self):
+        """Gets the release of this DkubeInfo.  # noqa: E501
+
+
+        :return: The release of this DkubeInfo.  # noqa: E501
+        :rtype: DkubeInfoRelease
+        """
+        return self._release
+
+    @release.setter
+    def release(self, release):
+        """Sets the release of this DkubeInfo.
+
+
+        :param release: The release of this DkubeInfo.  # noqa: E501
+        :type: DkubeInfoRelease
+        """
+
+        self._release = release
+
+    @property
     def tensorflow(self):
         """Gets the tensorflow of this DkubeInfo.  # noqa: E501
 
@@ -256,6 +235,27 @@ class DkubeInfo(object):
         """
 
         self._tensorflow = tensorflow
+
+    @property
+    def version(self):
+        """Gets the version of this DkubeInfo.  # noqa: E501
+
+
+        :return: The version of this DkubeInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._version
+
+    @version.setter
+    def version(self, version):
+        """Sets the version of this DkubeInfo.
+
+
+        :param version: The version of this DkubeInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

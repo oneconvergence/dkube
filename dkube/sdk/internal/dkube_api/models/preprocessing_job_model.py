@@ -31,41 +31,104 @@ class PreprocessingJobModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'kind': 'str',
-        'executor': 'PreprocessingJobModelExecutor',
+        'config': 'JobConfigModel',
         'datums': 'JobDatumModel',
-        'tags': 'list[str]',
-        'config': 'JobConfigModel'
+        'executor': 'PreprocessingJobModelExecutor',
+        'kind': 'str',
+        'tags': 'list[str]'
     }
 
     attribute_map = {
-        'kind': 'kind',
-        'executor': 'executor',
+        'config': 'config',
         'datums': 'datums',
-        'tags': 'tags',
-        'config': 'config'
+        'executor': 'executor',
+        'kind': 'kind',
+        'tags': 'tags'
     }
 
-    def __init__(self, kind=None, executor=None, datums=None, tags=None, config=None):  # noqa: E501
+    def __init__(self, config=None, datums=None, executor=None, kind=None, tags=None):  # noqa: E501
         """PreprocessingJobModel - a model defined in Swagger"""  # noqa: E501
 
-        self._kind = None
-        self._executor = None
-        self._datums = None
-        self._tags = None
         self._config = None
+        self._datums = None
+        self._executor = None
+        self._kind = None
+        self._tags = None
         self.discriminator = None
 
-        if kind is not None:
-            self.kind = kind
-        if executor is not None:
-            self.executor = executor
-        if datums is not None:
-            self.datums = datums
-        if tags is not None:
-            self.tags = tags
         if config is not None:
             self.config = config
+        if datums is not None:
+            self.datums = datums
+        if executor is not None:
+            self.executor = executor
+        if kind is not None:
+            self.kind = kind
+        if tags is not None:
+            self.tags = tags
+
+    @property
+    def config(self):
+        """Gets the config of this PreprocessingJobModel.  # noqa: E501
+
+
+        :return: The config of this PreprocessingJobModel.  # noqa: E501
+        :rtype: JobConfigModel
+        """
+        return self._config
+
+    @config.setter
+    def config(self, config):
+        """Sets the config of this PreprocessingJobModel.
+
+
+        :param config: The config of this PreprocessingJobModel.  # noqa: E501
+        :type: JobConfigModel
+        """
+
+        self._config = config
+
+    @property
+    def datums(self):
+        """Gets the datums of this PreprocessingJobModel.  # noqa: E501
+
+
+        :return: The datums of this PreprocessingJobModel.  # noqa: E501
+        :rtype: JobDatumModel
+        """
+        return self._datums
+
+    @datums.setter
+    def datums(self, datums):
+        """Sets the datums of this PreprocessingJobModel.
+
+
+        :param datums: The datums of this PreprocessingJobModel.  # noqa: E501
+        :type: JobDatumModel
+        """
+
+        self._datums = datums
+
+    @property
+    def executor(self):
+        """Gets the executor of this PreprocessingJobModel.  # noqa: E501
+
+
+        :return: The executor of this PreprocessingJobModel.  # noqa: E501
+        :rtype: PreprocessingJobModelExecutor
+        """
+        return self._executor
+
+    @executor.setter
+    def executor(self, executor):
+        """Sets the executor of this PreprocessingJobModel.
+
+
+        :param executor: The executor of this PreprocessingJobModel.  # noqa: E501
+        :type: PreprocessingJobModelExecutor
+        """
+
+        self._executor = executor
 
     @property
     def kind(self):
@@ -95,48 +158,6 @@ class PreprocessingJobModel(object):
         self._kind = kind
 
     @property
-    def executor(self):
-        """Gets the executor of this PreprocessingJobModel.  # noqa: E501
-
-
-        :return: The executor of this PreprocessingJobModel.  # noqa: E501
-        :rtype: PreprocessingJobModelExecutor
-        """
-        return self._executor
-
-    @executor.setter
-    def executor(self, executor):
-        """Sets the executor of this PreprocessingJobModel.
-
-
-        :param executor: The executor of this PreprocessingJobModel.  # noqa: E501
-        :type: PreprocessingJobModelExecutor
-        """
-
-        self._executor = executor
-
-    @property
-    def datums(self):
-        """Gets the datums of this PreprocessingJobModel.  # noqa: E501
-
-
-        :return: The datums of this PreprocessingJobModel.  # noqa: E501
-        :rtype: JobDatumModel
-        """
-        return self._datums
-
-    @datums.setter
-    def datums(self, datums):
-        """Sets the datums of this PreprocessingJobModel.
-
-
-        :param datums: The datums of this PreprocessingJobModel.  # noqa: E501
-        :type: JobDatumModel
-        """
-
-        self._datums = datums
-
-    @property
     def tags(self):
         """Gets the tags of this PreprocessingJobModel.  # noqa: E501
 
@@ -158,27 +179,6 @@ class PreprocessingJobModel(object):
         """
 
         self._tags = tags
-
-    @property
-    def config(self):
-        """Gets the config of this PreprocessingJobModel.  # noqa: E501
-
-
-        :return: The config of this PreprocessingJobModel.  # noqa: E501
-        :rtype: JobConfigModel
-        """
-        return self._config
-
-    @config.setter
-    def config(self, config):
-        """Sets the config of this PreprocessingJobModel.
-
-
-        :param config: The config of this PreprocessingJobModel.  # noqa: E501
-        :type: JobConfigModel
-        """
-
-        self._config = config
 
     def to_dict(self):
         """Returns the model properties as a dict"""

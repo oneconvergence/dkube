@@ -31,102 +31,42 @@ class Data19(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'kind': 'str',
-        'server': 'str',
-        'inline': 'UserProfile'
+        'description': 'str'
     }
 
     attribute_map = {
-        'kind': 'kind',
-        'server': 'server',
-        'inline': 'inline'
+        'description': 'description'
     }
 
-    def __init__(self, kind=None, server=None, inline=None):  # noqa: E501
+    def __init__(self, description=None):  # noqa: E501
         """Data19 - a model defined in Swagger"""  # noqa: E501
 
-        self._kind = None
-        self._server = None
-        self._inline = None
+        self._description = None
         self.discriminator = None
 
-        if kind is not None:
-            self.kind = kind
-        if server is not None:
-            self.server = server
-        if inline is not None:
-            self.inline = inline
+        if description is not None:
+            self.description = description
 
     @property
-    def kind(self):
-        """Gets the kind of this Data19.  # noqa: E501
+    def description(self):
+        """Gets the description of this Data19.  # noqa: E501
 
 
-        :return: The kind of this Data19.  # noqa: E501
+        :return: The description of this Data19.  # noqa: E501
         :rtype: str
         """
-        return self._kind
+        return self._description
 
-    @kind.setter
-    def kind(self, kind):
-        """Sets the kind of this Data19.
+    @description.setter
+    def description(self, description):
+        """Sets the description of this Data19.
 
 
-        :param kind: The kind of this Data19.  # noqa: E501
-        :type: str
-        """
-        allowed_values = ["inline", "server"]  # noqa: E501
-        if kind not in allowed_values:
-            raise ValueError(
-                "Invalid value for `kind` ({0}), must be one of {1}"  # noqa: E501
-                .format(kind, allowed_values)
-            )
-
-        self._kind = kind
-
-    @property
-    def server(self):
-        """Gets the server of this Data19.  # noqa: E501
-
-        Address of server to download from  # noqa: E501
-
-        :return: The server of this Data19.  # noqa: E501
-        :rtype: str
-        """
-        return self._server
-
-    @server.setter
-    def server(self, server):
-        """Sets the server of this Data19.
-
-        Address of server to download from  # noqa: E501
-
-        :param server: The server of this Data19.  # noqa: E501
+        :param description: The description of this Data19.  # noqa: E501
         :type: str
         """
 
-        self._server = server
-
-    @property
-    def inline(self):
-        """Gets the inline of this Data19.  # noqa: E501
-
-
-        :return: The inline of this Data19.  # noqa: E501
-        :rtype: UserProfile
-        """
-        return self._inline
-
-    @inline.setter
-    def inline(self, inline):
-        """Sets the inline of this Data19.
-
-
-        :param inline: The inline of this Data19.  # noqa: E501
-        :type: UserProfile
-        """
-
-        self._inline = inline
+        self._description = description
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,57 +31,36 @@ class TrackingModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'run_id': 'str',
         'artifact_id': 'str',
-        'version_id': 'str',
-        'pipeline_id': 'str'
+        'pipeline_id': 'str',
+        'run_id': 'str',
+        'version_id': 'str'
     }
 
     attribute_map = {
-        'run_id': 'runId',
         'artifact_id': 'artifactId',
-        'version_id': 'versionId',
-        'pipeline_id': 'pipelineId'
+        'pipeline_id': 'pipelineId',
+        'run_id': 'runId',
+        'version_id': 'versionId'
     }
 
-    def __init__(self, run_id=None, artifact_id=None, version_id=None, pipeline_id=None):  # noqa: E501
+    def __init__(self, artifact_id=None, pipeline_id=None, run_id=None, version_id=None):  # noqa: E501
         """TrackingModel - a model defined in Swagger"""  # noqa: E501
 
-        self._run_id = None
         self._artifact_id = None
-        self._version_id = None
         self._pipeline_id = None
+        self._run_id = None
+        self._version_id = None
         self.discriminator = None
 
-        if run_id is not None:
-            self.run_id = run_id
         if artifact_id is not None:
             self.artifact_id = artifact_id
-        if version_id is not None:
-            self.version_id = version_id
         if pipeline_id is not None:
             self.pipeline_id = pipeline_id
-
-    @property
-    def run_id(self):
-        """Gets the run_id of this TrackingModel.  # noqa: E501
-
-
-        :return: The run_id of this TrackingModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._run_id
-
-    @run_id.setter
-    def run_id(self, run_id):
-        """Sets the run_id of this TrackingModel.
-
-
-        :param run_id: The run_id of this TrackingModel.  # noqa: E501
-        :type: str
-        """
-
-        self._run_id = run_id
+        if run_id is not None:
+            self.run_id = run_id
+        if version_id is not None:
+            self.version_id = version_id
 
     @property
     def artifact_id(self):
@@ -105,27 +84,6 @@ class TrackingModel(object):
         self._artifact_id = artifact_id
 
     @property
-    def version_id(self):
-        """Gets the version_id of this TrackingModel.  # noqa: E501
-
-
-        :return: The version_id of this TrackingModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._version_id
-
-    @version_id.setter
-    def version_id(self, version_id):
-        """Sets the version_id of this TrackingModel.
-
-
-        :param version_id: The version_id of this TrackingModel.  # noqa: E501
-        :type: str
-        """
-
-        self._version_id = version_id
-
-    @property
     def pipeline_id(self):
         """Gets the pipeline_id of this TrackingModel.  # noqa: E501
 
@@ -145,6 +103,48 @@ class TrackingModel(object):
         """
 
         self._pipeline_id = pipeline_id
+
+    @property
+    def run_id(self):
+        """Gets the run_id of this TrackingModel.  # noqa: E501
+
+
+        :return: The run_id of this TrackingModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._run_id
+
+    @run_id.setter
+    def run_id(self, run_id):
+        """Sets the run_id of this TrackingModel.
+
+
+        :param run_id: The run_id of this TrackingModel.  # noqa: E501
+        :type: str
+        """
+
+        self._run_id = run_id
+
+    @property
+    def version_id(self):
+        """Gets the version_id of this TrackingModel.  # noqa: E501
+
+
+        :return: The version_id of this TrackingModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._version_id
+
+    @version_id.setter
+    def version_id(self, version_id):
+        """Sets the version_id of this TrackingModel.
+
+
+        :param version_id: The version_id of this TrackingModel.  # noqa: E501
+        :type: str
+        """
+
+        self._version_id = version_id
 
     def to_dict(self):
         """Returns the model properties as a dict"""

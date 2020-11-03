@@ -31,43 +31,94 @@ class Data22(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'groups': 'list[str]'
+        'description': 'str',
+        'name': 'str',
+        'serving': 'InferenceJobModel'
     }
 
     attribute_map = {
-        'groups': 'groups'
+        'description': 'description',
+        'name': 'name',
+        'serving': 'serving'
     }
 
-    def __init__(self, groups=None):  # noqa: E501
+    def __init__(self, description=None, name=None, serving=None):  # noqa: E501
         """Data22 - a model defined in Swagger"""  # noqa: E501
 
-        self._groups = None
+        self._description = None
+        self._name = None
+        self._serving = None
         self.discriminator = None
 
-        self.groups = groups
+        if description is not None:
+            self.description = description
+        if name is not None:
+            self.name = name
+        if serving is not None:
+            self.serving = serving
 
     @property
-    def groups(self):
-        """Gets the groups of this Data22.  # noqa: E501
+    def description(self):
+        """Gets the description of this Data22.  # noqa: E501
 
 
-        :return: The groups of this Data22.  # noqa: E501
-        :rtype: list[str]
+        :return: The description of this Data22.  # noqa: E501
+        :rtype: str
         """
-        return self._groups
+        return self._description
 
-    @groups.setter
-    def groups(self, groups):
-        """Sets the groups of this Data22.
+    @description.setter
+    def description(self, description):
+        """Sets the description of this Data22.
 
 
-        :param groups: The groups of this Data22.  # noqa: E501
-        :type: list[str]
+        :param description: The description of this Data22.  # noqa: E501
+        :type: str
         """
-        if groups is None:
-            raise ValueError("Invalid value for `groups`, must not be `None`")  # noqa: E501
 
-        self._groups = groups
+        self._description = description
+
+    @property
+    def name(self):
+        """Gets the name of this Data22.  # noqa: E501
+
+
+        :return: The name of this Data22.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this Data22.
+
+
+        :param name: The name of this Data22.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
+
+    @property
+    def serving(self):
+        """Gets the serving of this Data22.  # noqa: E501
+
+
+        :return: The serving of this Data22.  # noqa: E501
+        :rtype: InferenceJobModel
+        """
+        return self._serving
+
+    @serving.setter
+    def serving(self, serving):
+        """Sets the serving of this Data22.
+
+
+        :param serving: The serving of this Data22.  # noqa: E501
+        :type: InferenceJobModel
+        """
+
+        self._serving = serving
 
     def to_dict(self):
         """Returns the model properties as a dict"""

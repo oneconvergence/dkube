@@ -31,47 +31,26 @@ class JobGroupModelGenerated(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'uuid': 'str',
-        'created_time': 'TimeStamps'
+        'created_time': 'TimeStamps',
+        'uuid': 'str'
     }
 
     attribute_map = {
-        'uuid': 'uuid',
-        'created_time': 'created_time'
+        'created_time': 'created_time',
+        'uuid': 'uuid'
     }
 
-    def __init__(self, uuid=None, created_time=None):  # noqa: E501
+    def __init__(self, created_time=None, uuid=None):  # noqa: E501
         """JobGroupModelGenerated - a model defined in Swagger"""  # noqa: E501
 
-        self._uuid = None
         self._created_time = None
+        self._uuid = None
         self.discriminator = None
 
-        if uuid is not None:
-            self.uuid = uuid
         if created_time is not None:
             self.created_time = created_time
-
-    @property
-    def uuid(self):
-        """Gets the uuid of this JobGroupModelGenerated.  # noqa: E501
-
-
-        :return: The uuid of this JobGroupModelGenerated.  # noqa: E501
-        :rtype: str
-        """
-        return self._uuid
-
-    @uuid.setter
-    def uuid(self, uuid):
-        """Sets the uuid of this JobGroupModelGenerated.
-
-
-        :param uuid: The uuid of this JobGroupModelGenerated.  # noqa: E501
-        :type: str
-        """
-
-        self._uuid = uuid
+        if uuid is not None:
+            self.uuid = uuid
 
     @property
     def created_time(self):
@@ -93,6 +72,27 @@ class JobGroupModelGenerated(object):
         """
 
         self._created_time = created_time
+
+    @property
+    def uuid(self):
+        """Gets the uuid of this JobGroupModelGenerated.  # noqa: E501
+
+
+        :return: The uuid of this JobGroupModelGenerated.  # noqa: E501
+        :rtype: str
+        """
+        return self._uuid
+
+    @uuid.setter
+    def uuid(self, uuid):
+        """Sets the uuid of this JobGroupModelGenerated.
+
+
+        :param uuid: The uuid of this JobGroupModelGenerated.  # noqa: E501
+        :type: str
+        """
+
+        self._uuid = uuid
 
     def to_dict(self):
         """Returns the model properties as a dict"""

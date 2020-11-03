@@ -31,67 +31,88 @@ class JobModelParametersGeneratedDetails(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'tensorboard': 'TensorboardModel',
-        'notebook': 'NotebookResultModel',
-        'training': 'TrainingResultModel',
-        'serving': 'ServingResultModel',
+        'accesstoken': 'str',
         'custom': 'CustomJobResultModel',
-        'accesstoken': 'str'
+        'notebook': 'NotebookResultModel',
+        'serving': 'ServingResultModel',
+        'tensorboard': 'TensorboardModel',
+        'training': 'TrainingResultModel'
     }
 
     attribute_map = {
-        'tensorboard': 'tensorboard',
-        'notebook': 'notebook',
-        'training': 'training',
-        'serving': 'serving',
+        'accesstoken': 'accesstoken',
         'custom': 'custom',
-        'accesstoken': 'accesstoken'
+        'notebook': 'notebook',
+        'serving': 'serving',
+        'tensorboard': 'tensorboard',
+        'training': 'training'
     }
 
-    def __init__(self, tensorboard=None, notebook=None, training=None, serving=None, custom=None, accesstoken=None):  # noqa: E501
+    def __init__(self, accesstoken=None, custom=None, notebook=None, serving=None, tensorboard=None, training=None):  # noqa: E501
         """JobModelParametersGeneratedDetails - a model defined in Swagger"""  # noqa: E501
 
-        self._tensorboard = None
-        self._notebook = None
-        self._training = None
-        self._serving = None
-        self._custom = None
         self._accesstoken = None
+        self._custom = None
+        self._notebook = None
+        self._serving = None
+        self._tensorboard = None
+        self._training = None
         self.discriminator = None
 
-        if tensorboard is not None:
-            self.tensorboard = tensorboard
-        if notebook is not None:
-            self.notebook = notebook
-        if training is not None:
-            self.training = training
-        if serving is not None:
-            self.serving = serving
-        if custom is not None:
-            self.custom = custom
         if accesstoken is not None:
             self.accesstoken = accesstoken
+        if custom is not None:
+            self.custom = custom
+        if notebook is not None:
+            self.notebook = notebook
+        if serving is not None:
+            self.serving = serving
+        if tensorboard is not None:
+            self.tensorboard = tensorboard
+        if training is not None:
+            self.training = training
 
     @property
-    def tensorboard(self):
-        """Gets the tensorboard of this JobModelParametersGeneratedDetails.  # noqa: E501
+    def accesstoken(self):
+        """Gets the accesstoken of this JobModelParametersGeneratedDetails.  # noqa: E501
 
 
-        :return: The tensorboard of this JobModelParametersGeneratedDetails.  # noqa: E501
-        :rtype: TensorboardModel
+        :return: The accesstoken of this JobModelParametersGeneratedDetails.  # noqa: E501
+        :rtype: str
         """
-        return self._tensorboard
+        return self._accesstoken
 
-    @tensorboard.setter
-    def tensorboard(self, tensorboard):
-        """Sets the tensorboard of this JobModelParametersGeneratedDetails.
+    @accesstoken.setter
+    def accesstoken(self, accesstoken):
+        """Sets the accesstoken of this JobModelParametersGeneratedDetails.
 
 
-        :param tensorboard: The tensorboard of this JobModelParametersGeneratedDetails.  # noqa: E501
-        :type: TensorboardModel
+        :param accesstoken: The accesstoken of this JobModelParametersGeneratedDetails.  # noqa: E501
+        :type: str
         """
 
-        self._tensorboard = tensorboard
+        self._accesstoken = accesstoken
+
+    @property
+    def custom(self):
+        """Gets the custom of this JobModelParametersGeneratedDetails.  # noqa: E501
+
+
+        :return: The custom of this JobModelParametersGeneratedDetails.  # noqa: E501
+        :rtype: CustomJobResultModel
+        """
+        return self._custom
+
+    @custom.setter
+    def custom(self, custom):
+        """Sets the custom of this JobModelParametersGeneratedDetails.
+
+
+        :param custom: The custom of this JobModelParametersGeneratedDetails.  # noqa: E501
+        :type: CustomJobResultModel
+        """
+
+        self._custom = custom
 
     @property
     def notebook(self):
@@ -117,29 +138,6 @@ class JobModelParametersGeneratedDetails(object):
         self._notebook = notebook
 
     @property
-    def training(self):
-        """Gets the training of this JobModelParametersGeneratedDetails.  # noqa: E501
-
-        Will be set if the choice was training  # noqa: E501
-
-        :return: The training of this JobModelParametersGeneratedDetails.  # noqa: E501
-        :rtype: TrainingResultModel
-        """
-        return self._training
-
-    @training.setter
-    def training(self, training):
-        """Sets the training of this JobModelParametersGeneratedDetails.
-
-        Will be set if the choice was training  # noqa: E501
-
-        :param training: The training of this JobModelParametersGeneratedDetails.  # noqa: E501
-        :type: TrainingResultModel
-        """
-
-        self._training = training
-
-    @property
     def serving(self):
         """Gets the serving of this JobModelParametersGeneratedDetails.  # noqa: E501
 
@@ -163,46 +161,48 @@ class JobModelParametersGeneratedDetails(object):
         self._serving = serving
 
     @property
-    def custom(self):
-        """Gets the custom of this JobModelParametersGeneratedDetails.  # noqa: E501
+    def tensorboard(self):
+        """Gets the tensorboard of this JobModelParametersGeneratedDetails.  # noqa: E501
 
 
-        :return: The custom of this JobModelParametersGeneratedDetails.  # noqa: E501
-        :rtype: CustomJobResultModel
+        :return: The tensorboard of this JobModelParametersGeneratedDetails.  # noqa: E501
+        :rtype: TensorboardModel
         """
-        return self._custom
+        return self._tensorboard
 
-    @custom.setter
-    def custom(self, custom):
-        """Sets the custom of this JobModelParametersGeneratedDetails.
+    @tensorboard.setter
+    def tensorboard(self, tensorboard):
+        """Sets the tensorboard of this JobModelParametersGeneratedDetails.
 
 
-        :param custom: The custom of this JobModelParametersGeneratedDetails.  # noqa: E501
-        :type: CustomJobResultModel
+        :param tensorboard: The tensorboard of this JobModelParametersGeneratedDetails.  # noqa: E501
+        :type: TensorboardModel
         """
 
-        self._custom = custom
+        self._tensorboard = tensorboard
 
     @property
-    def accesstoken(self):
-        """Gets the accesstoken of this JobModelParametersGeneratedDetails.  # noqa: E501
+    def training(self):
+        """Gets the training of this JobModelParametersGeneratedDetails.  # noqa: E501
 
+        Will be set if the choice was training  # noqa: E501
 
-        :return: The accesstoken of this JobModelParametersGeneratedDetails.  # noqa: E501
-        :rtype: str
+        :return: The training of this JobModelParametersGeneratedDetails.  # noqa: E501
+        :rtype: TrainingResultModel
         """
-        return self._accesstoken
+        return self._training
 
-    @accesstoken.setter
-    def accesstoken(self, accesstoken):
-        """Sets the accesstoken of this JobModelParametersGeneratedDetails.
+    @training.setter
+    def training(self, training):
+        """Sets the training of this JobModelParametersGeneratedDetails.
 
+        Will be set if the choice was training  # noqa: E501
 
-        :param accesstoken: The accesstoken of this JobModelParametersGeneratedDetails.  # noqa: E501
-        :type: str
+        :param training: The training of this JobModelParametersGeneratedDetails.  # noqa: E501
+        :type: TrainingResultModel
         """
 
-        self._accesstoken = accesstoken
+        self._training = training
 
     def to_dict(self):
         """Returns the model properties as a dict"""

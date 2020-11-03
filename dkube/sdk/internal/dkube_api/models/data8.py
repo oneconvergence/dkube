@@ -31,72 +31,131 @@ class Data8(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'tags': 'list[str]',
-        'description': 'str'
+        'ndevices': 'int',
+        'poolname': 'str',
+        'pooltype': 'str',
+        'upsert': 'bool'
     }
 
     attribute_map = {
-        'tags': 'tags',
-        'description': 'description'
+        'ndevices': 'ndevices',
+        'poolname': 'poolname',
+        'pooltype': 'pooltype',
+        'upsert': 'upsert'
     }
 
-    def __init__(self, tags=None, description=None):  # noqa: E501
+    def __init__(self, ndevices=None, poolname=None, pooltype=None, upsert=True):  # noqa: E501
         """Data8 - a model defined in Swagger"""  # noqa: E501
 
-        self._tags = None
-        self._description = None
+        self._ndevices = None
+        self._poolname = None
+        self._pooltype = None
+        self._upsert = None
         self.discriminator = None
 
-        if tags is not None:
-            self.tags = tags
-        if description is not None:
-            self.description = description
+        self.ndevices = ndevices
+        self.poolname = poolname
+        self.pooltype = pooltype
+        if upsert is not None:
+            self.upsert = upsert
 
     @property
-    def tags(self):
-        """Gets the tags of this Data8.  # noqa: E501
+    def ndevices(self):
+        """Gets the ndevices of this Data8.  # noqa: E501
 
 
-        :return: The tags of this Data8.  # noqa: E501
-        :rtype: list[str]
+        :return: The ndevices of this Data8.  # noqa: E501
+        :rtype: int
         """
-        return self._tags
+        return self._ndevices
 
-    @tags.setter
-    def tags(self, tags):
-        """Sets the tags of this Data8.
+    @ndevices.setter
+    def ndevices(self, ndevices):
+        """Sets the ndevices of this Data8.
 
 
-        :param tags: The tags of this Data8.  # noqa: E501
-        :type: list[str]
+        :param ndevices: The ndevices of this Data8.  # noqa: E501
+        :type: int
         """
+        if ndevices is None:
+            raise ValueError("Invalid value for `ndevices`, must not be `None`")  # noqa: E501
 
-        self._tags = tags
+        self._ndevices = ndevices
 
     @property
-    def description(self):
-        """Gets the description of this Data8.  # noqa: E501
+    def poolname(self):
+        """Gets the poolname of this Data8.  # noqa: E501
 
 
-        :return: The description of this Data8.  # noqa: E501
+        :return: The poolname of this Data8.  # noqa: E501
         :rtype: str
         """
-        return self._description
+        return self._poolname
 
-    @description.setter
-    def description(self, description):
-        """Sets the description of this Data8.
+    @poolname.setter
+    def poolname(self, poolname):
+        """Sets the poolname of this Data8.
 
 
-        :param description: The description of this Data8.  # noqa: E501
+        :param poolname: The poolname of this Data8.  # noqa: E501
         :type: str
         """
-        if description is not None and len(description) > 255:
-            raise ValueError("Invalid value for `description`, length must be less than or equal to `255`")  # noqa: E501
-        if description is not None and len(description) < 1:
-            raise ValueError("Invalid value for `description`, length must be greater than or equal to `1`")  # noqa: E501
+        if poolname is None:
+            raise ValueError("Invalid value for `poolname`, must not be `None`")  # noqa: E501
+        if poolname is not None and len(poolname) > 255:
+            raise ValueError("Invalid value for `poolname`, length must be less than or equal to `255`")  # noqa: E501
+        if poolname is not None and len(poolname) < 1:
+            raise ValueError("Invalid value for `poolname`, length must be greater than or equal to `1`")  # noqa: E501
 
-        self._description = description
+        self._poolname = poolname
+
+    @property
+    def pooltype(self):
+        """Gets the pooltype of this Data8.  # noqa: E501
+
+
+        :return: The pooltype of this Data8.  # noqa: E501
+        :rtype: str
+        """
+        return self._pooltype
+
+    @pooltype.setter
+    def pooltype(self, pooltype):
+        """Sets the pooltype of this Data8.
+
+
+        :param pooltype: The pooltype of this Data8.  # noqa: E501
+        :type: str
+        """
+        if pooltype is None:
+            raise ValueError("Invalid value for `pooltype`, must not be `None`")  # noqa: E501
+        if pooltype is not None and len(pooltype) > 255:
+            raise ValueError("Invalid value for `pooltype`, length must be less than or equal to `255`")  # noqa: E501
+        if pooltype is not None and len(pooltype) < 1:
+            raise ValueError("Invalid value for `pooltype`, length must be greater than or equal to `1`")  # noqa: E501
+
+        self._pooltype = pooltype
+
+    @property
+    def upsert(self):
+        """Gets the upsert of this Data8.  # noqa: E501
+
+
+        :return: The upsert of this Data8.  # noqa: E501
+        :rtype: bool
+        """
+        return self._upsert
+
+    @upsert.setter
+    def upsert(self, upsert):
+        """Sets the upsert of this Data8.
+
+
+        :param upsert: The upsert of this Data8.  # noqa: E501
+        :type: bool
+        """
+
+        self._upsert = upsert
 
     def to_dict(self):
         """Returns the model properties as a dict"""

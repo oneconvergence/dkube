@@ -31,47 +31,26 @@ class MigrationStatus(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'migration': 'MigrationModel',
-        'jobs': 'list[MigrationJobStatus]'
+        'jobs': 'list[MigrationJobStatus]',
+        'migration': 'MigrationModel'
     }
 
     attribute_map = {
-        'migration': 'migration',
-        'jobs': 'jobs'
+        'jobs': 'jobs',
+        'migration': 'migration'
     }
 
-    def __init__(self, migration=None, jobs=None):  # noqa: E501
+    def __init__(self, jobs=None, migration=None):  # noqa: E501
         """MigrationStatus - a model defined in Swagger"""  # noqa: E501
 
-        self._migration = None
         self._jobs = None
+        self._migration = None
         self.discriminator = None
 
-        if migration is not None:
-            self.migration = migration
         if jobs is not None:
             self.jobs = jobs
-
-    @property
-    def migration(self):
-        """Gets the migration of this MigrationStatus.  # noqa: E501
-
-
-        :return: The migration of this MigrationStatus.  # noqa: E501
-        :rtype: MigrationModel
-        """
-        return self._migration
-
-    @migration.setter
-    def migration(self, migration):
-        """Sets the migration of this MigrationStatus.
-
-
-        :param migration: The migration of this MigrationStatus.  # noqa: E501
-        :type: MigrationModel
-        """
-
-        self._migration = migration
+        if migration is not None:
+            self.migration = migration
 
     @property
     def jobs(self):
@@ -93,6 +72,27 @@ class MigrationStatus(object):
         """
 
         self._jobs = jobs
+
+    @property
+    def migration(self):
+        """Gets the migration of this MigrationStatus.  # noqa: E501
+
+
+        :return: The migration of this MigrationStatus.  # noqa: E501
+        :rtype: MigrationModel
+        """
+        return self._migration
+
+    @migration.setter
+    def migration(self, migration):
+        """Sets the migration of this MigrationStatus.
+
+
+        :param migration: The migration of this MigrationStatus.  # noqa: E501
+        :type: MigrationModel
+        """
+
+        self._migration = migration
 
     def to_dict(self):
         """Returns the model properties as a dict"""

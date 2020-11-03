@@ -31,73 +31,43 @@ class Data3(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'users': 'list[str]',
-        'group': 'str'
+        'groups': 'list[str]'
     }
 
     attribute_map = {
-        'users': 'users',
-        'group': 'group'
+        'groups': 'groups'
     }
 
-    def __init__(self, users=None, group=None):  # noqa: E501
+    def __init__(self, groups=None):  # noqa: E501
         """Data3 - a model defined in Swagger"""  # noqa: E501
 
-        self._users = None
-        self._group = None
+        self._groups = None
         self.discriminator = None
 
-        self.users = users
-        if group is not None:
-            self.group = group
+        self.groups = groups
 
     @property
-    def users(self):
-        """Gets the users of this Data3.  # noqa: E501
+    def groups(self):
+        """Gets the groups of this Data3.  # noqa: E501
 
-        Name of the valid users. Each  user should be a valid github user.  # noqa: E501
 
-        :return: The users of this Data3.  # noqa: E501
+        :return: The groups of this Data3.  # noqa: E501
         :rtype: list[str]
         """
-        return self._users
+        return self._groups
 
-    @users.setter
-    def users(self, users):
-        """Sets the users of this Data3.
+    @groups.setter
+    def groups(self, groups):
+        """Sets the groups of this Data3.
 
-        Name of the valid users. Each  user should be a valid github user.  # noqa: E501
 
-        :param users: The users of this Data3.  # noqa: E501
+        :param groups: The groups of this Data3.  # noqa: E501
         :type: list[str]
         """
-        if users is None:
-            raise ValueError("Invalid value for `users`, must not be `None`")  # noqa: E501
+        if groups is None:
+            raise ValueError("Invalid value for `groups`, must not be `None`")  # noqa: E501
 
-        self._users = users
-
-    @property
-    def group(self):
-        """Gets the group of this Data3.  # noqa: E501
-
-        Name of the valid group. This should be a valid group existing in dkube.  # noqa: E501
-
-        :return: The group of this Data3.  # noqa: E501
-        :rtype: str
-        """
-        return self._group
-
-    @group.setter
-    def group(self, group):
-        """Sets the group of this Data3.
-
-        Name of the valid group. This should be a valid group existing in dkube.  # noqa: E501
-
-        :param group: The group of this Data3.  # noqa: E501
-        :type: str
-        """
-
-        self._group = group
+        self._groups = groups
 
     def to_dict(self):
         """Returns the model properties as a dict"""

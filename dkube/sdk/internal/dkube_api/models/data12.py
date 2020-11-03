@@ -31,45 +31,42 @@ class Data12(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'datums': 'list[str]'
+        'user': 'str'
     }
 
     attribute_map = {
-        'datums': 'datums'
+        'user': 'user'
     }
 
-    def __init__(self, datums=None):  # noqa: E501
+    def __init__(self, user=None):  # noqa: E501
         """Data12 - a model defined in Swagger"""  # noqa: E501
 
-        self._datums = None
+        self._user = None
         self.discriminator = None
 
-        self.datums = datums
+        if user is not None:
+            self.user = user
 
     @property
-    def datums(self):
-        """Gets the datums of this Data12.  # noqa: E501
+    def user(self):
+        """Gets the user of this Data12.  # noqa: E501
 
-        List of datums  # noqa: E501
 
-        :return: The datums of this Data12.  # noqa: E501
-        :rtype: list[str]
+        :return: The user of this Data12.  # noqa: E501
+        :rtype: str
         """
-        return self._datums
+        return self._user
 
-    @datums.setter
-    def datums(self, datums):
-        """Sets the datums of this Data12.
+    @user.setter
+    def user(self, user):
+        """Sets the user of this Data12.
 
-        List of datums  # noqa: E501
 
-        :param datums: The datums of this Data12.  # noqa: E501
-        :type: list[str]
+        :param user: The user of this Data12.  # noqa: E501
+        :type: str
         """
-        if datums is None:
-            raise ValueError("Invalid value for `datums`, must not be `None`")  # noqa: E501
 
-        self._datums = datums
+        self._user = user
 
     def to_dict(self):
         """Returns the model properties as a dict"""

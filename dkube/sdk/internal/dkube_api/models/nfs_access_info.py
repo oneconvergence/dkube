@@ -31,47 +31,26 @@ class NFSAccessInfo(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'server': 'str',
-        'path': 'str'
+        'path': 'str',
+        'server': 'str'
     }
 
     attribute_map = {
-        'server': 'server',
-        'path': 'path'
+        'path': 'path',
+        'server': 'server'
     }
 
-    def __init__(self, server=None, path=None):  # noqa: E501
+    def __init__(self, path=None, server=None):  # noqa: E501
         """NFSAccessInfo - a model defined in Swagger"""  # noqa: E501
 
-        self._server = None
         self._path = None
+        self._server = None
         self.discriminator = None
 
-        if server is not None:
-            self.server = server
         if path is not None:
             self.path = path
-
-    @property
-    def server(self):
-        """Gets the server of this NFSAccessInfo.  # noqa: E501
-
-
-        :return: The server of this NFSAccessInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._server
-
-    @server.setter
-    def server(self, server):
-        """Sets the server of this NFSAccessInfo.
-
-
-        :param server: The server of this NFSAccessInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._server = server
+        if server is not None:
+            self.server = server
 
     @property
     def path(self):
@@ -93,6 +72,27 @@ class NFSAccessInfo(object):
         """
 
         self._path = path
+
+    @property
+    def server(self):
+        """Gets the server of this NFSAccessInfo.  # noqa: E501
+
+
+        :return: The server of this NFSAccessInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._server
+
+    @server.setter
+    def server(self, server):
+        """Sets the server of this NFSAccessInfo.
+
+
+        :param server: The server of this NFSAccessInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._server = server
 
     def to_dict(self):
         """Returns the model properties as a dict"""

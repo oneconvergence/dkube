@@ -32,30 +32,30 @@ class GroupCollection(object):
     """
     swagger_types = {
         'group': 'GroupModel',
-        'users': 'list[GroupCollectionUsers]',
-        'pools': 'list[PoolCollection]'
+        'pools': 'list[PoolCollection]',
+        'users': 'list[GroupCollectionUsers]'
     }
 
     attribute_map = {
         'group': 'group',
-        'users': 'users',
-        'pools': 'pools'
+        'pools': 'pools',
+        'users': 'users'
     }
 
-    def __init__(self, group=None, users=None, pools=None):  # noqa: E501
+    def __init__(self, group=None, pools=None, users=None):  # noqa: E501
         """GroupCollection - a model defined in Swagger"""  # noqa: E501
 
         self._group = None
-        self._users = None
         self._pools = None
+        self._users = None
         self.discriminator = None
 
         if group is not None:
             self.group = group
-        if users is not None:
-            self.users = users
         if pools is not None:
             self.pools = pools
+        if users is not None:
+            self.users = users
 
     @property
     def group(self):
@@ -79,27 +79,6 @@ class GroupCollection(object):
         self._group = group
 
     @property
-    def users(self):
-        """Gets the users of this GroupCollection.  # noqa: E501
-
-
-        :return: The users of this GroupCollection.  # noqa: E501
-        :rtype: list[GroupCollectionUsers]
-        """
-        return self._users
-
-    @users.setter
-    def users(self, users):
-        """Sets the users of this GroupCollection.
-
-
-        :param users: The users of this GroupCollection.  # noqa: E501
-        :type: list[GroupCollectionUsers]
-        """
-
-        self._users = users
-
-    @property
     def pools(self):
         """Gets the pools of this GroupCollection.  # noqa: E501
 
@@ -119,6 +98,27 @@ class GroupCollection(object):
         """
 
         self._pools = pools
+
+    @property
+    def users(self):
+        """Gets the users of this GroupCollection.  # noqa: E501
+
+
+        :return: The users of this GroupCollection.  # noqa: E501
+        :rtype: list[GroupCollectionUsers]
+        """
+        return self._users
+
+    @users.setter
+    def users(self, users):
+        """Sets the users of this GroupCollection.
+
+
+        :param users: The users of this GroupCollection.  # noqa: E501
+        :type: list[GroupCollectionUsers]
+        """
+
+        self._users = users
 
     def to_dict(self):
         """Returns the model properties as a dict"""

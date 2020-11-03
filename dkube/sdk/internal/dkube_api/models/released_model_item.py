@@ -31,187 +31,61 @@ class ReleasedModelItem(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'name': 'str',
-        'reason': 'str',
-        'version': 'str',
-        'user': 'str',
-        'stage': 'str',
-        'tracking_url': 'str',
         'uuid': 'str',
         'description': 'str',
-        'released_timestamp': 'TimeStamps'
+        'name': 'str',
+        'reason': 'str',
+        'released_timestamp': 'TimeStamps',
+        'stage': 'str',
+        'tracking_url': 'str',
+        'user': 'str',
+        'version': 'str'
     }
 
     attribute_map = {
-        'name': 'name',
-        'reason': 'reason',
-        'version': 'version',
-        'user': 'user',
-        'stage': 'stage',
-        'tracking_url': 'trackingURL',
         'uuid': 'UUID',
         'description': 'description',
-        'released_timestamp': 'releasedTimestamp'
+        'name': 'name',
+        'reason': 'reason',
+        'released_timestamp': 'releasedTimestamp',
+        'stage': 'stage',
+        'tracking_url': 'trackingURL',
+        'user': 'user',
+        'version': 'version'
     }
 
-    def __init__(self, name=None, reason=None, version=None, user=None, stage=None, tracking_url=None, uuid=None, description=None, released_timestamp=None):  # noqa: E501
+    def __init__(self, uuid=None, description=None, name=None, reason=None, released_timestamp=None, stage=None, tracking_url=None, user=None, version=None):  # noqa: E501
         """ReleasedModelItem - a model defined in Swagger"""  # noqa: E501
 
-        self._name = None
-        self._reason = None
-        self._version = None
-        self._user = None
-        self._stage = None
-        self._tracking_url = None
         self._uuid = None
         self._description = None
+        self._name = None
+        self._reason = None
         self._released_timestamp = None
+        self._stage = None
+        self._tracking_url = None
+        self._user = None
+        self._version = None
         self.discriminator = None
 
-        if name is not None:
-            self.name = name
-        if reason is not None:
-            self.reason = reason
-        if version is not None:
-            self.version = version
-        if user is not None:
-            self.user = user
-        if stage is not None:
-            self.stage = stage
-        if tracking_url is not None:
-            self.tracking_url = tracking_url
         if uuid is not None:
             self.uuid = uuid
         if description is not None:
             self.description = description
+        if name is not None:
+            self.name = name
+        if reason is not None:
+            self.reason = reason
         if released_timestamp is not None:
             self.released_timestamp = released_timestamp
-
-    @property
-    def name(self):
-        """Gets the name of this ReleasedModelItem.  # noqa: E501
-
-
-        :return: The name of this ReleasedModelItem.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this ReleasedModelItem.
-
-
-        :param name: The name of this ReleasedModelItem.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
-
-    @property
-    def reason(self):
-        """Gets the reason of this ReleasedModelItem.  # noqa: E501
-
-
-        :return: The reason of this ReleasedModelItem.  # noqa: E501
-        :rtype: str
-        """
-        return self._reason
-
-    @reason.setter
-    def reason(self, reason):
-        """Sets the reason of this ReleasedModelItem.
-
-
-        :param reason: The reason of this ReleasedModelItem.  # noqa: E501
-        :type: str
-        """
-
-        self._reason = reason
-
-    @property
-    def version(self):
-        """Gets the version of this ReleasedModelItem.  # noqa: E501
-
-
-        :return: The version of this ReleasedModelItem.  # noqa: E501
-        :rtype: str
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version):
-        """Sets the version of this ReleasedModelItem.
-
-
-        :param version: The version of this ReleasedModelItem.  # noqa: E501
-        :type: str
-        """
-
-        self._version = version
-
-    @property
-    def user(self):
-        """Gets the user of this ReleasedModelItem.  # noqa: E501
-
-
-        :return: The user of this ReleasedModelItem.  # noqa: E501
-        :rtype: str
-        """
-        return self._user
-
-    @user.setter
-    def user(self, user):
-        """Sets the user of this ReleasedModelItem.
-
-
-        :param user: The user of this ReleasedModelItem.  # noqa: E501
-        :type: str
-        """
-
-        self._user = user
-
-    @property
-    def stage(self):
-        """Gets the stage of this ReleasedModelItem.  # noqa: E501
-
-
-        :return: The stage of this ReleasedModelItem.  # noqa: E501
-        :rtype: str
-        """
-        return self._stage
-
-    @stage.setter
-    def stage(self, stage):
-        """Sets the stage of this ReleasedModelItem.
-
-
-        :param stage: The stage of this ReleasedModelItem.  # noqa: E501
-        :type: str
-        """
-
-        self._stage = stage
-
-    @property
-    def tracking_url(self):
-        """Gets the tracking_url of this ReleasedModelItem.  # noqa: E501
-
-
-        :return: The tracking_url of this ReleasedModelItem.  # noqa: E501
-        :rtype: str
-        """
-        return self._tracking_url
-
-    @tracking_url.setter
-    def tracking_url(self, tracking_url):
-        """Sets the tracking_url of this ReleasedModelItem.
-
-
-        :param tracking_url: The tracking_url of this ReleasedModelItem.  # noqa: E501
-        :type: str
-        """
-
-        self._tracking_url = tracking_url
+        if stage is not None:
+            self.stage = stage
+        if tracking_url is not None:
+            self.tracking_url = tracking_url
+        if user is not None:
+            self.user = user
+        if version is not None:
+            self.version = version
 
     @property
     def uuid(self):
@@ -256,6 +130,48 @@ class ReleasedModelItem(object):
         self._description = description
 
     @property
+    def name(self):
+        """Gets the name of this ReleasedModelItem.  # noqa: E501
+
+
+        :return: The name of this ReleasedModelItem.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this ReleasedModelItem.
+
+
+        :param name: The name of this ReleasedModelItem.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
+
+    @property
+    def reason(self):
+        """Gets the reason of this ReleasedModelItem.  # noqa: E501
+
+
+        :return: The reason of this ReleasedModelItem.  # noqa: E501
+        :rtype: str
+        """
+        return self._reason
+
+    @reason.setter
+    def reason(self, reason):
+        """Sets the reason of this ReleasedModelItem.
+
+
+        :param reason: The reason of this ReleasedModelItem.  # noqa: E501
+        :type: str
+        """
+
+        self._reason = reason
+
+    @property
     def released_timestamp(self):
         """Gets the released_timestamp of this ReleasedModelItem.  # noqa: E501
 
@@ -275,6 +191,90 @@ class ReleasedModelItem(object):
         """
 
         self._released_timestamp = released_timestamp
+
+    @property
+    def stage(self):
+        """Gets the stage of this ReleasedModelItem.  # noqa: E501
+
+
+        :return: The stage of this ReleasedModelItem.  # noqa: E501
+        :rtype: str
+        """
+        return self._stage
+
+    @stage.setter
+    def stage(self, stage):
+        """Sets the stage of this ReleasedModelItem.
+
+
+        :param stage: The stage of this ReleasedModelItem.  # noqa: E501
+        :type: str
+        """
+
+        self._stage = stage
+
+    @property
+    def tracking_url(self):
+        """Gets the tracking_url of this ReleasedModelItem.  # noqa: E501
+
+
+        :return: The tracking_url of this ReleasedModelItem.  # noqa: E501
+        :rtype: str
+        """
+        return self._tracking_url
+
+    @tracking_url.setter
+    def tracking_url(self, tracking_url):
+        """Sets the tracking_url of this ReleasedModelItem.
+
+
+        :param tracking_url: The tracking_url of this ReleasedModelItem.  # noqa: E501
+        :type: str
+        """
+
+        self._tracking_url = tracking_url
+
+    @property
+    def user(self):
+        """Gets the user of this ReleasedModelItem.  # noqa: E501
+
+
+        :return: The user of this ReleasedModelItem.  # noqa: E501
+        :rtype: str
+        """
+        return self._user
+
+    @user.setter
+    def user(self, user):
+        """Sets the user of this ReleasedModelItem.
+
+
+        :param user: The user of this ReleasedModelItem.  # noqa: E501
+        :type: str
+        """
+
+        self._user = user
+
+    @property
+    def version(self):
+        """Gets the version of this ReleasedModelItem.  # noqa: E501
+
+
+        :return: The version of this ReleasedModelItem.  # noqa: E501
+        :rtype: str
+        """
+        return self._version
+
+    @version.setter
+    def version(self, version):
+        """Sets the version of this ReleasedModelItem.
+
+
+        :param version: The version of this ReleasedModelItem.  # noqa: E501
+        :type: str
+        """
+
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

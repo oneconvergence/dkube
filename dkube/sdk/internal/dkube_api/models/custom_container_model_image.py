@@ -31,35 +31,56 @@ class CustomContainerModelImage(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'path': 'str',
-        'username': 'str',
         'password': 'str',
-        'runas': 'str'
+        'path': 'str',
+        'runas': 'str',
+        'username': 'str'
     }
 
     attribute_map = {
-        'path': 'path',
-        'username': 'username',
         'password': 'password',
-        'runas': 'runas'
+        'path': 'path',
+        'runas': 'runas',
+        'username': 'username'
     }
 
-    def __init__(self, path=None, username=None, password=None, runas=None):  # noqa: E501
+    def __init__(self, password=None, path=None, runas=None, username=None):  # noqa: E501
         """CustomContainerModelImage - a model defined in Swagger"""  # noqa: E501
 
-        self._path = None
-        self._username = None
         self._password = None
+        self._path = None
         self._runas = None
+        self._username = None
         self.discriminator = None
 
-        self.path = path
-        if username is not None:
-            self.username = username
         if password is not None:
             self.password = password
+        self.path = path
         if runas is not None:
             self.runas = runas
+        if username is not None:
+            self.username = username
+
+    @property
+    def password(self):
+        """Gets the password of this CustomContainerModelImage.  # noqa: E501
+
+
+        :return: The password of this CustomContainerModelImage.  # noqa: E501
+        :rtype: str
+        """
+        return self._password
+
+    @password.setter
+    def password(self, password):
+        """Sets the password of this CustomContainerModelImage.
+
+
+        :param password: The password of this CustomContainerModelImage.  # noqa: E501
+        :type: str
+        """
+
+        self._password = password
 
     @property
     def path(self):
@@ -85,48 +106,6 @@ class CustomContainerModelImage(object):
         self._path = path
 
     @property
-    def username(self):
-        """Gets the username of this CustomContainerModelImage.  # noqa: E501
-
-
-        :return: The username of this CustomContainerModelImage.  # noqa: E501
-        :rtype: str
-        """
-        return self._username
-
-    @username.setter
-    def username(self, username):
-        """Sets the username of this CustomContainerModelImage.
-
-
-        :param username: The username of this CustomContainerModelImage.  # noqa: E501
-        :type: str
-        """
-
-        self._username = username
-
-    @property
-    def password(self):
-        """Gets the password of this CustomContainerModelImage.  # noqa: E501
-
-
-        :return: The password of this CustomContainerModelImage.  # noqa: E501
-        :rtype: str
-        """
-        return self._password
-
-    @password.setter
-    def password(self, password):
-        """Sets the password of this CustomContainerModelImage.
-
-
-        :param password: The password of this CustomContainerModelImage.  # noqa: E501
-        :type: str
-        """
-
-        self._password = password
-
-    @property
     def runas(self):
         """Gets the runas of this CustomContainerModelImage.  # noqa: E501
 
@@ -146,6 +125,27 @@ class CustomContainerModelImage(object):
         """
 
         self._runas = runas
+
+    @property
+    def username(self):
+        """Gets the username of this CustomContainerModelImage.  # noqa: E501
+
+
+        :return: The username of this CustomContainerModelImage.  # noqa: E501
+        :rtype: str
+        """
+        return self._username
+
+    @username.setter
+    def username(self, username):
+        """Sets the username of this CustomContainerModelImage.
+
+
+        :param username: The username of this CustomContainerModelImage.  # noqa: E501
+        :type: str
+        """
+
+        self._username = username
 
     def to_dict(self):
         """Returns the model properties as a dict"""

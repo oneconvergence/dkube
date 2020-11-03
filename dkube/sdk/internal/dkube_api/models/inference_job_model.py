@@ -31,140 +31,97 @@ class InferenceJobModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'model': 'str',
-        'version': 'str',
-        'owner': 'str',
-        'device': 'str',
         'deploy': 'bool',
+        'device': 'str',
+        'mcname': 'str',
+        'model': 'str',
+        'owner': 'str',
         'serving_image': 'CustomContainerModel',
         'transformer': 'bool',
+        'transformer_commit_id': 'str',
+        'transformer_code': 'str',
         'transformer_image': 'CustomContainerModel',
         'transformer_project': 'str',
-        'transformer_commit_id': 'str',
-        'transformer_code': 'str'
+        'version': 'str'
     }
 
     attribute_map = {
-        'model': 'model',
-        'version': 'version',
-        'owner': 'owner',
-        'device': 'device',
         'deploy': 'deploy',
+        'device': 'device',
+        'mcname': 'mcname',
+        'model': 'model',
+        'owner': 'owner',
         'serving_image': 'serving_image',
         'transformer': 'transformer',
+        'transformer_commit_id': 'transformer-commitID',
+        'transformer_code': 'transformer_code',
         'transformer_image': 'transformer_image',
         'transformer_project': 'transformer_project',
-        'transformer_commit_id': 'transformer-commitID',
-        'transformer_code': 'transformer_code'
+        'version': 'version'
     }
 
-    def __init__(self, model=None, version=None, owner=None, device=None, deploy=False, serving_image=None, transformer=False, transformer_image=None, transformer_project=None, transformer_commit_id=None, transformer_code=None):  # noqa: E501
+    def __init__(self, deploy=False, device=None, mcname=None, model=None, owner=None, serving_image=None, transformer=False, transformer_commit_id=None, transformer_code=None, transformer_image=None, transformer_project=None, version=None):  # noqa: E501
         """InferenceJobModel - a model defined in Swagger"""  # noqa: E501
 
-        self._model = None
-        self._version = None
-        self._owner = None
-        self._device = None
         self._deploy = None
+        self._device = None
+        self._mcname = None
+        self._model = None
+        self._owner = None
         self._serving_image = None
         self._transformer = None
-        self._transformer_image = None
-        self._transformer_project = None
         self._transformer_commit_id = None
         self._transformer_code = None
+        self._transformer_image = None
+        self._transformer_project = None
+        self._version = None
         self.discriminator = None
 
-        if model is not None:
-            self.model = model
-        if version is not None:
-            self.version = version
-        if owner is not None:
-            self.owner = owner
-        if device is not None:
-            self.device = device
         if deploy is not None:
             self.deploy = deploy
+        if device is not None:
+            self.device = device
+        if mcname is not None:
+            self.mcname = mcname
+        if model is not None:
+            self.model = model
+        if owner is not None:
+            self.owner = owner
         if serving_image is not None:
             self.serving_image = serving_image
         if transformer is not None:
             self.transformer = transformer
-        if transformer_image is not None:
-            self.transformer_image = transformer_image
-        if transformer_project is not None:
-            self.transformer_project = transformer_project
         if transformer_commit_id is not None:
             self.transformer_commit_id = transformer_commit_id
         if transformer_code is not None:
             self.transformer_code = transformer_code
+        if transformer_image is not None:
+            self.transformer_image = transformer_image
+        if transformer_project is not None:
+            self.transformer_project = transformer_project
+        if version is not None:
+            self.version = version
 
     @property
-    def model(self):
-        """Gets the model of this InferenceJobModel.  # noqa: E501
+    def deploy(self):
+        """Gets the deploy of this InferenceJobModel.  # noqa: E501
 
-        Name of the model to be deployed  # noqa: E501
 
-        :return: The model of this InferenceJobModel.  # noqa: E501
-        :rtype: str
+        :return: The deploy of this InferenceJobModel.  # noqa: E501
+        :rtype: bool
         """
-        return self._model
+        return self._deploy
 
-    @model.setter
-    def model(self, model):
-        """Sets the model of this InferenceJobModel.
+    @deploy.setter
+    def deploy(self, deploy):
+        """Sets the deploy of this InferenceJobModel.
 
-        Name of the model to be deployed  # noqa: E501
 
-        :param model: The model of this InferenceJobModel.  # noqa: E501
-        :type: str
+        :param deploy: The deploy of this InferenceJobModel.  # noqa: E501
+        :type: bool
         """
 
-        self._model = model
-
-    @property
-    def version(self):
-        """Gets the version of this InferenceJobModel.  # noqa: E501
-
-        Version of the model to be deployed  # noqa: E501
-
-        :return: The version of this InferenceJobModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version):
-        """Sets the version of this InferenceJobModel.
-
-        Version of the model to be deployed  # noqa: E501
-
-        :param version: The version of this InferenceJobModel.  # noqa: E501
-        :type: str
-        """
-
-        self._version = version
-
-    @property
-    def owner(self):
-        """Gets the owner of this InferenceJobModel.  # noqa: E501
-
-        Name of the user who owns the model  # noqa: E501
-
-        :return: The owner of this InferenceJobModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._owner
-
-    @owner.setter
-    def owner(self, owner):
-        """Sets the owner of this InferenceJobModel.
-
-        Name of the user who owns the model  # noqa: E501
-
-        :param owner: The owner of this InferenceJobModel.  # noqa: E501
-        :type: str
-        """
-
-        self._owner = owner
+        self._deploy = deploy
 
     @property
     def device(self):
@@ -196,25 +153,73 @@ class InferenceJobModel(object):
         self._device = device
 
     @property
-    def deploy(self):
-        """Gets the deploy of this InferenceJobModel.  # noqa: E501
+    def mcname(self):
+        """Gets the mcname of this InferenceJobModel.  # noqa: E501
 
+        Model catalog item name  # noqa: E501
 
-        :return: The deploy of this InferenceJobModel.  # noqa: E501
-        :rtype: bool
+        :return: The mcname of this InferenceJobModel.  # noqa: E501
+        :rtype: str
         """
-        return self._deploy
+        return self._mcname
 
-    @deploy.setter
-    def deploy(self, deploy):
-        """Sets the deploy of this InferenceJobModel.
+    @mcname.setter
+    def mcname(self, mcname):
+        """Sets the mcname of this InferenceJobModel.
 
+        Model catalog item name  # noqa: E501
 
-        :param deploy: The deploy of this InferenceJobModel.  # noqa: E501
-        :type: bool
+        :param mcname: The mcname of this InferenceJobModel.  # noqa: E501
+        :type: str
         """
 
-        self._deploy = deploy
+        self._mcname = mcname
+
+    @property
+    def model(self):
+        """Gets the model of this InferenceJobModel.  # noqa: E501
+
+        Name of the model to be deployed  # noqa: E501
+
+        :return: The model of this InferenceJobModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._model
+
+    @model.setter
+    def model(self, model):
+        """Sets the model of this InferenceJobModel.
+
+        Name of the model to be deployed  # noqa: E501
+
+        :param model: The model of this InferenceJobModel.  # noqa: E501
+        :type: str
+        """
+
+        self._model = model
+
+    @property
+    def owner(self):
+        """Gets the owner of this InferenceJobModel.  # noqa: E501
+
+        Name of the user who owns the model  # noqa: E501
+
+        :return: The owner of this InferenceJobModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._owner
+
+    @owner.setter
+    def owner(self, owner):
+        """Sets the owner of this InferenceJobModel.
+
+        Name of the user who owns the model  # noqa: E501
+
+        :param owner: The owner of this InferenceJobModel.  # noqa: E501
+        :type: str
+        """
+
+        self._owner = owner
 
     @property
     def serving_image(self):
@@ -259,48 +264,6 @@ class InferenceJobModel(object):
         self._transformer = transformer
 
     @property
-    def transformer_image(self):
-        """Gets the transformer_image of this InferenceJobModel.  # noqa: E501
-
-
-        :return: The transformer_image of this InferenceJobModel.  # noqa: E501
-        :rtype: CustomContainerModel
-        """
-        return self._transformer_image
-
-    @transformer_image.setter
-    def transformer_image(self, transformer_image):
-        """Sets the transformer_image of this InferenceJobModel.
-
-
-        :param transformer_image: The transformer_image of this InferenceJobModel.  # noqa: E501
-        :type: CustomContainerModel
-        """
-
-        self._transformer_image = transformer_image
-
-    @property
-    def transformer_project(self):
-        """Gets the transformer_project of this InferenceJobModel.  # noqa: E501
-
-
-        :return: The transformer_project of this InferenceJobModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._transformer_project
-
-    @transformer_project.setter
-    def transformer_project(self, transformer_project):
-        """Sets the transformer_project of this InferenceJobModel.
-
-
-        :param transformer_project: The transformer_project of this InferenceJobModel.  # noqa: E501
-        :type: str
-        """
-
-        self._transformer_project = transformer_project
-
-    @property
     def transformer_commit_id(self):
         """Gets the transformer_commit_id of this InferenceJobModel.  # noqa: E501
 
@@ -343,6 +306,71 @@ class InferenceJobModel(object):
         """
 
         self._transformer_code = transformer_code
+
+    @property
+    def transformer_image(self):
+        """Gets the transformer_image of this InferenceJobModel.  # noqa: E501
+
+
+        :return: The transformer_image of this InferenceJobModel.  # noqa: E501
+        :rtype: CustomContainerModel
+        """
+        return self._transformer_image
+
+    @transformer_image.setter
+    def transformer_image(self, transformer_image):
+        """Sets the transformer_image of this InferenceJobModel.
+
+
+        :param transformer_image: The transformer_image of this InferenceJobModel.  # noqa: E501
+        :type: CustomContainerModel
+        """
+
+        self._transformer_image = transformer_image
+
+    @property
+    def transformer_project(self):
+        """Gets the transformer_project of this InferenceJobModel.  # noqa: E501
+
+
+        :return: The transformer_project of this InferenceJobModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._transformer_project
+
+    @transformer_project.setter
+    def transformer_project(self, transformer_project):
+        """Sets the transformer_project of this InferenceJobModel.
+
+
+        :param transformer_project: The transformer_project of this InferenceJobModel.  # noqa: E501
+        :type: str
+        """
+
+        self._transformer_project = transformer_project
+
+    @property
+    def version(self):
+        """Gets the version of this InferenceJobModel.  # noqa: E501
+
+        Version of the model to be deployed  # noqa: E501
+
+        :return: The version of this InferenceJobModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._version
+
+    @version.setter
+    def version(self, version):
+        """Sets the version of this InferenceJobModel.
+
+        Version of the model to be deployed  # noqa: E501
+
+        :param version: The version of this InferenceJobModel.  # noqa: E501
+        :type: str
+        """
+
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

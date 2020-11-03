@@ -31,31 +31,52 @@ class GitCommitDetails(object):
                             and the value is json key in definition.
     """
     swagger_types = {
+        '_date': 'str',
         'id': 'str',
-        'message': 'str',
-        '_date': 'str'
+        'message': 'str'
     }
 
     attribute_map = {
+        '_date': 'date',
         'id': 'id',
-        'message': 'message',
-        '_date': 'date'
+        'message': 'message'
     }
 
-    def __init__(self, id=None, message=None, _date=None):  # noqa: E501
+    def __init__(self, _date=None, id=None, message=None):  # noqa: E501
         """GitCommitDetails - a model defined in Swagger"""  # noqa: E501
 
+        self.__date = None
         self._id = None
         self._message = None
-        self.__date = None
         self.discriminator = None
 
+        if _date is not None:
+            self._date = _date
         if id is not None:
             self.id = id
         if message is not None:
             self.message = message
-        if _date is not None:
-            self._date = _date
+
+    @property
+    def _date(self):
+        """Gets the _date of this GitCommitDetails.  # noqa: E501
+
+
+        :return: The _date of this GitCommitDetails.  # noqa: E501
+        :rtype: str
+        """
+        return self.__date
+
+    @_date.setter
+    def _date(self, _date):
+        """Sets the _date of this GitCommitDetails.
+
+
+        :param _date: The _date of this GitCommitDetails.  # noqa: E501
+        :type: str
+        """
+
+        self.__date = _date
 
     @property
     def id(self):
@@ -98,27 +119,6 @@ class GitCommitDetails(object):
         """
 
         self._message = message
-
-    @property
-    def _date(self):
-        """Gets the _date of this GitCommitDetails.  # noqa: E501
-
-
-        :return: The _date of this GitCommitDetails.  # noqa: E501
-        :rtype: str
-        """
-        return self.__date
-
-    @_date.setter
-    def _date(self, _date):
-        """Sets the _date of this GitCommitDetails.
-
-
-        :param _date: The _date of this GitCommitDetails.  # noqa: E501
-        :type: str
-        """
-
-        self.__date = _date
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,119 +31,98 @@ class DVSModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'name': 'str',
-        'uuid': 'str',
-        'status': 'DVSModelStatus',
-        'metadata': 'str',
-        'store': 'str',
+        'gcs': 'DVSModelGcs',
         'git': 'DVSModelGit',
+        'metadata': 'str',
+        'name': 'str',
         's3': 'DVSModelS3',
-        'gcs': 'DVSModelGcs'
+        'status': 'DVSModelStatus',
+        'store': 'str',
+        'uuid': 'str'
     }
 
     attribute_map = {
-        'name': 'name',
-        'uuid': 'uuid',
-        'status': 'status',
-        'metadata': 'metadata',
-        'store': 'store',
+        'gcs': 'gcs',
         'git': 'git',
+        'metadata': 'metadata',
+        'name': 'name',
         's3': 's3',
-        'gcs': 'gcs'
+        'status': 'status',
+        'store': 'store',
+        'uuid': 'uuid'
     }
 
-    def __init__(self, name=None, uuid=None, status=None, metadata=None, store=None, git=None, s3=None, gcs=None):  # noqa: E501
+    def __init__(self, gcs=None, git=None, metadata=None, name=None, s3=None, status=None, store=None, uuid=None):  # noqa: E501
         """DVSModel - a model defined in Swagger"""  # noqa: E501
 
-        self._name = None
-        self._uuid = None
-        self._status = None
-        self._metadata = None
-        self._store = None
-        self._git = None
-        self._s3 = None
         self._gcs = None
+        self._git = None
+        self._metadata = None
+        self._name = None
+        self._s3 = None
+        self._status = None
+        self._store = None
+        self._uuid = None
         self.discriminator = None
 
-        if name is not None:
-            self.name = name
-        if uuid is not None:
-            self.uuid = uuid
-        if status is not None:
-            self.status = status
-        if metadata is not None:
-            self.metadata = metadata
-        if store is not None:
-            self.store = store
-        if git is not None:
-            self.git = git
-        if s3 is not None:
-            self.s3 = s3
         if gcs is not None:
             self.gcs = gcs
+        if git is not None:
+            self.git = git
+        if metadata is not None:
+            self.metadata = metadata
+        if name is not None:
+            self.name = name
+        if s3 is not None:
+            self.s3 = s3
+        if status is not None:
+            self.status = status
+        if store is not None:
+            self.store = store
+        if uuid is not None:
+            self.uuid = uuid
 
     @property
-    def name(self):
-        """Gets the name of this DVSModel.  # noqa: E501
+    def gcs(self):
+        """Gets the gcs of this DVSModel.  # noqa: E501
 
 
-        :return: The name of this DVSModel.  # noqa: E501
-        :rtype: str
+        :return: The gcs of this DVSModel.  # noqa: E501
+        :rtype: DVSModelGcs
         """
-        return self._name
+        return self._gcs
 
-    @name.setter
-    def name(self, name):
-        """Sets the name of this DVSModel.
+    @gcs.setter
+    def gcs(self, gcs):
+        """Sets the gcs of this DVSModel.
 
 
-        :param name: The name of this DVSModel.  # noqa: E501
-        :type: str
+        :param gcs: The gcs of this DVSModel.  # noqa: E501
+        :type: DVSModelGcs
         """
 
-        self._name = name
+        self._gcs = gcs
 
     @property
-    def uuid(self):
-        """Gets the uuid of this DVSModel.  # noqa: E501
+    def git(self):
+        """Gets the git of this DVSModel.  # noqa: E501
 
 
-        :return: The uuid of this DVSModel.  # noqa: E501
-        :rtype: str
+        :return: The git of this DVSModel.  # noqa: E501
+        :rtype: DVSModelGit
         """
-        return self._uuid
+        return self._git
 
-    @uuid.setter
-    def uuid(self, uuid):
-        """Sets the uuid of this DVSModel.
-
-
-        :param uuid: The uuid of this DVSModel.  # noqa: E501
-        :type: str
-        """
-
-        self._uuid = uuid
-
-    @property
-    def status(self):
-        """Gets the status of this DVSModel.  # noqa: E501
+    @git.setter
+    def git(self, git):
+        """Sets the git of this DVSModel.
 
 
-        :return: The status of this DVSModel.  # noqa: E501
-        :rtype: DVSModelStatus
-        """
-        return self._status
-
-    @status.setter
-    def status(self, status):
-        """Sets the status of this DVSModel.
-
-
-        :param status: The status of this DVSModel.  # noqa: E501
-        :type: DVSModelStatus
+        :param git: The git of this DVSModel.  # noqa: E501
+        :type: DVSModelGit
         """
 
-        self._status = status
+        self._git = git
 
     @property
     def metadata(self):
@@ -173,6 +152,69 @@ class DVSModel(object):
         self._metadata = metadata
 
     @property
+    def name(self):
+        """Gets the name of this DVSModel.  # noqa: E501
+
+
+        :return: The name of this DVSModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this DVSModel.
+
+
+        :param name: The name of this DVSModel.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
+
+    @property
+    def s3(self):
+        """Gets the s3 of this DVSModel.  # noqa: E501
+
+
+        :return: The s3 of this DVSModel.  # noqa: E501
+        :rtype: DVSModelS3
+        """
+        return self._s3
+
+    @s3.setter
+    def s3(self, s3):
+        """Sets the s3 of this DVSModel.
+
+
+        :param s3: The s3 of this DVSModel.  # noqa: E501
+        :type: DVSModelS3
+        """
+
+        self._s3 = s3
+
+    @property
+    def status(self):
+        """Gets the status of this DVSModel.  # noqa: E501
+
+
+        :return: The status of this DVSModel.  # noqa: E501
+        :rtype: DVSModelStatus
+        """
+        return self._status
+
+    @status.setter
+    def status(self, status):
+        """Sets the status of this DVSModel.
+
+
+        :param status: The status of this DVSModel.  # noqa: E501
+        :type: DVSModelStatus
+        """
+
+        self._status = status
+
+    @property
     def store(self):
         """Gets the store of this DVSModel.  # noqa: E501
 
@@ -200,67 +242,25 @@ class DVSModel(object):
         self._store = store
 
     @property
-    def git(self):
-        """Gets the git of this DVSModel.  # noqa: E501
+    def uuid(self):
+        """Gets the uuid of this DVSModel.  # noqa: E501
 
 
-        :return: The git of this DVSModel.  # noqa: E501
-        :rtype: DVSModelGit
+        :return: The uuid of this DVSModel.  # noqa: E501
+        :rtype: str
         """
-        return self._git
+        return self._uuid
 
-    @git.setter
-    def git(self, git):
-        """Sets the git of this DVSModel.
-
-
-        :param git: The git of this DVSModel.  # noqa: E501
-        :type: DVSModelGit
-        """
-
-        self._git = git
-
-    @property
-    def s3(self):
-        """Gets the s3 of this DVSModel.  # noqa: E501
+    @uuid.setter
+    def uuid(self, uuid):
+        """Sets the uuid of this DVSModel.
 
 
-        :return: The s3 of this DVSModel.  # noqa: E501
-        :rtype: DVSModelS3
-        """
-        return self._s3
-
-    @s3.setter
-    def s3(self, s3):
-        """Sets the s3 of this DVSModel.
-
-
-        :param s3: The s3 of this DVSModel.  # noqa: E501
-        :type: DVSModelS3
+        :param uuid: The uuid of this DVSModel.  # noqa: E501
+        :type: str
         """
 
-        self._s3 = s3
-
-    @property
-    def gcs(self):
-        """Gets the gcs of this DVSModel.  # noqa: E501
-
-
-        :return: The gcs of this DVSModel.  # noqa: E501
-        :rtype: DVSModelGcs
-        """
-        return self._gcs
-
-    @gcs.setter
-    def gcs(self, gcs):
-        """Sets the gcs of this DVSModel.
-
-
-        :param gcs: The gcs of this DVSModel.  # noqa: E501
-        :type: DVSModelGcs
-        """
-
-        self._gcs = gcs
+        self._uuid = uuid
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,47 +31,26 @@ class TokenInfo(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'username': 'str',
-        'role': 'str'
+        'role': 'str',
+        'username': 'str'
     }
 
     attribute_map = {
-        'username': 'username',
-        'role': 'role'
+        'role': 'role',
+        'username': 'username'
     }
 
-    def __init__(self, username=None, role=None):  # noqa: E501
+    def __init__(self, role=None, username=None):  # noqa: E501
         """TokenInfo - a model defined in Swagger"""  # noqa: E501
 
-        self._username = None
         self._role = None
+        self._username = None
         self.discriminator = None
 
-        if username is not None:
-            self.username = username
         if role is not None:
             self.role = role
-
-    @property
-    def username(self):
-        """Gets the username of this TokenInfo.  # noqa: E501
-
-
-        :return: The username of this TokenInfo.  # noqa: E501
-        :rtype: str
-        """
-        return self._username
-
-    @username.setter
-    def username(self, username):
-        """Sets the username of this TokenInfo.
-
-
-        :param username: The username of this TokenInfo.  # noqa: E501
-        :type: str
-        """
-
-        self._username = username
+        if username is not None:
+            self.username = username
 
     @property
     def role(self):
@@ -93,6 +72,27 @@ class TokenInfo(object):
         """
 
         self._role = role
+
+    @property
+    def username(self):
+        """Gets the username of this TokenInfo.  # noqa: E501
+
+
+        :return: The username of this TokenInfo.  # noqa: E501
+        :rtype: str
+        """
+        return self._username
+
+    @username.setter
+    def username(self, username):
+        """Sets the username of this TokenInfo.
+
+
+        :param username: The username of this TokenInfo.  # noqa: E501
+        :type: str
+        """
+
+        self._username = username
 
     def to_dict(self):
         """Returns the model properties as a dict"""

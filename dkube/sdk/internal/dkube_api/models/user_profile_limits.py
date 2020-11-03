@@ -32,30 +32,30 @@ class UserProfileLimits(object):
     """
     swagger_types = {
         'cpus': 'str',
-        'mem': 'str',
-        'gpus': 'int'
+        'gpus': 'int',
+        'mem': 'str'
     }
 
     attribute_map = {
         'cpus': 'cpus',
-        'mem': 'mem',
-        'gpus': 'gpus'
+        'gpus': 'gpus',
+        'mem': 'mem'
     }
 
-    def __init__(self, cpus=None, mem=None, gpus=None):  # noqa: E501
+    def __init__(self, cpus=None, gpus=None, mem=None):  # noqa: E501
         """UserProfileLimits - a model defined in Swagger"""  # noqa: E501
 
         self._cpus = None
-        self._mem = None
         self._gpus = None
+        self._mem = None
         self.discriminator = None
 
         if cpus is not None:
             self.cpus = cpus
-        if mem is not None:
-            self.mem = mem
         if gpus is not None:
             self.gpus = gpus
+        if mem is not None:
+            self.mem = mem
 
     @property
     def cpus(self):
@@ -79,27 +79,6 @@ class UserProfileLimits(object):
         self._cpus = cpus
 
     @property
-    def mem(self):
-        """Gets the mem of this UserProfileLimits.  # noqa: E501
-
-
-        :return: The mem of this UserProfileLimits.  # noqa: E501
-        :rtype: str
-        """
-        return self._mem
-
-    @mem.setter
-    def mem(self, mem):
-        """Sets the mem of this UserProfileLimits.
-
-
-        :param mem: The mem of this UserProfileLimits.  # noqa: E501
-        :type: str
-        """
-
-        self._mem = mem
-
-    @property
     def gpus(self):
         """Gets the gpus of this UserProfileLimits.  # noqa: E501
 
@@ -119,6 +98,27 @@ class UserProfileLimits(object):
         """
 
         self._gpus = gpus
+
+    @property
+    def mem(self):
+        """Gets the mem of this UserProfileLimits.  # noqa: E501
+
+
+        :return: The mem of this UserProfileLimits.  # noqa: E501
+        :rtype: str
+        """
+        return self._mem
+
+    @mem.setter
+    def mem(self, mem):
+        """Sets the mem of this UserProfileLimits.
+
+
+        :param mem: The mem of this UserProfileLimits.  # noqa: E501
+        :type: str
+        """
+
+        self._mem = mem
 
     def to_dict(self):
         """Returns the model properties as a dict"""

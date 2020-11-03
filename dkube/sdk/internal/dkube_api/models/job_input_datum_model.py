@@ -31,31 +31,52 @@ class JobInputDatumModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
+        'mountpath': 'str',
         'name': 'str',
-        'version': 'str',
-        'mountpath': 'str'
+        'version': 'str'
     }
 
     attribute_map = {
+        'mountpath': 'mountpath',
         'name': 'name',
-        'version': 'version',
-        'mountpath': 'mountpath'
+        'version': 'version'
     }
 
-    def __init__(self, name=None, version=None, mountpath=None):  # noqa: E501
+    def __init__(self, mountpath=None, name=None, version=None):  # noqa: E501
         """JobInputDatumModel - a model defined in Swagger"""  # noqa: E501
 
+        self._mountpath = None
         self._name = None
         self._version = None
-        self._mountpath = None
         self.discriminator = None
 
+        if mountpath is not None:
+            self.mountpath = mountpath
         if name is not None:
             self.name = name
         if version is not None:
             self.version = version
-        if mountpath is not None:
-            self.mountpath = mountpath
+
+    @property
+    def mountpath(self):
+        """Gets the mountpath of this JobInputDatumModel.  # noqa: E501
+
+
+        :return: The mountpath of this JobInputDatumModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._mountpath
+
+    @mountpath.setter
+    def mountpath(self, mountpath):
+        """Sets the mountpath of this JobInputDatumModel.
+
+
+        :param mountpath: The mountpath of this JobInputDatumModel.  # noqa: E501
+        :type: str
+        """
+
+        self._mountpath = mountpath
 
     @property
     def name(self):
@@ -98,27 +119,6 @@ class JobInputDatumModel(object):
         """
 
         self._version = version
-
-    @property
-    def mountpath(self):
-        """Gets the mountpath of this JobInputDatumModel.  # noqa: E501
-
-
-        :return: The mountpath of this JobInputDatumModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._mountpath
-
-    @mountpath.setter
-    def mountpath(self, mountpath):
-        """Sets the mountpath of this JobInputDatumModel.
-
-
-        :param mountpath: The mountpath of this JobInputDatumModel.  # noqa: E501
-        :type: str
-        """
-
-        self._mountpath = mountpath
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,68 +31,42 @@ class InlineResponse20020(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'response': 'ApiResponse',
-        'data': 'ModelMetrics'
+        'members': 'list[str]'
     }
 
     attribute_map = {
-        'response': 'response',
-        'data': 'data'
+        'members': 'members'
     }
 
-    def __init__(self, response=None, data=None):  # noqa: E501
+    def __init__(self, members=None):  # noqa: E501
         """InlineResponse20020 - a model defined in Swagger"""  # noqa: E501
 
-        self._response = None
-        self._data = None
+        self._members = None
         self.discriminator = None
 
-        if response is not None:
-            self.response = response
-        if data is not None:
-            self.data = data
+        if members is not None:
+            self.members = members
 
     @property
-    def response(self):
-        """Gets the response of this InlineResponse20020.  # noqa: E501
+    def members(self):
+        """Gets the members of this InlineResponse20020.  # noqa: E501
 
 
-        :return: The response of this InlineResponse20020.  # noqa: E501
-        :rtype: ApiResponse
+        :return: The members of this InlineResponse20020.  # noqa: E501
+        :rtype: list[str]
         """
-        return self._response
+        return self._members
 
-    @response.setter
-    def response(self, response):
-        """Sets the response of this InlineResponse20020.
-
-
-        :param response: The response of this InlineResponse20020.  # noqa: E501
-        :type: ApiResponse
-        """
-
-        self._response = response
-
-    @property
-    def data(self):
-        """Gets the data of this InlineResponse20020.  # noqa: E501
+    @members.setter
+    def members(self, members):
+        """Sets the members of this InlineResponse20020.
 
 
-        :return: The data of this InlineResponse20020.  # noqa: E501
-        :rtype: ModelMetrics
-        """
-        return self._data
-
-    @data.setter
-    def data(self, data):
-        """Sets the data of this InlineResponse20020.
-
-
-        :param data: The data of this InlineResponse20020.  # noqa: E501
-        :type: ModelMetrics
+        :param members: The members of this InlineResponse20020.  # noqa: E501
+        :type: list[str]
         """
 
-        self._data = data
+        self._members = members
 
     def to_dict(self):
         """Returns the model properties as a dict"""

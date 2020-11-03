@@ -31,62 +31,41 @@ class LogViewer(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'username': 'str',
         'password': 'str',
-        'svr_address': 'str',
+        'port': 'str',
         'protocol': 'str',
-        'port': 'str'
+        'svr_address': 'str',
+        'username': 'str'
     }
 
     attribute_map = {
-        'username': 'Username',
         'password': 'Password',
-        'svr_address': 'SvrAddress',
+        'port': 'Port',
         'protocol': 'Protocol',
-        'port': 'Port'
+        'svr_address': 'SvrAddress',
+        'username': 'Username'
     }
 
-    def __init__(self, username=None, password=None, svr_address=None, protocol=None, port=None):  # noqa: E501
+    def __init__(self, password=None, port=None, protocol=None, svr_address=None, username=None):  # noqa: E501
         """LogViewer - a model defined in Swagger"""  # noqa: E501
 
-        self._username = None
         self._password = None
-        self._svr_address = None
-        self._protocol = None
         self._port = None
+        self._protocol = None
+        self._svr_address = None
+        self._username = None
         self.discriminator = None
 
-        if username is not None:
-            self.username = username
         if password is not None:
             self.password = password
-        if svr_address is not None:
-            self.svr_address = svr_address
-        if protocol is not None:
-            self.protocol = protocol
         if port is not None:
             self.port = port
-
-    @property
-    def username(self):
-        """Gets the username of this LogViewer.  # noqa: E501
-
-
-        :return: The username of this LogViewer.  # noqa: E501
-        :rtype: str
-        """
-        return self._username
-
-    @username.setter
-    def username(self, username):
-        """Sets the username of this LogViewer.
-
-
-        :param username: The username of this LogViewer.  # noqa: E501
-        :type: str
-        """
-
-        self._username = username
+        if protocol is not None:
+            self.protocol = protocol
+        if svr_address is not None:
+            self.svr_address = svr_address
+        if username is not None:
+            self.username = username
 
     @property
     def password(self):
@@ -110,25 +89,25 @@ class LogViewer(object):
         self._password = password
 
     @property
-    def svr_address(self):
-        """Gets the svr_address of this LogViewer.  # noqa: E501
+    def port(self):
+        """Gets the port of this LogViewer.  # noqa: E501
 
 
-        :return: The svr_address of this LogViewer.  # noqa: E501
+        :return: The port of this LogViewer.  # noqa: E501
         :rtype: str
         """
-        return self._svr_address
+        return self._port
 
-    @svr_address.setter
-    def svr_address(self, svr_address):
-        """Sets the svr_address of this LogViewer.
+    @port.setter
+    def port(self, port):
+        """Sets the port of this LogViewer.
 
 
-        :param svr_address: The svr_address of this LogViewer.  # noqa: E501
+        :param port: The port of this LogViewer.  # noqa: E501
         :type: str
         """
 
-        self._svr_address = svr_address
+        self._port = port
 
     @property
     def protocol(self):
@@ -152,25 +131,46 @@ class LogViewer(object):
         self._protocol = protocol
 
     @property
-    def port(self):
-        """Gets the port of this LogViewer.  # noqa: E501
+    def svr_address(self):
+        """Gets the svr_address of this LogViewer.  # noqa: E501
 
 
-        :return: The port of this LogViewer.  # noqa: E501
+        :return: The svr_address of this LogViewer.  # noqa: E501
         :rtype: str
         """
-        return self._port
+        return self._svr_address
 
-    @port.setter
-    def port(self, port):
-        """Sets the port of this LogViewer.
+    @svr_address.setter
+    def svr_address(self, svr_address):
+        """Sets the svr_address of this LogViewer.
 
 
-        :param port: The port of this LogViewer.  # noqa: E501
+        :param svr_address: The svr_address of this LogViewer.  # noqa: E501
         :type: str
         """
 
-        self._port = port
+        self._svr_address = svr_address
+
+    @property
+    def username(self):
+        """Gets the username of this LogViewer.  # noqa: E501
+
+
+        :return: The username of this LogViewer.  # noqa: E501
+        :rtype: str
+        """
+        return self._username
+
+    @username.setter
+    def username(self, username):
+        """Sets the username of this LogViewer.
+
+
+        :param username: The username of this LogViewer.  # noqa: E501
+        :type: str
+        """
+
+        self._username = username
 
     def to_dict(self):
         """Returns the model properties as a dict"""

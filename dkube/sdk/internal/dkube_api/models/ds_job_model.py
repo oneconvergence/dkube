@@ -31,87 +31,66 @@ class DSJobModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'executor': 'DSJobModelExecutor',
         'datums': 'JobDatumModel',
-        'tags': 'list[str]',
+        'executor': 'DSJobModelExecutor',
+        'gpus_override': 'bool',
         'hptuning': 'DSJobModelHptuning',
         'hyperparams': 'DSJobModelHyperparams',
-        'nworkers': 'int',
         'ngpus': 'int',
+        'nworkers': 'int',
         'rdma': 'bool',
-        'gpus_override': 'bool',
-        'view': 'DSJobModelView'
+        'tags': 'list[str]',
+        'view': 'CustomJobResultModelView'
     }
 
     attribute_map = {
-        'executor': 'executor',
         'datums': 'datums',
-        'tags': 'tags',
+        'executor': 'executor',
+        'gpus_override': 'gpus_override',
         'hptuning': 'hptuning',
         'hyperparams': 'hyperparams',
-        'nworkers': 'nworkers',
         'ngpus': 'ngpus',
+        'nworkers': 'nworkers',
         'rdma': 'rdma',
-        'gpus_override': 'gpus_override',
+        'tags': 'tags',
         'view': 'view'
     }
 
-    def __init__(self, executor=None, datums=None, tags=None, hptuning=None, hyperparams=None, nworkers=None, ngpus=None, rdma=True, gpus_override=True, view=None):  # noqa: E501
+    def __init__(self, datums=None, executor=None, gpus_override=True, hptuning=None, hyperparams=None, ngpus=None, nworkers=None, rdma=True, tags=None, view=None):  # noqa: E501
         """DSJobModel - a model defined in Swagger"""  # noqa: E501
 
-        self._executor = None
         self._datums = None
-        self._tags = None
+        self._executor = None
+        self._gpus_override = None
         self._hptuning = None
         self._hyperparams = None
-        self._nworkers = None
         self._ngpus = None
+        self._nworkers = None
         self._rdma = None
-        self._gpus_override = None
+        self._tags = None
         self._view = None
         self.discriminator = None
 
-        if executor is not None:
-            self.executor = executor
         if datums is not None:
             self.datums = datums
-        if tags is not None:
-            self.tags = tags
+        if executor is not None:
+            self.executor = executor
+        if gpus_override is not None:
+            self.gpus_override = gpus_override
         if hptuning is not None:
             self.hptuning = hptuning
         if hyperparams is not None:
             self.hyperparams = hyperparams
-        if nworkers is not None:
-            self.nworkers = nworkers
         if ngpus is not None:
             self.ngpus = ngpus
+        if nworkers is not None:
+            self.nworkers = nworkers
         if rdma is not None:
             self.rdma = rdma
-        if gpus_override is not None:
-            self.gpus_override = gpus_override
+        if tags is not None:
+            self.tags = tags
         if view is not None:
             self.view = view
-
-    @property
-    def executor(self):
-        """Gets the executor of this DSJobModel.  # noqa: E501
-
-
-        :return: The executor of this DSJobModel.  # noqa: E501
-        :rtype: DSJobModelExecutor
-        """
-        return self._executor
-
-    @executor.setter
-    def executor(self, executor):
-        """Sets the executor of this DSJobModel.
-
-
-        :param executor: The executor of this DSJobModel.  # noqa: E501
-        :type: DSJobModelExecutor
-        """
-
-        self._executor = executor
 
     @property
     def datums(self):
@@ -135,27 +114,46 @@ class DSJobModel(object):
         self._datums = datums
 
     @property
-    def tags(self):
-        """Gets the tags of this DSJobModel.  # noqa: E501
+    def executor(self):
+        """Gets the executor of this DSJobModel.  # noqa: E501
 
-        Custom tags set by user for the job.  # noqa: E501
 
-        :return: The tags of this DSJobModel.  # noqa: E501
-        :rtype: list[str]
+        :return: The executor of this DSJobModel.  # noqa: E501
+        :rtype: DSJobModelExecutor
         """
-        return self._tags
+        return self._executor
 
-    @tags.setter
-    def tags(self, tags):
-        """Sets the tags of this DSJobModel.
+    @executor.setter
+    def executor(self, executor):
+        """Sets the executor of this DSJobModel.
 
-        Custom tags set by user for the job.  # noqa: E501
 
-        :param tags: The tags of this DSJobModel.  # noqa: E501
-        :type: list[str]
+        :param executor: The executor of this DSJobModel.  # noqa: E501
+        :type: DSJobModelExecutor
         """
 
-        self._tags = tags
+        self._executor = executor
+
+    @property
+    def gpus_override(self):
+        """Gets the gpus_override of this DSJobModel.  # noqa: E501
+
+
+        :return: The gpus_override of this DSJobModel.  # noqa: E501
+        :rtype: bool
+        """
+        return self._gpus_override
+
+    @gpus_override.setter
+    def gpus_override(self, gpus_override):
+        """Sets the gpus_override of this DSJobModel.
+
+
+        :param gpus_override: The gpus_override of this DSJobModel.  # noqa: E501
+        :type: bool
+        """
+
+        self._gpus_override = gpus_override
 
     @property
     def hptuning(self):
@@ -200,27 +198,6 @@ class DSJobModel(object):
         self._hyperparams = hyperparams
 
     @property
-    def nworkers(self):
-        """Gets the nworkers of this DSJobModel.  # noqa: E501
-
-
-        :return: The nworkers of this DSJobModel.  # noqa: E501
-        :rtype: int
-        """
-        return self._nworkers
-
-    @nworkers.setter
-    def nworkers(self, nworkers):
-        """Sets the nworkers of this DSJobModel.
-
-
-        :param nworkers: The nworkers of this DSJobModel.  # noqa: E501
-        :type: int
-        """
-
-        self._nworkers = nworkers
-
-    @property
     def ngpus(self):
         """Gets the ngpus of this DSJobModel.  # noqa: E501
 
@@ -240,6 +217,27 @@ class DSJobModel(object):
         """
 
         self._ngpus = ngpus
+
+    @property
+    def nworkers(self):
+        """Gets the nworkers of this DSJobModel.  # noqa: E501
+
+
+        :return: The nworkers of this DSJobModel.  # noqa: E501
+        :rtype: int
+        """
+        return self._nworkers
+
+    @nworkers.setter
+    def nworkers(self, nworkers):
+        """Sets the nworkers of this DSJobModel.
+
+
+        :param nworkers: The nworkers of this DSJobModel.  # noqa: E501
+        :type: int
+        """
+
+        self._nworkers = nworkers
 
     @property
     def rdma(self):
@@ -263,25 +261,27 @@ class DSJobModel(object):
         self._rdma = rdma
 
     @property
-    def gpus_override(self):
-        """Gets the gpus_override of this DSJobModel.  # noqa: E501
+    def tags(self):
+        """Gets the tags of this DSJobModel.  # noqa: E501
 
+        Custom tags set by user for the job.  # noqa: E501
 
-        :return: The gpus_override of this DSJobModel.  # noqa: E501
-        :rtype: bool
+        :return: The tags of this DSJobModel.  # noqa: E501
+        :rtype: list[str]
         """
-        return self._gpus_override
+        return self._tags
 
-    @gpus_override.setter
-    def gpus_override(self, gpus_override):
-        """Sets the gpus_override of this DSJobModel.
+    @tags.setter
+    def tags(self, tags):
+        """Sets the tags of this DSJobModel.
 
+        Custom tags set by user for the job.  # noqa: E501
 
-        :param gpus_override: The gpus_override of this DSJobModel.  # noqa: E501
-        :type: bool
+        :param tags: The tags of this DSJobModel.  # noqa: E501
+        :type: list[str]
         """
 
-        self._gpus_override = gpus_override
+        self._tags = tags
 
     @property
     def view(self):
@@ -289,7 +289,7 @@ class DSJobModel(object):
 
 
         :return: The view of this DSJobModel.  # noqa: E501
-        :rtype: DSJobModelView
+        :rtype: CustomJobResultModelView
         """
         return self._view
 
@@ -299,7 +299,7 @@ class DSJobModel(object):
 
 
         :param view: The view of this DSJobModel.  # noqa: E501
-        :type: DSJobModelView
+        :type: CustomJobResultModelView
         """
 
         self._view = view

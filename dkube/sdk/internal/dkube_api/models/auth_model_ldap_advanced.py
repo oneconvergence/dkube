@@ -31,52 +31,31 @@ class AuthModelLdapAdvanced(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'name': 'str',
         'data_profile': 'str',
+        'name': 'str',
         'superuser_profile': 'str'
     }
 
     attribute_map = {
-        'name': 'name',
         'data_profile': 'dataProfile',
+        'name': 'name',
         'superuser_profile': 'superuserProfile'
     }
 
-    def __init__(self, name=None, data_profile=None, superuser_profile=None):  # noqa: E501
+    def __init__(self, data_profile=None, name=None, superuser_profile=None):  # noqa: E501
         """AuthModelLdapAdvanced - a model defined in Swagger"""  # noqa: E501
 
-        self._name = None
         self._data_profile = None
+        self._name = None
         self._superuser_profile = None
         self.discriminator = None
 
-        if name is not None:
-            self.name = name
         if data_profile is not None:
             self.data_profile = data_profile
+        if name is not None:
+            self.name = name
         if superuser_profile is not None:
             self.superuser_profile = superuser_profile
-
-    @property
-    def name(self):
-        """Gets the name of this AuthModelLdapAdvanced.  # noqa: E501
-
-
-        :return: The name of this AuthModelLdapAdvanced.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this AuthModelLdapAdvanced.
-
-
-        :param name: The name of this AuthModelLdapAdvanced.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
 
     @property
     def data_profile(self):
@@ -98,6 +77,27 @@ class AuthModelLdapAdvanced(object):
         """
 
         self._data_profile = data_profile
+
+    @property
+    def name(self):
+        """Gets the name of this AuthModelLdapAdvanced.  # noqa: E501
+
+
+        :return: The name of this AuthModelLdapAdvanced.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this AuthModelLdapAdvanced.
+
+
+        :param name: The name of this AuthModelLdapAdvanced.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
 
     @property
     def superuser_profile(self):

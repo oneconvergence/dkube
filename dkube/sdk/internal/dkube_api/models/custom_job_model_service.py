@@ -31,47 +31,26 @@ class CustomJobModelService(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'targetport': 'int',
-        'exposeas': 'str'
+        'exposeas': 'str',
+        'targetport': 'int'
     }
 
     attribute_map = {
-        'targetport': 'targetport',
-        'exposeas': 'exposeas'
+        'exposeas': 'exposeas',
+        'targetport': 'targetport'
     }
 
-    def __init__(self, targetport=None, exposeas=None):  # noqa: E501
+    def __init__(self, exposeas=None, targetport=None):  # noqa: E501
         """CustomJobModelService - a model defined in Swagger"""  # noqa: E501
 
-        self._targetport = None
         self._exposeas = None
+        self._targetport = None
         self.discriminator = None
 
-        if targetport is not None:
-            self.targetport = targetport
         if exposeas is not None:
             self.exposeas = exposeas
-
-    @property
-    def targetport(self):
-        """Gets the targetport of this CustomJobModelService.  # noqa: E501
-
-
-        :return: The targetport of this CustomJobModelService.  # noqa: E501
-        :rtype: int
-        """
-        return self._targetport
-
-    @targetport.setter
-    def targetport(self, targetport):
-        """Sets the targetport of this CustomJobModelService.
-
-
-        :param targetport: The targetport of this CustomJobModelService.  # noqa: E501
-        :type: int
-        """
-
-        self._targetport = targetport
+        if targetport is not None:
+            self.targetport = targetport
 
     @property
     def exposeas(self):
@@ -99,6 +78,27 @@ class CustomJobModelService(object):
             )
 
         self._exposeas = exposeas
+
+    @property
+    def targetport(self):
+        """Gets the targetport of this CustomJobModelService.  # noqa: E501
+
+
+        :return: The targetport of this CustomJobModelService.  # noqa: E501
+        :rtype: int
+        """
+        return self._targetport
+
+    @targetport.setter
+    def targetport(self, targetport):
+        """Sets the targetport of this CustomJobModelService.
+
+
+        :param targetport: The targetport of this CustomJobModelService.  # noqa: E501
+        :type: int
+        """
+
+        self._targetport = targetport
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -31,123 +31,81 @@ class MigrationModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'version': 'str',
-        'name': 'str',
         'uuid': 'str',
-        'remote_uuid': 'str',
         'user': 'str',
-        'triggering_point': 'str',
+        'job_refs': 'list[str]',
+        'jobs': 'list[MigrationJobEntry]',
         'location': 'str',
-        'remote': 'MigrationModelRemote',
+        'name': 'str',
         'progress': 'int',
+        'remote': 'MigrationModelRemote',
+        'remote_uuid': 'str',
         'status': 'MigrationStatusModel',
         'time_stamp': 'str',
-        'jobs': 'list[MigrationJobEntry]',
-        'job_refs': 'list[str]'
+        'triggering_point': 'str',
+        'version': 'str'
     }
 
     attribute_map = {
-        'version': 'version',
-        'name': 'name',
         'uuid': 'UUID',
-        'remote_uuid': 'remote_UUID',
         'user': 'User',
-        'triggering_point': 'triggering_point',
+        'job_refs': 'job_refs',
+        'jobs': 'jobs',
         'location': 'location',
-        'remote': 'remote',
+        'name': 'name',
         'progress': 'progress',
+        'remote': 'remote',
+        'remote_uuid': 'remote_UUID',
         'status': 'status',
         'time_stamp': 'time_stamp',
-        'jobs': 'jobs',
-        'job_refs': 'job_refs'
+        'triggering_point': 'triggering_point',
+        'version': 'version'
     }
 
-    def __init__(self, version=None, name=None, uuid=None, remote_uuid=None, user=None, triggering_point=None, location=None, remote=None, progress=None, status=None, time_stamp=None, jobs=None, job_refs=None):  # noqa: E501
+    def __init__(self, uuid=None, user=None, job_refs=None, jobs=None, location=None, name=None, progress=None, remote=None, remote_uuid=None, status=None, time_stamp=None, triggering_point=None, version=None):  # noqa: E501
         """MigrationModel - a model defined in Swagger"""  # noqa: E501
 
-        self._version = None
-        self._name = None
         self._uuid = None
-        self._remote_uuid = None
         self._user = None
-        self._triggering_point = None
+        self._job_refs = None
+        self._jobs = None
         self._location = None
-        self._remote = None
+        self._name = None
         self._progress = None
+        self._remote = None
+        self._remote_uuid = None
         self._status = None
         self._time_stamp = None
-        self._jobs = None
-        self._job_refs = None
+        self._triggering_point = None
+        self._version = None
         self.discriminator = None
 
-        if version is not None:
-            self.version = version
-        if name is not None:
-            self.name = name
         if uuid is not None:
             self.uuid = uuid
-        if remote_uuid is not None:
-            self.remote_uuid = remote_uuid
         if user is not None:
             self.user = user
-        if triggering_point is not None:
-            self.triggering_point = triggering_point
+        if job_refs is not None:
+            self.job_refs = job_refs
+        if jobs is not None:
+            self.jobs = jobs
         if location is not None:
             self.location = location
-        if remote is not None:
-            self.remote = remote
+        if name is not None:
+            self.name = name
         if progress is not None:
             self.progress = progress
+        if remote is not None:
+            self.remote = remote
+        if remote_uuid is not None:
+            self.remote_uuid = remote_uuid
         if status is not None:
             self.status = status
         if time_stamp is not None:
             self.time_stamp = time_stamp
-        if jobs is not None:
-            self.jobs = jobs
-        if job_refs is not None:
-            self.job_refs = job_refs
-
-    @property
-    def version(self):
-        """Gets the version of this MigrationModel.  # noqa: E501
-
-
-        :return: The version of this MigrationModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version):
-        """Sets the version of this MigrationModel.
-
-
-        :param version: The version of this MigrationModel.  # noqa: E501
-        :type: str
-        """
-
-        self._version = version
-
-    @property
-    def name(self):
-        """Gets the name of this MigrationModel.  # noqa: E501
-
-
-        :return: The name of this MigrationModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this MigrationModel.
-
-
-        :param name: The name of this MigrationModel.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
+        if triggering_point is not None:
+            self.triggering_point = triggering_point
+        if version is not None:
+            self.version = version
 
     @property
     def uuid(self):
@@ -171,27 +129,6 @@ class MigrationModel(object):
         self._uuid = uuid
 
     @property
-    def remote_uuid(self):
-        """Gets the remote_uuid of this MigrationModel.  # noqa: E501
-
-
-        :return: The remote_uuid of this MigrationModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._remote_uuid
-
-    @remote_uuid.setter
-    def remote_uuid(self, remote_uuid):
-        """Sets the remote_uuid of this MigrationModel.
-
-
-        :param remote_uuid: The remote_uuid of this MigrationModel.  # noqa: E501
-        :type: str
-        """
-
-        self._remote_uuid = remote_uuid
-
-    @property
     def user(self):
         """Gets the user of this MigrationModel.  # noqa: E501
 
@@ -213,31 +150,46 @@ class MigrationModel(object):
         self._user = user
 
     @property
-    def triggering_point(self):
-        """Gets the triggering_point of this MigrationModel.  # noqa: E501
+    def job_refs(self):
+        """Gets the job_refs of this MigrationModel.  # noqa: E501
 
 
-        :return: The triggering_point of this MigrationModel.  # noqa: E501
-        :rtype: str
+        :return: The job_refs of this MigrationModel.  # noqa: E501
+        :rtype: list[str]
         """
-        return self._triggering_point
+        return self._job_refs
 
-    @triggering_point.setter
-    def triggering_point(self, triggering_point):
-        """Sets the triggering_point of this MigrationModel.
+    @job_refs.setter
+    def job_refs(self, job_refs):
+        """Sets the job_refs of this MigrationModel.
 
 
-        :param triggering_point: The triggering_point of this MigrationModel.  # noqa: E501
-        :type: str
+        :param job_refs: The job_refs of this MigrationModel.  # noqa: E501
+        :type: list[str]
         """
-        allowed_values = ["source", "target"]  # noqa: E501
-        if triggering_point not in allowed_values:
-            raise ValueError(
-                "Invalid value for `triggering_point` ({0}), must be one of {1}"  # noqa: E501
-                .format(triggering_point, allowed_values)
-            )
 
-        self._triggering_point = triggering_point
+        self._job_refs = job_refs
+
+    @property
+    def jobs(self):
+        """Gets the jobs of this MigrationModel.  # noqa: E501
+
+
+        :return: The jobs of this MigrationModel.  # noqa: E501
+        :rtype: list[MigrationJobEntry]
+        """
+        return self._jobs
+
+    @jobs.setter
+    def jobs(self, jobs):
+        """Sets the jobs of this MigrationModel.
+
+
+        :param jobs: The jobs of this MigrationModel.  # noqa: E501
+        :type: list[MigrationJobEntry]
+        """
+
+        self._jobs = jobs
 
     @property
     def location(self):
@@ -267,25 +219,25 @@ class MigrationModel(object):
         self._location = location
 
     @property
-    def remote(self):
-        """Gets the remote of this MigrationModel.  # noqa: E501
+    def name(self):
+        """Gets the name of this MigrationModel.  # noqa: E501
 
 
-        :return: The remote of this MigrationModel.  # noqa: E501
-        :rtype: MigrationModelRemote
+        :return: The name of this MigrationModel.  # noqa: E501
+        :rtype: str
         """
-        return self._remote
+        return self._name
 
-    @remote.setter
-    def remote(self, remote):
-        """Sets the remote of this MigrationModel.
+    @name.setter
+    def name(self, name):
+        """Sets the name of this MigrationModel.
 
 
-        :param remote: The remote of this MigrationModel.  # noqa: E501
-        :type: MigrationModelRemote
+        :param name: The name of this MigrationModel.  # noqa: E501
+        :type: str
         """
 
-        self._remote = remote
+        self._name = name
 
     @property
     def progress(self):
@@ -307,6 +259,48 @@ class MigrationModel(object):
         """
 
         self._progress = progress
+
+    @property
+    def remote(self):
+        """Gets the remote of this MigrationModel.  # noqa: E501
+
+
+        :return: The remote of this MigrationModel.  # noqa: E501
+        :rtype: MigrationModelRemote
+        """
+        return self._remote
+
+    @remote.setter
+    def remote(self, remote):
+        """Sets the remote of this MigrationModel.
+
+
+        :param remote: The remote of this MigrationModel.  # noqa: E501
+        :type: MigrationModelRemote
+        """
+
+        self._remote = remote
+
+    @property
+    def remote_uuid(self):
+        """Gets the remote_uuid of this MigrationModel.  # noqa: E501
+
+
+        :return: The remote_uuid of this MigrationModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._remote_uuid
+
+    @remote_uuid.setter
+    def remote_uuid(self, remote_uuid):
+        """Sets the remote_uuid of this MigrationModel.
+
+
+        :param remote_uuid: The remote_uuid of this MigrationModel.  # noqa: E501
+        :type: str
+        """
+
+        self._remote_uuid = remote_uuid
 
     @property
     def status(self):
@@ -351,46 +345,52 @@ class MigrationModel(object):
         self._time_stamp = time_stamp
 
     @property
-    def jobs(self):
-        """Gets the jobs of this MigrationModel.  # noqa: E501
+    def triggering_point(self):
+        """Gets the triggering_point of this MigrationModel.  # noqa: E501
 
 
-        :return: The jobs of this MigrationModel.  # noqa: E501
-        :rtype: list[MigrationJobEntry]
+        :return: The triggering_point of this MigrationModel.  # noqa: E501
+        :rtype: str
         """
-        return self._jobs
+        return self._triggering_point
 
-    @jobs.setter
-    def jobs(self, jobs):
-        """Sets the jobs of this MigrationModel.
+    @triggering_point.setter
+    def triggering_point(self, triggering_point):
+        """Sets the triggering_point of this MigrationModel.
 
 
-        :param jobs: The jobs of this MigrationModel.  # noqa: E501
-        :type: list[MigrationJobEntry]
+        :param triggering_point: The triggering_point of this MigrationModel.  # noqa: E501
+        :type: str
         """
+        allowed_values = ["source", "target"]  # noqa: E501
+        if triggering_point not in allowed_values:
+            raise ValueError(
+                "Invalid value for `triggering_point` ({0}), must be one of {1}"  # noqa: E501
+                .format(triggering_point, allowed_values)
+            )
 
-        self._jobs = jobs
+        self._triggering_point = triggering_point
 
     @property
-    def job_refs(self):
-        """Gets the job_refs of this MigrationModel.  # noqa: E501
+    def version(self):
+        """Gets the version of this MigrationModel.  # noqa: E501
 
 
-        :return: The job_refs of this MigrationModel.  # noqa: E501
-        :rtype: list[str]
+        :return: The version of this MigrationModel.  # noqa: E501
+        :rtype: str
         """
-        return self._job_refs
+        return self._version
 
-    @job_refs.setter
-    def job_refs(self, job_refs):
-        """Sets the job_refs of this MigrationModel.
+    @version.setter
+    def version(self, version):
+        """Sets the version of this MigrationModel.
 
 
-        :param job_refs: The job_refs of this MigrationModel.  # noqa: E501
-        :type: list[str]
+        :param version: The version of this MigrationModel.  # noqa: E501
+        :type: str
         """
 
-        self._job_refs = job_refs
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

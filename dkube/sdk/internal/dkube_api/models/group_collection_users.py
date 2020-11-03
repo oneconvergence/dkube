@@ -31,47 +31,26 @@ class GroupCollectionUsers(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'user': 'UserModel',
-        'devices': 'list[DeviceModel]'
+        'devices': 'list[DeviceModel]',
+        'user': 'UserModel'
     }
 
     attribute_map = {
-        'user': 'user',
-        'devices': 'devices'
+        'devices': 'devices',
+        'user': 'user'
     }
 
-    def __init__(self, user=None, devices=None):  # noqa: E501
+    def __init__(self, devices=None, user=None):  # noqa: E501
         """GroupCollectionUsers - a model defined in Swagger"""  # noqa: E501
 
-        self._user = None
         self._devices = None
+        self._user = None
         self.discriminator = None
 
-        if user is not None:
-            self.user = user
         if devices is not None:
             self.devices = devices
-
-    @property
-    def user(self):
-        """Gets the user of this GroupCollectionUsers.  # noqa: E501
-
-
-        :return: The user of this GroupCollectionUsers.  # noqa: E501
-        :rtype: UserModel
-        """
-        return self._user
-
-    @user.setter
-    def user(self, user):
-        """Sets the user of this GroupCollectionUsers.
-
-
-        :param user: The user of this GroupCollectionUsers.  # noqa: E501
-        :type: UserModel
-        """
-
-        self._user = user
+        if user is not None:
+            self.user = user
 
     @property
     def devices(self):
@@ -93,6 +72,27 @@ class GroupCollectionUsers(object):
         """
 
         self._devices = devices
+
+    @property
+    def user(self):
+        """Gets the user of this GroupCollectionUsers.  # noqa: E501
+
+
+        :return: The user of this GroupCollectionUsers.  # noqa: E501
+        :rtype: UserModel
+        """
+        return self._user
+
+    @user.setter
+    def user(self, user):
+        """Sets the user of this GroupCollectionUsers.
+
+
+        :param user: The user of this GroupCollectionUsers.  # noqa: E501
+        :type: UserModel
+        """
+
+        self._user = user
 
     def to_dict(self):
         """Returns the model properties as a dict"""

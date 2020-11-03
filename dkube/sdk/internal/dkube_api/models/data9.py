@@ -31,45 +31,43 @@ class Data9(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'datums': 'list[str]'
+        'pools': 'list[str]'
     }
 
     attribute_map = {
-        'datums': 'datums'
+        'pools': 'pools'
     }
 
-    def __init__(self, datums=None):  # noqa: E501
+    def __init__(self, pools=None):  # noqa: E501
         """Data9 - a model defined in Swagger"""  # noqa: E501
 
-        self._datums = None
+        self._pools = None
         self.discriminator = None
 
-        self.datums = datums
+        self.pools = pools
 
     @property
-    def datums(self):
-        """Gets the datums of this Data9.  # noqa: E501
+    def pools(self):
+        """Gets the pools of this Data9.  # noqa: E501
 
-        List of datums to delete  # noqa: E501
 
-        :return: The datums of this Data9.  # noqa: E501
+        :return: The pools of this Data9.  # noqa: E501
         :rtype: list[str]
         """
-        return self._datums
+        return self._pools
 
-    @datums.setter
-    def datums(self, datums):
-        """Sets the datums of this Data9.
+    @pools.setter
+    def pools(self, pools):
+        """Sets the pools of this Data9.
 
-        List of datums to delete  # noqa: E501
 
-        :param datums: The datums of this Data9.  # noqa: E501
+        :param pools: The pools of this Data9.  # noqa: E501
         :type: list[str]
         """
-        if datums is None:
-            raise ValueError("Invalid value for `datums`, must not be `None`")  # noqa: E501
+        if pools is None:
+            raise ValueError("Invalid value for `pools`, must not be `None`")  # noqa: E501
 
-        self._datums = datums
+        self._pools = pools
 
     def to_dict(self):
         """Returns the model properties as a dict"""

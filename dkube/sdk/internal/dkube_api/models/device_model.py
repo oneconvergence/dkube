@@ -31,107 +31,82 @@ class DeviceModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'version': 'str',
-        'name': 'str',
-        '_class': 'str',
-        'vendor': 'str',
-        'model': 'str',
         'uuid': 'str',
+        '_class': 'str',
+        'created_at': 'TimeStamps',
         'healthy': 'bool',
+        'model': 'str',
+        'name': 'str',
         'node': 'str',
-        'created_at': 'TimeStamps'
+        'vendor': 'str',
+        'version': 'str'
     }
 
     attribute_map = {
-        'version': 'version',
-        'name': 'name',
-        '_class': 'class',
-        'vendor': 'vendor',
-        'model': 'model',
         'uuid': 'UUID',
+        '_class': 'class',
+        'created_at': 'created_at',
         'healthy': 'healthy',
+        'model': 'model',
+        'name': 'name',
         'node': 'node',
-        'created_at': 'created_at'
+        'vendor': 'vendor',
+        'version': 'version'
     }
 
-    def __init__(self, version=None, name=None, _class='gpu', vendor='nvidia', model=None, uuid=None, healthy=True, node=None, created_at=None):  # noqa: E501
+    def __init__(self, uuid=None, _class='gpu', created_at=None, healthy=True, model=None, name=None, node=None, vendor='nvidia', version=None):  # noqa: E501
         """DeviceModel - a model defined in Swagger"""  # noqa: E501
 
-        self._version = None
-        self._name = None
-        self.__class = None
-        self._vendor = None
-        self._model = None
         self._uuid = None
-        self._healthy = None
-        self._node = None
+        self.__class = None
         self._created_at = None
+        self._healthy = None
+        self._model = None
+        self._name = None
+        self._node = None
+        self._vendor = None
+        self._version = None
         self.discriminator = None
 
-        if version is not None:
-            self.version = version
-        if name is not None:
-            self.name = name
-        if _class is not None:
-            self._class = _class
-        if vendor is not None:
-            self.vendor = vendor
-        if model is not None:
-            self.model = model
         if uuid is not None:
             self.uuid = uuid
-        if healthy is not None:
-            self.healthy = healthy
-        if node is not None:
-            self.node = node
+        if _class is not None:
+            self._class = _class
         if created_at is not None:
             self.created_at = created_at
+        if healthy is not None:
+            self.healthy = healthy
+        if model is not None:
+            self.model = model
+        if name is not None:
+            self.name = name
+        if node is not None:
+            self.node = node
+        if vendor is not None:
+            self.vendor = vendor
+        if version is not None:
+            self.version = version
 
     @property
-    def version(self):
-        """Gets the version of this DeviceModel.  # noqa: E501
+    def uuid(self):
+        """Gets the uuid of this DeviceModel.  # noqa: E501
 
 
-        :return: The version of this DeviceModel.  # noqa: E501
+        :return: The uuid of this DeviceModel.  # noqa: E501
         :rtype: str
         """
-        return self._version
+        return self._uuid
 
-    @version.setter
-    def version(self, version):
-        """Sets the version of this DeviceModel.
+    @uuid.setter
+    def uuid(self, uuid):
+        """Sets the uuid of this DeviceModel.
 
 
-        :param version: The version of this DeviceModel.  # noqa: E501
+        :param uuid: The uuid of this DeviceModel.  # noqa: E501
         :type: str
         """
 
-        self._version = version
-
-    @property
-    def name(self):
-        """Gets the name of this DeviceModel.  # noqa: E501
-
-
-        :return: The name of this DeviceModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this DeviceModel.
-
-
-        :param name: The name of this DeviceModel.  # noqa: E501
-        :type: str
-        """
-        if name is not None and len(name) > 255:
-            raise ValueError("Invalid value for `name`, length must be less than or equal to `255`")  # noqa: E501
-        if name is not None and len(name) < 1:
-            raise ValueError("Invalid value for `name`, length must be greater than or equal to `1`")  # noqa: E501
-
-        self._name = name
+        self._uuid = uuid
 
     @property
     def _class(self):
@@ -161,6 +136,115 @@ class DeviceModel(object):
         self.__class = _class
 
     @property
+    def created_at(self):
+        """Gets the created_at of this DeviceModel.  # noqa: E501
+
+
+        :return: The created_at of this DeviceModel.  # noqa: E501
+        :rtype: TimeStamps
+        """
+        return self._created_at
+
+    @created_at.setter
+    def created_at(self, created_at):
+        """Sets the created_at of this DeviceModel.
+
+
+        :param created_at: The created_at of this DeviceModel.  # noqa: E501
+        :type: TimeStamps
+        """
+
+        self._created_at = created_at
+
+    @property
+    def healthy(self):
+        """Gets the healthy of this DeviceModel.  # noqa: E501
+
+
+        :return: The healthy of this DeviceModel.  # noqa: E501
+        :rtype: bool
+        """
+        return self._healthy
+
+    @healthy.setter
+    def healthy(self, healthy):
+        """Sets the healthy of this DeviceModel.
+
+
+        :param healthy: The healthy of this DeviceModel.  # noqa: E501
+        :type: bool
+        """
+
+        self._healthy = healthy
+
+    @property
+    def model(self):
+        """Gets the model of this DeviceModel.  # noqa: E501
+
+
+        :return: The model of this DeviceModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._model
+
+    @model.setter
+    def model(self, model):
+        """Sets the model of this DeviceModel.
+
+
+        :param model: The model of this DeviceModel.  # noqa: E501
+        :type: str
+        """
+
+        self._model = model
+
+    @property
+    def name(self):
+        """Gets the name of this DeviceModel.  # noqa: E501
+
+
+        :return: The name of this DeviceModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this DeviceModel.
+
+
+        :param name: The name of this DeviceModel.  # noqa: E501
+        :type: str
+        """
+        if name is not None and len(name) > 255:
+            raise ValueError("Invalid value for `name`, length must be less than or equal to `255`")  # noqa: E501
+        if name is not None and len(name) < 1:
+            raise ValueError("Invalid value for `name`, length must be greater than or equal to `1`")  # noqa: E501
+
+        self._name = name
+
+    @property
+    def node(self):
+        """Gets the node of this DeviceModel.  # noqa: E501
+
+
+        :return: The node of this DeviceModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._node
+
+    @node.setter
+    def node(self, node):
+        """Sets the node of this DeviceModel.
+
+
+        :param node: The node of this DeviceModel.  # noqa: E501
+        :type: str
+        """
+
+        self._node = node
+
+    @property
     def vendor(self):
         """Gets the vendor of this DeviceModel.  # noqa: E501
 
@@ -188,109 +272,25 @@ class DeviceModel(object):
         self._vendor = vendor
 
     @property
-    def model(self):
-        """Gets the model of this DeviceModel.  # noqa: E501
+    def version(self):
+        """Gets the version of this DeviceModel.  # noqa: E501
 
 
-        :return: The model of this DeviceModel.  # noqa: E501
+        :return: The version of this DeviceModel.  # noqa: E501
         :rtype: str
         """
-        return self._model
+        return self._version
 
-    @model.setter
-    def model(self, model):
-        """Sets the model of this DeviceModel.
+    @version.setter
+    def version(self, version):
+        """Sets the version of this DeviceModel.
 
 
-        :param model: The model of this DeviceModel.  # noqa: E501
+        :param version: The version of this DeviceModel.  # noqa: E501
         :type: str
         """
 
-        self._model = model
-
-    @property
-    def uuid(self):
-        """Gets the uuid of this DeviceModel.  # noqa: E501
-
-
-        :return: The uuid of this DeviceModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._uuid
-
-    @uuid.setter
-    def uuid(self, uuid):
-        """Sets the uuid of this DeviceModel.
-
-
-        :param uuid: The uuid of this DeviceModel.  # noqa: E501
-        :type: str
-        """
-
-        self._uuid = uuid
-
-    @property
-    def healthy(self):
-        """Gets the healthy of this DeviceModel.  # noqa: E501
-
-
-        :return: The healthy of this DeviceModel.  # noqa: E501
-        :rtype: bool
-        """
-        return self._healthy
-
-    @healthy.setter
-    def healthy(self, healthy):
-        """Sets the healthy of this DeviceModel.
-
-
-        :param healthy: The healthy of this DeviceModel.  # noqa: E501
-        :type: bool
-        """
-
-        self._healthy = healthy
-
-    @property
-    def node(self):
-        """Gets the node of this DeviceModel.  # noqa: E501
-
-
-        :return: The node of this DeviceModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._node
-
-    @node.setter
-    def node(self, node):
-        """Sets the node of this DeviceModel.
-
-
-        :param node: The node of this DeviceModel.  # noqa: E501
-        :type: str
-        """
-
-        self._node = node
-
-    @property
-    def created_at(self):
-        """Gets the created_at of this DeviceModel.  # noqa: E501
-
-
-        :return: The created_at of this DeviceModel.  # noqa: E501
-        :rtype: TimeStamps
-        """
-        return self._created_at
-
-    @created_at.setter
-    def created_at(self, created_at):
-        """Sets the created_at of this DeviceModel.
-
-
-        :param created_at: The created_at of this DeviceModel.  # noqa: E501
-        :type: TimeStamps
-        """
-
-        self._created_at = created_at
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -32,45 +32,45 @@ class ModelMetricsInner(object):
     """
     swagger_types = {
         '_class': 'str',
+        'confusion_matrix': 'ModelMetricsInnerConfusionMatrix',
+        'curve': 'ModelMetricsInnerConfusionMatrix',
         'name': 'str',
-        'curve': 'ModelMetricsInnerCurve',
-        'table': 'ModelMetricsInnerCurve',
         'scalar': 'str',
-        'confusion_matrix': 'ModelMetricsInnerCurve'
+        'table': 'ModelMetricsInnerConfusionMatrix'
     }
 
     attribute_map = {
         '_class': 'class',
-        'name': 'name',
+        'confusion_matrix': 'confusion_matrix',
         'curve': 'curve',
-        'table': 'table',
+        'name': 'name',
         'scalar': 'scalar',
-        'confusion_matrix': 'confusion_matrix'
+        'table': 'table'
     }
 
-    def __init__(self, _class=None, name=None, curve=None, table=None, scalar=None, confusion_matrix=None):  # noqa: E501
+    def __init__(self, _class=None, confusion_matrix=None, curve=None, name=None, scalar=None, table=None):  # noqa: E501
         """ModelMetricsInner - a model defined in Swagger"""  # noqa: E501
 
         self.__class = None
-        self._name = None
-        self._curve = None
-        self._table = None
-        self._scalar = None
         self._confusion_matrix = None
+        self._curve = None
+        self._name = None
+        self._scalar = None
+        self._table = None
         self.discriminator = None
 
         if _class is not None:
             self._class = _class
-        if name is not None:
-            self.name = name
-        if curve is not None:
-            self.curve = curve
-        if table is not None:
-            self.table = table
-        if scalar is not None:
-            self.scalar = scalar
         if confusion_matrix is not None:
             self.confusion_matrix = confusion_matrix
+        if curve is not None:
+            self.curve = curve
+        if name is not None:
+            self.name = name
+        if scalar is not None:
+            self.scalar = scalar
+        if table is not None:
+            self.table = table
 
     @property
     def _class(self):
@@ -100,6 +100,48 @@ class ModelMetricsInner(object):
         self.__class = _class
 
     @property
+    def confusion_matrix(self):
+        """Gets the confusion_matrix of this ModelMetricsInner.  # noqa: E501
+
+
+        :return: The confusion_matrix of this ModelMetricsInner.  # noqa: E501
+        :rtype: ModelMetricsInnerConfusionMatrix
+        """
+        return self._confusion_matrix
+
+    @confusion_matrix.setter
+    def confusion_matrix(self, confusion_matrix):
+        """Sets the confusion_matrix of this ModelMetricsInner.
+
+
+        :param confusion_matrix: The confusion_matrix of this ModelMetricsInner.  # noqa: E501
+        :type: ModelMetricsInnerConfusionMatrix
+        """
+
+        self._confusion_matrix = confusion_matrix
+
+    @property
+    def curve(self):
+        """Gets the curve of this ModelMetricsInner.  # noqa: E501
+
+
+        :return: The curve of this ModelMetricsInner.  # noqa: E501
+        :rtype: ModelMetricsInnerConfusionMatrix
+        """
+        return self._curve
+
+    @curve.setter
+    def curve(self, curve):
+        """Sets the curve of this ModelMetricsInner.
+
+
+        :param curve: The curve of this ModelMetricsInner.  # noqa: E501
+        :type: ModelMetricsInnerConfusionMatrix
+        """
+
+        self._curve = curve
+
+    @property
     def name(self):
         """Gets the name of this ModelMetricsInner.  # noqa: E501
 
@@ -119,48 +161,6 @@ class ModelMetricsInner(object):
         """
 
         self._name = name
-
-    @property
-    def curve(self):
-        """Gets the curve of this ModelMetricsInner.  # noqa: E501
-
-
-        :return: The curve of this ModelMetricsInner.  # noqa: E501
-        :rtype: ModelMetricsInnerCurve
-        """
-        return self._curve
-
-    @curve.setter
-    def curve(self, curve):
-        """Sets the curve of this ModelMetricsInner.
-
-
-        :param curve: The curve of this ModelMetricsInner.  # noqa: E501
-        :type: ModelMetricsInnerCurve
-        """
-
-        self._curve = curve
-
-    @property
-    def table(self):
-        """Gets the table of this ModelMetricsInner.  # noqa: E501
-
-
-        :return: The table of this ModelMetricsInner.  # noqa: E501
-        :rtype: ModelMetricsInnerCurve
-        """
-        return self._table
-
-    @table.setter
-    def table(self, table):
-        """Sets the table of this ModelMetricsInner.
-
-
-        :param table: The table of this ModelMetricsInner.  # noqa: E501
-        :type: ModelMetricsInnerCurve
-        """
-
-        self._table = table
 
     @property
     def scalar(self):
@@ -184,25 +184,25 @@ class ModelMetricsInner(object):
         self._scalar = scalar
 
     @property
-    def confusion_matrix(self):
-        """Gets the confusion_matrix of this ModelMetricsInner.  # noqa: E501
+    def table(self):
+        """Gets the table of this ModelMetricsInner.  # noqa: E501
 
 
-        :return: The confusion_matrix of this ModelMetricsInner.  # noqa: E501
-        :rtype: ModelMetricsInnerCurve
+        :return: The table of this ModelMetricsInner.  # noqa: E501
+        :rtype: ModelMetricsInnerConfusionMatrix
         """
-        return self._confusion_matrix
+        return self._table
 
-    @confusion_matrix.setter
-    def confusion_matrix(self, confusion_matrix):
-        """Sets the confusion_matrix of this ModelMetricsInner.
+    @table.setter
+    def table(self, table):
+        """Sets the table of this ModelMetricsInner.
 
 
-        :param confusion_matrix: The confusion_matrix of this ModelMetricsInner.  # noqa: E501
-        :type: ModelMetricsInnerCurve
+        :param table: The table of this ModelMetricsInner.  # noqa: E501
+        :type: ModelMetricsInnerConfusionMatrix
         """
 
-        self._confusion_matrix = confusion_matrix
+        self._table = table
 
     def to_dict(self):
         """Returns the model properties as a dict"""

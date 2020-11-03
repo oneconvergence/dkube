@@ -31,42 +31,68 @@ class InlineResponse2008(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'members': 'list[str]'
+        'data': 'list[GroupCollection]',
+        'response': 'ApiResponse'
     }
 
     attribute_map = {
-        'members': 'members'
+        'data': 'data',
+        'response': 'response'
     }
 
-    def __init__(self, members=None):  # noqa: E501
+    def __init__(self, data=None, response=None):  # noqa: E501
         """InlineResponse2008 - a model defined in Swagger"""  # noqa: E501
 
-        self._members = None
+        self._data = None
+        self._response = None
         self.discriminator = None
 
-        if members is not None:
-            self.members = members
+        if data is not None:
+            self.data = data
+        if response is not None:
+            self.response = response
 
     @property
-    def members(self):
-        """Gets the members of this InlineResponse2008.  # noqa: E501
+    def data(self):
+        """Gets the data of this InlineResponse2008.  # noqa: E501
 
 
-        :return: The members of this InlineResponse2008.  # noqa: E501
-        :rtype: list[str]
+        :return: The data of this InlineResponse2008.  # noqa: E501
+        :rtype: list[GroupCollection]
         """
-        return self._members
+        return self._data
 
-    @members.setter
-    def members(self, members):
-        """Sets the members of this InlineResponse2008.
+    @data.setter
+    def data(self, data):
+        """Sets the data of this InlineResponse2008.
 
 
-        :param members: The members of this InlineResponse2008.  # noqa: E501
-        :type: list[str]
+        :param data: The data of this InlineResponse2008.  # noqa: E501
+        :type: list[GroupCollection]
         """
 
-        self._members = members
+        self._data = data
+
+    @property
+    def response(self):
+        """Gets the response of this InlineResponse2008.  # noqa: E501
+
+
+        :return: The response of this InlineResponse2008.  # noqa: E501
+        :rtype: ApiResponse
+        """
+        return self._response
+
+    @response.setter
+    def response(self, response):
+        """Sets the response of this InlineResponse2008.
+
+
+        :param response: The response of this InlineResponse2008.  # noqa: E501
+        :type: ApiResponse
+        """
+
+        self._response = response
 
     def to_dict(self):
         """Returns the model properties as a dict"""

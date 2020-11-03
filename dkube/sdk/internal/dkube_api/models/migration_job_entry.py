@@ -31,47 +31,26 @@ class MigrationJobEntry(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'name': 'str',
-        '_class': 'str'
+        '_class': 'str',
+        'name': 'str'
     }
 
     attribute_map = {
-        'name': 'name',
-        '_class': 'class'
+        '_class': 'class',
+        'name': 'name'
     }
 
-    def __init__(self, name=None, _class=None):  # noqa: E501
+    def __init__(self, _class=None, name=None):  # noqa: E501
         """MigrationJobEntry - a model defined in Swagger"""  # noqa: E501
 
-        self._name = None
         self.__class = None
+        self._name = None
         self.discriminator = None
 
-        if name is not None:
-            self.name = name
         if _class is not None:
             self._class = _class
-
-    @property
-    def name(self):
-        """Gets the name of this MigrationJobEntry.  # noqa: E501
-
-
-        :return: The name of this MigrationJobEntry.  # noqa: E501
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this MigrationJobEntry.
-
-
-        :param name: The name of this MigrationJobEntry.  # noqa: E501
-        :type: str
-        """
-
-        self._name = name
+        if name is not None:
+            self.name = name
 
     @property
     def _class(self):
@@ -93,6 +72,27 @@ class MigrationJobEntry(object):
         """
 
         self.__class = _class
+
+    @property
+    def name(self):
+        """Gets the name of this MigrationJobEntry.  # noqa: E501
+
+
+        :return: The name of this MigrationJobEntry.  # noqa: E501
+        :rtype: str
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        """Sets the name of this MigrationJobEntry.
+
+
+        :param name: The name of this MigrationJobEntry.  # noqa: E501
+        :type: str
+        """
+
+        self._name = name
 
     def to_dict(self):
         """Returns the model properties as a dict"""

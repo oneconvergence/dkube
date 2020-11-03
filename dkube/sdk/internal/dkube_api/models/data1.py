@@ -31,52 +31,52 @@ class Data1(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'type': 'str',
+        'event_data': 'ModeldeployEventData',
         'operator': 'str',
-        'event_data': 'ModeldeployEventData'
+        'type': 'str'
     }
 
     attribute_map = {
-        'type': 'type',
+        'event_data': 'event_data',
         'operator': 'operator',
-        'event_data': 'event_data'
+        'type': 'type'
     }
 
-    def __init__(self, type=None, operator=None, event_data=None):  # noqa: E501
+    def __init__(self, event_data=None, operator=None, type=None):  # noqa: E501
         """Data1 - a model defined in Swagger"""  # noqa: E501
 
-        self._type = None
-        self._operator = None
         self._event_data = None
+        self._operator = None
+        self._type = None
         self.discriminator = None
 
-        if type is not None:
-            self.type = type
-        if operator is not None:
-            self.operator = operator
         if event_data is not None:
             self.event_data = event_data
+        if operator is not None:
+            self.operator = operator
+        if type is not None:
+            self.type = type
 
     @property
-    def type(self):
-        """Gets the type of this Data1.  # noqa: E501
+    def event_data(self):
+        """Gets the event_data of this Data1.  # noqa: E501
 
 
-        :return: The type of this Data1.  # noqa: E501
-        :rtype: str
+        :return: The event_data of this Data1.  # noqa: E501
+        :rtype: ModeldeployEventData
         """
-        return self._type
+        return self._event_data
 
-    @type.setter
-    def type(self, type):
-        """Sets the type of this Data1.
+    @event_data.setter
+    def event_data(self, event_data):
+        """Sets the event_data of this Data1.
 
 
-        :param type: The type of this Data1.  # noqa: E501
-        :type: str
+        :param event_data: The event_data of this Data1.  # noqa: E501
+        :type: ModeldeployEventData
         """
 
-        self._type = type
+        self._event_data = event_data
 
     @property
     def operator(self):
@@ -100,25 +100,25 @@ class Data1(object):
         self._operator = operator
 
     @property
-    def event_data(self):
-        """Gets the event_data of this Data1.  # noqa: E501
+    def type(self):
+        """Gets the type of this Data1.  # noqa: E501
 
 
-        :return: The event_data of this Data1.  # noqa: E501
-        :rtype: ModeldeployEventData
+        :return: The type of this Data1.  # noqa: E501
+        :rtype: str
         """
-        return self._event_data
+        return self._type
 
-    @event_data.setter
-    def event_data(self, event_data):
-        """Sets the event_data of this Data1.
+    @type.setter
+    def type(self, type):
+        """Sets the type of this Data1.
 
 
-        :param event_data: The event_data of this Data1.  # noqa: E501
-        :type: ModeldeployEventData
+        :param type: The type of this Data1.  # noqa: E501
+        :type: str
         """
 
-        self._event_data = event_data
+        self._type = type
 
     def to_dict(self):
         """Returns the model properties as a dict"""

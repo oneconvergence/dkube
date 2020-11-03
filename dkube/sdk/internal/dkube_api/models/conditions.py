@@ -32,30 +32,30 @@ class Conditions(object):
     """
     swagger_types = {
         'match': 'str',
-        'user': 'str',
-        'name': 'str'
+        'name': 'str',
+        'user': 'str'
     }
 
     attribute_map = {
         'match': 'match',
-        'user': 'user',
-        'name': 'name'
+        'name': 'name',
+        'user': 'user'
     }
 
-    def __init__(self, match=None, user=None, name=None):  # noqa: E501
+    def __init__(self, match=None, name=None, user=None):  # noqa: E501
         """Conditions - a model defined in Swagger"""  # noqa: E501
 
         self._match = None
-        self._user = None
         self._name = None
+        self._user = None
         self.discriminator = None
 
         if match is not None:
             self.match = match
-        if user is not None:
-            self.user = user
         if name is not None:
             self.name = name
+        if user is not None:
+            self.user = user
 
     @property
     def match(self):
@@ -85,27 +85,6 @@ class Conditions(object):
         self._match = match
 
     @property
-    def user(self):
-        """Gets the user of this Conditions.  # noqa: E501
-
-
-        :return: The user of this Conditions.  # noqa: E501
-        :rtype: str
-        """
-        return self._user
-
-    @user.setter
-    def user(self, user):
-        """Sets the user of this Conditions.
-
-
-        :param user: The user of this Conditions.  # noqa: E501
-        :type: str
-        """
-
-        self._user = user
-
-    @property
     def name(self):
         """Gets the name of this Conditions.  # noqa: E501
 
@@ -125,6 +104,27 @@ class Conditions(object):
         """
 
         self._name = name
+
+    @property
+    def user(self):
+        """Gets the user of this Conditions.  # noqa: E501
+
+
+        :return: The user of this Conditions.  # noqa: E501
+        :rtype: str
+        """
+        return self._user
+
+    @user.setter
+    def user(self, user):
+        """Sets the user of this Conditions.
+
+
+        :param user: The user of this Conditions.  # noqa: E501
+        :type: str
+        """
+
+        self._user = user
 
     def to_dict(self):
         """Returns the model properties as a dict"""

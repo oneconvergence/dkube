@@ -131,7 +131,7 @@ class DfabApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param Data21 data: (required)
+        :param Data2 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -152,7 +152,7 @@ class DfabApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param Data21 data: (required)
+        :param Data2 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -228,7 +228,7 @@ class DfabApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param Data22 data: (required)
+        :param Data3 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -249,7 +249,7 @@ class DfabApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param Data22 data: (required)
+        :param Data3 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -325,7 +325,7 @@ class DfabApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20035
+        :return: InlineResponse2008
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -345,7 +345,7 @@ class DfabApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20035
+        :return: InlineResponse2008
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -397,7 +397,7 @@ class DfabApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20035',  # noqa: E501
+            response_type='InlineResponse2008',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -415,7 +415,7 @@ class DfabApi(object):
 
         :param async_req bool
         :param str group: (required)
-        :return: InlineResponse20036
+        :return: InlineResponse2009
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -436,7 +436,7 @@ class DfabApi(object):
 
         :param async_req bool
         :param str group: (required)
-        :return: InlineResponse20036
+        :return: InlineResponse2009
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -494,7 +494,7 @@ class DfabApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20036',  # noqa: E501
+            response_type='InlineResponse2009',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -511,7 +511,7 @@ class DfabApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20039
+        :return: InlineResponse20013
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -531,7 +531,7 @@ class DfabApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20039
+        :return: InlineResponse20013
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -583,7 +583,7 @@ class DfabApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20039',  # noqa: E501
+            response_type='InlineResponse20013',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -600,7 +600,7 @@ class DfabApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param Data23 data: (required)
+        :param Data8 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -621,7 +621,7 @@ class DfabApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param Data23 data: (required)
+        :param Data8 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -697,7 +697,7 @@ class DfabApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param Data24 data: (required)
+        :param Data9 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -718,7 +718,7 @@ class DfabApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :param Data24 data: (required)
+        :param Data9 data: (required)
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -794,7 +794,7 @@ class DfabApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20037
+        :return: InlineResponse20014
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -814,7 +814,7 @@ class DfabApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20037
+        :return: InlineResponse20014
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -866,7 +866,7 @@ class DfabApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20037',  # noqa: E501
+            response_type='InlineResponse20014',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -884,7 +884,7 @@ class DfabApi(object):
 
         :param async_req bool
         :param str pool: (required)
-        :return: InlineResponse20038
+        :return: InlineResponse20015
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -905,7 +905,7 @@ class DfabApi(object):
 
         :param async_req bool
         :param str pool: (required)
-        :return: InlineResponse20038
+        :return: InlineResponse20015
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -963,7 +963,7 @@ class DfabApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20038',  # noqa: E501
+            response_type='InlineResponse20015',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),

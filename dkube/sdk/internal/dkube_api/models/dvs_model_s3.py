@@ -31,52 +31,52 @@ class DVSModelS3(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'secretkey': 'str',
+        'bucket': 'str',
         'secretid': 'str',
-        'bucket': 'str'
+        'secretkey': 'str'
     }
 
     attribute_map = {
-        'secretkey': 'secretkey',
+        'bucket': 'bucket',
         'secretid': 'secretid',
-        'bucket': 'bucket'
+        'secretkey': 'secretkey'
     }
 
-    def __init__(self, secretkey=None, secretid=None, bucket=None):  # noqa: E501
+    def __init__(self, bucket=None, secretid=None, secretkey=None):  # noqa: E501
         """DVSModelS3 - a model defined in Swagger"""  # noqa: E501
 
-        self._secretkey = None
-        self._secretid = None
         self._bucket = None
+        self._secretid = None
+        self._secretkey = None
         self.discriminator = None
 
-        if secretkey is not None:
-            self.secretkey = secretkey
-        if secretid is not None:
-            self.secretid = secretid
         if bucket is not None:
             self.bucket = bucket
+        if secretid is not None:
+            self.secretid = secretid
+        if secretkey is not None:
+            self.secretkey = secretkey
 
     @property
-    def secretkey(self):
-        """Gets the secretkey of this DVSModelS3.  # noqa: E501
+    def bucket(self):
+        """Gets the bucket of this DVSModelS3.  # noqa: E501
 
 
-        :return: The secretkey of this DVSModelS3.  # noqa: E501
+        :return: The bucket of this DVSModelS3.  # noqa: E501
         :rtype: str
         """
-        return self._secretkey
+        return self._bucket
 
-    @secretkey.setter
-    def secretkey(self, secretkey):
-        """Sets the secretkey of this DVSModelS3.
+    @bucket.setter
+    def bucket(self, bucket):
+        """Sets the bucket of this DVSModelS3.
 
 
-        :param secretkey: The secretkey of this DVSModelS3.  # noqa: E501
+        :param bucket: The bucket of this DVSModelS3.  # noqa: E501
         :type: str
         """
 
-        self._secretkey = secretkey
+        self._bucket = bucket
 
     @property
     def secretid(self):
@@ -100,25 +100,25 @@ class DVSModelS3(object):
         self._secretid = secretid
 
     @property
-    def bucket(self):
-        """Gets the bucket of this DVSModelS3.  # noqa: E501
+    def secretkey(self):
+        """Gets the secretkey of this DVSModelS3.  # noqa: E501
 
 
-        :return: The bucket of this DVSModelS3.  # noqa: E501
+        :return: The secretkey of this DVSModelS3.  # noqa: E501
         :rtype: str
         """
-        return self._bucket
+        return self._secretkey
 
-    @bucket.setter
-    def bucket(self, bucket):
-        """Sets the bucket of this DVSModelS3.
+    @secretkey.setter
+    def secretkey(self, secretkey):
+        """Sets the secretkey of this DVSModelS3.
 
 
-        :param bucket: The bucket of this DVSModelS3.  # noqa: E501
+        :param secretkey: The secretkey of this DVSModelS3.  # noqa: E501
         :type: str
         """
 
-        self._bucket = bucket
+        self._secretkey = secretkey
 
     def to_dict(self):
         """Returns the model properties as a dict"""

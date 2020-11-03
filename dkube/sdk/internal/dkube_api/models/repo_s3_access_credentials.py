@@ -31,47 +31,26 @@ class RepoS3AccessCredentials(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'access_key_id': 'str',
-        'access_key': 'str'
+        'access_key': 'str',
+        'access_key_id': 'str'
     }
 
     attribute_map = {
-        'access_key_id': 'AccessKeyId',
-        'access_key': 'AccessKey'
+        'access_key': 'AccessKey',
+        'access_key_id': 'AccessKeyId'
     }
 
-    def __init__(self, access_key_id=None, access_key=None):  # noqa: E501
+    def __init__(self, access_key=None, access_key_id=None):  # noqa: E501
         """RepoS3AccessCredentials - a model defined in Swagger"""  # noqa: E501
 
-        self._access_key_id = None
         self._access_key = None
+        self._access_key_id = None
         self.discriminator = None
 
-        if access_key_id is not None:
-            self.access_key_id = access_key_id
         if access_key is not None:
             self.access_key = access_key
-
-    @property
-    def access_key_id(self):
-        """Gets the access_key_id of this RepoS3AccessCredentials.  # noqa: E501
-
-
-        :return: The access_key_id of this RepoS3AccessCredentials.  # noqa: E501
-        :rtype: str
-        """
-        return self._access_key_id
-
-    @access_key_id.setter
-    def access_key_id(self, access_key_id):
-        """Sets the access_key_id of this RepoS3AccessCredentials.
-
-
-        :param access_key_id: The access_key_id of this RepoS3AccessCredentials.  # noqa: E501
-        :type: str
-        """
-
-        self._access_key_id = access_key_id
+        if access_key_id is not None:
+            self.access_key_id = access_key_id
 
     @property
     def access_key(self):
@@ -93,6 +72,27 @@ class RepoS3AccessCredentials(object):
         """
 
         self._access_key = access_key
+
+    @property
+    def access_key_id(self):
+        """Gets the access_key_id of this RepoS3AccessCredentials.  # noqa: E501
+
+
+        :return: The access_key_id of this RepoS3AccessCredentials.  # noqa: E501
+        :rtype: str
+        """
+        return self._access_key_id
+
+    @access_key_id.setter
+    def access_key_id(self, access_key_id):
+        """Sets the access_key_id of this RepoS3AccessCredentials.
+
+
+        :param access_key_id: The access_key_id of this RepoS3AccessCredentials.  # noqa: E501
+        :type: str
+        """
+
+        self._access_key_id = access_key_id
 
     def to_dict(self):
         """Returns the model properties as a dict"""

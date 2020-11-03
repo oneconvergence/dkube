@@ -31,26 +31,47 @@ class DatumSourceDetails(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'kind': 'str',
-        'job': 'DatumSourceDetailsJob'
+        'job': 'DatumSourceDetailsJob',
+        'kind': 'str'
     }
 
     attribute_map = {
-        'kind': 'kind',
-        'job': 'job'
+        'job': 'job',
+        'kind': 'kind'
     }
 
-    def __init__(self, kind=None, job=None):  # noqa: E501
+    def __init__(self, job=None, kind=None):  # noqa: E501
         """DatumSourceDetails - a model defined in Swagger"""  # noqa: E501
 
-        self._kind = None
         self._job = None
+        self._kind = None
         self.discriminator = None
 
-        if kind is not None:
-            self.kind = kind
         if job is not None:
             self.job = job
+        if kind is not None:
+            self.kind = kind
+
+    @property
+    def job(self):
+        """Gets the job of this DatumSourceDetails.  # noqa: E501
+
+
+        :return: The job of this DatumSourceDetails.  # noqa: E501
+        :rtype: DatumSourceDetailsJob
+        """
+        return self._job
+
+    @job.setter
+    def job(self, job):
+        """Sets the job of this DatumSourceDetails.
+
+
+        :param job: The job of this DatumSourceDetails.  # noqa: E501
+        :type: DatumSourceDetailsJob
+        """
+
+        self._job = job
 
     @property
     def kind(self):
@@ -78,27 +99,6 @@ class DatumSourceDetails(object):
             )
 
         self._kind = kind
-
-    @property
-    def job(self):
-        """Gets the job of this DatumSourceDetails.  # noqa: E501
-
-
-        :return: The job of this DatumSourceDetails.  # noqa: E501
-        :rtype: DatumSourceDetailsJob
-        """
-        return self._job
-
-    @job.setter
-    def job(self, job):
-        """Sets the job of this DatumSourceDetails.
-
-
-        :param job: The job of this DatumSourceDetails.  # noqa: E501
-        :type: DatumSourceDetailsJob
-        """
-
-        self._job = job
 
     def to_dict(self):
         """Returns the model properties as a dict"""

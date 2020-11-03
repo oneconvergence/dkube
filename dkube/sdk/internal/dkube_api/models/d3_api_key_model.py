@@ -31,57 +31,36 @@ class D3APIKeyModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'version': 'str',
         'apikey': 'str',
+        'generated': 'D3APIKeyModelGenerated',
         'revoked': 'bool',
-        'generated': 'ModelCatalogItemGenerated'
+        'version': 'str'
     }
 
     attribute_map = {
-        'version': 'version',
         'apikey': 'apikey',
+        'generated': 'generated',
         'revoked': 'revoked',
-        'generated': 'generated'
+        'version': 'version'
     }
 
-    def __init__(self, version=None, apikey=None, revoked=False, generated=None):  # noqa: E501
+    def __init__(self, apikey=None, generated=None, revoked=False, version=None):  # noqa: E501
         """D3APIKeyModel - a model defined in Swagger"""  # noqa: E501
 
-        self._version = None
         self._apikey = None
-        self._revoked = None
         self._generated = None
+        self._revoked = None
+        self._version = None
         self.discriminator = None
 
-        if version is not None:
-            self.version = version
         if apikey is not None:
             self.apikey = apikey
-        if revoked is not None:
-            self.revoked = revoked
         if generated is not None:
             self.generated = generated
-
-    @property
-    def version(self):
-        """Gets the version of this D3APIKeyModel.  # noqa: E501
-
-
-        :return: The version of this D3APIKeyModel.  # noqa: E501
-        :rtype: str
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version):
-        """Sets the version of this D3APIKeyModel.
-
-
-        :param version: The version of this D3APIKeyModel.  # noqa: E501
-        :type: str
-        """
-
-        self._version = version
+        if revoked is not None:
+            self.revoked = revoked
+        if version is not None:
+            self.version = version
 
     @property
     def apikey(self):
@@ -105,6 +84,27 @@ class D3APIKeyModel(object):
         self._apikey = apikey
 
     @property
+    def generated(self):
+        """Gets the generated of this D3APIKeyModel.  # noqa: E501
+
+
+        :return: The generated of this D3APIKeyModel.  # noqa: E501
+        :rtype: D3APIKeyModelGenerated
+        """
+        return self._generated
+
+    @generated.setter
+    def generated(self, generated):
+        """Sets the generated of this D3APIKeyModel.
+
+
+        :param generated: The generated of this D3APIKeyModel.  # noqa: E501
+        :type: D3APIKeyModelGenerated
+        """
+
+        self._generated = generated
+
+    @property
     def revoked(self):
         """Gets the revoked of this D3APIKeyModel.  # noqa: E501
 
@@ -126,25 +126,25 @@ class D3APIKeyModel(object):
         self._revoked = revoked
 
     @property
-    def generated(self):
-        """Gets the generated of this D3APIKeyModel.  # noqa: E501
+    def version(self):
+        """Gets the version of this D3APIKeyModel.  # noqa: E501
 
 
-        :return: The generated of this D3APIKeyModel.  # noqa: E501
-        :rtype: ModelCatalogItemGenerated
+        :return: The version of this D3APIKeyModel.  # noqa: E501
+        :rtype: str
         """
-        return self._generated
+        return self._version
 
-    @generated.setter
-    def generated(self, generated):
-        """Sets the generated of this D3APIKeyModel.
+    @version.setter
+    def version(self, version):
+        """Sets the version of this D3APIKeyModel.
 
 
-        :param generated: The generated of this D3APIKeyModel.  # noqa: E501
-        :type: ModelCatalogItemGenerated
+        :param version: The version of this D3APIKeyModel.  # noqa: E501
+        :type: str
         """
 
-        self._generated = generated
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

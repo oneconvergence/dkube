@@ -31,68 +31,94 @@ class InlineResponse20030Data(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        '_class': 'str',
-        'jobs': 'list[JobCollection]'
+        'datum': 'DatumModel',
+        'owner': 'str',
+        'versions': 'list[InlineResponse20030DataVersions]'
     }
 
     attribute_map = {
-        '_class': 'class',
-        'jobs': 'jobs'
+        'datum': 'datum',
+        'owner': 'owner',
+        'versions': 'versions'
     }
 
-    def __init__(self, _class=None, jobs=None):  # noqa: E501
+    def __init__(self, datum=None, owner=None, versions=None):  # noqa: E501
         """InlineResponse20030Data - a model defined in Swagger"""  # noqa: E501
 
-        self.__class = None
-        self._jobs = None
+        self._datum = None
+        self._owner = None
+        self._versions = None
         self.discriminator = None
 
-        if _class is not None:
-            self._class = _class
-        if jobs is not None:
-            self.jobs = jobs
+        if datum is not None:
+            self.datum = datum
+        if owner is not None:
+            self.owner = owner
+        if versions is not None:
+            self.versions = versions
 
     @property
-    def _class(self):
-        """Gets the _class of this InlineResponse20030Data.  # noqa: E501
+    def datum(self):
+        """Gets the datum of this InlineResponse20030Data.  # noqa: E501
 
 
-        :return: The _class of this InlineResponse20030Data.  # noqa: E501
+        :return: The datum of this InlineResponse20030Data.  # noqa: E501
+        :rtype: DatumModel
+        """
+        return self._datum
+
+    @datum.setter
+    def datum(self, datum):
+        """Sets the datum of this InlineResponse20030Data.
+
+
+        :param datum: The datum of this InlineResponse20030Data.  # noqa: E501
+        :type: DatumModel
+        """
+
+        self._datum = datum
+
+    @property
+    def owner(self):
+        """Gets the owner of this InlineResponse20030Data.  # noqa: E501
+
+
+        :return: The owner of this InlineResponse20030Data.  # noqa: E501
         :rtype: str
         """
-        return self.__class
+        return self._owner
 
-    @_class.setter
-    def _class(self, _class):
-        """Sets the _class of this InlineResponse20030Data.
+    @owner.setter
+    def owner(self, owner):
+        """Sets the owner of this InlineResponse20030Data.
 
 
-        :param _class: The _class of this InlineResponse20030Data.  # noqa: E501
+        :param owner: The owner of this InlineResponse20030Data.  # noqa: E501
         :type: str
         """
 
-        self.__class = _class
+        self._owner = owner
 
     @property
-    def jobs(self):
-        """Gets the jobs of this InlineResponse20030Data.  # noqa: E501
+    def versions(self):
+        """Gets the versions of this InlineResponse20030Data.  # noqa: E501
 
 
-        :return: The jobs of this InlineResponse20030Data.  # noqa: E501
-        :rtype: list[JobCollection]
+        :return: The versions of this InlineResponse20030Data.  # noqa: E501
+        :rtype: list[InlineResponse20030DataVersions]
         """
-        return self._jobs
+        return self._versions
 
-    @jobs.setter
-    def jobs(self, jobs):
-        """Sets the jobs of this InlineResponse20030Data.
+    @versions.setter
+    def versions(self, versions):
+        """Sets the versions of this InlineResponse20030Data.
 
 
-        :param jobs: The jobs of this InlineResponse20030Data.  # noqa: E501
-        :type: list[JobCollection]
+        :param versions: The versions of this InlineResponse20030Data.  # noqa: E501
+        :type: list[InlineResponse20030DataVersions]
         """
 
-        self._jobs = jobs
+        self._versions = versions
 
     def to_dict(self):
         """Returns the model properties as a dict"""

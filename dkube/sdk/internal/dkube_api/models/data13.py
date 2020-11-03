@@ -31,21 +31,26 @@ class Data13(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'description': 'str'
+        'description': 'str',
+        'tags': 'list[str]'
     }
 
     attribute_map = {
-        'description': 'description'
+        'description': 'description',
+        'tags': 'tags'
     }
 
-    def __init__(self, description=None):  # noqa: E501
+    def __init__(self, description=None, tags=None):  # noqa: E501
         """Data13 - a model defined in Swagger"""  # noqa: E501
 
         self._description = None
+        self._tags = None
         self.discriminator = None
 
         if description is not None:
             self.description = description
+        if tags is not None:
+            self.tags = tags
 
     @property
     def description(self):
@@ -65,8 +70,33 @@ class Data13(object):
         :param description: The description of this Data13.  # noqa: E501
         :type: str
         """
+        if description is not None and len(description) > 255:
+            raise ValueError("Invalid value for `description`, length must be less than or equal to `255`")  # noqa: E501
+        if description is not None and len(description) < 1:
+            raise ValueError("Invalid value for `description`, length must be greater than or equal to `1`")  # noqa: E501
 
         self._description = description
+
+    @property
+    def tags(self):
+        """Gets the tags of this Data13.  # noqa: E501
+
+
+        :return: The tags of this Data13.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._tags
+
+    @tags.setter
+    def tags(self, tags):
+        """Sets the tags of this Data13.
+
+
+        :param tags: The tags of this Data13.  # noqa: E501
+        :type: list[str]
+        """
+
+        self._tags = tags
 
     def to_dict(self):
         """Returns the model properties as a dict"""

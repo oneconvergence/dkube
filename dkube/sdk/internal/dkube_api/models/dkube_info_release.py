@@ -31,49 +31,24 @@ class DkubeInfoRelease(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'previous': 'str',
-        'current': 'str'
+        'current': 'str',
+        'previous': 'str'
     }
 
     attribute_map = {
-        'previous': 'previous',
-        'current': 'current'
+        'current': 'current',
+        'previous': 'previous'
     }
 
-    def __init__(self, previous=None, current=None):  # noqa: E501
+    def __init__(self, current=None, previous=None):  # noqa: E501
         """DkubeInfoRelease - a model defined in Swagger"""  # noqa: E501
 
-        self._previous = None
         self._current = None
+        self._previous = None
         self.discriminator = None
 
-        self.previous = previous
         self.current = current
-
-    @property
-    def previous(self):
-        """Gets the previous of this DkubeInfoRelease.  # noqa: E501
-
-        The previous Dkube version if it has been migrated.  # noqa: E501
-
-        :return: The previous of this DkubeInfoRelease.  # noqa: E501
-        :rtype: str
-        """
-        return self._previous
-
-    @previous.setter
-    def previous(self, previous):
-        """Sets the previous of this DkubeInfoRelease.
-
-        The previous Dkube version if it has been migrated.  # noqa: E501
-
-        :param previous: The previous of this DkubeInfoRelease.  # noqa: E501
-        :type: str
-        """
-        if previous is None:
-            raise ValueError("Invalid value for `previous`, must not be `None`")  # noqa: E501
-
-        self._previous = previous
+        self.previous = previous
 
     @property
     def current(self):
@@ -99,6 +74,31 @@ class DkubeInfoRelease(object):
             raise ValueError("Invalid value for `current`, must not be `None`")  # noqa: E501
 
         self._current = current
+
+    @property
+    def previous(self):
+        """Gets the previous of this DkubeInfoRelease.  # noqa: E501
+
+        The previous Dkube version if it has been migrated.  # noqa: E501
+
+        :return: The previous of this DkubeInfoRelease.  # noqa: E501
+        :rtype: str
+        """
+        return self._previous
+
+    @previous.setter
+    def previous(self, previous):
+        """Sets the previous of this DkubeInfoRelease.
+
+        The previous Dkube version if it has been migrated.  # noqa: E501
+
+        :param previous: The previous of this DkubeInfoRelease.  # noqa: E501
+        :type: str
+        """
+        if previous is None:
+            raise ValueError("Invalid value for `previous`, must not be `None`")  # noqa: E501
+
+        self._previous = previous
 
     def to_dict(self):
         """Returns the model properties as a dict"""

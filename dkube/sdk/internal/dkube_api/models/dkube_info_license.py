@@ -31,67 +31,46 @@ class DkubeInfoLicense(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'start_date': 'str',
         'end_date': 'str',
-        'validity': 'int',
-        'licensee': 'str',
+        'expired': 'bool',
         'gen_time': 'str',
-        'expired': 'bool'
+        'licensee': 'str',
+        'start_date': 'str',
+        'validity': 'int'
     }
 
     attribute_map = {
-        'start_date': 'startDate',
         'end_date': 'endDate',
-        'validity': 'validity',
-        'licensee': 'licensee',
+        'expired': 'expired',
         'gen_time': 'genTime',
-        'expired': 'expired'
+        'licensee': 'licensee',
+        'start_date': 'startDate',
+        'validity': 'validity'
     }
 
-    def __init__(self, start_date=None, end_date=None, validity=None, licensee=None, gen_time=None, expired=False):  # noqa: E501
+    def __init__(self, end_date=None, expired=False, gen_time=None, licensee=None, start_date=None, validity=None):  # noqa: E501
         """DkubeInfoLicense - a model defined in Swagger"""  # noqa: E501
 
-        self._start_date = None
         self._end_date = None
-        self._validity = None
-        self._licensee = None
-        self._gen_time = None
         self._expired = None
+        self._gen_time = None
+        self._licensee = None
+        self._start_date = None
+        self._validity = None
         self.discriminator = None
 
-        if start_date is not None:
-            self.start_date = start_date
         if end_date is not None:
             self.end_date = end_date
-        if validity is not None:
-            self.validity = validity
-        if licensee is not None:
-            self.licensee = licensee
-        if gen_time is not None:
-            self.gen_time = gen_time
         if expired is not None:
             self.expired = expired
-
-    @property
-    def start_date(self):
-        """Gets the start_date of this DkubeInfoLicense.  # noqa: E501
-
-
-        :return: The start_date of this DkubeInfoLicense.  # noqa: E501
-        :rtype: str
-        """
-        return self._start_date
-
-    @start_date.setter
-    def start_date(self, start_date):
-        """Sets the start_date of this DkubeInfoLicense.
-
-
-        :param start_date: The start_date of this DkubeInfoLicense.  # noqa: E501
-        :type: str
-        """
-
-        self._start_date = start_date
+        if gen_time is not None:
+            self.gen_time = gen_time
+        if licensee is not None:
+            self.licensee = licensee
+        if start_date is not None:
+            self.start_date = start_date
+        if validity is not None:
+            self.validity = validity
 
     @property
     def end_date(self):
@@ -115,46 +94,25 @@ class DkubeInfoLicense(object):
         self._end_date = end_date
 
     @property
-    def validity(self):
-        """Gets the validity of this DkubeInfoLicense.  # noqa: E501
+    def expired(self):
+        """Gets the expired of this DkubeInfoLicense.  # noqa: E501
 
 
-        :return: The validity of this DkubeInfoLicense.  # noqa: E501
-        :rtype: int
+        :return: The expired of this DkubeInfoLicense.  # noqa: E501
+        :rtype: bool
         """
-        return self._validity
+        return self._expired
 
-    @validity.setter
-    def validity(self, validity):
-        """Sets the validity of this DkubeInfoLicense.
-
-
-        :param validity: The validity of this DkubeInfoLicense.  # noqa: E501
-        :type: int
-        """
-
-        self._validity = validity
-
-    @property
-    def licensee(self):
-        """Gets the licensee of this DkubeInfoLicense.  # noqa: E501
+    @expired.setter
+    def expired(self, expired):
+        """Sets the expired of this DkubeInfoLicense.
 
 
-        :return: The licensee of this DkubeInfoLicense.  # noqa: E501
-        :rtype: str
-        """
-        return self._licensee
-
-    @licensee.setter
-    def licensee(self, licensee):
-        """Sets the licensee of this DkubeInfoLicense.
-
-
-        :param licensee: The licensee of this DkubeInfoLicense.  # noqa: E501
-        :type: str
+        :param expired: The expired of this DkubeInfoLicense.  # noqa: E501
+        :type: bool
         """
 
-        self._licensee = licensee
+        self._expired = expired
 
     @property
     def gen_time(self):
@@ -178,25 +136,67 @@ class DkubeInfoLicense(object):
         self._gen_time = gen_time
 
     @property
-    def expired(self):
-        """Gets the expired of this DkubeInfoLicense.  # noqa: E501
+    def licensee(self):
+        """Gets the licensee of this DkubeInfoLicense.  # noqa: E501
 
 
-        :return: The expired of this DkubeInfoLicense.  # noqa: E501
-        :rtype: bool
+        :return: The licensee of this DkubeInfoLicense.  # noqa: E501
+        :rtype: str
         """
-        return self._expired
+        return self._licensee
 
-    @expired.setter
-    def expired(self, expired):
-        """Sets the expired of this DkubeInfoLicense.
+    @licensee.setter
+    def licensee(self, licensee):
+        """Sets the licensee of this DkubeInfoLicense.
 
 
-        :param expired: The expired of this DkubeInfoLicense.  # noqa: E501
-        :type: bool
+        :param licensee: The licensee of this DkubeInfoLicense.  # noqa: E501
+        :type: str
         """
 
-        self._expired = expired
+        self._licensee = licensee
+
+    @property
+    def start_date(self):
+        """Gets the start_date of this DkubeInfoLicense.  # noqa: E501
+
+
+        :return: The start_date of this DkubeInfoLicense.  # noqa: E501
+        :rtype: str
+        """
+        return self._start_date
+
+    @start_date.setter
+    def start_date(self, start_date):
+        """Sets the start_date of this DkubeInfoLicense.
+
+
+        :param start_date: The start_date of this DkubeInfoLicense.  # noqa: E501
+        :type: str
+        """
+
+        self._start_date = start_date
+
+    @property
+    def validity(self):
+        """Gets the validity of this DkubeInfoLicense.  # noqa: E501
+
+
+        :return: The validity of this DkubeInfoLicense.  # noqa: E501
+        :rtype: int
+        """
+        return self._validity
+
+    @validity.setter
+    def validity(self, validity):
+        """Sets the validity of this DkubeInfoLicense.
+
+
+        :param validity: The validity of this DkubeInfoLicense.  # noqa: E501
+        :type: int
+        """
+
+        self._validity = validity
 
     def to_dict(self):
         """Returns the model properties as a dict"""

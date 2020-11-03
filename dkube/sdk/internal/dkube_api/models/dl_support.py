@@ -31,52 +31,31 @@ class DLSupport(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'version': 'str',
         'frameworks': 'list[str]',
-        'tensorflow': 'DLSupportTensorflow'
+        'tensorflow': 'DLSupportTensorflow',
+        'version': 'str'
     }
 
     attribute_map = {
-        'version': 'version',
         'frameworks': 'frameworks',
-        'tensorflow': 'tensorflow'
+        'tensorflow': 'tensorflow',
+        'version': 'version'
     }
 
-    def __init__(self, version=None, frameworks=None, tensorflow=None):  # noqa: E501
+    def __init__(self, frameworks=None, tensorflow=None, version=None):  # noqa: E501
         """DLSupport - a model defined in Swagger"""  # noqa: E501
 
-        self._version = None
         self._frameworks = None
         self._tensorflow = None
+        self._version = None
         self.discriminator = None
 
-        if version is not None:
-            self.version = version
         if frameworks is not None:
             self.frameworks = frameworks
         if tensorflow is not None:
             self.tensorflow = tensorflow
-
-    @property
-    def version(self):
-        """Gets the version of this DLSupport.  # noqa: E501
-
-
-        :return: The version of this DLSupport.  # noqa: E501
-        :rtype: str
-        """
-        return self._version
-
-    @version.setter
-    def version(self, version):
-        """Sets the version of this DLSupport.
-
-
-        :param version: The version of this DLSupport.  # noqa: E501
-        :type: str
-        """
-
-        self._version = version
+        if version is not None:
+            self.version = version
 
     @property
     def frameworks(self):
@@ -126,6 +105,27 @@ class DLSupport(object):
         """
 
         self._tensorflow = tensorflow
+
+    @property
+    def version(self):
+        """Gets the version of this DLSupport.  # noqa: E501
+
+
+        :return: The version of this DLSupport.  # noqa: E501
+        :rtype: str
+        """
+        return self._version
+
+    @version.setter
+    def version(self, version):
+        """Sets the version of this DLSupport.
+
+
+        :param version: The version of this DLSupport.  # noqa: E501
+        :type: str
+        """
+
+        self._version = version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

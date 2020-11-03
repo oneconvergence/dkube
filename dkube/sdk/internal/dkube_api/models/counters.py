@@ -32,35 +32,35 @@ class Counters(object):
     """
     swagger_types = {
         'active': 'str',
-        'total': 'str',
+        'complete': 'str',
         'failed': 'str',
-        'complete': 'str'
+        'total': 'str'
     }
 
     attribute_map = {
         'active': 'active',
-        'total': 'total',
+        'complete': 'complete',
         'failed': 'failed',
-        'complete': 'complete'
+        'total': 'total'
     }
 
-    def __init__(self, active=None, total=None, failed=None, complete=None):  # noqa: E501
+    def __init__(self, active=None, complete=None, failed=None, total=None):  # noqa: E501
         """Counters - a model defined in Swagger"""  # noqa: E501
 
         self._active = None
-        self._total = None
-        self._failed = None
         self._complete = None
+        self._failed = None
+        self._total = None
         self.discriminator = None
 
         if active is not None:
             self.active = active
-        if total is not None:
-            self.total = total
-        if failed is not None:
-            self.failed = failed
         if complete is not None:
             self.complete = complete
+        if failed is not None:
+            self.failed = failed
+        if total is not None:
+            self.total = total
 
     @property
     def active(self):
@@ -84,25 +84,25 @@ class Counters(object):
         self._active = active
 
     @property
-    def total(self):
-        """Gets the total of this Counters.  # noqa: E501
+    def complete(self):
+        """Gets the complete of this Counters.  # noqa: E501
 
 
-        :return: The total of this Counters.  # noqa: E501
+        :return: The complete of this Counters.  # noqa: E501
         :rtype: str
         """
-        return self._total
+        return self._complete
 
-    @total.setter
-    def total(self, total):
-        """Sets the total of this Counters.
+    @complete.setter
+    def complete(self, complete):
+        """Sets the complete of this Counters.
 
 
-        :param total: The total of this Counters.  # noqa: E501
+        :param complete: The complete of this Counters.  # noqa: E501
         :type: str
         """
 
-        self._total = total
+        self._complete = complete
 
     @property
     def failed(self):
@@ -126,25 +126,25 @@ class Counters(object):
         self._failed = failed
 
     @property
-    def complete(self):
-        """Gets the complete of this Counters.  # noqa: E501
+    def total(self):
+        """Gets the total of this Counters.  # noqa: E501
 
 
-        :return: The complete of this Counters.  # noqa: E501
+        :return: The total of this Counters.  # noqa: E501
         :rtype: str
         """
-        return self._complete
+        return self._total
 
-    @complete.setter
-    def complete(self, complete):
-        """Sets the complete of this Counters.
+    @total.setter
+    def total(self, total):
+        """Sets the total of this Counters.
 
 
-        :param complete: The complete of this Counters.  # noqa: E501
+        :param total: The total of this Counters.  # noqa: E501
         :type: str
         """
 
-        self._complete = complete
+        self._total = total
 
     def to_dict(self):
         """Returns the model properties as a dict"""
