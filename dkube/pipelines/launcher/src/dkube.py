@@ -73,7 +73,6 @@ def command_serving(name='', user='', serving='', runid='', workflowid='', **kwa
     runname = generate('plserving')
 
     run = json.loads(serving)
-    print(run)
     run['name'] = runname
     run['parameters']['class'] = 'inference'
     #run['parameters']['inference']['tags'].extend(['owner=pipeline', 'stage='+name, 'workflowid='+workflowid, 'runid='+runid])
@@ -103,8 +102,6 @@ def command_serving(name='', user='', serving='', runid='', workflowid='', **kwa
             inf['transformer_commit_id'] = code['version']
 
     run['parameters']['inference'] = inf
-    print(run)
-    import pdb;pdb.set_trace()
     api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
     api.jobs_add_one(user, run, run='true')
     while True:
