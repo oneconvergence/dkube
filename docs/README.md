@@ -7,7 +7,7 @@ How to build SDK Documentation
 
 - source dkubesdkdoc/bin/activate
 
-- pip install Sphinx; pip install rinohtype; pip install url_normalize
+- pip install Sphinx rinohtype url_normalize sphinx_rtd_theme
 
 - Install DKube SDK (mentioned in Main README)
 

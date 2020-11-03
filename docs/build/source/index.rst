@@ -1,7 +1,3 @@
-.. contents:: Table of Contents
-    :depth: 2
-    :local:
-
 .. role:: bash(code)
    :language: bash
 
