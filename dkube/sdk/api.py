@@ -938,6 +938,29 @@ class DkubeApi(ApiBase):
         versions = self.get_model_versions(user, name)
         return versions[0]['version']
 
+    def get_model_version(self, user, name, version):
+        """
+            Method to get details of a version of the given model.
+            Raises `NotFoundException` if the version is not found
+
+            *Inputs*
+
+                name
+                    Name of the model
+
+                version
+                    Version of the model
+
+                user
+                    owner of the model
+        """
+        versions = self.get_model_versions(user, name)
+        for v in versions:
+            if v['uuid'] == version:
+                return v
+
+        raise NotFoundException
+
     def get_dataset_versions(self, user, name):
         """
             Method to get the versions of dataset.
@@ -972,6 +995,29 @@ class DkubeApi(ApiBase):
 
         versions = self.get_dataset_versions(user, name)
         return versions[0]['version']
+
+    def get_dataset_version(self, user, name, version):
+        """
+            Method to get details of a version of the given dataset.
+            Raises `NotFoundException` if the version is not found
+
+            *Inputs*
+
+                name
+                    Name of the dataset
+
+                version
+                    Version of the dataset
+
+                user
+                    owner of the dataset
+        """
+        versions = self.get_dataset_versions(user, name)
+        for v in versions:
+            if v['uuid'] == version:
+                return v
+
+        raise NotFoundException
 
     def get_datascience_capabilities(self):
         """
@@ -1016,3 +1062,123 @@ class DkubeApi(ApiBase):
         """
         caps = self.get_datascience_capabilities()
         return caps['serving']['frameworks']
+
+    def release_model(self, user, model, version=None, wait_for_completion=True):
+        """
+            Method to release a model to model catalog.
+            Raises Exception in case of errors.
+
+
+            *Inputs*
+
+                model
+                    Name with model.
+
+                version
+                    Version of the model to be released. 
+                    If not passed then latest version is released automatically.
+
+                user
+                    Owner of the model.
+
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for publish to finish.
+                    Publishing is complete if stage of the mode is changed to :bash:`published/failed/error`
+
+        """
+
+        if version == None:
+            version = self.get_model_latest_version(user, model)
+
+        super().release_model(user, model, version['uuid'])
+
+        while wait_for_completion:
+            model = self.get_model_version(user, model, version['uuid'])
+            stage = model['model']['stage']
+            reason = model['model']['reason']
+            if stage.lower() in ['released', 'failed', 'error']:
+                print(
+                    "release {}/{} - completed with state {} and reason {}".format(model, version, stage, reason))
+                break
+            else:
+                print(
+                    "release {}/{} - waiting for completion, current state {}".format(model, version, stage))
+                time.sleep(10)
+
+    def publish_model(self, name, details: DkubeServing, wait_for_completion=True):
+        """
+            Method to publish a model to model catalog.
+            Raises Exception in case of errors.
+
+
+            *Inputs*
+
+                name
+                    Name with which the model must be published in the model catalog.
+
+                details
+                    Instance of :bash:`dkube.sdk.rsrcs.serving` class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+                    If serving image is not updated in :bash:`run:DkubeServing` argument then,
+                    - If training used supported standard framework, dkube will pick approp serving image
+                    - If training used custom image, dkube will try to use the same image for serving
+
+                    If transformer image is not updated in :bash:`run:DkubeServing` then,
+                    - Dkube will use same image as training image
+
+                    If transformer project is not updated in :bash:`run:DkubeServing` then,
+                    - Dkube will use the project used for training
+
+
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for publish to finish.
+                    Publishing is complete if stage of the mode is changed to :bash:`published/failed/error`
+
+        """
+
+        run = details
+        # Fetch training run details and fill in information for serving
+        if run.predictor.image == None or (
+                run.serving_def.transformer == True and run.transformer.image == None) or (
+                run.serving_def.transformer == True and run.serving_def.transformer_project == None):
+
+            if run.serving_def.version == None:
+                v = self.get_model_latest_version(
+                    run.serving_def.owner, run.serving_def.model)
+                run.serving_def.version = v['uuid']
+
+            li = self.get_model_lineage(
+                run.serving_def.owner, run.serving_def.model, run.serving_def.version)
+            if run.predictor.image == None:
+                si = li['run']['parameters'][
+                    'generated']['serving_image']['image']
+                run.update_serving_image(
+                    si['path'], si['username'], si['password'])
+
+            if run.serving_def.transformer == True and run.transformer.image == None:
+                ti = li['run']['parameters']['generated'][
+                    'training_image']['image']
+                run.update_transformer_image(
+                    ti['path'], ti['username'], ti['password'])
+
+            if run.serving_def.transformer == True and run.serving_def.transformer_project == None:
+                code = li['run']['parameters']['training'][
+                    'datums']['workspace']['data']
+                name = code['name'].split(':')[1]
+                run.update_transformer_project(name, code['version'])
+
+        user, model, version = run.serving_def.owner, run.serving_def.model, run.serving_def.version
+        super().publish_model(user, model, version, run)
+        while wait_for_completion:
+            v = self.get_model_version(user, model, version)
+            stage = v['model']['stage']
+            reason = v['model']['reason']
+            if stage.lower() in ['published', 'failed', 'error']:
+                print(
+                    "publish {}/{} - completed with state {} and reason {}".format(model, version, stage, reason))
+                break
+            else:
+                print(
+                    "publish {}/{} - waiting for completion, current state {}".format(model, version, stage))
+                time.sleep(10)

@@ -37,9 +37,9 @@ from url_normalize import url_normalize
 configuration = dkube_api.Configuration()
 configuration.api_key_prefix['Authorization'] = 'Bearer'
 
-#Bug: Go via proxy since token-info API is not returning claims on direct http call
+# Bug: Go via proxy since token-info API is not returning claims on direct http call
 #dkubeURL = 'http://dkube-controller-master.dkube:5000'
-dkubeURL  = 'https://dkube-proxy.dkube'
+dkubeURL = 'https://dkube-proxy.dkube'
 configuration.host = url_normalize('{}/dkube/v2/controller'.format(dkubeURL))
 configuration.verify_ssl = False
 
@@ -49,7 +49,7 @@ def run_outputs(user, _class, name):
     gresponse = api.jobs_get_collection_one(user, _class, name)
 
     job = gresponse.to_dict()['data']['job']
-    uuid = job['parameters']['generated']['uuid'] 
+    uuid = job['parameters']['generated']['uuid']
 
     with open("/tmp/rundetails", "w+") as op:
         op.write(json.dumps(job))
@@ -58,14 +58,15 @@ def run_outputs(user, _class, name):
     outputs = lresponse.to_dict()['data']['outputs']
 
     artifacts = [
-                    {'datum': output['version']['datum_name'], 'class': output['version']['datum_type'],
-                     'version': output['version']['uuid'], 'index': output['version']['index']
-                    }
-                    for output in outputs
-                ]
+        {'datum': output['version']['datum_name'], 'class': output['version']['datum_type'],
+         'version': output['version']['uuid'], 'index': output['version']['index']
+         }
+        for output in outputs
+    ]
 
     with open("/tmp/artifacts", "w+") as op:
         op.write(json.dumps(artifacts))
+
 
 def command_serving(name='', user='', serving='', runid='', workflowid='', **kwargs):
     stagename = name
@@ -76,6 +77,10 @@ def command_serving(name='', user='', serving='', runid='', workflowid='', **kwa
     run['name'] = runname
     run['parameters']['class'] = 'inference'
     #run['parameters']['inference']['tags'].extend(['owner=pipeline', 'stage='+name, 'workflowid='+workflowid, 'runid='+runid])
+
+    # Update pipeline information
+    run['parameters']['generated'].update(
+        {'pipeline': {'runid': runid, 'name': stagename}})
 
     api = DkubeApi(URL=dkubeURL, token=kwargs['token'])
     inf = run['parameters']['inference']
@@ -93,11 +98,13 @@ def command_serving(name='', user='', serving='', runid='', workflowid='', **kwa
             inf['serving_image']['image'] = dict(si)
 
         if inf['transformer'] == True and inf['transformer_image']['image'] == None:
-            ti = li['run']['parameters']['generated']['training_image']['image']
+            ti = li['run']['parameters']['generated'][
+                'training_image']['image']
             inf['transformer_image']['image'] = dict(ti)
 
         if inf['transformer'] == True and inf['transformer_project'] == None:
-            code = li['run']['parameters']['training']['datums']['workspace']['data']
+            code = li['run']['parameters']['training'][
+                'datums']['workspace']['data']
             inf['transformer_project'] = code['name']
             inf['transformer_commit_id'] = code['version']
 
@@ -106,46 +113,58 @@ def command_serving(name='', user='', serving='', runid='', workflowid='', **kwa
     api.jobs_add_one(user, run, run='true')
     while True:
         response = api.jobs_get_collection_one(user, 'inference', runname)
-        status = response.to_dict()['data']['job']['parameters']['generated']['status']
+        status = response.to_dict()['data']['job']['parameters'][
+            'generated']['status']
         state, reason = status['state'], status['reason']
         if state.lower() in ['running', 'failed', 'error']:
-            print("run {} - completed with state {} and reason {}".format(runname, state, reason))
+            print(
+                "run {} - completed with state {} and reason {}".format(runname, state, reason))
             break
         else:
-            print("run {} - waiting for completion, current state {}".format(runname, state))
+            print(
+                "run {} - waiting for completion, current state {}".format(runname, state))
             time.sleep(10)
 
-    #generate the outputs, next stage can pick from here
+    # generate the outputs, next stage can pick from here
     run_outputs(user, 'inference', runname)
 
 
 def command_preprocessing(name='', user='', preprocessing='', runid='', workflowid='', **kwargs):
-    stagename=name
+    stagename = name
 
     runname = generate('pldata')
 
     run = json.loads(preprocessing)
     run['name'] = runname
     run['parameters']['class'] = 'preprocessing'
-    run['parameters']['preprocessing']['tags'].extend(['owner=pipeline', 'stage='+stagename, 'workflowid='+workflowid, 'runid='+runid])
+    run['parameters']['preprocessing']['tags'].extend(
+        ['owner=pipeline', 'stage=' + stagename, 'workflowid=' + workflowid, 'runid=' + runid])
+
+    # Update pipeline information
+    run['parameters']['generated'].update(
+        {'pipeline': {'runid': runid, 'name': stagename}})
 
     api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
     api.jobs_add_one(user, run, run='true')
     while True:
         response = api.jobs_get_collection_one(user, 'preprocessing', runname)
-        status = response.to_dict()['data']['job']['parameters']['generated']['status']
+        status = response.to_dict()['data']['job']['parameters'][
+            'generated']['status']
         state, reason = status['state'], status['reason']
         if state.lower() in ['complete', 'failed', 'error']:
-            print("run {} - completed with state {} and reason {}".format(runname, state, reason))
+            print(
+                "run {} - completed with state {} and reason {}".format(runname, state, reason))
             break
         else:
-            print("run {} - waiting for completion, current state {}".format(runname, state))
+            print(
+                "run {} - waiting for completion, current state {}".format(runname, state))
             time.sleep(10)
 
-    #generate the outputs, next stage can pick from here
+    # generate the outputs, next stage can pick from here
     run_outputs(user, 'preprocessing', runname)
 
-def command_training(name='', user='', training='', runid='', workflowid='',**kwargs):
+
+def command_training(name='', user='', training='', runid='', workflowid='', **kwargs):
     stagename = name
 
     runname = generate('pltraining')
@@ -153,23 +172,32 @@ def command_training(name='', user='', training='', runid='', workflowid='',**kw
     run = json.loads(training)
     run['name'] = runname
     run['parameters']['class'] = 'training'
-    run['parameters']['training']['tags'].extend(['owner=pipeline', 'stage='+stagename, 'workflowid='+workflowid, 'runid='+runid])
+    run['parameters']['training']['tags'].extend(
+        ['owner=pipeline', 'stage=' + stagename, 'workflowid=' + workflowid, 'runid=' + runid])
+
+    # Update pipeline information
+    run['parameters']['generated'].update(
+        {'pipeline': {'runid': runid, 'name': stagename}})
 
     api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
     api.jobs_add_one(user, run, run='true')
     while True:
         response = api.jobs_get_collection_one(user, 'training', runname)
-        status = response.to_dict()['data']['job']['parameters']['generated']['status']
+        status = response.to_dict()['data']['job']['parameters'][
+            'generated']['status']
         state, reason = status['state'], status['reason']
         if state.lower() in ['complete', 'failed', 'error']:
-            print("run {} - completed with state {} and reason {}".format(runname, state, reason))
+            print(
+                "run {} - completed with state {} and reason {}".format(runname, state, reason))
             break
         else:
-            print("run {} - waiting for completion, current state {}".format(runname, state))
+            print(
+                "run {} - waiting for completion, current state {}".format(runname, state))
             time.sleep(10)
 
-    #generate the outputs, next stage can pick from here
+    # generate the outputs, next stage can pick from here
     run_outputs(user, 'training', runname)
+
 
 def validate_token(token):
     configuration.api_key['Authorization'] = token
@@ -182,6 +210,7 @@ def validate_token(token):
     role = claims['role']
 
     return user, role
+
 
 def main():
     args = docopt(__doc__, version='1.4')
