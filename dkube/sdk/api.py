@@ -956,10 +956,10 @@ class DkubeApi(ApiBase):
         """
         versions = self.get_model_versions(user, name)
         for v in versions:
-            if v['uuid'] == version:
-                return v
+            if v['version']['uuid'] == version:
+                return v['version']
 
-        raise NotFoundException
+        raise Exception(f"{user}/{name}/{version} not found")
 
     def get_dataset_versions(self, user, name):
         """
@@ -1014,10 +1014,10 @@ class DkubeApi(ApiBase):
         """
         versions = self.get_dataset_versions(user, name)
         for v in versions:
-            if v['uuid'] == version:
-                return v
+            if v['version']['uuid'] == version:
+                return v['version']
 
-        raise NotFoundException
+        raise Exception(f"{user}/{name}/{version} not found")
 
     def get_datascience_capabilities(self):
         """
@@ -1089,13 +1089,14 @@ class DkubeApi(ApiBase):
 
         if version == None:
             version = self.get_model_latest_version(user, model)
+            version = version['uuid']
 
-        super().release_model(user, model, version['uuid'])
+        super().release_model(user, model, version)
 
         while wait_for_completion:
-            model = self.get_model_version(user, model, version['uuid'])
-            stage = model['model']['stage']
-            reason = model['model']['reason']
+            v = self.get_model_version(user, model, version)
+            stage = v['model']['stage']
+            reason = v['model']['reason']
             if stage.lower() in ['released', 'failed', 'error']:
                 print(
                     "release {}/{} - completed with state {} and reason {}".format(model, version, stage, reason))
@@ -1105,7 +1106,7 @@ class DkubeApi(ApiBase):
                     "release {}/{} - waiting for completion, current state {}".format(model, version, stage))
                 time.sleep(10)
 
-    def publish_model(self, name, details: DkubeServing, wait_for_completion=True):
+    def publish_model(self, name, description, details: DkubeServing, wait_for_completion=True):
         """
             Method to publish a model to model catalog.
             Raises Exception in case of errors.
@@ -1115,6 +1116,9 @@ class DkubeApi(ApiBase):
 
                 name
                     Name with which the model must be published in the model catalog.
+
+                description
+                    Human readable text for the model being published
 
                 details
                     Instance of :bash:`dkube.sdk.rsrcs.serving` class.
@@ -1138,6 +1142,7 @@ class DkubeApi(ApiBase):
         """
 
         run = details
+        user, model, version = run.serving_def.owner, run.serving_def.model, run.serving_def.version
         # Fetch training run details and fill in information for serving
         if run.predictor.image == None or (
                 run.serving_def.transformer == True and run.transformer.image == None) or (
@@ -1165,11 +1170,13 @@ class DkubeApi(ApiBase):
             if run.serving_def.transformer == True and run.serving_def.transformer_project == None:
                 code = li['run']['parameters']['training'][
                     'datums']['workspace']['data']
-                name = code['name'].split(':')[1]
-                run.update_transformer_project(name, code['version'])
+                cname = code['name'].split(':')[1]
+                run.update_transformer_project(cname, code['version'])
 
-        user, model, version = run.serving_def.owner, run.serving_def.model, run.serving_def.version
-        super().publish_model(user, model, version, run)
+        data = {'name': name, 'description': description,
+                'serving': run.serving_def}
+        super().publish_model(user, model, version, data)
+
         while wait_for_completion:
             v = self.get_model_version(user, model, version)
             stage = v['model']['stage']

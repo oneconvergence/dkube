@@ -130,9 +130,7 @@ class ApiBase(object):
     def publish_model(self, user, model, version, details):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
         response = api.datums_publish_one_model(user, model, version, details)
-        return response.to_dict()['data']
 
     def release_model(self, user, model, version):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
         response = api.datums_release_one_model(user, model, version)
-        return response.to_dict()['data']
