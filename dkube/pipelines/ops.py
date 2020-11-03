@@ -29,7 +29,7 @@ def dkube_serving_op(
     authtoken=None,
     serving=DkubeServing):
 
-    assert type(training) == DkubeServing, "Invalid type for serving argument, must be instance of dkube.sdk.rsrcs:DkubeServing"
+    assert type(serving) == DkubeServing, "Invalid type for serving argument, must be instance of dkube.sdk.rsrcs:DkubeServing"
     assert authtoken == None, "Auth token is must"
 
     return dkube_op(name, authtoken, 'serving', serving=json.dumps(serving.job.to_dict()))

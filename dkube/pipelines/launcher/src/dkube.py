@@ -73,6 +73,7 @@ def command_serving(name='', user='', serving='', runid='', workflowid='', **kwa
     runname = generate('plserving')
 
     run = json.loads(serving)
+    print(run)
     run['name'] = name
     run['parameters']['class'] = 'inference'
     #run['parameters']['inference']['tags'].extend(['owner=pipeline', 'stage='+name, 'workflowid='+workflowid, 'runid='+runid])
@@ -80,7 +81,7 @@ def command_serving(name='', user='', serving='', runid='', workflowid='', **kwa
     api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
     api.jobs_add_one(user, run, run='true')
     while True:
-        response = api.jobs_get_collection_one(user, 'serving', runname)
+        response = api.jobs_get_collection_one(user, 'inference', runname)
         status = response.to_dict()['data']['job']['parameters']['generated']['status']
         state, reason = status['state'], status['reason']
         if state.lower() in ['complete', 'failed', 'error']:
@@ -105,7 +106,7 @@ def command_preprocessing(name='', user='', preprocessing='', runid='', workflow
     run['parameters']['preprocessing']['tags'].extend(['owner=pipeline', 'stage='+stagename, 'workflowid='+workflowid, 'runid='+runid])
 
     api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
-    api.jobs_add_one(user, runname, run='true')
+    api.jobs_add_one(user, run, run='true')
     while True:
         response = api.jobs_get_collection_one(user, 'preprocessing', runname)
         status = response.to_dict()['data']['job']['parameters']['generated']['status']
