@@ -17,7 +17,6 @@ import re  # noqa: F401
 
 # python 2 and python 3 compatibility library
 import six
-
 from dkube.sdk.internal.dkube_api.api_client import ApiClient
 
 
@@ -3159,7 +3158,6 @@ class DkubeApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-
         all_params = ['featureset', 'data']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
@@ -4128,12 +4126,12 @@ class DkubeApi(object):
             _request_timeout=params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def get_dvs_config(self, **kwargs):  # noqa: E501
+    def get__config(self, **kwargs):  # noqa: E501
         """API to list dkube version management system config.  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_dvs_config(async_req=True)
+        >>> thread = api.get__config(async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
@@ -4143,17 +4141,17 @@ class DkubeApi(object):
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('async_req'):
-            return self.get_dvs_config_with_http_info(**kwargs)  # noqa: E501
+            return self.get__config_with_http_info(**kwargs)  # noqa: E501
         else:
-            (data) = self.get_dvs_config_with_http_info(**kwargs)  # noqa: E501
+            (data) = self.get__config_with_http_info(**kwargs)  # noqa: E501
             return data
 
-    def get_dvs_config_with_http_info(self, **kwargs):  # noqa: E501
+    def get__config_with_http_info(self, **kwargs):  # noqa: E501
         """API to list dkube version management system config.  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.get_dvs_config_with_http_info(async_req=True)
+        >>> thread = api.get__config_with_http_info(async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
@@ -4173,7 +4171,7 @@ class DkubeApi(object):
             if key not in all_params:
                 raise TypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method get_dvs_config" % key
+                    " to method get__config" % key
                 )
             params[key] = val
         del params['kwargs']
@@ -4202,7 +4200,7 @@ class DkubeApi(object):
         auth_settings = ['d3apikey']  # noqa: E501
 
         return self.api_client.call_api(
-            '/dvs/config', 'GET',
+            '//config', 'GET',
             path_params,
             query_params,
             header_params,

@@ -1,10 +1,10 @@
 from __future__ import print_function
+
 import time
+from pprint import pprint
 
 from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.rest import ApiException
-from pprint import pprint
-
 from url_normalize import url_normalize
 
 # Configure API key authorization: d3apikey
@@ -73,7 +73,8 @@ class ApiBase(object):
 
     def delete_repo(self, category, user, name):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
-        response = api.datums_delete_by_class(user, category, {'datums': [name]})
+        response = api.datums_delete_by_class(
+            user, category, {'datums': [name]})
 
     def get_head_version(self, category, user, repo):
         pass
