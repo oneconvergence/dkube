@@ -8,10 +8,10 @@
 
 """
 
+import time
+
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.rsrcs import *
-
-import time
 
 
 class DkubeApi(ApiBase):
@@ -442,6 +442,27 @@ class DkubeApi(ApiBase):
         """
 
         super().delete_repo('program', user, name)
+
+################### Feature Store ############################
+    def create_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
+        pass
+
+    def delete_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
+        pass
+
+    def read_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
+        pass
+
+    def write_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
+        pass
+
+    def commit_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
+        pass
+
+    def list_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
+        pass
+
+###############################################################
 
     def create_dataset(self, dataset: DkubeDataset, wait_for_completion=True):
         """

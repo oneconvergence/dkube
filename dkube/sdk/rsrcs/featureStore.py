@@ -1,11 +1,10 @@
-import json
-import os
+from __future__ import print_function
 
-import numpy as np
-import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
-from dkube.sdk.internal import api_base, dkube_api
+import sys
+import time
+from pprint import pprint
+
+from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.models.datum_model import DatumModel
 from dkube.sdk.internal.dkube_api.models.datum_model_k8svolume import \
     DatumModelK8svolume
@@ -20,16 +19,61 @@ from dkube.sdk.internal.dkube_api.models.repo_gcs_access_info_secret import \
     RepoGCSAccessInfoSecret
 from dkube.sdk.internal.dkube_api.models.s3_access_credentials import \
     S3AccessCredentials
-from dkube.sdk.rsrcs import *
+from dkube.sdk.internal.dkube_api.rest import ApiException
+
+from .util import *
 
 
-class FeatureStore(object):
-    FEATURESTORE_SOURCES = ["dvs", "git", "aws_s3",
-                            "s3", "gcs", "nfs", "redshift", "k8svolume"]
+class DkubeFeatureStore(object):
 
-    def __init__(self, config_file=None, user, name=generate("featurestore"), tags=None):
-        self.CONFIG_FILE = config_file
-        self.configuration = api_base.ApiBase.configuration
+    """
+
+        This class defines the DKube dataset with helper functions to set properties of dataset.::
+
+            from dkube.sdk import *
+            mnist = DkubeDataset("oneconv", name="mnist")
+
+            Where first argument is the user of this dataset. User should be a valid onboarded user in dkube.
+
+    """
+
+    FEATURE_SOURCES = ["dvs", "git", "aws_s3",
+                       "s3", "gcs", "nfs", "redshift", "k8svolume"]
+    """
+	List of valid feature store sources in DKube.
+	Some datasources are downloaded while some are remotely referenced.
+
+	:bash:`dvs` :- To create an empty repository which can be used in future runs.
+
+	:bash:`git` :- If data is in the git repo. All git compatible repos are supported - github, bitbucket, gitlab. :bash:`Downloaded`
+
+	:bash:`aws_s3` :- If the data is in AWS s3 bucket. :bash:`Downloaded | Remote`
+
+	:bash:`s3` :- Non aws s3 data source. Like MinIO deployed on internal cluster. :bash:`Downloaded | Remote`
+
+	:bash:`gcs` :- Google cloud storage as data source. :bash:`Downloaded`
+
+	:bash:`nfs` :- External NFS server as data source. :bash:`Remote`
+
+	:bash:`redshift` :- Redshift as data source. :bash:`Remote`
+
+	:bash:`k8svolume` :- Kubernetes volume as data source. :bash:`Remote`
+
+    """
+
+    GIT_ACCESS_OPTS = ["apikey", "sshkey", "password"]
+    """
+	List of authentication options supported for git data source.
+
+	:bash:`apikey` :- Github APIKey based authentication. This must have permission on the repo to clone and checkout.
+
+	:bash:`sshkey` :- Git SSH key based authentication.
+
+	:bash:`password` :- Standard username/password based. 
+
+    """
+
+    def __init__(self, user, name=generate("featurestore"), tags=None):
         self.k8svolume = DatumModelK8svolume(name=None)
 
         self.redshift = RedshiftAccessInfo(
@@ -49,7 +93,7 @@ class FeatureStore(object):
         self.gitaccess = GitAccessInfo(
             path=None, url=None, branch=None, credentials=self.gitcreds)
 
-        self.datum = DatumModel(name=None, tags=None, _class='dataset',
+        self.datum = DatumModel(name=None, tags=None, _class='featurestore',
                                 dvs=None, source='dvs', url=None, remote=False, gitaccess=self.gitaccess,
                                 s3access=self.s3access, nfsaccess=self.nfsaccess, gcsaccess=self.gcsaccess)
 
@@ -71,73 +115,6 @@ class FeatureStore(object):
             Default value is **git**
         """
         self.datum.source = source
-
-    def list_fs(self):
-        fs = []
-        try:
-            with open(self.CONFIG_FILE) as json_file:
-                fsconfig = json.load(json_file)
-            featuresets = fsconfig["inputs"]["featuresets"]
-            for each_feature in featuresets:
-                fs.append([each_feature["name"], each_feature["location"]])
-            return fs
-        except Exception as e:
-            return e
-
-    def read(self, featureset, path=None):
-        df_empty = pd.DataFrame({'A': []})
-        if path is None and self.CONFIG_FILE is None:
-            return return {"data": df_empty, "status": -1, "error": "Path of featureset not found"}
-        if path is None:
-            with open(self.CONFIG_FILE) as json_file:
-                fsconfig = json.load(json_file)
-            featuresets = fsconfig["inputs"]["featuresets"]
-            for each_feature in featuresets:
-                if each_feature["name"] == featureset:
-                    path = each_feature["location"]
-        if path is None:
-            return {"data": df_empty, "status": -1, "error": "Featureset doesn't exist"}
-        try:
-            table = pq.read_table(os.path.join(path, 'example.parquet'))
-            feature_df = table.to_pandas()
-            return {"data": feature_df, "status": 0, "error": None}
-        except Exception as e:
-            return {"data": df_empty, "status": -1, "error": e}
-
-    def write(self, dataframe, featureset, path=None):
-        if path is None and self.CONFIG_FILE is None:
-            return return {"status": -1, "error": "Path of featureset not found"}
-        if path is None:
-            with open(self.CONFIG_FILE) as json_file:
-                fsconfig = json.load(json_file)
-            featuresets = fsconfig["outputs"]["featuresets"]
-            for each_feature in featuresets:
-                if each_feature["name"] == featureset:
-                    path = each_feature["location"]
-        if path is None:
-            return {"status": -1, "error": "Featureset doesn't exist"}
-        try:
-            table = pa.Table.from_pandas(dataframe)
-            pq.write_table(table, os.path.join(path, 'example.parquet'))
-            return {"status": 0, "error": None}
-        except Exception as e:
-            return {"status": -1, "error": e}
-
-    def commit(self, featureset, path=None):
-        if path is None and self.CONFIG_FILE is None:
-            return return {"error": "Path of featureset not found"}
-        if path is None:
-            with open(self.CONFIG_FILE) as json_file:
-                fsconfig = json.load(json_file)
-            featuresets = fsconfig["outputs"]["featuresets"]
-            for each_feature in featuresets:
-                if each_feature["name"] == featureset:
-                    path = each_feature["location"]
-        if path is None:
-            return {"status": -1, "error": "Featureset doesn't exist"}
-        api = dkube_api.DkubeApi(dkube_api.ApiClient(self.configuration))
-        response = api.featureset_commit_version(featureset, path)
-        return {"error": response}
 
     def update_git_details(self, url, branch=None, authopt=GIT_ACCESS_OPTS[0], authval=None):
         """
