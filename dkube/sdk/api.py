@@ -8,8 +8,12 @@
 
 """
 
+import json
+import os
 import time
 
+import pandas as pd
+import pyarrow as pa
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.rsrcs import *
 
@@ -450,11 +454,44 @@ class DkubeApi(ApiBase):
     def delete_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
         pass
 
-    def read_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
-        pass
+    def read_featurestore(self, featureset, path=None):
+        df_empty = pd.DataFrame({'A': []})
+        if path is None and self.CONFIG_FILE is None:
+            return {"data": df_empty, "status": -1, "error": "Path of featureset not found"}
+        if path is None:
+            with open(self.CONFIG_FILE) as json_file:
+                fsconfig = json.load(json_file)
+            featuresets = fsconfig["inputs"]["featuresets"]
+            for each_feature in featuresets:
+                if each_feature["name"] == featureset:
+                    path = each_feature["location"]
+        if path is None:
+            return {"data": df_empty, "status": -1, "error": "Featureset doesn't exist"}
+        try:
+            table = pq.read_table(os.path.join(path, 'featureset.parquet'))
+            feature_df = table.to_pandas()
+            return {"data": feature_df, "status": 0, "error": None}
+        except Exception as e:
+            return {"data": df_empty, "status": -1, "error": e}
 
-    def write_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
-        pass
+    def write_featurestore(self, dataframe, featureset, path=None):
+        if path is None and self.CONFIG_FILE is None:
+            return {"status": -1, "error": "Path of featureset not found"}
+        if path is None:
+            with open(self.CONFIG_FILE) as json_file:
+                fsconfig = json.load(json_file)
+            featuresets = fsconfig["outputs"]["featuresets"]
+            for each_feature in featuresets:
+                if each_feature["name"] == featureset:
+                    path = each_feature["location"]
+        if path is None:
+            return {"status": -1, "error": "Featureset doesn't exist"}
+        try:
+            table = pa.Table.from_pandas(dataframe)
+            pq.write_table(table, os.path.join(path, 'featureset.parquet'))
+            return {"status": 0, "error": None}
+        except Exception as e:
+            return {"status": -1, "error": e}
 
     def commit_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
         pass

@@ -97,3 +97,9 @@ class ApiBase(object):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
         response = api.trigger_runs_by_condition(condition)
         return response.to_dict()['data']
+
+    def commit_feature_version(self, category, user, repo):
+        api = dkube_api.DkubeApi(dkube_api.ApiClient(self.configuration))
+        response = api.featureset_commit_version(featureset, path)
+        return {"error": response}
+        pass
