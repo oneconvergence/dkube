@@ -494,7 +494,19 @@ class DkubeApi(ApiBase):
             return {"status": -1, "error": e}
 
     def commit_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
-        pass
+        if path is None and self.CONFIG_FILE is None:
+            return return {"error": "Path of featureset not found"}
+        if path is None:
+            with open(self.CONFIG_FILE) as json_file:
+                fsconfig = json.load(json_file)
+            featuresets = fsconfig["outputs"]["featuresets"]
+            for each_feature in featuresets:
+                if each_feature["name"] == featureset:
+                    path = each_feature["location"]
+        if path is None:
+            return {"status": -1, "error": "Featureset doesn't exist"}
+        res = super().commit_featurestore(featurestore, featureset, user, path)
+        return res
 
     def list_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
         pass
