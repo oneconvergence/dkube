@@ -449,7 +449,21 @@ class DkubeApi(ApiBase):
 
 ################### Feature Store ############################
     def create_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
-        pass
+        assert type(
+            featurestore) == DkubeFeatureStore, "Invalid type for run, value must be instance of rsrcs:DkubeDataset class"
+        super().create_repo(featurestore)
+        while wait_for_completion:
+            status = super().get_repo('featurestore', featurestore.user,
+                                      featurestore.name, fields='status')
+            state, reason = status['state'], status['reason']
+            if state.lower() in ['ready', 'failed', 'error']:
+                print(
+                    "dataset {} - completed with state {} and reason {}".format(featurestore.name, state, reason))
+                break
+            else:
+                print(
+                    "dataset {} - waiting for completion, current state {}".format(featurestore.name, state))
+                time.sleep(10)
 
     def delete_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
         pass
@@ -493,9 +507,9 @@ class DkubeApi(ApiBase):
         except Exception as e:
             return {"status": -1, "error": e}
 
-    def commit_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
+    def commit_featurestore(self, jobid, featurestore: DkubeFeatureStore, wait_for_completion=True):
         if path is None and self.CONFIG_FILE is None:
-            return return {"error": "Path of featureset not found"}
+            return {"error": "Path of featureset not found"}
         if path is None:
             with open(self.CONFIG_FILE) as json_file:
                 fsconfig = json.load(json_file)
