@@ -468,7 +468,7 @@ class DkubeApi(ApiBase):
     def delete_featureset(self, featureset, wait_for_completion=True):
         return super().delete_featureset(featureset)
 
-    def read_featureset(self, featureset, path=None):
+    def read_featureset(self, featureset, path=None, filename='featureset.parquet'):
         df_empty = pd.DataFrame({'A': []})
         if path is None and self.CONFIG_FILE is None:
             return {"data": df_empty, "status": -1, "error": "Path of featureset not found"}
@@ -482,13 +482,13 @@ class DkubeApi(ApiBase):
         if path is None:
             return {"data": df_empty, "status": -1, "error": "Featureset doesn't exist"}
         try:
-            table = pq.read_table(os.path.join(path, 'featureset.parquet'))
+            table = pq.read_table(os.path.join(path, filename))
             feature_df = table.to_pandas()
             return {"data": feature_df, "status": 0, "error": None}
         except Exception as e:
             return {"data": df_empty, "status": -1, "error": e}
 
-    def write_featureset(self, dataframe, featureset, path=None):
+    def write_featureset(self, dataframe, featureset, path=None, filename='featureset.parquet'):
         if path is None and self.CONFIG_FILE is None:
             return {"status": -1, "error": "Path of featureset not found"}
         if path is None:
@@ -502,7 +502,7 @@ class DkubeApi(ApiBase):
             return {"status": -1, "error": "Featureset doesn't exist"}
         try:
             table = pa.Table.from_pandas(dataframe)
-            pq.write_table(table, os.path.join(path, 'featureset.parquet'))
+            pq.write_table(table, os.path.join(path, filename))
             return {"status": 0, "error": None}
         except Exception as e:
             return {"status": -1, "error": e}
