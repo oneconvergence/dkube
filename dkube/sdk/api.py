@@ -448,27 +448,27 @@ class DkubeApi(ApiBase):
         super().delete_repo('program', user, name)
 
 ################### Feature Store ############################
-    def create_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
+    def create_featureset(self, featureset: DkubeFeatureSet, wait_for_completion=True):
         assert type(
-            featurestore) == DkubeFeatureStore, "Invalid type for run, value must be instance of rsrcs:DkubeDataset class"
-        super().create_repo(featurestore)
+            featureset) == DkubeFeatureSet, "Invalid type for run, value must be instance of rsrcs:DkubeDataset class"
+        super().create_repo(featureset)
         while wait_for_completion:
-            status = super().get_repo('featurestore', featurestore.user,
-                                      featurestore.name, fields='status')
+            status = super().get_repo('featureset', featureset.user,
+                                      featureset.name, fields='status')
             state, reason = status['state'], status['reason']
             if state.lower() in ['ready', 'failed', 'error']:
                 print(
-                    "dataset {} - completed with state {} and reason {}".format(featurestore.name, state, reason))
+                    "dataset {} - completed with state {} and reason {}".format(featureset.name, state, reason))
                 break
             else:
                 print(
-                    "dataset {} - waiting for completion, current state {}".format(featurestore.name, state))
+                    "dataset {} - waiting for completion, current state {}".format(featureset.name, state))
                 time.sleep(10)
 
-    def delete_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
-        pass
+    def delete_featureset(self, featureset, wait_for_completion=True):
+        return super().delete_featureset(featureset)
 
-    def read_featurestore(self, featureset, path=None):
+    def read_featureset(self, featureset, path=None):
         df_empty = pd.DataFrame({'A': []})
         if path is None and self.CONFIG_FILE is None:
             return {"data": df_empty, "status": -1, "error": "Path of featureset not found"}
@@ -488,7 +488,7 @@ class DkubeApi(ApiBase):
         except Exception as e:
             return {"data": df_empty, "status": -1, "error": e}
 
-    def write_featurestore(self, dataframe, featureset, path=None):
+    def write_featureset(self, dataframe, featureset, path=None):
         if path is None and self.CONFIG_FILE is None:
             return {"status": -1, "error": "Path of featureset not found"}
         if path is None:
@@ -507,7 +507,7 @@ class DkubeApi(ApiBase):
         except Exception as e:
             return {"status": -1, "error": e}
 
-    def commit_featurestore(self, jobid, featurestore: DkubeFeatureStore, wait_for_completion=True):
+    def commit_featureset(self, jobid, featuresset, path):
         if path is None and self.CONFIG_FILE is None:
             return {"error": "Path of featureset not found"}
         if path is None:
@@ -519,11 +519,10 @@ class DkubeApi(ApiBase):
                     path = each_feature["location"]
         if path is None:
             return {"status": -1, "error": "Featureset doesn't exist"}
-        res = super().commit_featurestore(featurestore, featureset, user, path)
-        return res
+        return super().commit_feature_version(featureset, path)
 
-    def list_featurestore(self, featurestore: DkubeFeatureStore, wait_for_completion=True):
-        pass
+    def list_featureset(self):
+        return super().list_featureset()
 
 ###############################################################
 

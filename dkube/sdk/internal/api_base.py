@@ -98,8 +98,17 @@ class ApiBase(object):
         response = api.trigger_runs_by_condition(condition)
         return response.to_dict()['data']
 
-    def commit_feature_version(self, category, featureset, user, repo):
+    def commit_feature_version(self, featureset, repo):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(self.configuration))
         response = api.featureset_commit_version(featureset, repo)
         return {"error": response}
-        pass
+
+    def delete_featureset(self, featureset):
+        api = dkube_api.DkubeApi(dkube_api.ApiClient(self.configuration))
+        response = api.featureset_delete(featureset)
+        return {"error": response}
+
+    def list_featureset(self):
+        api = dkube_api.DkubeApi(dkube_api.ApiClient(self.configuration))
+        response = api.featureset_list_with_http_info()
+        return response

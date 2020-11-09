@@ -11,11 +11,11 @@ from dkube.sdk.internal.dkube_api.rest import ApiException
 from .util import *
 
 
-class DkubeFeatureStore(object):
+class DkubeFeatureSet(object):
 
     """
 
-        This class defines the DKube dataset with helper functions to set properties of dataset.::
+        This class defines the DKube featureset with helper functions to set properties of dataset.::
 
             from dkube.sdk import *
             mnist = DkubeDataset("oneconv", name="mnist")
@@ -24,7 +24,7 @@ class DkubeFeatureStore(object):
 
     """
 
-    FEATURE_SOURCES = ["dvs"]
+    FEATURE_SOURCES = ["dvs", None]
     """
 	List of valid feature store sources in DKube.
 
@@ -47,7 +47,7 @@ class DkubeFeatureStore(object):
         self.datum.name = name
         self.datum.tags = tags
 
-    def update_dataset_source(self, source=DATASET_SOURCES[0]):
+    def update_dataset_source(self, source=FEATURE_SOURCES[0]):
         """
             Method to update the source for this dataset.
             It should be one of the choice mentioned in DATASET_SOURCES
