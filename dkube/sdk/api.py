@@ -450,7 +450,7 @@ class DkubeApi(ApiBase):
 ################### Feature Store ############################
     def create_featureset(self, featureset: DkubeFeatureSet, wait_for_completion=True):
         assert type(
-            featureset) == DkubeFeatureSet, "Invalid type for run, value must be instance of rsrcs:DkubeDataset class"
+            featureset) == DkubeFeatureSet, "nvalid type for run, value must be instance of rsrcs:DkubeFeatureset class"
         super().create_repo(featureset)
         while wait_for_completion:
             status = super().get_repo('featureset', featureset.user,
@@ -458,11 +458,11 @@ class DkubeApi(ApiBase):
             state, reason = status['state'], status['reason']
             if state.lower() in ['ready', 'failed', 'error']:
                 print(
-                    "dataset {} - completed with state {} and reason {}".format(featureset.name, state, reason))
+                    "featureset {} - completed with state {} and reason {}".format(featureset.name, state, reason))
                 break
             else:
                 print(
-                    "dataset {} - waiting for completion, current state {}".format(featureset.name, state))
+                    "featureset {} - waiting for completion, current state {}".format(featureset.name, state))
                 time.sleep(10)
 
     def delete_featureset(self, featureset, wait_for_completion=True):
@@ -507,7 +507,7 @@ class DkubeApi(ApiBase):
         except Exception as e:
             return {"status": -1, "error": e}
 
-    def commit_featureset(self, jobid, featuresset, path):
+    def commit_featureset(self, featuresset, path):
         if path is None and self.CONFIG_FILE is None:
             return {"error": "Path of featureset not found"}
         if path is None:

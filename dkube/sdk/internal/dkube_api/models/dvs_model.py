@@ -31,7 +31,7 @@ class DVSModel(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'gcs': 'DVSModelGcs',
+        'gcs': '',
         'git': 'DVSModelGit',
         'metadata': 'str',
         'name': 'str',
@@ -88,7 +88,7 @@ class DVSModel(object):
 
 
         :return: The gcs of this DVSModel.  # noqa: E501
-        :rtype: DVSModelGcs
+        :rtype: 
         """
         return self._gcs
 
@@ -98,7 +98,7 @@ class DVSModel(object):
 
 
         :param gcs: The gcs of this DVSModel.  # noqa: E501
-        :type: DVSModelGcs
+        :type: 
         """
 
         self._gcs = gcs
