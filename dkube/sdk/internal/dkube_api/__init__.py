@@ -18,7 +18,7 @@ from __future__ import absolute_import
 from dkube.sdk.internal.dkube_api.api_client import ApiClient
 from dkube.sdk.internal.dkube_api.configuration import Configuration
 # import apis into sdk package
-from dkube.sdk.internal.dkube_api.dfab_api import DfabApi
+from dkube.sdk.internal.dkube_api.dfab_api import dkube.sdk.internal.dkube_api.
 from dkube.sdk.internal.dkube_api.dkube_api import DkubeApi
 from dkube.sdk.internal.dkube_api.dkube_operator_exclusive_api import \
     DkubeOperatorExclusiveApi
