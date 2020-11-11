@@ -147,7 +147,7 @@ from dkube.sdk.internal.dkube_api.models.ds_job_model_hptuning import \
 from dkube.sdk.internal.dkube_api.models.ds_job_model_hyperparams import \
     DSJobModelHyperparams
 from dkube.sdk.internal.dkube_api.models.dvs_model import DVSModel
-from dkube.sdk.internal.dkube_api.models.dvs_model_gcs import ModelGcs
+from dkube.sdk.internal.dkube_api.models.dvs_model_gcs import DVSModelGcs
 from dkube.sdk.internal.dkube_api.models.dvs_model_git import DVSModelGit
 from dkube.sdk.internal.dkube_api.models.dvs_model_s3 import DVSModelS3
 from dkube.sdk.internal.dkube_api.models.dvs_model_status import DVSModelStatus

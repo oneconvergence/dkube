@@ -98,6 +98,11 @@ class ApiBase(object):
         response = api.trigger_runs_by_condition(condition)
         return response.to_dict()['data']
 
+    def create_featureset(self, data, user, name):
+        api = dkube_api.DkubeApi(dkube_api.ApiClient(self.configuration))
+        response = api.featureset_add_one(data, user, name)
+        return {"error": response}
+
     def commit_feature_version(self, featureset, repo):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(self.configuration))
         response = api.featureset_commit_version(featureset, repo)

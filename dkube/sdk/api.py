@@ -448,22 +448,11 @@ class DkubeApi(ApiBase):
         super().delete_repo('program', user, name)
 
 ################### Feature Store ############################
-    def create_featureset(self, featureset: DkubeFeatureSet, wait_for_completion=True):
+    def create_featureset(self, featureset: DkubeFeatureSet, data):
         assert type(
-            featureset) == DkubeFeatureSet, "nvalid type for run, value must be instance of rsrcs:DkubeFeatureset class"
-        super().create_repo(featureset)
-        while wait_for_completion:
-            status = super().get_repo('featureset', featureset.user,
-                                      featureset.name, fields='status')
-            state, reason = status['state'], status['reason']
-            if state.lower() in ['ready', 'failed', 'error']:
-                print(
-                    "featureset {} - completed with state {} and reason {}".format(featureset.name, state, reason))
-                break
-            else:
-                print(
-                    "featureset {} - waiting for completion, current state {}".format(featureset.name, state))
-                time.sleep(10)
+            featureset) == DkubeFeatureSet, "Invalid type for run, value must be instance of rsrcs:DkubeFeatureset class"
+        response = super().create_featureset(data, featureset.user, featureset.name)
+        return response
 
     def delete_featureset(self, featureset, wait_for_completion=True):
         return super().delete_featureset(featureset)
