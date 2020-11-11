@@ -13,17 +13,18 @@ from __future__ import absolute_import
 import datetime
 import json
 import mimetypes
+from multiprocessing.pool import ThreadPool
 import os
 import re
 import tempfile
-from multiprocessing.pool import ThreadPool
 
-import dkube.sdk.internal.dkube_api.models
 # python 2 and python 3 compatibility library
 import six
-from dkube.sdk.internal.dkube_api import rest
-from dkube.sdk.internal.dkube_api.configuration import Configuration
 from six.moves.urllib.parse import quote
+
+from dkube.sdk.internal.dkube_api.configuration import Configuration
+import dkube.sdk.internal.dkube_api.models
+from dkube.sdk.internal.dkube_api import rest
 
 
 class ApiClient(object):

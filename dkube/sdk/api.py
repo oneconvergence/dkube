@@ -16,6 +16,7 @@ import pandas as pd
 import pyarrow as pa
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.rsrcs import *
+from dkube.sdk.rsrcs.featureset import DkubeFeatureSet
 
 
 class DkubeApi(ApiBase):
