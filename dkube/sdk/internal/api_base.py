@@ -98,22 +98,22 @@ class ApiBase(object):
         response = api.trigger_runs_by_condition(condition)
         return response.to_dict()['data']
 
-    def create_featureset(self, data, user, name):
+    def create_featureset(self, body, user, name):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(self.configuration))
-        response = api.featureset_add_one(data, user, name)
+        response = api.featureset_add_one(body, user, name)
         return {"error": response}
 
-    def commit_feature_version(self, featureset, repo):
+    def commit_feature_version(self, body, featureset):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(self.configuration))
-        response = api.featureset_commit_version(featureset, repo)
+        response = api.featureset_commit_version(body, featureset)
         return {"error": response}
 
-    def delete_featureset(self, featureset):
+    def delete_featureset(self, body):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(self.configuration))
-        response = api.featureset_delete(featureset)
+        response = api.featureset_delete(body)
         return {"error": response}
 
-    def list_featureset(self):
+    def list_featureset(self, user):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(self.configuration))
-        response = api.featureset_list_with_http_info()
+        response = api.featureset_list_with_http_info(user)
         return response

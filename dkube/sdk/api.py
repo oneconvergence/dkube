@@ -448,14 +448,14 @@ class DkubeApi(ApiBase):
         super().delete_repo('program', user, name)
 
 ################### Feature Store ############################
-    def create_featureset(self, featureset: DkubeFeatureSet, data):
+    def create_featureset(self, featureset: DkubeFeatureSet, body):
         assert type(
             featureset) == DkubeFeatureSet, "Invalid type for run, value must be instance of rsrcs:DkubeFeatureset class"
-        response = super().create_featureset(data, featureset.user, featureset.name)
+        response = super().create_featureset(body, featureset.user, featureset.name)
         return response
 
-    def delete_featureset(self, featureset, wait_for_completion=True):
-        return super().delete_featureset(featureset)
+    def delete_featureset(self, body):
+        return super().delete_featureset(body)
 
     def read_featureset(self, featureset, path=None, filename='featureset.parquet'):
         df_empty = pd.DataFrame({'A': []})
@@ -468,6 +468,7 @@ class DkubeApi(ApiBase):
             for each_feature in featuresets:
                 if each_feature["name"] == featureset:
                     path = each_feature["location"]
+                    break
         if path is None:
             return {"data": df_empty, "status": -1, "error": "Featureset doesn't exist"}
         try:
@@ -487,6 +488,7 @@ class DkubeApi(ApiBase):
             for each_feature in featuresets:
                 if each_feature["name"] == featureset:
                     path = each_feature["location"]
+                    break
         if path is None:
             return {"status": -1, "error": "Featureset doesn't exist"}
         try:
@@ -496,7 +498,7 @@ class DkubeApi(ApiBase):
         except Exception as e:
             return {"status": -1, "error": e}
 
-    def commit_featureset(self, featuresset, path):
+    def commit_featureset(self, body, featureset):
         if path is None and self.CONFIG_FILE is None:
             return {"error": "Path of featureset not found"}
         if path is None:
@@ -506,12 +508,15 @@ class DkubeApi(ApiBase):
             for each_feature in featuresets:
                 if each_feature["name"] == featureset:
                     path = each_feature["location"]
+                    break
         if path is None:
             return {"status": -1, "error": "Featureset doesn't exist"}
         return super().commit_feature_version(featureset, path)
 
-    def list_featureset(self):
-        return super().list_featureset()
+    def list_featureset(self, featureset: DkubeFeatureSet):
+        assert type(
+            featureset) == DkubeFeatureSet, "Invalid type for run, value must be instance of rsrcs:DkubeFeatureset class"
+        return super().list_featureset(featureset.user)
 
 ###############################################################
 
