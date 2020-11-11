@@ -100,7 +100,7 @@ class ApiBase(object):
 
     def create_featureset(self, body, user, name):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(self.configuration))
-        response = api.dkube.sdk.internal.dkube_api(body, user, name)
+        response = api.featureset_add_one(body, user, name)
         return {"error": response}
 
     def commit_feature_version(self, body, featureset):
