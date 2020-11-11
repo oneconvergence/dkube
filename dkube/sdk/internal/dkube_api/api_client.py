@@ -13,18 +13,17 @@ from __future__ import absolute_import
 import datetime
 import json
 import mimetypes
-from multiprocessing.pool import ThreadPool
 import os
 import re
 import tempfile
+from multiprocessing.pool import ThreadPool
 
+import dkube.sdk.internal.dkube_api.models
 # python 2 and python 3 compatibility library
 import six
+from dkube.sdk.internal.dkube_api import rest
+from dkube.sdk.internal.dkube_api.configuration import Configuration
 from six.moves.urllib.parse import quote
-
-from swagger_client.configuration import Configuration
-import swagger_client.models
-from swagger_client import rest
 
 
 class ApiClient(object):
@@ -257,7 +256,7 @@ class ApiClient(object):
             if klass in self.NATIVE_TYPES_MAPPING:
                 klass = self.NATIVE_TYPES_MAPPING[klass]
             else:
-                klass = getattr(swagger_client.models, klass)
+                klass = getattr(dkube.sdk.internal.dkube_api.models, klass)
 
         if klass in self.PRIMITIVE_TYPES:
             return self.__deserialize_primitive(data, klass)
@@ -321,13 +320,13 @@ class ApiClient(object):
                                    _preload_content, _request_timeout)
         else:
             thread = self.pool.apply_async(self.__call_api, (resource_path,
-                                           method, path_params, query_params,
-                                           header_params, body,
-                                           post_params, files,
-                                           response_type, auth_settings,
-                                           _return_http_data_only,
-                                           collection_formats,
-                                           _preload_content, _request_timeout))
+                                                             method, path_params, query_params,
+                                                             header_params, body,
+                                                             post_params, files,
+                                                             response_type, auth_settings,
+                                                             _return_http_data_only,
+                                                             collection_formats,
+                                                             _preload_content, _request_timeout))
         return thread
 
     def request(self, method, url, query_params=None, headers=None,
@@ -591,7 +590,7 @@ class ApiClient(object):
             )
 
     def __hasattr(self, object, name):
-            return name in object.__class__.__dict__
+        return name in object.__class__.__dict__
 
     def __deserialize_model(self, data, klass):
         """Deserializes list or dict to model.
