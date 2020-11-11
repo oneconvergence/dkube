@@ -33,8 +33,7 @@ class DkubeFeatureSet(object):
 
     def __init__(self, user, name=generate("featureset"), tags=None):
         self.datum = DatumModel(name=None, tags=None, _class='featureset',
-                                dvs=None, source='dvs', url=None, remote=False, gitaccess=self.gitaccess,
-                                s3access=self.s3access, nfsaccess=self.nfsaccess, gcsaccess=self.gcsaccess)
+                                dvs=None, source='dvs')
 
         self.update_basic(user, name, tags)
 
