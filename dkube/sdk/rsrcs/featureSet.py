@@ -31,20 +31,23 @@ class DkubeFeatureSet(object):
 	:bash:`dvs` :- To create an empty repository which can be used in future runs.
     """
 
-    def __init__(self, user, name=generate("featureset"), tags=None):
+    def __init__(self, user, name=generate("featureset"), description=None, tags=None):
         self.datum = DatumModel(name=None, tags=None, _class='featureset',
                                 dvs=None, source='dvs')
 
-        self.update_basic(user, name, tags)
+        self.update_basic(user, name, description, tags)
 
-    def update_basic(self, user, name, tags):
-        tags = list_of_strs(tags)
-
-        self.user = user
-        self.name = name
-
-        self.datum.name = name
-        self.datum.tags = tags
+    def update_basic(self, name=None, description, tags):
+        self._name = None
+        self._description = None
+        self._tags = None
+        self.discriminator = None
+        if name is not None:
+            self.name = name
+        if description is not None:
+            self.description = description
+        if tags is not None:
+            self.tags = tags
 
     def update_dataset_source(self, source=FEATURE_SOURCES[0]):
         """
