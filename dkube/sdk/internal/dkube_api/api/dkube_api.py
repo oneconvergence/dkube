@@ -16,6 +16,7 @@ import re  # noqa: F401
 
 # python 2 and python 3 compatibility library
 import six
+
 from dkube.sdk.internal.dkube_api.api_client import ApiClient
 
 
@@ -2041,6 +2042,115 @@ class DkubeApi(object):
             _request_timeout=params.get('_request_timeout'),
             collection_formats=collection_formats)
 
+    def delete_model_catalog_item(self, user, model, version, **kwargs):  # noqa: E501
+        """API to delete modelcatalog version item  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.delete_model_catalog_item(user, model, version, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str user: (required)
+        :param str model: (required)
+        :param str version: (required)
+        :return: ApiResponse
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.delete_model_catalog_item_with_http_info(user, model, version, **kwargs)  # noqa: E501
+        else:
+            (data) = self.delete_model_catalog_item_with_http_info(user, model, version, **kwargs)  # noqa: E501
+            return data
+
+    def delete_model_catalog_item_with_http_info(self, user, model, version, **kwargs):  # noqa: E501
+        """API to delete modelcatalog version item  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.delete_model_catalog_item_with_http_info(user, model, version, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str user: (required)
+        :param str model: (required)
+        :param str version: (required)
+        :return: ApiResponse
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['user', 'model', 'version']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method delete_model_catalog_item" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'user' is set
+        if ('user' not in params or
+                params['user'] is None):
+            raise ValueError("Missing the required parameter `user` when calling `delete_model_catalog_item`")  # noqa: E501
+        # verify the required parameter 'model' is set
+        if ('model' not in params or
+                params['model'] is None):
+            raise ValueError("Missing the required parameter `model` when calling `delete_model_catalog_item`")  # noqa: E501
+        # verify the required parameter 'version' is set
+        if ('version' not in params or
+                params['version'] is None):
+            raise ValueError("Missing the required parameter `version` when calling `delete_model_catalog_item`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'user' in params:
+            path_params['user'] = params['user']  # noqa: E501
+        if 'model' in params:
+            path_params['model'] = params['model']  # noqa: E501
+        if 'version' in params:
+            path_params['version'] = params['version']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['d3apikey']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/users/{user}/modelcatalog/models/{model}/versions/{version}/delete', 'DELETE',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='ApiResponse',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
     def delete_pipeline_experiment(self, name, **kwargs):  # noqa: E501
         """API to delete a pipeline experiment  # noqa: E501
 
@@ -3332,7 +3442,7 @@ class DkubeApi(object):
         auth_settings = ['d3apikey']  # noqa: E501
 
         return self.api_client.call_api(
-            '/featureset/{featureset}', 'GET',
+            '/featuresets/{featureset}', 'GET',
             path_params,
             query_params,
             header_params,
@@ -3627,7 +3737,7 @@ class DkubeApi(object):
         auth_settings = ['d3apikey']  # noqa: E501
 
         return self.api_client.call_api(
-            '/featureset/{featureset}', 'PUT',
+            '/featuresets/{featureset}', 'PUT',
             path_params,
             query_params,
             header_params,

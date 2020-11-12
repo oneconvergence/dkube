@@ -2098,41 +2098,43 @@ class DkubeOperatorExclusiveApi(object):
             _request_timeout=params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def sync(self, **kwargs):  # noqa: E501
+    def sync(self, kind, **kwargs):  # noqa: E501
         """API to sync D3 db with the resources available in cluster This also synchronizes members from github.  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.sync(async_req=True)
+        >>> thread = api.sync(kind, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
+        :param str kind: (required)
         :return: InlineResponse2008
                  If the method is called asynchronously,
                  returns the request thread.
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('async_req'):
-            return self.sync_with_http_info(**kwargs)  # noqa: E501
+            return self.sync_with_http_info(kind, **kwargs)  # noqa: E501
         else:
-            (data) = self.sync_with_http_info(**kwargs)  # noqa: E501
+            (data) = self.sync_with_http_info(kind, **kwargs)  # noqa: E501
             return data
 
-    def sync_with_http_info(self, **kwargs):  # noqa: E501
+    def sync_with_http_info(self, kind, **kwargs):  # noqa: E501
         """API to sync D3 db with the resources available in cluster This also synchronizes members from github.  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.sync_with_http_info(async_req=True)
+        >>> thread = api.sync_with_http_info(kind, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
+        :param str kind: (required)
         :return: InlineResponse2008
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
-        all_params = []  # noqa: E501
+        all_params = ['kind']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
         all_params.append('_preload_content')
@@ -2147,10 +2149,16 @@ class DkubeOperatorExclusiveApi(object):
                 )
             params[key] = val
         del params['kwargs']
+        # verify the required parameter 'kind' is set
+        if ('kind' not in params or
+                params['kind'] is None):
+            raise ValueError("Missing the required parameter `kind` when calling `sync`")  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
+        if 'kind' in params:
+            path_params['kind'] = params['kind']  # noqa: E501
 
         query_params = []
 
@@ -2168,7 +2176,100 @@ class DkubeOperatorExclusiveApi(object):
         auth_settings = ['d3apikey']  # noqa: E501
 
         return self.api_client.call_api(
-            '/sync/', 'GET',
+            '/sync/{kind}', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='InlineResponse2008',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def sync_group_users(self, group, **kwargs):  # noqa: E501
+        """API to sync D3 db with the resources available in cluster This also synchronizes members from github.  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.sync_group_users(group, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str group: (required)
+        :return: InlineResponse2008
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.sync_group_users_with_http_info(group, **kwargs)  # noqa: E501
+        else:
+            (data) = self.sync_group_users_with_http_info(group, **kwargs)  # noqa: E501
+            return data
+
+    def sync_group_users_with_http_info(self, group, **kwargs):  # noqa: E501
+        """API to sync D3 db with the resources available in cluster This also synchronizes members from github.  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.sync_group_users_with_http_info(group, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str group: (required)
+        :return: InlineResponse2008
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['group']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method sync_group_users" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'group' is set
+        if ('group' not in params or
+                params['group'] is None):
+            raise ValueError("Missing the required parameter `group` when calling `sync_group_users`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'group' in params:
+            path_params['group'] = params['group']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['d3apikey']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/sync/groups/{group}', 'GET',
             path_params,
             query_params,
             header_params,
