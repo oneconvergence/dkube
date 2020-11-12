@@ -32,12 +32,9 @@ class DkubeFeatureSet(object):
     """
 
     def __init__(self, user, name=generate("featureset"), description=None, tags=None):
-        self.datum = DatumModel(name=None, tags=None, _class='featureset',
-                                dvs=None, source='dvs')
-
         self.update_basic(user, name, description, tags)
 
-    def update_basic(self, name=None, description, tags):
+    def update_basic(self, name, description, tags):
         self._name = None
         self._description = None
         self._tags = None
