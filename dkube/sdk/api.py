@@ -15,11 +15,12 @@ import time
 import pandas as pd
 import pyarrow as pa
 from dkube.sdk.internal.api_base import *
+from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureSet import DkubeFeatureSet
 
 
-class DkubeApi(ApiBase):
+class DkubeApi(ApiBase, FilesBase):
 
     """
 
@@ -65,6 +66,11 @@ class DkubeApi(ApiBase):
         if self.url == None:
             self.url = os.getenv(
                 "DKUBE_ACCESS_URL", "http://dkube-controller-master.dkube.cluster.local:5000")
+            self.files_url = os.getenv(
+                "DKUBE_ACCESS_URL", "http://dkube-controller-worker.dkube.cluster.local:5000")
+        else:
+            self.files_url = self.url
+
 
         self.token = token
         if self.token == None:
@@ -72,7 +78,8 @@ class DkubeApi(ApiBase):
             assert self.token == None, "TOKEN must be specified either by passing argument or by setting DKUBE_ACCESS_TOKEN env variable"
 
         self.common_tags = common_tags
-        super().__init__(self.url, self.token)
+        ApiBase.__init__(self, self.url, self.token)
+        FilesBase.__init__(self, self.files_url, self.token)
 
     def validate_token(self):
         """
@@ -449,13 +456,20 @@ class DkubeApi(ApiBase):
         super().delete_repo('program', user, name)
 
 ################### Feature Store ############################
-    def create_featureset(self, featureset: DkubeFeatureSet, body):
+    def create_featureset(self, featureset: DkubeFeatureSet):
         assert type(
             featureset) == DkubeFeatureSet, "Invalid type for run, value must be instance of rsrcs:DkubeFeatureset class"
-        response = super().create_featureset(body, featureset.user, featureset.name)
+        response = super().create_featureset(featureset)
+        if response.code == 200 and featureset.featurespec_path is not None:
+            spec_response = super().featureset_upload_specfile(featureset.featureset.name, featureset.featurespec_path)
+            if spec_response.code != 200:
+                super().delete_featureset(featureset)
+                return spec_response
         return response
 
-    def delete_featureset(self, body):
+    def delete_featureset(self, featureset: DkubeFeatureSet):
+        assert type(
+        featureset) == DkubeFeatureSet, "Invalid type for run, value must be instance of rsrcs:DkubeFeatureset class"
         return super().delete_featureset(body)
 
     def read_featureset(self, featureset, path=None, filename='featureset.parquet'):
