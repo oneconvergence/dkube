@@ -5,7 +5,8 @@ import time
 from pprint import pprint
 
 from dkube.sdk.internal import dkube_api
-from dkube.sdk.internal.dkube_api.models.datum_model import DatumModel
+from dkube.sdk.internal.dkube_api.models.feature_set_input_def import \
+    FeatureSetInputDef
 from dkube.sdk.internal.dkube_api.rest import ApiException
 
 from .util import *
@@ -31,25 +32,22 @@ class DkubeFeatureSet(object):
 	:bash:`dvs` :- To create an empty repository which can be used in future runs.
     """
 
-    def __init__(self, user, name=generate("featureset"), description=None, tags=None):
-        self.update_basic(user, name, description, tags)
+    def __init__(self, name=generate("featureset"), tags=None, description=None):
+        self.featureset = FeatureSetInputDef(name=None, tags=None, description=None)
+
+        self.update_basic(name, description, tags)
 
     def update_basic(self, name, description, tags):
-        self._name = None
-        self._description = None
-        self._tags = None
-        self.discriminator = None
+    
         if name is not None:
-            self.name = name
+            self.featureset.name = name
         if description is not None:
-            self.description = description
+            self.featureset.description = description
         if tags is not None:
-            self.tags = tags
+            self.featureset.tags = tags
 
-    def update_dataset_source(self, source=FEATURE_SOURCES[0]):
+    def update_featurespec_file(self, path=None):
         """
-            Method to update the source for this dataset.
-            It should be one of the choice mentioned in DATASET_SOURCES
-            Default value is **git**
+            Method to update features specification metadata
         """
-        self.datum.source = source
+        self.featurespec_path = path
