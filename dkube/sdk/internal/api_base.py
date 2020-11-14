@@ -108,14 +108,16 @@ class ApiBase(object):
         response = api.featureset_commit_version(body, featureset)
         return response
 
-    def delete_featureset(self, featureset):
+    def delete_featureset(self, delete_list):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
-        delete_list = []
-        delete_list.append(featureset.featureset.name)
-        response = api.featureset_delete(delete_list)
+        
+        response = api.featureset_delete({'featuresets':delete_list})
         return response
 
-    def list_featureset(self, user):
+    def list_featureset(self, filter):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
-        response = api.featureset_list_with_http_info(user)
+        if filter is None:
+            response = api.featureset_list()
+        else:
+            response = api.featureset_list(query=filter)
         return response

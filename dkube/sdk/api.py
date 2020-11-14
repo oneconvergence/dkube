@@ -467,10 +467,13 @@ class DkubeApi(ApiBase, FilesBase):
                 return spec_response
         return response
 
-    def delete_featureset(self, featureset: DkubeFeatureSet):
-        assert type(
-        featureset) == DkubeFeatureSet, "Invalid type for run, value must be instance of rsrcs:DkubeFeatureset class"
-        return super().delete_featureset(body)
+    def delete_featureset(self, featureset_list):
+        assert (
+            featureset_list
+            and isinstance(featureset_list, list)
+            and all(isinstance(featureset, str) for featureset in featureset_list)
+        ), "Invalid parameter, value must be a list of featureset names"
+        return super().delete_featureset(featureset_list)
 
     def read_featureset(self, featureset, path=None, filename='featureset.parquet'):
         df_empty = pd.DataFrame({'A': []})
@@ -528,10 +531,8 @@ class DkubeApi(ApiBase, FilesBase):
             return {"status": -1, "error": "Featureset doesn't exist"}
         return super().commit_feature_version(featureset, path)
 
-    def list_featureset(self, featureset: DkubeFeatureSet):
-        assert type(
-            featureset) == DkubeFeatureSet, "Invalid type for run, value must be instance of rsrcs:DkubeFeatureset class"
-        return super().list_featureset(featureset.user)
+    def list_featuresets(self, query=None):
+        return super().list_featureset(query)
 
 ###############################################################
 
