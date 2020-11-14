@@ -221,6 +221,7 @@ from dkube.sdk.internal.dkube_api.models.inline_response20043_data import Inline
 from dkube.sdk.internal.dkube_api.models.inline_response20044 import InlineResponse20044
 from dkube.sdk.internal.dkube_api.models.inline_response20045 import InlineResponse20045
 from dkube.sdk.internal.dkube_api.models.inline_response20046 import InlineResponse20046
+from dkube.sdk.internal.dkube_api.models.inline_response20046_data import InlineResponse20046Data
 from dkube.sdk.internal.dkube_api.models.inline_response20047 import InlineResponse20047
 from dkube.sdk.internal.dkube_api.models.inline_response20047_data import InlineResponse20047Data
 from dkube.sdk.internal.dkube_api.models.inline_response20047_data_versions import InlineResponse20047DataVersions
