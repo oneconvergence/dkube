@@ -71,7 +71,6 @@ class DkubeApi(ApiBase, FilesBase):
         else:
             self.files_url = self.url
 
-
         self.token = token
         if self.token == None:
             self.token = os.getenv("DKUBE_ACCESS_TOKEN", None)
@@ -461,7 +460,8 @@ class DkubeApi(ApiBase, FilesBase):
             featureset) == DkubeFeatureSet, "Invalid type for run, value must be instance of rsrcs:DkubeFeatureset class"
         response = super().create_featureset(featureset)
         if response.code == 200 and featureset.featurespec_path is not None:
-            spec_response = super().featureset_upload_specfile(featureset.featureset.name, featureset.featurespec_path)
+            spec_response = super().featureset_upload_specfile(
+                featureset.featureset.name, featureset.featurespec_path)
             if spec_response.code != 200:
                 super().delete_featureset(featureset)
                 return spec_response
@@ -475,20 +475,10 @@ class DkubeApi(ApiBase, FilesBase):
         ), "Invalid parameter, value must be a list of featureset names"
         return super().delete_featureset(featureset_list)
 
-    def read_featureset(self, featureset, path=None, filename='featureset.parquet'):
+    def read_featureset(self, featureset: DkubeFeatureSet, filename='featureset.parquet'):
         df_empty = pd.DataFrame({'A': []})
-        if path is None and self.CONFIG_FILE is None:
+        if featureset.featurespec_path is None:
             return {"data": df_empty, "status": -1, "error": "Path of featureset not found"}
-        if path is None:
-            with open(self.CONFIG_FILE) as json_file:
-                fsconfig = json.load(json_file)
-            featuresets = fsconfig["inputs"]["featuresets"]
-            for each_feature in featuresets:
-                if each_feature["name"] == featureset:
-                    path = each_feature["location"]
-                    break
-        if path is None:
-            return {"data": df_empty, "status": -1, "error": "Featureset doesn't exist"}
         try:
             table = pq.read_table(os.path.join(path, filename))
             feature_df = table.to_pandas()
@@ -496,18 +486,8 @@ class DkubeApi(ApiBase, FilesBase):
         except Exception as e:
             return {"data": df_empty, "status": -1, "error": e}
 
-    def write_featureset(self, dataframe, featureset, path=None, filename='featureset.parquet'):
-        if path is None and self.CONFIG_FILE is None:
-            return {"status": -1, "error": "Path of featureset not found"}
-        if path is None:
-            with open(self.CONFIG_FILE) as json_file:
-                fsconfig = json.load(json_file)
-            featuresets = fsconfig["outputs"]["featuresets"]
-            for each_feature in featuresets:
-                if each_feature["name"] == featureset:
-                    path = each_feature["location"]
-                    break
-        if path is None:
+    def write_featureset(self, dataframe, featureset: DkubeFeatureSet, filename='featureset.parquet'):
+        if featureset.featurespec_path is None:
             return {"status": -1, "error": "Featureset doesn't exist"}
         try:
             table = pa.Table.from_pandas(dataframe)
