@@ -27,7 +27,7 @@ class ApiBase(object):
 
     def create_run(self, run):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
-        response = api.jobs_add_one(run.user, run.job, run='true')
+        response = api.jobs_add_one(user=run.user, body=run.job, run='true')
 
     def get_run(self, category, user, name, fields='*'):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
@@ -52,7 +52,7 @@ class ApiBase(object):
 
     def create_repo(self, repo):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
-        response = api.datums_add_one(repo.user, repo.datum)
+        response = api.datums_add_one(user=repo.user, body=repo.datum)
         print(response.to_dict())
 
     def get_repo(self, category, user, name, fields='*'):
