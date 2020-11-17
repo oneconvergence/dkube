@@ -14,6 +14,7 @@ import time
 
 import pandas as pd
 import pyarrow as pa
+import pyarrow.parquet as pq
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
