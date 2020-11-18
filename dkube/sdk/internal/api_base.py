@@ -113,6 +113,7 @@ class ApiBase(object):
         job_uuid = os.getenv('DKUBE_JOB_UUID')
         job = FeatureSetCommitDefJob(kind='dkube_run')
         body = FeatureSetCommitDef(job_uuid=job_uuid, job=job)
+        # Todo(osm). Fix API. commit doesn't need featureset name.
         response = api.featureset_commit_version(body=body, featureset='all')
         return response
 
