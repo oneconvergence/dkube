@@ -1,9 +1,14 @@
 from __future__ import print_function
 
+import os
 import time
 from pprint import pprint
 
 from dkube.sdk.internal import dkube_api
+from dkube.sdk.internal.dkube_api.models.feature_set_commit_def import \
+    FeatureSetCommitDef
+from dkube.sdk.internal.dkube_api.models.feature_set_commit_def_job import \
+    FeatureSetCommitDefJob
 from dkube.sdk.internal.dkube_api.rest import ApiException
 from url_normalize import url_normalize
 
@@ -103,9 +108,13 @@ class ApiBase(object):
         response = api.featureset_add_one(featureset.featureset)
         return response
 
-    def commit_feature_version(self, body, featureset):
+    def commit_features(self):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
-        response = api.featureset_commit_version(body, featureset)
+        job_uuid = os.getenv('DKUBE_JOB_UUID')
+        job = FeatureSetCommitDefJob(kind='dkube_run')
+        body = FeatureSetCommitDef(job_uuid=job_uuid, job=job)
+        # Todo(osm). Fix API. commit doesn't need featureset name.
+        response = api.featureset_commit_version(body=body, featureset='all')
         return response
 
     def delete_featureset(self, delete_list):

@@ -12,9 +12,6 @@ import json
 import os
 import time
 
-import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
@@ -476,41 +473,8 @@ class DkubeApi(ApiBase, FilesBase):
         ), "Invalid parameter, value must be a list of featureset names"
         return super().delete_featureset(featureset_list)
 
-    def read_featureset(self, featureset: DkubeFeatureSet, filename='featureset.parquet'):
-        df_empty = pd.DataFrame({'A': []})
-        if featureset.featurespec_path is None:
-            return {"data": df_empty, "status": -1, "error": "Path of featureset not found"}
-        try:
-            table = pq.read_table(os.path.join(path, filename))
-            feature_df = table.to_pandas()
-            return {"data": feature_df, "status": 0, "error": None}
-        except Exception as e:
-            return {"data": df_empty, "status": -1, "error": e}
-
-    def write_featureset(self, dataframe, featureset: DkubeFeatureSet, filename='featureset.parquet'):
-        if featureset.featurespec_path is None:
-            return {"status": -1, "error": "Featureset doesn't exist"}
-        try:
-            table = pa.Table.from_pandas(dataframe)
-            pq.write_table(table, os.path.join(path, filename))
-            return {"status": 0, "error": None}
-        except Exception as e:
-            return {"status": -1, "error": e}
-
-    def commit_featureset(self, body, featureset):
-        if path is None and self.CONFIG_FILE is None:
-            return {"error": "Path of featureset not found"}
-        if path is None:
-            with open(self.CONFIG_FILE) as json_file:
-                fsconfig = json.load(json_file)
-            featuresets = fsconfig["outputs"]["featuresets"]
-            for each_feature in featuresets:
-                if each_feature["name"] == featureset:
-                    path = each_feature["location"]
-                    break
-        if path is None:
-            return {"status": -1, "error": "Featureset doesn't exist"}
-        return super().commit_feature_version(featureset, path)
+    def commit_features(self):
+        return super().commit_features()
 
     def list_featuresets(self, query=None):
         return super().list_featureset(query)

@@ -4,6 +4,9 @@ import sys
 import time
 from pprint import pprint
 
+import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.models.feature_set_input_def import \
     FeatureSetInputDef
@@ -34,6 +37,7 @@ class DkubeFeatureSet(object):
 
         self.update_basic(name, description, tags, config_file)
         self.update_featurespec_file(path)
+        self.update_features_path()
 
     def update_basic(self, name, description, tags, config_file):
         if name is not None:
@@ -48,15 +52,28 @@ class DkubeFeatureSet(object):
         """
             Method to update features specification metadata
         """
-        if path is None and self.CONFIG_FILE is None:
-            self.featurespec_path = path
-            return
-        if path is None:
-            with open(self.CONFIG_FILE) as json_file:
-                fsconfig = json.load(json_file)
-            featuresets = fsconfig["inputs"]["featuresets"]
-            for each_feature in featuresets:
-                if each_feature["name"] == self.featureset.name:
-                    path = each_feature["location"]
-                    break
         self.featurespec_path = path
+
+    def update_features_path(self, path=None):
+        self.features_path = path
+
+    def read(self, filename='featureset.parquet'):
+        df_empty = pd.DataFrame({'A': []})
+        if self.features_path is None:
+            return {"data": df_empty, "status": -1, "error": "Path of featureset not found"}
+        try:
+            table = pq.read_table(os.path.join(path, filename))
+            feature_df = table.to_pandas()
+            return {"data": feature_df, "status": 0, "error": None}
+        except Exception as e:
+            return {"data": df_empty, "status": -1, "error": e}
+
+    def write(self, dataframe, filename='featureset.parquet'):
+        if self.features_path is None:
+            return {"status": -1, "error": "Featureet doesn't exist"}
+        try:
+            table = pa.Table.from_pandas(dataframe)
+            pq.write_table(table, os.path.join(path, filename))
+            return {"status": 0, "error": None}
+        except Exception as e:
+            return {"status": -1, "error": e}
