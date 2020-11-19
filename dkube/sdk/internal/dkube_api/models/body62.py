@@ -28,66 +28,42 @@ class Body62(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'tags': 'list[str]',
-        'description': 'str'
+        'upfile': 'str'
     }
 
     attribute_map = {
-        'tags': 'tags',
-        'description': 'description'
+        'upfile': 'upfile'
     }
 
-    def __init__(self, tags=None, description=None):  # noqa: E501
+    def __init__(self, upfile=None):  # noqa: E501
         """Body62 - a model defined in Swagger"""  # noqa: E501
-        self._tags = None
-        self._description = None
+        self._upfile = None
         self.discriminator = None
-        if tags is not None:
-            self.tags = tags
-        if description is not None:
-            self.description = description
+        if upfile is not None:
+            self.upfile = upfile
 
     @property
-    def tags(self):
-        """Gets the tags of this Body62.  # noqa: E501
+    def upfile(self):
+        """Gets the upfile of this Body62.  # noqa: E501
 
+        The file to upload.  # noqa: E501
 
-        :return: The tags of this Body62.  # noqa: E501
-        :rtype: list[str]
-        """
-        return self._tags
-
-    @tags.setter
-    def tags(self, tags):
-        """Sets the tags of this Body62.
-
-
-        :param tags: The tags of this Body62.  # noqa: E501
-        :type: list[str]
-        """
-
-        self._tags = tags
-
-    @property
-    def description(self):
-        """Gets the description of this Body62.  # noqa: E501
-
-
-        :return: The description of this Body62.  # noqa: E501
+        :return: The upfile of this Body62.  # noqa: E501
         :rtype: str
         """
-        return self._description
+        return self._upfile
 
-    @description.setter
-    def description(self, description):
-        """Sets the description of this Body62.
+    @upfile.setter
+    def upfile(self, upfile):
+        """Sets the upfile of this Body62.
 
+        The file to upload.  # noqa: E501
 
-        :param description: The description of this Body62.  # noqa: E501
+        :param upfile: The upfile of this Body62.  # noqa: E501
         :type: str
         """
 
-        self._description = description
+        self._upfile = upfile
 
     def to_dict(self):
         """Returns the model properties as a dict"""

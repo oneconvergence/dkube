@@ -29,28 +29,28 @@ class InlineResponse20050Data(object):
     """
     swagger_types = {
         'featureset': 'FeatureSetDef',
-        'version': 'FeatureSetVersionDef',
-        'run': 'JobModel'
+        'featurespec': 'list[FeatureSpecDef]',
+        'versions': 'list[InlineResponse20050DataVersions]'
     }
 
     attribute_map = {
         'featureset': 'featureset',
-        'version': 'version',
-        'run': 'run'
+        'featurespec': 'featurespec',
+        'versions': 'versions'
     }
 
-    def __init__(self, featureset=None, version=None, run=None):  # noqa: E501
+    def __init__(self, featureset=None, featurespec=None, versions=None):  # noqa: E501
         """InlineResponse20050Data - a model defined in Swagger"""  # noqa: E501
         self._featureset = None
-        self._version = None
-        self._run = None
+        self._featurespec = None
+        self._versions = None
         self.discriminator = None
         if featureset is not None:
             self.featureset = featureset
-        if version is not None:
-            self.version = version
-        if run is not None:
-            self.run = run
+        if featurespec is not None:
+            self.featurespec = featurespec
+        if versions is not None:
+            self.versions = versions
 
     @property
     def featureset(self):
@@ -74,46 +74,46 @@ class InlineResponse20050Data(object):
         self._featureset = featureset
 
     @property
-    def version(self):
-        """Gets the version of this InlineResponse20050Data.  # noqa: E501
+    def featurespec(self):
+        """Gets the featurespec of this InlineResponse20050Data.  # noqa: E501
 
 
-        :return: The version of this InlineResponse20050Data.  # noqa: E501
-        :rtype: FeatureSetVersionDef
+        :return: The featurespec of this InlineResponse20050Data.  # noqa: E501
+        :rtype: list[FeatureSpecDef]
         """
-        return self._version
+        return self._featurespec
 
-    @version.setter
-    def version(self, version):
-        """Sets the version of this InlineResponse20050Data.
+    @featurespec.setter
+    def featurespec(self, featurespec):
+        """Sets the featurespec of this InlineResponse20050Data.
 
 
-        :param version: The version of this InlineResponse20050Data.  # noqa: E501
-        :type: FeatureSetVersionDef
+        :param featurespec: The featurespec of this InlineResponse20050Data.  # noqa: E501
+        :type: list[FeatureSpecDef]
         """
 
-        self._version = version
+        self._featurespec = featurespec
 
     @property
-    def run(self):
-        """Gets the run of this InlineResponse20050Data.  # noqa: E501
+    def versions(self):
+        """Gets the versions of this InlineResponse20050Data.  # noqa: E501
 
 
-        :return: The run of this InlineResponse20050Data.  # noqa: E501
-        :rtype: JobModel
+        :return: The versions of this InlineResponse20050Data.  # noqa: E501
+        :rtype: list[InlineResponse20050DataVersions]
         """
-        return self._run
+        return self._versions
 
-    @run.setter
-    def run(self, run):
-        """Sets the run of this InlineResponse20050Data.
+    @versions.setter
+    def versions(self, versions):
+        """Sets the versions of this InlineResponse20050Data.
 
 
-        :param run: The run of this InlineResponse20050Data.  # noqa: E501
-        :type: JobModel
+        :param versions: The versions of this InlineResponse20050Data.  # noqa: E501
+        :type: list[InlineResponse20050DataVersions]
         """
 
-        self._run = run
+        self._versions = versions
 
     def to_dict(self):
         """Returns the model properties as a dict"""

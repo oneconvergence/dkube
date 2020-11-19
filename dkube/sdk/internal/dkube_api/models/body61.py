@@ -28,66 +28,40 @@ class Body61(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'tags': 'list[str]',
-        'description': 'str'
+        'jobs': 'list[MigrationJobEntry]'
     }
 
     attribute_map = {
-        'tags': 'tags',
-        'description': 'description'
+        'jobs': 'jobs'
     }
 
-    def __init__(self, tags=None, description=None):  # noqa: E501
+    def __init__(self, jobs=None):  # noqa: E501
         """Body61 - a model defined in Swagger"""  # noqa: E501
-        self._tags = None
-        self._description = None
+        self._jobs = None
         self.discriminator = None
-        if tags is not None:
-            self.tags = tags
-        if description is not None:
-            self.description = description
+        if jobs is not None:
+            self.jobs = jobs
 
     @property
-    def tags(self):
-        """Gets the tags of this Body61.  # noqa: E501
+    def jobs(self):
+        """Gets the jobs of this Body61.  # noqa: E501
 
 
-        :return: The tags of this Body61.  # noqa: E501
-        :rtype: list[str]
+        :return: The jobs of this Body61.  # noqa: E501
+        :rtype: list[MigrationJobEntry]
         """
-        return self._tags
+        return self._jobs
 
-    @tags.setter
-    def tags(self, tags):
-        """Sets the tags of this Body61.
-
-
-        :param tags: The tags of this Body61.  # noqa: E501
-        :type: list[str]
-        """
-
-        self._tags = tags
-
-    @property
-    def description(self):
-        """Gets the description of this Body61.  # noqa: E501
+    @jobs.setter
+    def jobs(self, jobs):
+        """Sets the jobs of this Body61.
 
 
-        :return: The description of this Body61.  # noqa: E501
-        :rtype: str
-        """
-        return self._description
-
-    @description.setter
-    def description(self, description):
-        """Sets the description of this Body61.
-
-
-        :param description: The description of this Body61.  # noqa: E501
-        :type: str
+        :param jobs: The jobs of this Body61.  # noqa: E501
+        :type: list[MigrationJobEntry]
         """
 
-        self._description = description
+        self._jobs = jobs
 
     def to_dict(self):
         """Returns the model properties as a dict"""

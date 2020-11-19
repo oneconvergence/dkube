@@ -28,40 +28,118 @@ class Body55(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'jobs': 'list[MigrationJobEntry]'
+        'metrics': 'object',
+        'eval_run': 'str',
+        'eval_run_name': 'str',
+        'artifacts_url': 'str'
     }
 
     attribute_map = {
-        'jobs': 'jobs'
+        'metrics': 'metrics',
+        'eval_run': 'eval_run',
+        'eval_run_name': 'eval_run_name',
+        'artifacts_url': 'artifacts_url'
     }
 
-    def __init__(self, jobs=None):  # noqa: E501
+    def __init__(self, metrics=None, eval_run=None, eval_run_name=None, artifacts_url=None):  # noqa: E501
         """Body55 - a model defined in Swagger"""  # noqa: E501
-        self._jobs = None
+        self._metrics = None
+        self._eval_run = None
+        self._eval_run_name = None
+        self._artifacts_url = None
         self.discriminator = None
-        if jobs is not None:
-            self.jobs = jobs
+        if metrics is not None:
+            self.metrics = metrics
+        if eval_run is not None:
+            self.eval_run = eval_run
+        if eval_run_name is not None:
+            self.eval_run_name = eval_run_name
+        if artifacts_url is not None:
+            self.artifacts_url = artifacts_url
 
     @property
-    def jobs(self):
-        """Gets the jobs of this Body55.  # noqa: E501
+    def metrics(self):
+        """Gets the metrics of this Body55.  # noqa: E501
 
 
-        :return: The jobs of this Body55.  # noqa: E501
-        :rtype: list[MigrationJobEntry]
+        :return: The metrics of this Body55.  # noqa: E501
+        :rtype: object
         """
-        return self._jobs
+        return self._metrics
 
-    @jobs.setter
-    def jobs(self, jobs):
-        """Sets the jobs of this Body55.
+    @metrics.setter
+    def metrics(self, metrics):
+        """Sets the metrics of this Body55.
 
 
-        :param jobs: The jobs of this Body55.  # noqa: E501
-        :type: list[MigrationJobEntry]
+        :param metrics: The metrics of this Body55.  # noqa: E501
+        :type: object
         """
 
-        self._jobs = jobs
+        self._metrics = metrics
+
+    @property
+    def eval_run(self):
+        """Gets the eval_run of this Body55.  # noqa: E501
+
+
+        :return: The eval_run of this Body55.  # noqa: E501
+        :rtype: str
+        """
+        return self._eval_run
+
+    @eval_run.setter
+    def eval_run(self, eval_run):
+        """Sets the eval_run of this Body55.
+
+
+        :param eval_run: The eval_run of this Body55.  # noqa: E501
+        :type: str
+        """
+
+        self._eval_run = eval_run
+
+    @property
+    def eval_run_name(self):
+        """Gets the eval_run_name of this Body55.  # noqa: E501
+
+
+        :return: The eval_run_name of this Body55.  # noqa: E501
+        :rtype: str
+        """
+        return self._eval_run_name
+
+    @eval_run_name.setter
+    def eval_run_name(self, eval_run_name):
+        """Sets the eval_run_name of this Body55.
+
+
+        :param eval_run_name: The eval_run_name of this Body55.  # noqa: E501
+        :type: str
+        """
+
+        self._eval_run_name = eval_run_name
+
+    @property
+    def artifacts_url(self):
+        """Gets the artifacts_url of this Body55.  # noqa: E501
+
+
+        :return: The artifacts_url of this Body55.  # noqa: E501
+        :rtype: str
+        """
+        return self._artifacts_url
+
+    @artifacts_url.setter
+    def artifacts_url(self, artifacts_url):
+        """Sets the artifacts_url of this Body55.
+
+
+        :param artifacts_url: The artifacts_url of this Body55.  # noqa: E501
+        :type: str
+        """
+
+        self._artifacts_url = artifacts_url
 
     def to_dict(self):
         """Returns the model properties as a dict"""

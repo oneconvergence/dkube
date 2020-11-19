@@ -29,27 +29,22 @@ class Body7(object):
     """
     swagger_types = {
         'users': 'list[str]',
-        'group': 'str',
-        'role': 'str'
+        'group': 'str'
     }
 
     attribute_map = {
         'users': 'users',
-        'group': 'group',
-        'role': 'role'
+        'group': 'group'
     }
 
-    def __init__(self, users=None, group=None, role=None):  # noqa: E501
+    def __init__(self, users=None, group=None):  # noqa: E501
         """Body7 - a model defined in Swagger"""  # noqa: E501
         self._users = None
         self._group = None
-        self._role = None
         self.discriminator = None
         self.users = users
         if group is not None:
             self.group = group
-        if role is not None:
-            self.role = role
 
     @property
     def users(self):
@@ -98,27 +93,6 @@ class Body7(object):
         """
 
         self._group = group
-
-    @property
-    def role(self):
-        """Gets the role of this Body7.  # noqa: E501
-
-
-        :return: The role of this Body7.  # noqa: E501
-        :rtype: str
-        """
-        return self._role
-
-    @role.setter
-    def role(self, role):
-        """Sets the role of this Body7.
-
-
-        :param role: The role of this Body7.  # noqa: E501
-        :type: str
-        """
-
-        self._role = role
 
     def to_dict(self):
         """Returns the model properties as a dict"""

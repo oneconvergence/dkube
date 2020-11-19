@@ -28,92 +28,171 @@ class Body58(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'type': 'str',
-        'operator': 'str',
-        'event_data': 'ModeldeployEventData'
+        'name': 'str',
+        'source_url': 'str',
+        'source_jwt': 'str',
+        'target_url': 'str',
+        'target_jwt': 'str',
+        'jobs': 'list[MigrationJobEntry]'
     }
 
     attribute_map = {
-        'type': 'type',
-        'operator': 'operator',
-        'event_data': 'event_data'
+        'name': 'name',
+        'source_url': 'source_url',
+        'source_jwt': 'source_JWT',
+        'target_url': 'target_url',
+        'target_jwt': 'target_JWT',
+        'jobs': 'jobs'
     }
 
-    def __init__(self, type=None, operator=None, event_data=None):  # noqa: E501
+    def __init__(self, name=None, source_url=None, source_jwt=None, target_url=None, target_jwt=None, jobs=None):  # noqa: E501
         """Body58 - a model defined in Swagger"""  # noqa: E501
-        self._type = None
-        self._operator = None
-        self._event_data = None
+        self._name = None
+        self._source_url = None
+        self._source_jwt = None
+        self._target_url = None
+        self._target_jwt = None
+        self._jobs = None
         self.discriminator = None
-        if type is not None:
-            self.type = type
-        if operator is not None:
-            self.operator = operator
-        if event_data is not None:
-            self.event_data = event_data
+        if name is not None:
+            self.name = name
+        if source_url is not None:
+            self.source_url = source_url
+        if source_jwt is not None:
+            self.source_jwt = source_jwt
+        if target_url is not None:
+            self.target_url = target_url
+        if target_jwt is not None:
+            self.target_jwt = target_jwt
+        self.jobs = jobs
 
     @property
-    def type(self):
-        """Gets the type of this Body58.  # noqa: E501
+    def name(self):
+        """Gets the name of this Body58.  # noqa: E501
 
 
-        :return: The type of this Body58.  # noqa: E501
+        :return: The name of this Body58.  # noqa: E501
         :rtype: str
         """
-        return self._type
+        return self._name
 
-    @type.setter
-    def type(self, type):
-        """Sets the type of this Body58.
+    @name.setter
+    def name(self, name):
+        """Sets the name of this Body58.
 
 
-        :param type: The type of this Body58.  # noqa: E501
+        :param name: The name of this Body58.  # noqa: E501
         :type: str
         """
 
-        self._type = type
+        self._name = name
 
     @property
-    def operator(self):
-        """Gets the operator of this Body58.  # noqa: E501
+    def source_url(self):
+        """Gets the source_url of this Body58.  # noqa: E501
 
 
-        :return: The operator of this Body58.  # noqa: E501
+        :return: The source_url of this Body58.  # noqa: E501
         :rtype: str
         """
-        return self._operator
+        return self._source_url
 
-    @operator.setter
-    def operator(self, operator):
-        """Sets the operator of this Body58.
+    @source_url.setter
+    def source_url(self, source_url):
+        """Sets the source_url of this Body58.
 
 
-        :param operator: The operator of this Body58.  # noqa: E501
+        :param source_url: The source_url of this Body58.  # noqa: E501
         :type: str
         """
 
-        self._operator = operator
+        self._source_url = source_url
 
     @property
-    def event_data(self):
-        """Gets the event_data of this Body58.  # noqa: E501
+    def source_jwt(self):
+        """Gets the source_jwt of this Body58.  # noqa: E501
 
 
-        :return: The event_data of this Body58.  # noqa: E501
-        :rtype: ModeldeployEventData
+        :return: The source_jwt of this Body58.  # noqa: E501
+        :rtype: str
         """
-        return self._event_data
+        return self._source_jwt
 
-    @event_data.setter
-    def event_data(self, event_data):
-        """Sets the event_data of this Body58.
+    @source_jwt.setter
+    def source_jwt(self, source_jwt):
+        """Sets the source_jwt of this Body58.
 
 
-        :param event_data: The event_data of this Body58.  # noqa: E501
-        :type: ModeldeployEventData
+        :param source_jwt: The source_jwt of this Body58.  # noqa: E501
+        :type: str
         """
 
-        self._event_data = event_data
+        self._source_jwt = source_jwt
+
+    @property
+    def target_url(self):
+        """Gets the target_url of this Body58.  # noqa: E501
+
+
+        :return: The target_url of this Body58.  # noqa: E501
+        :rtype: str
+        """
+        return self._target_url
+
+    @target_url.setter
+    def target_url(self, target_url):
+        """Sets the target_url of this Body58.
+
+
+        :param target_url: The target_url of this Body58.  # noqa: E501
+        :type: str
+        """
+
+        self._target_url = target_url
+
+    @property
+    def target_jwt(self):
+        """Gets the target_jwt of this Body58.  # noqa: E501
+
+
+        :return: The target_jwt of this Body58.  # noqa: E501
+        :rtype: str
+        """
+        return self._target_jwt
+
+    @target_jwt.setter
+    def target_jwt(self, target_jwt):
+        """Sets the target_jwt of this Body58.
+
+
+        :param target_jwt: The target_jwt of this Body58.  # noqa: E501
+        :type: str
+        """
+
+        self._target_jwt = target_jwt
+
+    @property
+    def jobs(self):
+        """Gets the jobs of this Body58.  # noqa: E501
+
+
+        :return: The jobs of this Body58.  # noqa: E501
+        :rtype: list[MigrationJobEntry]
+        """
+        return self._jobs
+
+    @jobs.setter
+    def jobs(self, jobs):
+        """Sets the jobs of this Body58.
+
+
+        :param jobs: The jobs of this Body58.  # noqa: E501
+        :type: list[MigrationJobEntry]
+        """
+        if jobs is None:
+            raise ValueError("Invalid value for `jobs`, must not be `None`")  # noqa: E501
+
+        self._jobs = jobs
 
     def to_dict(self):
         """Returns the model properties as a dict"""

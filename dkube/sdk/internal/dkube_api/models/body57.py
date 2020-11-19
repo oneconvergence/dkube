@@ -28,92 +28,118 @@ class Body57(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'type': 'str',
-        'operator': 'str',
-        'event_data': 'ModeldeployEventData'
+        'name': 'str',
+        'description': 'str',
+        'image': 'str',
+        'leaderboard': 'bool'
     }
 
     attribute_map = {
-        'type': 'type',
-        'operator': 'operator',
-        'event_data': 'event_data'
+        'name': 'name',
+        'description': 'description',
+        'image': 'image',
+        'leaderboard': 'leaderboard'
     }
 
-    def __init__(self, type=None, operator=None, event_data=None):  # noqa: E501
+    def __init__(self, name=None, description=None, image=None, leaderboard=False):  # noqa: E501
         """Body57 - a model defined in Swagger"""  # noqa: E501
-        self._type = None
-        self._operator = None
-        self._event_data = None
+        self._name = None
+        self._description = None
+        self._image = None
+        self._leaderboard = None
         self.discriminator = None
-        if type is not None:
-            self.type = type
-        if operator is not None:
-            self.operator = operator
-        if event_data is not None:
-            self.event_data = event_data
+        if name is not None:
+            self.name = name
+        if description is not None:
+            self.description = description
+        if image is not None:
+            self.image = image
+        if leaderboard is not None:
+            self.leaderboard = leaderboard
 
     @property
-    def type(self):
-        """Gets the type of this Body57.  # noqa: E501
+    def name(self):
+        """Gets the name of this Body57.  # noqa: E501
 
 
-        :return: The type of this Body57.  # noqa: E501
+        :return: The name of this Body57.  # noqa: E501
         :rtype: str
         """
-        return self._type
+        return self._name
 
-    @type.setter
-    def type(self, type):
-        """Sets the type of this Body57.
+    @name.setter
+    def name(self, name):
+        """Sets the name of this Body57.
 
 
-        :param type: The type of this Body57.  # noqa: E501
+        :param name: The name of this Body57.  # noqa: E501
         :type: str
         """
 
-        self._type = type
+        self._name = name
 
     @property
-    def operator(self):
-        """Gets the operator of this Body57.  # noqa: E501
+    def description(self):
+        """Gets the description of this Body57.  # noqa: E501
 
 
-        :return: The operator of this Body57.  # noqa: E501
+        :return: The description of this Body57.  # noqa: E501
         :rtype: str
         """
-        return self._operator
+        return self._description
 
-    @operator.setter
-    def operator(self, operator):
-        """Sets the operator of this Body57.
+    @description.setter
+    def description(self, description):
+        """Sets the description of this Body57.
 
 
-        :param operator: The operator of this Body57.  # noqa: E501
+        :param description: The description of this Body57.  # noqa: E501
         :type: str
         """
 
-        self._operator = operator
+        self._description = description
 
     @property
-    def event_data(self):
-        """Gets the event_data of this Body57.  # noqa: E501
+    def image(self):
+        """Gets the image of this Body57.  # noqa: E501
 
 
-        :return: The event_data of this Body57.  # noqa: E501
-        :rtype: ModeldeployEventData
+        :return: The image of this Body57.  # noqa: E501
+        :rtype: str
         """
-        return self._event_data
+        return self._image
 
-    @event_data.setter
-    def event_data(self, event_data):
-        """Sets the event_data of this Body57.
+    @image.setter
+    def image(self, image):
+        """Sets the image of this Body57.
 
 
-        :param event_data: The event_data of this Body57.  # noqa: E501
-        :type: ModeldeployEventData
+        :param image: The image of this Body57.  # noqa: E501
+        :type: str
         """
 
-        self._event_data = event_data
+        self._image = image
+
+    @property
+    def leaderboard(self):
+        """Gets the leaderboard of this Body57.  # noqa: E501
+
+
+        :return: The leaderboard of this Body57.  # noqa: E501
+        :rtype: bool
+        """
+        return self._leaderboard
+
+    @leaderboard.setter
+    def leaderboard(self, leaderboard):
+        """Sets the leaderboard of this Body57.
+
+
+        :param leaderboard: The leaderboard of this Body57.  # noqa: E501
+        :type: bool
+        """
+
+        self._leaderboard = leaderboard
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -28,40 +28,40 @@ class Body60(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'featuresets': 'list[str]'
+        'jobs': 'list[MigrationJobEntry]'
     }
 
     attribute_map = {
-        'featuresets': 'featuresets'
+        'jobs': 'jobs'
     }
 
-    def __init__(self, featuresets=None):  # noqa: E501
+    def __init__(self, jobs=None):  # noqa: E501
         """Body60 - a model defined in Swagger"""  # noqa: E501
-        self._featuresets = None
+        self._jobs = None
         self.discriminator = None
-        if featuresets is not None:
-            self.featuresets = featuresets
+        if jobs is not None:
+            self.jobs = jobs
 
     @property
-    def featuresets(self):
-        """Gets the featuresets of this Body60.  # noqa: E501
+    def jobs(self):
+        """Gets the jobs of this Body60.  # noqa: E501
 
 
-        :return: The featuresets of this Body60.  # noqa: E501
-        :rtype: list[str]
+        :return: The jobs of this Body60.  # noqa: E501
+        :rtype: list[MigrationJobEntry]
         """
-        return self._featuresets
+        return self._jobs
 
-    @featuresets.setter
-    def featuresets(self, featuresets):
-        """Sets the featuresets of this Body60.
+    @jobs.setter
+    def jobs(self, jobs):
+        """Sets the jobs of this Body60.
 
 
-        :param featuresets: The featuresets of this Body60.  # noqa: E501
-        :type: list[str]
+        :param jobs: The jobs of this Body60.  # noqa: E501
+        :type: list[MigrationJobEntry]
         """
 
-        self._featuresets = featuresets
+        self._jobs = jobs
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -28,40 +28,171 @@ class Body59(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'featuresets': 'list[str]'
+        'name': 'str',
+        'source_url': 'str',
+        'source_jwt': 'str',
+        'target_url': 'str',
+        'target_jwt': 'str',
+        'jobs': 'list[MigrationJobEntry]'
     }
 
     attribute_map = {
-        'featuresets': 'featuresets'
+        'name': 'name',
+        'source_url': 'source_url',
+        'source_jwt': 'source_JWT',
+        'target_url': 'target_url',
+        'target_jwt': 'target_JWT',
+        'jobs': 'jobs'
     }
 
-    def __init__(self, featuresets=None):  # noqa: E501
+    def __init__(self, name=None, source_url=None, source_jwt=None, target_url=None, target_jwt=None, jobs=None):  # noqa: E501
         """Body59 - a model defined in Swagger"""  # noqa: E501
-        self._featuresets = None
+        self._name = None
+        self._source_url = None
+        self._source_jwt = None
+        self._target_url = None
+        self._target_jwt = None
+        self._jobs = None
         self.discriminator = None
-        if featuresets is not None:
-            self.featuresets = featuresets
+        if name is not None:
+            self.name = name
+        if source_url is not None:
+            self.source_url = source_url
+        if source_jwt is not None:
+            self.source_jwt = source_jwt
+        if target_url is not None:
+            self.target_url = target_url
+        if target_jwt is not None:
+            self.target_jwt = target_jwt
+        self.jobs = jobs
 
     @property
-    def featuresets(self):
-        """Gets the featuresets of this Body59.  # noqa: E501
+    def name(self):
+        """Gets the name of this Body59.  # noqa: E501
 
 
-        :return: The featuresets of this Body59.  # noqa: E501
-        :rtype: list[str]
+        :return: The name of this Body59.  # noqa: E501
+        :rtype: str
         """
-        return self._featuresets
+        return self._name
 
-    @featuresets.setter
-    def featuresets(self, featuresets):
-        """Sets the featuresets of this Body59.
+    @name.setter
+    def name(self, name):
+        """Sets the name of this Body59.
 
 
-        :param featuresets: The featuresets of this Body59.  # noqa: E501
-        :type: list[str]
+        :param name: The name of this Body59.  # noqa: E501
+        :type: str
         """
 
-        self._featuresets = featuresets
+        self._name = name
+
+    @property
+    def source_url(self):
+        """Gets the source_url of this Body59.  # noqa: E501
+
+
+        :return: The source_url of this Body59.  # noqa: E501
+        :rtype: str
+        """
+        return self._source_url
+
+    @source_url.setter
+    def source_url(self, source_url):
+        """Sets the source_url of this Body59.
+
+
+        :param source_url: The source_url of this Body59.  # noqa: E501
+        :type: str
+        """
+
+        self._source_url = source_url
+
+    @property
+    def source_jwt(self):
+        """Gets the source_jwt of this Body59.  # noqa: E501
+
+
+        :return: The source_jwt of this Body59.  # noqa: E501
+        :rtype: str
+        """
+        return self._source_jwt
+
+    @source_jwt.setter
+    def source_jwt(self, source_jwt):
+        """Sets the source_jwt of this Body59.
+
+
+        :param source_jwt: The source_jwt of this Body59.  # noqa: E501
+        :type: str
+        """
+
+        self._source_jwt = source_jwt
+
+    @property
+    def target_url(self):
+        """Gets the target_url of this Body59.  # noqa: E501
+
+
+        :return: The target_url of this Body59.  # noqa: E501
+        :rtype: str
+        """
+        return self._target_url
+
+    @target_url.setter
+    def target_url(self, target_url):
+        """Sets the target_url of this Body59.
+
+
+        :param target_url: The target_url of this Body59.  # noqa: E501
+        :type: str
+        """
+
+        self._target_url = target_url
+
+    @property
+    def target_jwt(self):
+        """Gets the target_jwt of this Body59.  # noqa: E501
+
+
+        :return: The target_jwt of this Body59.  # noqa: E501
+        :rtype: str
+        """
+        return self._target_jwt
+
+    @target_jwt.setter
+    def target_jwt(self, target_jwt):
+        """Sets the target_jwt of this Body59.
+
+
+        :param target_jwt: The target_jwt of this Body59.  # noqa: E501
+        :type: str
+        """
+
+        self._target_jwt = target_jwt
+
+    @property
+    def jobs(self):
+        """Gets the jobs of this Body59.  # noqa: E501
+
+
+        :return: The jobs of this Body59.  # noqa: E501
+        :rtype: list[MigrationJobEntry]
+        """
+        return self._jobs
+
+    @jobs.setter
+    def jobs(self, jobs):
+        """Sets the jobs of this Body59.
+
+
+        :param jobs: The jobs of this Body59.  # noqa: E501
+        :type: list[MigrationJobEntry]
+        """
+        if jobs is None:
+            raise ValueError("Invalid value for `jobs`, must not be `None`")  # noqa: E501
+
+        self._jobs = jobs
 
     def to_dict(self):
         """Returns the model properties as a dict"""

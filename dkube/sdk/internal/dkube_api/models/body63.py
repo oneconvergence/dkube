@@ -28,66 +28,92 @@ class Body63(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'tags': 'list[str]',
-        'description': 'str'
+        'type': 'str',
+        'operator': 'str',
+        'event_data': 'ModeldeployEventData'
     }
 
     attribute_map = {
-        'tags': 'tags',
-        'description': 'description'
+        'type': 'type',
+        'operator': 'operator',
+        'event_data': 'event_data'
     }
 
-    def __init__(self, tags=None, description=None):  # noqa: E501
+    def __init__(self, type=None, operator=None, event_data=None):  # noqa: E501
         """Body63 - a model defined in Swagger"""  # noqa: E501
-        self._tags = None
-        self._description = None
+        self._type = None
+        self._operator = None
+        self._event_data = None
         self.discriminator = None
-        if tags is not None:
-            self.tags = tags
-        if description is not None:
-            self.description = description
+        if type is not None:
+            self.type = type
+        if operator is not None:
+            self.operator = operator
+        if event_data is not None:
+            self.event_data = event_data
 
     @property
-    def tags(self):
-        """Gets the tags of this Body63.  # noqa: E501
+    def type(self):
+        """Gets the type of this Body63.  # noqa: E501
 
 
-        :return: The tags of this Body63.  # noqa: E501
-        :rtype: list[str]
-        """
-        return self._tags
-
-    @tags.setter
-    def tags(self, tags):
-        """Sets the tags of this Body63.
-
-
-        :param tags: The tags of this Body63.  # noqa: E501
-        :type: list[str]
-        """
-
-        self._tags = tags
-
-    @property
-    def description(self):
-        """Gets the description of this Body63.  # noqa: E501
-
-
-        :return: The description of this Body63.  # noqa: E501
+        :return: The type of this Body63.  # noqa: E501
         :rtype: str
         """
-        return self._description
+        return self._type
 
-    @description.setter
-    def description(self, description):
-        """Sets the description of this Body63.
+    @type.setter
+    def type(self, type):
+        """Sets the type of this Body63.
 
 
-        :param description: The description of this Body63.  # noqa: E501
+        :param type: The type of this Body63.  # noqa: E501
         :type: str
         """
 
-        self._description = description
+        self._type = type
+
+    @property
+    def operator(self):
+        """Gets the operator of this Body63.  # noqa: E501
+
+
+        :return: The operator of this Body63.  # noqa: E501
+        :rtype: str
+        """
+        return self._operator
+
+    @operator.setter
+    def operator(self, operator):
+        """Sets the operator of this Body63.
+
+
+        :param operator: The operator of this Body63.  # noqa: E501
+        :type: str
+        """
+
+        self._operator = operator
+
+    @property
+    def event_data(self):
+        """Gets the event_data of this Body63.  # noqa: E501
+
+
+        :return: The event_data of this Body63.  # noqa: E501
+        :rtype: ModeldeployEventData
+        """
+        return self._event_data
+
+    @event_data.setter
+    def event_data(self, event_data):
+        """Sets the event_data of this Body63.
+
+
+        :param event_data: The event_data of this Body63.  # noqa: E501
+        :type: ModeldeployEventData
+        """
+
+        self._event_data = event_data
 
     def to_dict(self):
         """Returns the model properties as a dict"""

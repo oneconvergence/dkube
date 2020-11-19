@@ -28,42 +28,118 @@ class Body56(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'upfile': 'str'
+        'name': 'str',
+        'description': 'str',
+        'image': 'str',
+        'leaderboard': 'bool'
     }
 
     attribute_map = {
-        'upfile': 'upfile'
+        'name': 'name',
+        'description': 'description',
+        'image': 'image',
+        'leaderboard': 'leaderboard'
     }
 
-    def __init__(self, upfile=None):  # noqa: E501
+    def __init__(self, name=None, description=None, image=None, leaderboard=False):  # noqa: E501
         """Body56 - a model defined in Swagger"""  # noqa: E501
-        self._upfile = None
+        self._name = None
+        self._description = None
+        self._image = None
+        self._leaderboard = None
         self.discriminator = None
-        if upfile is not None:
-            self.upfile = upfile
+        if name is not None:
+            self.name = name
+        if description is not None:
+            self.description = description
+        if image is not None:
+            self.image = image
+        if leaderboard is not None:
+            self.leaderboard = leaderboard
 
     @property
-    def upfile(self):
-        """Gets the upfile of this Body56.  # noqa: E501
+    def name(self):
+        """Gets the name of this Body56.  # noqa: E501
 
-        The file to upload.  # noqa: E501
 
-        :return: The upfile of this Body56.  # noqa: E501
+        :return: The name of this Body56.  # noqa: E501
         :rtype: str
         """
-        return self._upfile
+        return self._name
 
-    @upfile.setter
-    def upfile(self, upfile):
-        """Sets the upfile of this Body56.
+    @name.setter
+    def name(self, name):
+        """Sets the name of this Body56.
 
-        The file to upload.  # noqa: E501
 
-        :param upfile: The upfile of this Body56.  # noqa: E501
+        :param name: The name of this Body56.  # noqa: E501
         :type: str
         """
 
-        self._upfile = upfile
+        self._name = name
+
+    @property
+    def description(self):
+        """Gets the description of this Body56.  # noqa: E501
+
+
+        :return: The description of this Body56.  # noqa: E501
+        :rtype: str
+        """
+        return self._description
+
+    @description.setter
+    def description(self, description):
+        """Sets the description of this Body56.
+
+
+        :param description: The description of this Body56.  # noqa: E501
+        :type: str
+        """
+
+        self._description = description
+
+    @property
+    def image(self):
+        """Gets the image of this Body56.  # noqa: E501
+
+
+        :return: The image of this Body56.  # noqa: E501
+        :rtype: str
+        """
+        return self._image
+
+    @image.setter
+    def image(self, image):
+        """Sets the image of this Body56.
+
+
+        :param image: The image of this Body56.  # noqa: E501
+        :type: str
+        """
+
+        self._image = image
+
+    @property
+    def leaderboard(self):
+        """Gets the leaderboard of this Body56.  # noqa: E501
+
+
+        :return: The leaderboard of this Body56.  # noqa: E501
+        :rtype: bool
+        """
+        return self._leaderboard
+
+    @leaderboard.setter
+    def leaderboard(self, leaderboard):
+        """Sets the leaderboard of this Body56.
+
+
+        :param leaderboard: The leaderboard of this Body56.  # noqa: E501
+        :type: bool
+        """
+
+        self._leaderboard = leaderboard
 
     def to_dict(self):
         """Returns the model properties as a dict"""
