@@ -3,7 +3,7 @@ from __future__ import print_function
 import sys
 import time
 from pprint import pprint
-
+import os
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -62,7 +62,7 @@ class DkubeFeatureSet(object):
         if self.features_path is None:
             return {"data": df_empty, "status": -1, "error": "Path of featureset not found"}
         try:
-            table = pq.read_table(os.path.join(path, filename))
+            table = pq.read_table(os.path.join(self.features_path, filename))
             feature_df = table.to_pandas()
             return {"data": feature_df, "status": 0, "error": None}
         except Exception as e:
@@ -73,7 +73,7 @@ class DkubeFeatureSet(object):
             return {"status": -1, "error": "Featureet doesn't exist"}
         try:
             table = pa.Table.from_pandas(dataframe)
-            pq.write_table(table, os.path.join(path, filename))
+            pq.write_table(table, os.path.join(self.features_path, filename))
             return {"status": 0, "error": None}
         except Exception as e:
             return {"status": -1, "error": e}
