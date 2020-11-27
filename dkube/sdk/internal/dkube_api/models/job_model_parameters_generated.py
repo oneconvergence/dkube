@@ -57,6 +57,7 @@ class JobModelParametersGenerated(object):
         'versions': 'JobModelParametersGeneratedVersions',
         'tracking': 'list[str]',
         'input_datum_refs': 'list[JobModelParametersGeneratedInputDatumRefs]',
+        'input_featureset_refs': 'list[JobModelParametersGeneratedInputFeaturesetRefs]',
         'details': 'JobModelParametersGeneratedDetails'
     }
 
@@ -90,10 +91,11 @@ class JobModelParametersGenerated(object):
         'versions': 'versions',
         'tracking': 'tracking',
         'input_datum_refs': 'inputDatumRefs',
+        'input_featureset_refs': 'inputFeaturesetRefs',
         'details': 'details'
     }
 
-    def __init__(self, deleted=False, archived=False, private=None, category=None, cicdstatus=None, pipeline=None, subclass=None, hp_tuning_info=None, training_image=None, serving_image=None, scheduled=None, affinity=None, user=None, jobid=None, uuid=None, status=None, timestamps=None, runtime=None, ngpus_alloc=None, ngpus_max=None, tbref=None, studyref=None, trialref=None, best_trial_id=None, best_objective_value=None, accelerator=None, versions=None, tracking=None, input_datum_refs=None, details=None):  # noqa: E501
+    def __init__(self, deleted=False, archived=False, private=None, category=None, cicdstatus=None, pipeline=None, subclass=None, hp_tuning_info=None, training_image=None, serving_image=None, scheduled=None, affinity=None, user=None, jobid=None, uuid=None, status=None, timestamps=None, runtime=None, ngpus_alloc=None, ngpus_max=None, tbref=None, studyref=None, trialref=None, best_trial_id=None, best_objective_value=None, accelerator=None, versions=None, tracking=None, input_datum_refs=None, input_featureset_refs=None, details=None):  # noqa: E501
         """JobModelParametersGenerated - a model defined in Swagger"""  # noqa: E501
         self._deleted = None
         self._archived = None
@@ -124,6 +126,7 @@ class JobModelParametersGenerated(object):
         self._versions = None
         self._tracking = None
         self._input_datum_refs = None
+        self._input_featureset_refs = None
         self._details = None
         self.discriminator = None
         if deleted is not None:
@@ -184,6 +187,8 @@ class JobModelParametersGenerated(object):
             self.tracking = tracking
         if input_datum_refs is not None:
             self.input_datum_refs = input_datum_refs
+        if input_featureset_refs is not None:
+            self.input_featureset_refs = input_featureset_refs
         if details is not None:
             self.details = details
 
@@ -833,6 +838,27 @@ class JobModelParametersGenerated(object):
         """
 
         self._input_datum_refs = input_datum_refs
+
+    @property
+    def input_featureset_refs(self):
+        """Gets the input_featureset_refs of this JobModelParametersGenerated.  # noqa: E501
+
+
+        :return: The input_featureset_refs of this JobModelParametersGenerated.  # noqa: E501
+        :rtype: list[JobModelParametersGeneratedInputFeaturesetRefs]
+        """
+        return self._input_featureset_refs
+
+    @input_featureset_refs.setter
+    def input_featureset_refs(self, input_featureset_refs):
+        """Sets the input_featureset_refs of this JobModelParametersGenerated.
+
+
+        :param input_featureset_refs: The input_featureset_refs of this JobModelParametersGenerated.  # noqa: E501
+        :type: list[JobModelParametersGeneratedInputFeaturesetRefs]
+        """
+
+        self._input_featureset_refs = input_featureset_refs
 
     @property
     def details(self):

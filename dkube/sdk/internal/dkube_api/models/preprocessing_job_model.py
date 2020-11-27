@@ -33,7 +33,9 @@ class PreprocessingJobModel(object):
         'datums': 'JobDatumModel',
         'featuresets': 'JobFeaturesetModel',
         'tags': 'list[str]',
-        'config': 'JobConfigModel'
+        'config': 'JobConfigModel',
+        'ngpus': 'int',
+        'gpus_override': 'bool'
     }
 
     attribute_map = {
@@ -42,10 +44,12 @@ class PreprocessingJobModel(object):
         'datums': 'datums',
         'featuresets': 'featuresets',
         'tags': 'tags',
-        'config': 'config'
+        'config': 'config',
+        'ngpus': 'ngpus',
+        'gpus_override': 'gpus_override'
     }
 
-    def __init__(self, kind=None, executor=None, datums=None, featuresets=None, tags=None, config=None):  # noqa: E501
+    def __init__(self, kind=None, executor=None, datums=None, featuresets=None, tags=None, config=None, ngpus=None, gpus_override=True):  # noqa: E501
         """PreprocessingJobModel - a model defined in Swagger"""  # noqa: E501
         self._kind = None
         self._executor = None
@@ -53,6 +57,8 @@ class PreprocessingJobModel(object):
         self._featuresets = None
         self._tags = None
         self._config = None
+        self._ngpus = None
+        self._gpus_override = None
         self.discriminator = None
         if kind is not None:
             self.kind = kind
@@ -66,6 +72,10 @@ class PreprocessingJobModel(object):
             self.tags = tags
         if config is not None:
             self.config = config
+        if ngpus is not None:
+            self.ngpus = ngpus
+        if gpus_override is not None:
+            self.gpus_override = gpus_override
 
     @property
     def kind(self):
@@ -200,6 +210,48 @@ class PreprocessingJobModel(object):
         """
 
         self._config = config
+
+    @property
+    def ngpus(self):
+        """Gets the ngpus of this PreprocessingJobModel.  # noqa: E501
+
+
+        :return: The ngpus of this PreprocessingJobModel.  # noqa: E501
+        :rtype: int
+        """
+        return self._ngpus
+
+    @ngpus.setter
+    def ngpus(self, ngpus):
+        """Sets the ngpus of this PreprocessingJobModel.
+
+
+        :param ngpus: The ngpus of this PreprocessingJobModel.  # noqa: E501
+        :type: int
+        """
+
+        self._ngpus = ngpus
+
+    @property
+    def gpus_override(self):
+        """Gets the gpus_override of this PreprocessingJobModel.  # noqa: E501
+
+
+        :return: The gpus_override of this PreprocessingJobModel.  # noqa: E501
+        :rtype: bool
+        """
+        return self._gpus_override
+
+    @gpus_override.setter
+    def gpus_override(self, gpus_override):
+        """Sets the gpus_override of this PreprocessingJobModel.
+
+
+        :param gpus_override: The gpus_override of this PreprocessingJobModel.  # noqa: E501
+        :type: bool
+        """
+
+        self._gpus_override = gpus_override
 
     def to_dict(self):
         """Returns the model properties as a dict"""

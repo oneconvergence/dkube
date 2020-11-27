@@ -29,23 +29,33 @@ class InlineResponse20027DataOutputs(object):
     """
     swagger_types = {
         'datum': 'DatumModel',
-        'version': 'VersionModel'
+        'version': 'VersionModel',
+        'featureset': 'FeatureSetDef',
+        'featureset_version': 'FeatureSetVersionDef'
     }
 
     attribute_map = {
         'datum': 'datum',
-        'version': 'version'
+        'version': 'version',
+        'featureset': 'featureset',
+        'featureset_version': 'featureset_version'
     }
 
-    def __init__(self, datum=None, version=None):  # noqa: E501
+    def __init__(self, datum=None, version=None, featureset=None, featureset_version=None):  # noqa: E501
         """InlineResponse20027DataOutputs - a model defined in Swagger"""  # noqa: E501
         self._datum = None
         self._version = None
+        self._featureset = None
+        self._featureset_version = None
         self.discriminator = None
         if datum is not None:
             self.datum = datum
         if version is not None:
             self.version = version
+        if featureset is not None:
+            self.featureset = featureset
+        if featureset_version is not None:
+            self.featureset_version = featureset_version
 
     @property
     def datum(self):
@@ -88,6 +98,48 @@ class InlineResponse20027DataOutputs(object):
         """
 
         self._version = version
+
+    @property
+    def featureset(self):
+        """Gets the featureset of this InlineResponse20027DataOutputs.  # noqa: E501
+
+
+        :return: The featureset of this InlineResponse20027DataOutputs.  # noqa: E501
+        :rtype: FeatureSetDef
+        """
+        return self._featureset
+
+    @featureset.setter
+    def featureset(self, featureset):
+        """Sets the featureset of this InlineResponse20027DataOutputs.
+
+
+        :param featureset: The featureset of this InlineResponse20027DataOutputs.  # noqa: E501
+        :type: FeatureSetDef
+        """
+
+        self._featureset = featureset
+
+    @property
+    def featureset_version(self):
+        """Gets the featureset_version of this InlineResponse20027DataOutputs.  # noqa: E501
+
+
+        :return: The featureset_version of this InlineResponse20027DataOutputs.  # noqa: E501
+        :rtype: FeatureSetVersionDef
+        """
+        return self._featureset_version
+
+    @featureset_version.setter
+    def featureset_version(self, featureset_version):
+        """Sets the featureset_version of this InlineResponse20027DataOutputs.
+
+
+        :param featureset_version: The featureset_version of this InlineResponse20027DataOutputs.  # noqa: E501
+        :type: FeatureSetVersionDef
+        """
+
+        self._featureset_version = featureset_version
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -16,6 +16,7 @@ import re  # noqa: F401
 
 # python 2 and python 3 compatibility library
 import six
+
 from dkube.sdk.internal.dkube_api.api_client import ApiClient
 
 
@@ -3661,6 +3662,7 @@ class DkubeApi(object):
         :param async_req bool
         :param str query:
         :param bool versions:
+        :param str tags:
         :return: InlineResponse20049
                  If the method is called asynchronously,
                  returns the request thread.
@@ -3683,12 +3685,13 @@ class DkubeApi(object):
         :param async_req bool
         :param str query:
         :param bool versions:
+        :param str tags:
         :return: InlineResponse20049
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
-        all_params = ['query', 'versions']  # noqa: E501
+        all_params = ['query', 'versions', 'tags']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
         all_params.append('_preload_content')
@@ -3713,6 +3716,8 @@ class DkubeApi(object):
             query_params.append(('query', params['query']))  # noqa: E501
         if 'versions' in params:
             query_params.append(('versions', params['versions']))  # noqa: E501
+        if 'tags' in params:
+            query_params.append(('tags', params['tags']))  # noqa: E501
 
         header_params = {}
 
