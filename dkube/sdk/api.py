@@ -1190,33 +1190,31 @@ class DkubeApi(ApiBase):
                     "publish {}/{} - waiting for completion, current state {}".format(model, version, stage))
                 time.sleep(10)
 
-        def create_model_deployment(self, run: DkubeServing, stage_or_deploy="stage", wait_for_completion=True):
+    def create_model_deployment(self, name=None, description=None, model=None, version=None,
+                                stage_or_deploy="stage", wait_for_completion=True):
         """
-            Method to create a serving 
+            Method to create a serving deployment for a model in the model catalog.
             Raises Exception in case of errors.
 
 
             *Inputs*
 
-                run
-                    Instance of :bash:`dkube.sdk.rsrcs.serving` class.
-                    Please see the :bash:`Resources` section for details on this class.
+                name
+                    Name of the deployment. Must be unique
 
-                    If serving image is not updated in :bash:`run:DkubeServing` argument then,
-                    - If training used supported standard framework, dkube will pick approp serving image
-                    - If training used custom image, dkube will try to use the same image for serving
+                description
+                    User readable description of the deployment
 
-                    If transformer image is not updated in :bash:`run:DkubeServing` then,
-                    - Dkube will use same image as training image
+                model
+                    Name of the model to be deployed
 
-                    If transformer project is not updated in :bash:`run:DkubeServing` then,
-                    - Dkube will use the project used for training
+                version
+                    Version of the model to be deployed
 
-
-				stage_or_deploy
-					Default set to :bash: `stage` which means to stage the model deployment for testing before
-					deploying it for production.
-					Change to :bash: `deploy` to deploy the model in production
+                                stage_or_deploy
+                                        Default set to :bash: `stage` which means to stage the model deployment for testing before
+                                        deploying it for production.
+                                        Change to :bash: `deploy` to deploy the model in production
 
                 wait_for_completion
                     When set to :bash:`True` this method will wait for job to complete after submission.
@@ -1224,38 +1222,17 @@ class DkubeApi(ApiBase):
 
         """
 
-        assert type(
-            run) == DkubeServing, "Invalid type for run, value must be instance of rsrcs:DkubeServing class"
+        assert stage_or_deploy in [
+            "stage", "deploy"], "Invalid value for stage_or_deploy parameter."
 
-        # Fetch training run details and fill in information for serving
-        if run.predictor.image == None or (
-                run.serving_def.transformer == True and run.transformer.image == None) or (
-                run.serving_def.transformer == True and run.serving_def.transformer_project == None):
+        # Fetch the model from modelcatalog
+        mcitem = get_modelcatalog_item(model, version)
 
-            if run.serving_def.version == None:
-                v = self.get_model_latest_version(
-                    run.serving_def.owner, run.serving_def.model)
-                run.serving_def.version = v['uuid']
-
-            li = self.get_model_lineage(
-                run.serving_def.owner, run.serving_def.model, run.serving_def.version)
-            if run.predictor.image == None:
-                si = li['run']['parameters'][
-                    'generated']['serving_image']['image']
-                run.update_serving_image(
-                    si['path'], si['username'], si['password'])
-
-            if run.serving_def.transformer == True and run.transformer.image == None:
-                ti = li['run']['parameters']['generated'][
-                    'training_image']['image']
-                run.update_transformer_image(
-                    ti['path'], ti['username'], ti['password'])
-
-            if run.serving_def.transformer == True and run.serving_def.transformer_project == None:
-                code = li['run']['parameters']['training'][
-                    'datums']['workspace']['data']
-                name = code['name'].split(':')[1]
-                run.update_transformer_project(name, code['version'])
+        run:
+            = DkubeServing(user, name=name, description=description)
+        run.update_serving_model(model, version=version)
+        run.update_serving_image(image_url=mcitem['images'][
+                                 'serving']['image']['path'])
 
         if stage_or_deploy == "stage":
             super().stage_model(run)
@@ -1299,7 +1276,7 @@ class DkubeApi(ApiBase):
             *Inputs*
 
                 user
-                                        Name of the user.
+                    Name of the user.
 
                 filters
                     Only :bash:`*` is supported now.
@@ -1317,12 +1294,43 @@ class DkubeApi(ApiBase):
 
         return deps
 
-    def modelcatalog(self):
+    def modelcatalog(self, user):
         """
             Method to fetch the model catalog from DKube.
-                        Model catalog is list of models published by datascientists and are
-                        ready for staging or deployment on a production cluster.
-                        The user must have permission to fetch the model catalog.
+            Model catalog is list of models published by datascientists and are
+            ready for staging or deployment on a production cluster.
+            The user must have permission to fetch the model catalog.
+
+            *Inputs*
+
+                user
+                    Name of the user.
+        """
+        return super().modelcatalog(user)
+
+    def get_modelcatalog_item(self, user, model, version):
+        """
+            Method to get an item from modelcatalog
+            Raises exception on any connection errors.
+
+            *Inputs*
+
+                user
+                    Name of the user.
+
+                model
+                    Name of the model in the model catalog
+
+                version
+                    Version of the model
 
         """
-        return super().modelcatalog()
+        mc = modelcatalog(user)
+
+        for item in mc:
+            if item['name'] == model:
+                for version in item['versions']:
+                    if version['model']['version'] == version:
+                        return version
+
+        raise Exception(f'{mode}.{version} not found in model catalog')

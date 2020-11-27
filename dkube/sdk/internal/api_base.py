@@ -151,8 +151,8 @@ class ApiBase(object):
         response = api.datums_testdeploy_one_model(
             serving.user, model, version, deployment)
 
-    def modelcatalog(self):
+    def modelcatalog(self, user):
         api = dkube_api.DkubeOperatorExclusiveApi(
             dkube_api.ApiClient(configuration))
-        response = api.get_model_catalog()
+        response = api.get_model_catalog(user)
         return response['data']
