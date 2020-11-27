@@ -134,3 +134,25 @@ class ApiBase(object):
     def release_model(self, user, model, version):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
         response = api.datums_release_one_model(user, model, version)
+
+    def deploy_model(self, serving):
+        api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        model, version = serving.serving_def.model, serving.serving_def.version
+        deployment = {'name': serving.name,
+                      'description': serving.description, 'serving': serving.serving_def}
+        response = api.datums_deploy_one_model(
+            serving.user, model, version, deployment)
+
+    def stage_model(self, serving):
+        api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        model, version = serving.serving_def.model, serving.serving_def.version
+        deployment = {'name': serving.name,
+                      'description': serving.description, 'serving': serving.serving_def}
+        response = api.datums_testdeploy_one_model(
+            serving.user, model, version, deployment)
+
+    def modelcatalog(self):
+        api = dkube_api.DkubeOperatorExclusiveApi(
+            dkube_api.ApiClient(configuration))
+        response = api.get_model_catalog()
+        return response['data']

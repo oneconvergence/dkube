@@ -1189,3 +1189,140 @@ class DkubeApi(ApiBase):
                 print(
                     "publish {}/{} - waiting for completion, current state {}".format(model, version, stage))
                 time.sleep(10)
+
+        def create_model_deployment(self, run: DkubeServing, stage_or_deploy="stage", wait_for_completion=True):
+        """
+            Method to create a serving 
+            Raises Exception in case of errors.
+
+
+            *Inputs*
+
+                run
+                    Instance of :bash:`dkube.sdk.rsrcs.serving` class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+                    If serving image is not updated in :bash:`run:DkubeServing` argument then,
+                    - If training used supported standard framework, dkube will pick approp serving image
+                    - If training used custom image, dkube will try to use the same image for serving
+
+                    If transformer image is not updated in :bash:`run:DkubeServing` then,
+                    - Dkube will use same image as training image
+
+                    If transformer project is not updated in :bash:`run:DkubeServing` then,
+                    - Dkube will use the project used for training
+
+
+				stage_or_deploy
+					Default set to :bash: `stage` which means to stage the model deployment for testing before
+					deploying it for production.
+					Change to :bash: `deploy` to deploy the model in production
+
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for job to complete after submission.
+                    Job is declared complete if it is one of the :bash:`complete/failed/error` state
+
+        """
+
+        assert type(
+            run) == DkubeServing, "Invalid type for run, value must be instance of rsrcs:DkubeServing class"
+
+        # Fetch training run details and fill in information for serving
+        if run.predictor.image == None or (
+                run.serving_def.transformer == True and run.transformer.image == None) or (
+                run.serving_def.transformer == True and run.serving_def.transformer_project == None):
+
+            if run.serving_def.version == None:
+                v = self.get_model_latest_version(
+                    run.serving_def.owner, run.serving_def.model)
+                run.serving_def.version = v['uuid']
+
+            li = self.get_model_lineage(
+                run.serving_def.owner, run.serving_def.model, run.serving_def.version)
+            if run.predictor.image == None:
+                si = li['run']['parameters'][
+                    'generated']['serving_image']['image']
+                run.update_serving_image(
+                    si['path'], si['username'], si['password'])
+
+            if run.serving_def.transformer == True and run.transformer.image == None:
+                ti = li['run']['parameters']['generated'][
+                    'training_image']['image']
+                run.update_transformer_image(
+                    ti['path'], ti['username'], ti['password'])
+
+            if run.serving_def.transformer == True and run.serving_def.transformer_project == None:
+                code = li['run']['parameters']['training'][
+                    'datums']['workspace']['data']
+                name = code['name'].split(':')[1]
+                run.update_transformer_project(name, code['version'])
+
+        if stage_or_deploy == "stage":
+            super().stage_model(run)
+        if stage_or_deploy == "deploy":
+            super().deploy_model(run)
+
+        while wait_for_completion:
+            status = super().get_run('inference', run.user, run.name, fields='status')
+            state, reason = status['state'], status['reason']
+            if state.lower() in ['complete', 'failed', 'error', 'running']:
+                print(
+                    "run {} - completed with state {} and reason {}".format(run.name, state, reason))
+                break
+            else:
+                print(
+                    "run {} - waiting for completion, current state {}".format(run.name, state))
+                time.sleep(10)
+
+    def delete_model_deployment(self, user, name):
+        """
+            Method to delete a model deployment.
+            Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.
+
+            *Inputs*
+
+                user
+                    The token must belong to this user. As run of different user cannot be deleted.
+
+                name
+                    Name of the run which needs to be deleted.
+
+        """
+
+        super().delete_run('inference', user, name)
+
+    def list_model_deployments(self, user, filters='*'):
+        """
+            Method to list all the model deployments.
+            Raises exception on any connection errors.
+
+            *Inputs*
+
+                user
+                                        Name of the user.
+
+                filters
+                    Only :bash:`*` is supported now.
+
+                    User will able to filter runs based on state or duration
+
+        """
+
+        deps = []
+        infs = super().list_runs('inference', user)
+        for inf in infs:
+            if inf['parameters']['inference']['deploy'] == True or
+                inf['parameters']['inference']['deploy'] == False:
+                    deps.append(inf)
+
+        return deps
+
+    def modelcatalog(self):
+        """
+            Method to fetch the model catalog from DKube.
+                        Model catalog is list of models published by datascientists and are
+                        ready for staging or deployment on a production cluster.
+                        The user must have permission to fetch the model catalog.
+
+        """
+        return super().modelcatalog()

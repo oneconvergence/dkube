@@ -41,6 +41,7 @@ class DkubeServing(object):
 
         self.user = user
         self.name = name
+        self.description = description
 
         self.job.name = name
         self.job.description = description
