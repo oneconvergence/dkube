@@ -1190,7 +1190,8 @@ class DkubeApi(ApiBase):
                     "publish {}/{} - waiting for completion, current state {}".format(model, version, stage))
                 time.sleep(10)
 
-    def create_model_deployment(self, name=None, description=None, model=None, version=None,
+    def create_model_deployment(self, user, name, model, version,
+                                description=None,
                                 stage_or_deploy="stage", wait_for_completion=True):
         """
             Method to create a serving deployment for a model in the model catalog.
@@ -1198,6 +1199,9 @@ class DkubeApi(ApiBase):
 
 
             *Inputs*
+
+                user
+                    Name of the user creating the deployment
 
                 name
                     Name of the deployment. Must be unique
@@ -1226,12 +1230,11 @@ class DkubeApi(ApiBase):
             "stage", "deploy"], "Invalid value for stage_or_deploy parameter."
 
         # Fetch the model from modelcatalog
-        mcitem = get_modelcatalog_item(model, version)
+        mcitem = self.get_modelcatalog_item(user, model, version)
 
-        run:
-            = DkubeServing(user, name=name, description=description)
+        run = DkubeServing(user, name=name, description=description)
         run.update_serving_model(model, version=version)
-        run.update_serving_image(image_url=mcitem['images'][
+        run.update_serving_image(image_url=mcitem['serving']['images'][
                                  'serving']['image']['path'])
 
         if stage_or_deploy == "stage":
@@ -1286,12 +1289,13 @@ class DkubeApi(ApiBase):
         """
 
         deps = []
-        infs = super().list_runs('inference', user)
-        for inf in infs:
-            if inf['parameters']['inference']['deploy'] == True or
-                inf['parameters']['inference']['deploy'] == False:
-                    deps.append(inf)
-
+        resp = super().list_runs('inference', user)
+        for item in resp:
+            for inf in item['jobs']:
+                deploy = inf['parameters']['inference']['deploy']
+                # MAK - BUG - there is no way today from backend response to separate the test-inferences
+                # vs serving deployments. So appending all.
+                deps.append(inf)
         return deps
 
     def modelcatalog(self, user):
@@ -1325,12 +1329,12 @@ class DkubeApi(ApiBase):
                     Version of the model
 
         """
-        mc = modelcatalog(user)
+        mc = self.modelcatalog(user)
 
         for item in mc:
             if item['name'] == model:
-                for version in item['versions']:
-                    if version['model']['version'] == version:
-                        return version
+                for iversion in item['versions']:
+                    if iversion['model']['version'] == version:
+                        return iversion
 
-        raise Exception(f'{mode}.{version} not found in model catalog')
+        raise Exception('{}.{} not found in model catalog'.format(model, version))

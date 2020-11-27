@@ -72,8 +72,15 @@ class ApiBase(object):
 
     def list_runs(self, category, user, filters='*'):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        # MAK - [HACK - TODO] - Correct from backend.
+        # all=true is always returning training+preprocessing and ignoring
+        # inference runs
+        if category == 'inference':
+            all = 'false'
+        else:
+            all = 'true'
         response = api.jobs_get_by_class(
-            user, category, False, run='true', all='true')
+            user, category, False, run='true', all=all)
         return response.to_dict()['data']
 
     def delete_run(self, category, user, name):
@@ -155,4 +162,4 @@ class ApiBase(object):
         api = dkube_api.DkubeOperatorExclusiveApi(
             dkube_api.ApiClient(configuration))
         response = api.get_model_catalog(user)
-        return response['data']
+        return response.to_dict()['data']

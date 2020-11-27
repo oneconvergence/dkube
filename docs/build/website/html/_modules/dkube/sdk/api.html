@@ -1334,7 +1334,156 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span>
                     <span class="s2">&quot;publish </span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2"> - waiting for completion, current state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">stage</span><span class="p">))</span>
-                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div></div>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.create_model_deployment"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.create_model_deployment">[docs]</a>    <span class="k">def</span> <span class="nf">create_model_deployment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span>
+                                <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">stage_or_deploy</span><span class="o">=</span><span class="s2">&quot;stage&quot;</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to create a serving deployment for a model in the model catalog.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    Name of the user creating the deployment</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the deployment. Must be unique</span>
+
+<span class="sd">                description</span>
+<span class="sd">                    User readable description of the deployment</span>
+
+<span class="sd">                model</span>
+<span class="sd">                    Name of the model to be deployed</span>
+
+<span class="sd">                version</span>
+<span class="sd">                    Version of the model to be deployed</span>
+
+<span class="sd">                                stage_or_deploy</span>
+<span class="sd">                                        Default set to :bash: `stage` which means to stage the model deployment for testing before</span>
+<span class="sd">                                        deploying it for production.</span>
+<span class="sd">                                        Change to :bash: `deploy` to deploy the model in production</span>
+
+<span class="sd">                wait_for_completion</span>
+<span class="sd">                    When set to :bash:`True` this method will wait for job to complete after submission.</span>
+<span class="sd">                    Job is declared complete if it is one of the :bash:`complete/failed/error` state</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">stage_or_deploy</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">&quot;stage&quot;</span><span class="p">,</span> <span class="s2">&quot;deploy&quot;</span><span class="p">],</span> <span class="s2">&quot;Invalid value for stage_or_deploy parameter.&quot;</span>
+
+        <span class="c1"># Fetch the model from modelcatalog</span>
+        <span class="n">mcitem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_modelcatalog_item</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+
+        <span class="n">run</span> <span class="o">=</span> <span class="n">DkubeServing</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">)</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">update_serving_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">)</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">update_serving_image</span><span class="p">(</span><span class="n">image_url</span><span class="o">=</span><span class="n">mcitem</span><span class="p">[</span><span class="s1">&#39;serving&#39;</span><span class="p">][</span><span class="s1">&#39;images&#39;</span><span class="p">][</span>
+                                 <span class="s1">&#39;serving&#39;</span><span class="p">][</span><span class="s1">&#39;image&#39;</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">stage_or_deploy</span> <span class="o">==</span> <span class="s2">&quot;stage&quot;</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">stage_model</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">stage_or_deploy</span> <span class="o">==</span> <span class="s2">&quot;deploy&quot;</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">deploy_model</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="n">wait_for_completion</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="s1">&#39;inference&#39;</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
+            <span class="n">state</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;complete&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;running&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;run </span><span class="si">{}</span><span class="s2"> - completed with state </span><span class="si">{}</span><span class="s2"> and reason </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reason</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;run </span><span class="si">{}</span><span class="s2"> - waiting for completion, current state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.delete_model_deployment"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_model_deployment">[docs]</a>    <span class="k">def</span> <span class="nf">delete_model_deployment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to delete a model deployment.</span>
+<span class="sd">            Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    The token must belong to this user. As run of different user cannot be deleted.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the run which needs to be deleted.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_run</span><span class="p">(</span><span class="s1">&#39;inference&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.list_model_deployments"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.list_model_deployments">[docs]</a>    <span class="k">def</span> <span class="nf">list_model_deployments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to list all the model deployments.</span>
+<span class="sd">            Raises exception on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    Name of the user.</span>
+
+<span class="sd">                filters</span>
+<span class="sd">                    Only :bash:`*` is supported now.</span>
+
+<span class="sd">                    User will able to filter runs based on state or duration</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">deps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_runs</span><span class="p">(</span><span class="s1">&#39;inference&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">inf</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;jobs&#39;</span><span class="p">]:</span>
+                <span class="n">deploy</span> <span class="o">=</span> <span class="n">inf</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="s1">&#39;inference&#39;</span><span class="p">][</span><span class="s1">&#39;deploy&#39;</span><span class="p">]</span>
+                <span class="c1"># MAK - BUG - there is no way today from backend response to separate the test-inferences</span>
+                <span class="c1"># vs serving deployments. So appending all.</span>
+                <span class="n">deps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">deps</span></div>
+
+<div class="viewcode-block" id="DkubeApi.modelcatalog"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.modelcatalog">[docs]</a>    <span class="k">def</span> <span class="nf">modelcatalog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to fetch the model catalog from DKube.</span>
+<span class="sd">            Model catalog is list of models published by datascientists and are</span>
+<span class="sd">            ready for staging or deployment on a production cluster.</span>
+<span class="sd">            The user must have permission to fetch the model catalog.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    Name of the user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">modelcatalog</span><span class="p">(</span><span class="n">user</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_modelcatalog_item"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_modelcatalog_item">[docs]</a>    <span class="k">def</span> <span class="nf">get_modelcatalog_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get an item from modelcatalog</span>
+<span class="sd">            Raises exception on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    Name of the user.</span>
+
+<span class="sd">                model</span>
+<span class="sd">                    Name of the model in the model catalog</span>
+
+<span class="sd">                version</span>
+<span class="sd">                    Version of the model</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelcatalog</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">mc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">model</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">iversion</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;versions&#39;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">iversion</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;version&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">version</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">iversion</span>
+
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1"> not found in model catalog&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">))</span></div></div>
 </pre></div>
 
            </div>
