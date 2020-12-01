@@ -29,23 +29,33 @@ class JobModelParametersGeneratedInputFeaturesetRefs(object):
     """
     swagger_types = {
         'fsetuuid': 'str',
-        'version_uuid': 'str'
+        'version_uuid': 'str',
+        'version_name': 'str',
+        'version_index': 'int'
     }
 
     attribute_map = {
         'fsetuuid': 'fsetuuid',
-        'version_uuid': 'version_uuid'
+        'version_uuid': 'version_uuid',
+        'version_name': 'version_name',
+        'version_index': 'version_index'
     }
 
-    def __init__(self, fsetuuid=None, version_uuid=None):  # noqa: E501
+    def __init__(self, fsetuuid=None, version_uuid=None, version_name=None, version_index=None):  # noqa: E501
         """JobModelParametersGeneratedInputFeaturesetRefs - a model defined in Swagger"""  # noqa: E501
         self._fsetuuid = None
         self._version_uuid = None
+        self._version_name = None
+        self._version_index = None
         self.discriminator = None
         if fsetuuid is not None:
             self.fsetuuid = fsetuuid
         if version_uuid is not None:
             self.version_uuid = version_uuid
+        if version_name is not None:
+            self.version_name = version_name
+        if version_index is not None:
+            self.version_index = version_index
 
     @property
     def fsetuuid(self):
@@ -88,6 +98,48 @@ class JobModelParametersGeneratedInputFeaturesetRefs(object):
         """
 
         self._version_uuid = version_uuid
+
+    @property
+    def version_name(self):
+        """Gets the version_name of this JobModelParametersGeneratedInputFeaturesetRefs.  # noqa: E501
+
+
+        :return: The version_name of this JobModelParametersGeneratedInputFeaturesetRefs.  # noqa: E501
+        :rtype: str
+        """
+        return self._version_name
+
+    @version_name.setter
+    def version_name(self, version_name):
+        """Sets the version_name of this JobModelParametersGeneratedInputFeaturesetRefs.
+
+
+        :param version_name: The version_name of this JobModelParametersGeneratedInputFeaturesetRefs.  # noqa: E501
+        :type: str
+        """
+
+        self._version_name = version_name
+
+    @property
+    def version_index(self):
+        """Gets the version_index of this JobModelParametersGeneratedInputFeaturesetRefs.  # noqa: E501
+
+
+        :return: The version_index of this JobModelParametersGeneratedInputFeaturesetRefs.  # noqa: E501
+        :rtype: int
+        """
+        return self._version_index
+
+    @version_index.setter
+    def version_index(self, version_index):
+        """Sets the version_index of this JobModelParametersGeneratedInputFeaturesetRefs.
+
+
+        :param version_index: The version_index of this JobModelParametersGeneratedInputFeaturesetRefs.  # noqa: E501
+        :type: int
+        """
+
+        self._version_index = version_index
 
     def to_dict(self):
         """Returns the model properties as a dict"""
