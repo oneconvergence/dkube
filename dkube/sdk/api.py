@@ -65,7 +65,7 @@ class DkubeApi(ApiBase, FilesBase):
             self.url = os.getenv(
                 "DKUBE_ACCESS_URL", "http://dkube-controller-master.dkube.svc.cluster.local:5000")
             self.files_url = os.getenv(
-                "DKUBE_ACCESS_URL", "http://dkube-controller-worker.dkube.svc.cluster.local:5000")
+                "DKUBE_ACCESS_URL", "http://dkube-downloader.dkube.svc.cluster.local:9401")
         else:
             self.files_url = self.url
 
