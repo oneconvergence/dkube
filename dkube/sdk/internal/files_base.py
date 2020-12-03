@@ -65,7 +65,7 @@ class FilesBase(object):
                 The full pathname of features specification file on your workstation
 
         """
-        url = f"/ext/featuresets/" + featureset + "/featurespec/upload"
+        url = f"/featuresets/" + featureset + "/featurespec/upload"
         assert (
             os.path.isfile(filepath) == True
         ), f"Specified file path {filepath} is invalid"
