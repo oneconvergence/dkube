@@ -303,7 +303,6 @@ class DkubeApi(ApiBase, FilesBase):
                 print(
                     "run {} - waiting for completion, current state {}".format(run.name, state))
                 time.sleep(10)
-                break
 
     def get_test_inference(self, user, name):
         """
