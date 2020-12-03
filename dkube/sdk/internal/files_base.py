@@ -29,8 +29,8 @@ class FilesBase(object):
             self.url = f"{url}/dkube/v2/ext"
         else:
             assert protocol[0] == "http", "Invalid host"
-            self.url = f"{url}/dkube/v2" 
-        
+            self.url = f"{url}/dkube/v2"
+
         self.token = token
         self.request_headers = {}
         self.request_headers['Authorization'] = f'Bearer {self.token}'
@@ -65,11 +65,12 @@ class FilesBase(object):
                 The full pathname of features specification file on your workstation
 
         """
-        url = f"/featuresets/" + featureset + "/featurespec/upload"
+        url = f"/ext/featuresets/" + featureset + "/featurespec/upload"
         assert (
             os.path.isfile(filepath) == True
         ), f"Specified file path {filepath} is invalid"
         resp = self._upload_file(url, filepath)
         resp_dict = json.loads(resp.text)
-        api_response = ApiResponse(code=resp_dict['code'], message=resp_dict['message'])
+        api_response = ApiResponse(
+            code=resp_dict['code'], message=resp_dict['message'])
         return api_response
