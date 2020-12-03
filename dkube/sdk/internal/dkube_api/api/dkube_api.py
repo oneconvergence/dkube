@@ -16,7 +16,6 @@ import re  # noqa: F401
 
 # python 2 and python 3 compatibility library
 import six
-
 from dkube.sdk.internal.dkube_api.api_client import ApiClient
 
 
@@ -5812,7 +5811,6 @@ class DkubeApi(object):
 
         # Authentication setting
         auth_settings = ['d3apikey']  # noqa: E501
-
         return self.api_client.call_api(
             '/users/{user}/jobs/', 'POST',
             path_params,
