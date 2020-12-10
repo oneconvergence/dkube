@@ -84,6 +84,9 @@ class DkubeFeatureSet(object):
         d_api = api.DkubeApi(token=authToken)
         res = d_api.get_featurespec(featureset=featureset_name)
         f_spec = res.data
+        if f_spec == None:
+            status = "Featurespec is found."
+            return {"status": status}
         fspec_dic = {}
         fspec_keys = []
         for each_spec in f_spec:
