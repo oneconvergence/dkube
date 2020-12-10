@@ -482,6 +482,9 @@ class DkubeApi(ApiBase, FilesBase):
     def upload_featurespec(self, featureset=None, filepath=None):
         return super().featureset_upload_specfile(featureset, filepath)
 
+    def get_featurespec(self, featureset=None):
+        return super().get_featurespec(featureset)
+
 ###############################################################
 
     def create_dataset(self, dataset: DkubeDataset, wait_for_completion=True):

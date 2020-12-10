@@ -130,3 +130,8 @@ class ApiBase(object):
         else:
             response = api.featureset_list(query=filter)
         return response
+
+    def get_featurespec(self, featureset):
+        api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        response = api.featurespec_list(featureset)
+        return response

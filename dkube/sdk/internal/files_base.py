@@ -74,3 +74,27 @@ class FilesBase(object):
         api_response = ApiResponse(
             code=resp_dict['code'], message=resp_dict['message'])
         return api_response
+
+    def featureset_download_specfile(self, featureset=None) -> ApiResponse:
+        """
+        Method to upload features specification file on DKube.
+        Raises Exception in case of errors.
+
+        *Inputs*
+
+            featureset
+                FeatureSet name.
+
+            filepath
+                The full pathname of features specification file on your workstation
+
+        """
+        url = f"/featuresets/" + featureset + "/featurespec/download"
+        assert (
+            os.path.isfile(filepath) == True
+        ), f"Specified file path {filepath} is invalid"
+        resp = self._upload_file(url, filepath)
+        resp_dict = json.loads(resp.text)
+        api_response = ApiResponse(
+            code=resp_dict['code'], message=resp_dict['message'])
+        return api_response

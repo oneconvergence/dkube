@@ -1,9 +1,10 @@
 from __future__ import print_function
 
+import os
 import sys
 import time
 from pprint import pprint
-import os
+
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -22,7 +23,7 @@ class DkubeFeatureSet(object):
         This class defines the DKube featureset with helper functions to set properties of dataset.::
 
             from dkube.sdk import *
-            mnist = DkubeDataset("oneconv", name="mnist")
+             = DkubeDataset("oneconv", name="")
 
             Where first argument is the user of this dataset. User should be a valid onboarded user in dkube.
 
@@ -77,3 +78,34 @@ class DkubeFeatureSet(object):
             return {"status": 0, "error": None}
         except Exception as e:
             return {"status": -1, "error": e}
+
+    def validate(self, dataframe=None, featureset_name=None):
+        authToken = os.getenv('DKUBE_USER_ACCESS_TOKEN')
+        d_api = api.DkubeApi(token=authToken)
+        res = d_api.get_featurespec(featureset=featureset_name)
+        f_spec = res.data
+        fspec_dic = {}
+        fspec_keys = []
+        for each_spec in f_spec:
+            fspec_dic[str(each_spec.name)] = str(each_spec.schema)
+            fspec_keys.append(str(each_spec.name))
+
+        schema = [str(sma) for sma in dataframe.dtypes.to_list()]
+        df_keys = [str(k) for k in dataframe.keys()]
+        df_spec = {}
+        for i in range(len(df_keys)):
+            df_spec[df_keys[i]] = schema[i]
+
+        status = "success"
+
+        if len(fspec_keys) != len(df_keys):
+            status = "No. of columns in dataframe and featurespec are not equal"
+            return {"status": status}
+        for each_key in df_keys:
+            if each_key not in fspec_keys:
+                status = f"Column name {each_key} not found in featurespec"
+                break
+            if df_spec[each_key] != fspec_dic[each_key]:
+                status = f"Datatype not matched for column {each_key}"
+                break
+        return {"status": status}
