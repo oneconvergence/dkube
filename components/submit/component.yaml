@@ -16,7 +16,7 @@ outputs:
     - {name: submit-results, description: 'folder contain output from eval script'}
 implementation:
   container:
-    image: ocdr/d3project_eval
+    image: ocdr/d3project_eval:v2
     command: ['python']
     args: [
       submit.py,
