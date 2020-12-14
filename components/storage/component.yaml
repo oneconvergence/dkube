@@ -23,7 +23,7 @@ outputs:
   - {name: volumes,        description: 'Volumes exported by this component'}
 implementation:
   container:
-    image: ocdr/dkubepl:2.1.6.7
+    image: ocdr/dkubepl:2.2.1.4
     command: ['dkubepl']
     args: [
       storage,
