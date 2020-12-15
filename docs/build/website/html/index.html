@@ -6,8 +6,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DKube SDK Developer Guide &#8212; DKubeSDK 2.1.4 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
@@ -98,6 +98,21 @@ DKube SDK is repository of abstract python classes and libraries which can be us
 </dl>
 </div></blockquote>
 <dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.commit_features">
+<code class="sig-name descname">commit_features</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.commit_features"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.commit_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to commit all sticky featuresets mounted as output on DKube.
+Raises Exception in case of errors.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><p>None</p>
+</div></blockquote>
+<p><em>Outputs</em></p>
+<blockquote>
+<div><p>A Json string with response status</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
 <dt id="dkube.sdk.api.DkubeApi.create_dataset">
 <code class="sig-name descname">create_dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#dkube.sdk.rsrcs.dataset.DkubeDataset" title="dkube.sdk.rsrcs.dataset.DkubeDataset">dkube.sdk.rsrcs.dataset.DkubeDataset</a></span></em>, <em class="sig-param"><span class="n">wait_for_completion</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.create_dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.create_dataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to create a dataset on DKube.
@@ -112,6 +127,25 @@ Please see the <code class="code bash docutils literal notranslate"><span class=
 dataset is declared complete if it is one of the <code class="code bash docutils literal notranslate"><span class="pre">complete/failed/error</span></code> state</p>
 </dd>
 </dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.create_featureset">
+<code class="sig-name descname">create_featureset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">featureset</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#dkube.sdk.rsrcs.featureset.DkubeFeatureSet" title="dkube.sdk.rsrcs.featureset.DkubeFeatureSet">dkube.sdk.rsrcs.featureset.DkubeFeatureSet</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.create_featureset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.create_featureset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to create a featureset on DKube.
+Raises Exception in case of errors.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>featureset</dt><dd><p>Instance of <code class="code bash docutils literal notranslate"><span class="pre">dkube.sdk.rsrcs.featureSet</span></code> class.
+Please see the <code class="code bash docutils literal notranslate"><span class="pre">Resources</span></code> section for details on this class.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><em>Outputs</em></p>
+<blockquote>
+<div><p>A Json string with response status</p>
 </div></blockquote>
 </dd></dl>
 
@@ -222,6 +256,25 @@ Raises exception if token is of different user or if dataset with name doesnt ex
 </dd></dl>
 
 <dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.delete_featuresets">
+<code class="sig-name descname">delete_featuresets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">featureset_list</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.delete_featuresets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.delete_featuresets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to delete a list of featuresets on DKube.
+Raises Exception in case of errors.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>featureset_list</dt><dd><p>list of featureset names
+example: “mnist-fs”, “titanic-fs”]</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><em>Outputs</em></p>
+<blockquote>
+<div><p>A Json string with response status with the list of deleted featureset names</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
 <dt id="dkube.sdk.api.DkubeApi.delete_model">
 <code class="sig-name descname">delete_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.delete_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.delete_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method to delete a model.
@@ -316,6 +369,24 @@ dataset of the <code class="code bash docutils literal notranslate"><span class=
 <dt>name</dt><dd><p>Name of the dataset to be fetched</p>
 </dd>
 </dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.get_featurespec">
+<code class="sig-name descname">get_featurespec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">featureset</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.get_featurespec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.get_featurespec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to retrieve feature specification method.
+Raises Exception in case of errors.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><p>featureset</p>
+<blockquote>
+<div><p>The name of featureset</p>
+</div></blockquote>
+</div></blockquote>
+<p><em>Outputs</em></p>
+<blockquote>
+<div><p>A Json string with response status and feature specification metadata</p>
 </div></blockquote>
 </dd></dl>
 
@@ -425,6 +496,24 @@ datasets of the <code class="code bash docutils literal notranslate"><span class
 <p>User will able to filter datasets based on state or the source</p>
 </dd>
 </dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.list_featuresets">
+<code class="sig-name descname">list_featuresets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">query</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.list_featuresets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.list_featuresets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to list featuresets based on query string.
+Raises Exception in case of errors.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><p>query</p>
+<blockquote>
+<div><p>A query string that is compatible with Bleve search format</p>
+</div></blockquote>
+</div></blockquote>
+<p><em>Outputs</em></p>
+<blockquote>
+<div><p>A Json string with response status and the list of featuresets</p>
 </div></blockquote>
 </dd></dl>
 
@@ -569,6 +658,28 @@ training runs of the <code class="code bash docutils literal notranslate"><span 
 </dd></dl>
 
 <dl class="py method">
+<dt id="dkube.sdk.api.DkubeApi.upload_featurespec">
+<code class="sig-name descname">upload_featurespec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">featureset</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">filepath</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.upload_featurespec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.upload_featurespec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to upload feature specification file.
+Raises Exception in case of errors.</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><p>featureset</p>
+<blockquote>
+<div><p>The name of featureset</p>
+</div></blockquote>
+<p>filepath</p>
+<blockquote>
+<div><p>Valid filepath for the feature specification metadata yaml file</p>
+</div></blockquote>
+</div></blockquote>
+<p><em>Outputs</em></p>
+<blockquote>
+<div><p>A Json string with response status</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
 <dt id="dkube.sdk.api.DkubeApi.validate_token">
 <code class="sig-name descname">validate_token</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/api.html#DkubeApi.validate_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.api.DkubeApi.validate_token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method which can be used to validate the token. 
@@ -582,7 +693,7 @@ Returns the JWT Claims. Which contains the role assigned to the user.</p>
 <span id="dkube-resources"></span><h2><a class="toc-backref" href="#id4">DKube Resources</a><a class="headerlink" href="#module-dkube.sdk.rsrcs.dataset" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="dkube.sdk.rsrcs.dataset.DkubeDataset">
-<em class="property">class </em><code class="sig-prename descclassname">dkube.sdk.rsrcs.dataset.</code><code class="sig-name descname">DkubeDataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'dataset-8668'</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/dataset.html#DkubeDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.dataset.DkubeDataset" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">dkube.sdk.rsrcs.dataset.</code><code class="sig-name descname">DkubeDataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'dataset-6761'</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/dataset.html#DkubeDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.dataset.DkubeDataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class defines the DKube dataset with helper functions to set properties of dataset.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dkube.sdk</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">mnist</span> <span class="o">=</span> <span class="n">DkubeDataset</span><span class="p">(</span><span class="s2">&quot;oneconv&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mnist&quot;</span><span class="p">)</span>
@@ -734,7 +845,109 @@ Default value is <strong>git</strong></p>
 
 </dd></dl>
 
-<span class="target" id="module-dkube.sdk.rsrcs.project"></span></div>
+<span class="target" id="module-dkube.sdk.rsrcs.project"></span><span class="target" id="module-dkube.sdk.rsrcs.featureset"></span><dl class="py class">
+<dt id="dkube.sdk.rsrcs.featureset.DkubeFeatureSet">
+<em class="property">class </em><code class="sig-prename descclassname">dkube.sdk.rsrcs.featureset.</code><code class="sig-name descname">DkubeFeatureSet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'featureset-4635'</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">config_file</span><span class="o">=</span><span class="default_value">'/opt/dkube/conf/conf.json'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/featureset.html#DkubeFeatureSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.featureset.DkubeFeatureSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class defines the DKube featureset with helper functions to set properties of featureset.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dkube.sdk</span> <span class="kn">import</span> <span class="o">*</span>
+ <span class="n">mnist</span> <span class="o">=</span> <span class="n">DkubeFeatureSet</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;mnist-fs&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="dkube.sdk.rsrcs.featureset.DkubeFeatureSet.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">'featureset.parquet'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/featureset.html#DkubeFeatureSet.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.featureset.DkubeFeatureSet.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to read features</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>filename</dt><dd><p>This is optional. It defaults to featureset.parquet. The features are read from features_path/filename into a Panda’s Dataframe object.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl>
+<dt><em>Outputs</em>  </dt><dd><p>A dictionaly with the following elements</p>
+<blockquote>
+<div><p>“data” : Dataframe with features</p>
+<p>“status” : 0 for success, -1 for failure</p>
+<p>“error” : None or human readable text in the case of failures</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.rsrcs.featureset.DkubeFeatureSet.update_features_path">
+<code class="sig-name descname">update_features_path</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/featureset.html#DkubeFeatureSet.update_features_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.featureset.DkubeFeatureSet.update_features_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to update the directory path for features data</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>path</dt><dd><p>A valid directory path. This folder is typically where the featureset is mounted by DKube. The folder contains features saved in Apache Parquet file format.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.rsrcs.featureset.DkubeFeatureSet.update_featurespec_file">
+<code class="sig-name descname">update_featurespec_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/featureset.html#DkubeFeatureSet.update_featurespec_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.featureset.DkubeFeatureSet.update_featurespec_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to update the filepath for feature specification metadata</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>path</dt><dd><p>A valid filepath. The file should be an YAML file describing a ‘Name’, ‘Description’, ‘Schema’ for each feature.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.rsrcs.featureset.DkubeFeatureSet.validate">
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataframe</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/featureset.html#DkubeFeatureSet.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.featureset.DkubeFeatureSet.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to validate features data against features specification metadata</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>dataframe</dt><dd><p>Panda’s dataframe object with features data. This should confirm to the feature specification metadata.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl>
+<dt><em>Outputs</em>  </dt><dd><p>A dictionaly with the following elements</p>
+<blockquote>
+<div><p>“status” : 0 for success, -1 for failure</p>
+<p>“error” : None or human readable text in the case of failures</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dkube.sdk.rsrcs.featureset.DkubeFeatureSet.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataframe</span></em>, <em class="sig-param"><span class="n">filename</span><span class="o">=</span><span class="default_value">'featureset.parquet'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dkube/sdk/rsrcs/featureset.html#DkubeFeatureSet.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dkube.sdk.rsrcs.featureset.DkubeFeatureSet.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to write features</p>
+<p><em>Inputs</em></p>
+<blockquote>
+<div><dl class="simple">
+<dt>dataframe</dt><dd><p>Panda’s dataframe object with features data. This should confirm to the feature specification metadata.</p>
+</dd>
+<dt>filename</dt><dd><p>This is optional. It defaults to featureset.parquet. The features in ‘dataframe’ are written to features_path/filename.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl>
+<dt><em>Outputs</em>  </dt><dd><p>A dictionaly with the following elements</p>
+<blockquote>
+<div><p>“status” : 0 for success, -1 for failure</p>
+<p>“error” : None or human readable text in the case of failures</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="dkube-api-swagger-spec">
 <h2><a class="toc-backref" href="#id5">DKube API Swagger Spec</a><a class="headerlink" href="#dkube-api-swagger-spec" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -804,7 +1017,7 @@ Default value is <strong>git</strong></p>
       &copy;2020, OneConvergence.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

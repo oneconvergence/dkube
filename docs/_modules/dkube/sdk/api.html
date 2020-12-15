@@ -6,8 +6,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>dkube.sdk.api &#8212; DKubeSDK 2.1.4 documentation</title>
-    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
@@ -42,13 +42,17 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal.api_base</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">dkube.sdk.rsrcs</span> <span class="kn">import</span> <span class="o">*</span>
-
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.api_base</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.files_base</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.rsrcs</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.rsrcs.featureset</span> <span class="kn">import</span> <span class="n">DkubeFeatureSet</span>
 
-<div class="viewcode-block" id="DkubeApi"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi">[docs]</a><span class="k">class</span> <span class="nc">DkubeApi</span><span class="p">(</span><span class="n">ApiBase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DkubeApi"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi">[docs]</a><span class="k">class</span> <span class="nc">DkubeApi</span><span class="p">(</span><span class="n">ApiBase</span><span class="p">,</span> <span class="n">FilesBase</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 
@@ -93,7 +97,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">URL</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
-                <span class="s2">&quot;DKUBE_ACCESS_URL&quot;</span><span class="p">,</span> <span class="s2">&quot;http://dkube-controller-master.dkube.cluster.local:5000&quot;</span><span class="p">)</span>
+                <span class="s2">&quot;DKUBE_ACCESS_URL&quot;</span><span class="p">,</span> <span class="s2">&quot;http://dkube-controller-master.dkube.svc.cluster.local:5000&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">files_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
+                <span class="s2">&quot;DKUBE_ACCESS_URL&quot;</span><span class="p">,</span> <span class="s2">&quot;http://dkube-downloader.dkube.svc.cluster.local:9401&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">files_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">token</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
@@ -101,7 +109,8 @@
             <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">==</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;TOKEN must be specified either by passing argument or by setting DKUBE_ACCESS_TOKEN env variable&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">common_tags</span> <span class="o">=</span> <span class="n">common_tags</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">)</span>
+        <span class="n">ApiBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">)</span>
+        <span class="n">FilesBase</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">files_url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">token</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DkubeApi.validate_token"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.validate_token">[docs]</a>    <span class="k">def</span> <span class="nf">validate_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -185,7 +194,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_runs</span><span class="p">(</span><span class="s1">&#39;training&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_runs</span><span class="p">(</span><span class="s1">&#39;training&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DkubeApi.delete_training_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_training_run">[docs]</a>    <span class="k">def</span> <span class="nf">delete_training_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -276,7 +285,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_runs</span><span class="p">(</span><span class="s1">&#39;preprocessing&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_runs</span><span class="p">(</span><span class="s1">&#39;preprocessing&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DkubeApi.delete_preprocessing_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_preprocessing_run">[docs]</a>    <span class="k">def</span> <span class="nf">delete_preprocessing_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -346,7 +355,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="s1">&#39;serving&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="s1">&#39;inference&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DkubeApi.list_test_inferences"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.list_test_inferences">[docs]</a>    <span class="k">def</span> <span class="nf">list_test_inferences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -367,7 +376,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_runs</span><span class="p">(</span><span class="s1">&#39;serving&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_runs</span><span class="p">(</span><span class="s1">&#39;inference&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DkubeApi.delete_test_inference"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_test_inference">[docs]</a>    <span class="k">def</span> <span class="nf">delete_test_inference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -384,7 +393,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_run</span><span class="p">(</span><span class="s1">&#39;serving&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_run</span><span class="p">(</span><span class="s1">&#39;inference&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DkubeApi.create_project"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.create_project">[docs]</a>    <span class="k">def</span> <span class="nf">create_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">:</span> <span class="n">DkubeProject</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -458,7 +467,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_repos</span><span class="p">(</span><span class="s1">&#39;program&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_repos</span><span class="p">(</span><span class="s1">&#39;program&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DkubeApi.delete_project"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_project">[docs]</a>    <span class="k">def</span> <span class="nf">delete_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -476,6 +485,134 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_repo</span><span class="p">(</span><span class="s1">&#39;program&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<span class="c1">################### Feature Store ############################</span>
+<div class="viewcode-block" id="DkubeApi.create_featureset"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.create_featureset">[docs]</a>    <span class="k">def</span> <span class="nf">create_featureset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">featureset</span><span class="p">:</span> <span class="n">DkubeFeatureSet</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to create a featureset on DKube.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                featureset</span>
+<span class="sd">                    Instance of :bash:`dkube.sdk.rsrcs.featureSet` class.</span>
+<span class="sd">                    Please see the :bash:`Resources` section for details on this class.</span>
+
+<span class="sd">            *Outputs*</span>
+
+<span class="sd">                A Json string with response status </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="n">featureset</span><span class="p">)</span> <span class="o">==</span> <span class="n">DkubeFeatureSet</span><span class="p">,</span> <span class="s2">&quot;Invalid type for run, value must be instance of rsrcs:DkubeFeatureset class&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">create_featureset</span><span class="p">(</span><span class="n">featureset</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="mi">200</span> <span class="ow">and</span> <span class="n">featureset</span><span class="o">.</span><span class="n">featurespec_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">spec_response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">featureset_upload_specfile</span><span class="p">(</span>
+                <span class="n">featureset</span><span class="o">.</span><span class="n">featureset</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">featureset</span><span class="o">.</span><span class="n">featurespec_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">spec_response</span><span class="o">.</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_featureset</span><span class="p">(</span><span class="n">featureset</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">spec_response</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+<div class="viewcode-block" id="DkubeApi.delete_featuresets"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_featuresets">[docs]</a>    <span class="k">def</span> <span class="nf">delete_featuresets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">featureset_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to delete a list of featuresets on DKube.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                featureset_list</span>
+<span class="sd">                    list of featureset names</span>
+<span class="sd">                    example: &quot;mnist-fs&quot;, &quot;titanic-fs&quot;]</span>
+
+<span class="sd">            *Outputs*</span>
+
+<span class="sd">                A Json string with response status with the list of deleted featureset names</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">featureset_list</span>
+            <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">featureset_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">featureset</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">featureset</span> <span class="ow">in</span> <span class="n">featureset_list</span><span class="p">)</span>
+        <span class="p">),</span> <span class="s2">&quot;Invalid parameter, value must be a list of featureset names&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_featureset</span><span class="p">(</span><span class="n">featureset_list</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.commit_features"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.commit_features">[docs]</a>    <span class="k">def</span> <span class="nf">commit_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to commit all sticky featuresets mounted as output on DKube.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                None</span>
+
+<span class="sd">            *Outputs*</span>
+
+<span class="sd">                A Json string with response status</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">commit_features</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DkubeApi.list_featuresets"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.list_featuresets">[docs]</a>    <span class="k">def</span> <span class="nf">list_featuresets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to list featuresets based on query string.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                query</span>
+
+<span class="sd">                    A query string that is compatible with Bleve search format</span>
+
+<span class="sd">            *Outputs*</span>
+
+<span class="sd">                A Json string with response status and the list of featuresets</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_featureset</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.upload_featurespec"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.upload_featurespec">[docs]</a>    <span class="k">def</span> <span class="nf">upload_featurespec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">featureset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to upload feature specification file.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                featureset</span>
+
+<span class="sd">                    The name of featureset</span>
+
+<span class="sd">                filepath</span>
+
+<span class="sd">                    Valid filepath for the feature specification metadata yaml file</span>
+
+<span class="sd">            *Outputs*</span>
+
+<span class="sd">                A Json string with response status</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">featureset_upload_specfile</span><span class="p">(</span><span class="n">featureset</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_featurespec"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_featurespec">[docs]</a>    <span class="k">def</span> <span class="nf">get_featurespec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">featureset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to retrieve feature specification method.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                featureset</span>
+
+<span class="sd">                    The name of featureset</span>
+
+<span class="sd">            *Outputs*</span>
+
+<span class="sd">                A Json string with response status and feature specification metadata</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_featurespec</span><span class="p">(</span><span class="n">featureset</span><span class="p">)</span></div>
+
+<span class="c1">###############################################################</span>
 
 <div class="viewcode-block" id="DkubeApi.create_dataset"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.create_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">create_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">DkubeDataset</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -549,7 +686,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_repos</span><span class="p">(</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_repos</span><span class="p">(</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DkubeApi.delete_dataset"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">delete_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -640,7 +777,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_repos</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_repos</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DkubeApi.delete_model"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_model">[docs]</a>    <span class="k">def</span> <span class="nf">delete_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -762,7 +899,7 @@
       &copy;2020, OneConvergence.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.2.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>

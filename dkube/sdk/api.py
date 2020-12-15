@@ -15,7 +15,7 @@ import time
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
-from dkube.sdk.rsrcs.featureSet import DkubeFeatureSet
+from dkube.sdk.rsrcs.featureset import DkubeFeatureSet
 
 
 class DkubeApi(ApiBase, FilesBase):
@@ -454,6 +454,22 @@ class DkubeApi(ApiBase, FilesBase):
 
 ################### Feature Store ############################
     def create_featureset(self, featureset: DkubeFeatureSet):
+        """
+            Method to create a featureset on DKube.
+            Raises Exception in case of errors.
+
+
+            *Inputs*
+
+                featureset
+                    Instance of :bash:`dkube.sdk.rsrcs.featureSet` class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+            *Outputs*
+
+                A Json string with response status 
+
+        """
         assert type(
             featureset) == DkubeFeatureSet, "Invalid type for run, value must be instance of rsrcs:DkubeFeatureset class"
         response = super().create_featureset(featureset)
@@ -465,7 +481,22 @@ class DkubeApi(ApiBase, FilesBase):
                 return spec_response
         return response
 
-    def delete_featureset(self, featureset_list):
+    def delete_featuresets(self, featureset_list):
+        """
+            Method to delete a list of featuresets on DKube.
+            Raises Exception in case of errors.
+
+            *Inputs*
+
+                featureset_list
+                    list of featureset names
+                    example: "mnist-fs", "titanic-fs"]
+
+            *Outputs*
+
+                A Json string with response status with the list of deleted featureset names
+
+        """
         assert (
             featureset_list
             and isinstance(featureset_list, list)
@@ -474,15 +505,77 @@ class DkubeApi(ApiBase, FilesBase):
         return super().delete_featureset(featureset_list)
 
     def commit_features(self):
+        """
+            Method to commit all sticky featuresets mounted as output on DKube.
+            Raises Exception in case of errors.
+
+            *Inputs*
+
+                None
+
+            *Outputs*
+
+                A Json string with response status
+
+        """
         return super().commit_features()
 
     def list_featuresets(self, query=None):
+        """
+            Method to list featuresets based on query string.
+            Raises Exception in case of errors.
+
+            *Inputs*
+
+                query
+
+                    A query string that is compatible with Bleve search format
+
+            *Outputs*
+
+                A Json string with response status and the list of featuresets
+
+        """
         return super().list_featureset(query)
 
     def upload_featurespec(self, featureset=None, filepath=None):
+        """
+            Method to upload feature specification file.
+            Raises Exception in case of errors.
+
+            *Inputs*
+
+                featureset
+
+                    The name of featureset
+
+                filepath
+
+                    Valid filepath for the feature specification metadata yaml file
+
+            *Outputs*
+
+                A Json string with response status
+
+        """
         return super().featureset_upload_specfile(featureset, filepath)
 
     def get_featurespec(self, featureset=None):
+        """
+            Method to retrieve feature specification method.
+            Raises Exception in case of errors.
+
+            *Inputs*
+
+                featureset
+
+                    The name of featureset
+
+            *Outputs*
+
+                A Json string with response status and feature specification metadata
+
+        """
         return super().get_featurespec(featureset)
 
 ###############################################################
