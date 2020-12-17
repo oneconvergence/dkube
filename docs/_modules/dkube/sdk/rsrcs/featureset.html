@@ -144,22 +144,22 @@
            <div itemprop="articleBody">
             
   <h1>Source code for dkube.sdk.rsrcs.featureset</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="k">import</span> <span class="n">pprint</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pyarrow</span> <span class="k">as</span> <span class="nn">pa</span>
 <span class="kn">import</span> <span class="nn">pyarrow.parquet</span> <span class="k">as</span> <span class="nn">pq</span>
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal</span> <span class="kn">import</span> <span class="n">dkube_api</span>
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.feature_set_input_def</span> <span class="kn">import</span> \
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal</span> <span class="k">import</span> <span class="n">dkube_api</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.feature_set_input_def</span> <span class="k">import</span> \
     <span class="n">FeatureSetInputDef</span>
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.rest</span> <span class="kn">import</span> <span class="n">ApiException</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.rest</span> <span class="k">import</span> <span class="n">ApiException</span>
 
-<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="k">import</span> <span class="o">*</span>
 
 
 <div class="viewcode-block" id="DkubeFeatureSet"><a class="viewcode-back" href="../../../../index.html#dkube.sdk.rsrcs.featureset.DkubeFeatureSet">[docs]</a><span class="k">class</span> <span class="nc">DkubeFeatureSet</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -172,7 +172,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">generate</span><span class="p">(</span><span class="s2">&quot;featureset&quot;</span><span class="p">),</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="s2">&quot;/opt/dkube/conf/conf.json&quot;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">generate</span><span class="p">(</span><span class="s2">&quot;featureset&quot;</span><span class="p">),</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="s2">&quot;/opt/dkube/conf/conf.json&quot;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">featureset</span> <span class="o">=</span> <span class="n">FeatureSetInputDef</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
@@ -325,9 +325,9 @@
             <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;No. of columns in dataframe and featurespec are not equal&quot;</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">each_key</span> <span class="ow">in</span> <span class="n">df_keys</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">each_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fspec_keys</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Column name </span><span class="si">{</span><span class="n">each_key</span><span class="si">}</span><span class="s2"> not found in featurespec&quot;</span> <span class="p">}</span>
+                <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="n">f</span><span class="s2">&quot;Column name </span><span class="si">{each_key}</span><span class="s2"> not found in featurespec&quot;</span> <span class="p">}</span>
             <span class="k">if</span> <span class="n">df_spec</span><span class="p">[</span><span class="n">each_key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">fspec_dic</span><span class="p">[</span><span class="n">each_key</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Datatype not matched for column </span><span class="si">{</span><span class="n">each_key</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+                <span class="k">return</span> <span class="p">{</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="n">f</span><span class="s2">&quot;Datatype not matched for column </span><span class="si">{each_key}</span><span class="s2">&quot;</span> <span class="p">}</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span></div></div>
 

@@ -14,8 +14,8 @@ Python >=python3.5 is required
 
 Install using *pip* from *git* using below command::
 
-    sudo pip install git+https://github.com/oneconvergence/dkube.git@2.1.dev or
-    sudo pip3 install git+https://github.com/oneconvergence/dkube.git@2.1.dev
+    sudo pip install git+https://github.com/oneconvergence/dkube.git@2.2 or
+    sudo pip3 install git+https://github.com/oneconvergence/dkube.git@2.2
 
 
 It will install all the prerequisites in *requirements.txt*

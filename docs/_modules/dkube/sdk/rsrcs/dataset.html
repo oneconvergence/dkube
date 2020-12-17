@@ -144,26 +144,26 @@
            <div itemprop="articleBody">
             
   <h1>Source code for dkube.sdk.rsrcs.dataset</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal</span> <span class="kn">import</span> <span class="n">dkube_api</span>
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.rest</span> <span class="kn">import</span> <span class="n">ApiException</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal</span> <span class="k">import</span> <span class="n">dkube_api</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.rest</span> <span class="k">import</span> <span class="n">ApiException</span>
 
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.datum_model</span> <span class="kn">import</span> <span class="n">DatumModel</span>
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.git_access_info</span> <span class="kn">import</span> <span class="n">GitAccessInfo</span>
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.git_access_credentials</span> <span class="kn">import</span> <span class="n">GitAccessCredentials</span>
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.s3_access_credentials</span> <span class="kn">import</span> <span class="n">S3AccessCredentials</span>
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.gcs_access_info</span> <span class="kn">import</span> <span class="n">GCSAccessInfo</span>
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.repo_gcs_access_info_secret</span> <span class="kn">import</span> <span class="n">RepoGCSAccessInfoSecret</span>
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.nfs_access_info</span> <span class="kn">import</span> <span class="n">NFSAccessInfo</span>
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.redshift_access_info</span> <span class="kn">import</span> <span class="n">RedshiftAccessInfo</span>
-<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.datum_model_k8svolume</span> <span class="kn">import</span> <span class="n">DatumModelK8svolume</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.datum_model</span> <span class="k">import</span> <span class="n">DatumModel</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.git_access_info</span> <span class="k">import</span> <span class="n">GitAccessInfo</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.git_access_credentials</span> <span class="k">import</span> <span class="n">GitAccessCredentials</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.s3_access_credentials</span> <span class="k">import</span> <span class="n">S3AccessCredentials</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.gcs_access_info</span> <span class="k">import</span> <span class="n">GCSAccessInfo</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.repo_gcs_access_info_secret</span> <span class="k">import</span> <span class="n">RepoGCSAccessInfoSecret</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.nfs_access_info</span> <span class="k">import</span> <span class="n">NFSAccessInfo</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.redshift_access_info</span> <span class="k">import</span> <span class="n">RedshiftAccessInfo</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.datum_model_k8svolume</span> <span class="k">import</span> <span class="n">DatumModelK8svolume</span>
 
-<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="k">import</span> <span class="n">pprint</span>
 
-<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="k">import</span> <span class="o">*</span>
 
 
 <div class="viewcode-block" id="DkubeDataset"><a class="viewcode-back" href="../../../../index.html#dkube.sdk.rsrcs.dataset.DkubeDataset">[docs]</a><span class="k">class</span> <span class="nc">DkubeDataset</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -215,7 +215,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">generate</span><span class="p">(</span><span class="s2">&quot;dataset&quot;</span><span class="p">),</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">generate</span><span class="p">(</span><span class="s2">&quot;dataset&quot;</span><span class="p">),</span> <span class="n">tags</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k8svolume</span> <span class="o">=</span> <span class="n">DatumModelK8svolume</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">redshift</span> <span class="o">=</span> <span class="n">RedshiftAccessInfo</span><span class="p">(</span>
