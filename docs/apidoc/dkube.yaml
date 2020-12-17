@@ -4,7 +4,7 @@ info:
   version: 0.2.2
 schemes:
   - https
-host: '34.66.186.4:32222'
+host: '34.86.197.28:32222'
 basePath: /dkube/v2/controller
 consumes:
   - application/keyauth.api.v1+json
@@ -480,7 +480,7 @@ paths:
           description: Error
           schema:
             $ref: '#/definitions/ApiError'
-  /sync/:
+  /sync/{kind}:
     get:
       tags:
         - dkube-operator-exclusive
@@ -490,6 +490,41 @@ paths:
         synchronizes members from github.
       security:
         - d3apikey: []
+      parameters:
+        - name: kind
+          in: path
+          required: true
+          type: string
+          enum: [users, groups]
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              members:
+                type: array
+                items:
+                  type: string
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  /sync/groups/{group}:
+    get:
+      tags:
+        - dkube-operator-exclusive
+      operationId: syncGroupUsers
+      summary: >-
+        API to sync D3 db with the resources available in cluster This also
+        synchronizes members from github.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: group
+          in: path
+          required: true
+          type: string
       responses:
         '200':
           description: Success
@@ -704,6 +739,111 @@ paths:
           schema:
             $ref: '#/definitions/ApiError'
 
+  '/rbac/roles':
+    post:
+      tags:
+        - dkube-operator-exclusive
+      operationId: add_role
+      summary: API to add a role.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RoleModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    get:
+      tags:
+        - dkube-operator-exclusive
+      operationId: get_all_roles
+      summary: >-
+        API to get all roles.
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/RoleModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/rbac/roles/{rolename}':
+    put:
+      tags:
+        - dkube-operator-exclusive
+      operationId: update_role
+      summary: API to update a role.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: rolename
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/RoleModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    get:
+      tags:
+        - dkube
+      operationId: get_role
+      summary: >-
+        API to get details of a required role.
+      security:
+        - d3apikey: []
+      parameters:
+        - name: rolename
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/RoleModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
   '/users/{user}/datums':
     post:
       tags:
@@ -716,6 +856,9 @@ paths:
         - name: user
           in: path
           required: true
+          type: string
+        - name: extract
+          in: query
           type: string
         - name: data
           in: body
@@ -1138,6 +1281,9 @@ paths:
           in: path
           required: true
           type: string
+        - name: extract
+          in: query
+          type: string
         - name: datum
           in: path
           required: true
@@ -1317,6 +1463,9 @@ paths:
           required: true
           type: boolean
         - name: archived
+          in: query
+          type: string
+        - name: tags
           in: query
           type: string
       responses:
@@ -1655,6 +1804,37 @@ paths:
           description: Error
           schema:
             $ref: '#/definitions/ApiError'
+  '/users/{user}/modelcatalog/models/{model}/versions/{version}/delete':
+    delete:
+      tags:
+        - dkube
+      operationId: Delete_model_catalog_item
+      summary: >-
+        API to delete modelcatalog version item
+      security:
+        - d3apikey: []
+      parameters:
+        - name: user
+          in: path
+          required: true
+          type: string
+        - name: model
+          in: path
+          required: true
+          type: string
+        - name: version
+          in: path
+          required: true
+          type : string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
 
   '/users/{user}/modelcatalog':
     get:
@@ -1969,6 +2149,10 @@ paths:
                           $ref: '#/definitions/DatumModel'
                         version:
                           $ref: '#/definitions/VersionModel'
+                        featureset:
+                           $ref: '#/definitions/FeatureSetDef'
+                        featureset_version:
+                           $ref: '#/definitions/FeatureSetVersionDef'
         default:
           description: Error
           schema:
@@ -2015,6 +2199,9 @@ paths:
           required: true
           type: string
         - name: run
+          in: query
+          type: string
+        - name: rerun
           in: query
           type: string
         - name: subclass
@@ -2185,6 +2372,9 @@ paths:
           in: query
           type: string
         - name: archived
+          in: query
+          type: string
+        - name: tags
           in: query
           type: string
       responses:
@@ -2992,6 +3182,237 @@ paths:
           schema:
             $ref: '#/definitions/ApiError'
 
+  '/projects':
+    get:
+      tags:
+        - dkube
+      summary: API to Get All Projects
+      operationId: get_all_projects
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/ProjectListModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    delete:
+      tags:
+        - dkube
+      operationId: projects_delete_list
+      summary: API to delete a list of projects
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - project_ids
+            properties:
+              project_ids:
+                type: array
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+
+  '/projects/{project_id}':
+    get:
+      tags:
+        - dkube
+      summary: API to Get Single Project
+      operationId: get_one_project
+      security:
+        - d3apikey: []
+      parameters:
+        - required: true
+          name: project_id
+          in: path
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/ProjectModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    patch:
+      tags:
+        - dkube
+      summary: API to update single Project
+      description: Update project
+      operationId: update_one_project
+      security:
+        - d3apikey: []
+      parameters:
+        - required: true
+          name: project_id
+          in: path
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectUpdateModel'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/projects/{project_id}/submissions':
+    get:
+      tags:
+        - dkube
+      summary: API to Get all submissions of a project
+      operationId: get_all_project_submissions
+      security:
+        - d3apikey: []
+      parameters:
+        - required: true
+          name: project_id
+          in: path
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/SubmissionModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/projects/{project_id}/{submission_id}':
+    post:
+      tags:
+        - dkube
+      operationId: submit_project_metrics
+      summary: API to post submission for a project
+      security:
+        - d3apikey: []
+      parameters:
+        - name: project_id
+          in: path
+          type: string
+          required: true
+        - name: submission_id
+          in: path
+          type: string
+          required: true
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              metrics:
+                title: Metrics
+                type: object
+                additionalProperties: true
+              eval_run:
+                title: Eval Run
+                type: string
+              eval_run_name:
+                title: Eval Run Name
+                type: string
+              artifacts_url:
+                title: URL of artifacts in storage
+                type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/projects/create':
+    post:
+      tags:
+        - dkube
+      summary: API to Create a Project
+      operationId: create_project
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                title: Name
+                type: string
+              description:
+                title: Description
+                type: string
+              image:
+                title: Image
+                maxLength: 2083
+                minLength: 1
+                type: string
+              leaderboard:
+                title: Leaderboard
+                type: boolean
+                default: false
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/ProjectModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
   '/migration':
     post:
       tags:
@@ -3511,7 +3932,610 @@ paths:
           schema:
             $ref: '#/definitions/ApiError'
 
+  '/storage/volumes/export':
+    post:
+      tags:
+        - dkube
+      operationId: storage_volume_export
+      security:
+        - d3apikey: []
+      summary: Export the given artifacts as k8s volumes
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              uid:
+                type: string
+                description: Unique id which relates all the volumes
+              kind:
+                type: string
+                description: Kind of volume to be exported
+                enum:
+                  - input
+                  - output
+                  - intermediate
+              namespace:
+                type: string
+                description: K8S namespace in which these vols must be provided
+              volumes:
+                type: array
+                items:
+                  $ref: '#/definitions/ArtifactVolume'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/storage/volumes/reclaim':
+    post:
+      tags:
+        - dkube
+      operationId: storage_volume_reclaim
+      security:
+        - d3apikey: []
+      summary: Reclaims the volumes related to the unique ID
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              uid:
+                type: string
+                description: Unique id which relates all the volumes
+              namespace:
+                type: string
+                description: K8S namespace in which these vols are provided
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /images:
+    delete:
+      tags:
+        - dkube
+      operationId: delete_cicd_images
+      summary: API to delete cicd images
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              images:
+                type: array
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    post:
+      tags:
+        - dkube
+      operationId: add_cicd_image
+      summary: API to add new cicd image
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              image:
+                type: string
+              private:
+                type: boolean
+                default: false
+              username:
+                type: string
+              password:
+                type: string
+              project:
+                 type: string
+              description:
+                type: string
+              tags:
+                type: array
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    get:
+      tags:
+        - dkube
+      security:
+        - d3apikey: []
+      operationId: get_all_cicd_images
+      summary: API to get all cicd images
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/ImageModel'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+#********************featurestore*****************************
+  '/admin/featurestore':
+    put:
+      tags:
+        - dkube-operator-exclusive
+      operationId: featurestore_put
+      summary: API to edit faturestore configuration
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/FeatureStore'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    get:
+      tags:
+        - dkube-operator-exclusive
+      operationId: featurestore_get
+      summary: API to get featurestore configuration
+      security:
+        - d3apikey: []
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/FeatureStore'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/featuresets':
+    post:
+      tags:
+        - dkube
+      operationId: featureset_add_one
+      summary: API to create a fatureset
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/FeatureSetInputDef'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    get:
+      tags:
+        - dkube
+      operationId: featureset_list
+      summary: API to list faturestores
+      security:
+        - d3apikey: []
+      parameters:
+        - name: query
+          in: query
+          required: false
+          type: string
+        - name: versions
+          in: query
+          required: false
+          type: boolean
+          default: true
+        - name: tags
+          in: query
+          type: string
+        - name: archived
+          type: boolean
+          in: query
+          required: false
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    featureset:
+                      $ref: '#/definitions/FeatureSetDef'
+                    versions:
+                      type: array
+                      items:
+                        $ref: '#/definitions/FeatureSetVersionDef'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    delete:
+      tags:
+        - dkube
+      operationId: featureset_delete
+      summary: API to delete a featureset
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              featuresets:
+                type: array
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  '/featuresets/{featureset}':
+  # Don't we take uuid as well as input?
+    get:
+      tags:
+        - dkube
+      operationId: featureset_get
+      summary: API to get featureset configuration
+      security:
+        - d3apikey: []
+      parameters:
+        - name: featureset
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                properties:
+                  featureset:
+                    $ref: '#/definitions/FeatureSetDef'
+                  featurespec:
+                    type: array
+                    items:
+                      $ref: '#/definitions/FeatureSpecDef'
+                  versions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        version:
+                          $ref: '#/definitions/FeatureSetVersionDef'
+                        jobs:
+                          type: array
+                          description: List of jobs used by featureset version
+                          items:
+                            $ref: '#/definitions/FeatureSetUsageDef'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    put:
+      tags:
+        - dkube
+      operationId: featureset_put
+      summary: API to update featureset configuration
+      security:
+        - d3apikey: []
+      parameters:
+        - name: featureset
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              tags:
+                type: array
+                items:
+                  type: string
+              description:
+                type: string
+                minLength: 1
+                maxLength: 255
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                $ref: '#/definitions/FeatureSetDef'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/featuresets/{featureset}/featurespec':
+    get:
+      tags:
+        - dkube
+      operationId: featurespec_list
+      summary: API to list featurespecs for a spec featureset
+      security:
+        - d3apikey: []
+      parameters:
+        - name: featureset
+          in: path
+          required: true
+          type: string
+        - name: query
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/FeatureSpecDef'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  # Commit a new version
+  '/featuresets/commit':
+    post:
+      tags:
+        - dkube
+      operationId: featureset_commit_version
+      summary: API to commit all output faturesets
+      security:
+        - d3apikey: []
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/FeatureSetCommitDef'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  # Update description and tags on a version
+  '/featuresets/{featureset}/version/{version}':
+    put:
+      tags:
+        - dkube
+      operationId: featureset_update_version
+      summary: API to update fatureset version
+      security:
+        - d3apikey: []
+      parameters:
+        - name: featureset
+          in: path
+          required: true
+          type: string
+        - name: version
+          in: path
+          required: true
+          type: string
+        - name: data
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              tags:
+                type: array
+                items:
+                  type: string
+              description:
+                type: string
+                minLength: 1
+                maxLength: 255
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+  '/featuresets/{featureset}/versions/{version}/lineage':
+    get:
+      tags:
+        - dkube
+      operationId: featureset_get_one_version_lineage
+      summary: >-
+        API to get lineage of a featureset version
+      security:
+        - d3apikey: []
+      parameters:
+        - name: featureset
+          in: path
+          required: true
+          type: string
+        - name: version
+          in: path
+          required: true
+          type : string
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              response:
+                $ref: '#/definitions/ApiResponse'
+              data:
+                type: object
+                properties:
+                  featureset:
+                    $ref: '#/definitions/FeatureSetDef'
+                  version:
+                    $ref: '#/definitions/FeatureSetVersionDef'
+                  run:
+                    $ref: '#/definitions/JobModel'
+                  run_inputs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/FeaturesetLineageInOutModel'
+                  run_outputs:
+                    type: array
+                    items:
+                      $ref: '#/definitions/FeaturesetLineageInOutModel'
+
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+#
+  '/featuresets/archive':
+    put:
+      tags:
+        - dkube
+      operationId: featuresets_archive
+      summary: >-
+        API to archive  or un-archive featuresets
+      security:
+        - d3apikey: []
+      parameters:
+        - name: archive
+          in: query
+          type: boolean
+          required: true
+        - name: data
+          in: body
+          required: true
+          description: List of featuresets to archive
+          schema:
+            type: object
+            properties:
+              featuresets:
+                type: array
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+
+
 definitions:
+  ArtifactVolume:
+    type: object
+    description: Definition of PV for a dkube artifact
+    properties:
+      name:
+        type: string
+      artifact_type:
+        type: string
+        enum:
+          - dataset
+          - program
+          - model
+      artifact_name:
+        type: string
+      artifact_version:
+        type: string
+
   AuthModel:
     type: object
     description: Schema for an authorization mode in dkube.
@@ -3520,7 +4544,7 @@ definitions:
       mode:
         type: string
         description: The authorization mode to switch to.
-        enum: [github, local, ldap]
+        enum: [github, local, ldap, keycloak]
       code:
         type: string
         description: >-
@@ -3626,6 +4650,41 @@ definitions:
           clientSecret:
             type: string
             description: Github App client secret.
+            minLength: 1
+            maxLength: 255
+          updatedAt:
+            type: string
+            format: 'YYYY:MM:DD HH:MM:SS'
+            description: Time at which this provider was migrated to.
+      keycloak:
+        type: object
+        description: Keycloak info required to onboard an operator.
+        properties:
+          username:
+            type: string
+            minLength: 1
+            maxLength: 255
+            description: >-
+              Name of the valid user. This user should be a keycloak user and
+              must have admin priviliges.
+          realm:
+            type: string
+            minLength: 1
+            maxLength: 255
+          endpoint:
+            type: string
+            description: Keycloak server's IP Address with scheme and port.
+          redirectURI:
+            type: string
+            description: redirect uri for keycloak server
+          clientId:
+            type: string
+            description: Keycloak App client id.
+            minLength: 1
+            maxLength: 255
+          clientSecret:
+            type: string
+            description: Keycloak App client secret.
             minLength: 1
             maxLength: 255
           updatedAt:
@@ -3988,6 +5047,15 @@ definitions:
                 type: string
               version:
                 type: string
+      featuresets:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            version:
+              type: string
 
   ModelCatalogItemVersion:
     description: Struct defining a version of a model in ModelCatalogItem
@@ -4014,6 +5082,8 @@ definitions:
         $ref: '#/definitions/ModelTrainingInfo'
       stage:
         type: string
+      staged:
+        type: boolean
       description:
         type: string
       publishedTimestamp:
@@ -4326,6 +5396,8 @@ definitions:
           archived:
             type: boolean
             default: false
+          originalName:
+            type: string
           private:
             type: string
           head_version_index:
@@ -4467,6 +5539,9 @@ definitions:
       datumUUID:
         type: string
         description: UUID of dataset/model.
+      runUUID:
+        type: string
+        description: UUID of run.
       trackingUUID:
         type: string
       commitID:
@@ -4500,6 +5575,15 @@ definitions:
               - DEPLOYED
               - STAGED
 
+  ProjectStatusModel:
+    type: object
+    description: Status of a project
+    properties:
+      state:
+        type: string
+      reason:
+        type: string
+
   JobStatusModel:
     type: object
     description: Possible states of a run
@@ -4516,7 +5600,27 @@ definitions:
           - STOPPING
           - DELETING
           - ERROR
+          - IMAGEBUILDINPROGRESS
       reason:
+        type: string
+  CICDStatusModel:
+    type: object
+    description: Possible states of a run
+    properties:
+      state:
+        type: string
+        enum:
+          - GITCLONE
+          - CICDBUILD
+          - WAITINGIMAGE
+          - CICDBUILDCOMPLETE
+      reason:
+        type: string
+      programPath:
+        type: string
+      repo:
+        type: string
+      commitID:
         type: string
   DLSupport:
     type: object
@@ -4751,7 +5855,30 @@ definitions:
        type: string
      mountpath:
        type: string
-
+  JobInputFeaturesetModel:
+   type: object
+   properties:
+     name:
+       type: string
+     version:
+       type: string
+     owner:
+       type: string
+     mountpath:
+       type: string
+  JobFeaturesetModel:
+    type: object
+    properties:
+      inputs:
+        type: array
+        description: List of featureset names the job would use.
+        items:
+          $ref: '#/definitions/JobInputFeaturesetModel'
+      outputs:
+        type: array
+        description: List of featureset names the job would generate.
+        items:
+          $ref: '#/definitions/JobInputFeaturesetModel'
   DSJobModel:
     type: object
     description: >-
@@ -4766,6 +5893,9 @@ definitions:
             enum:
               - dkube
               - custom
+          buildfromproject:
+            type: boolean
+            default: false
           dkube:
             $ref: '#/definitions/DkubeContainerModel'
             description: Executor object for dkube class
@@ -4774,7 +5904,8 @@ definitions:
             description: Executor object for custom class
       datums:
         $ref: '#/definitions/JobDatumModel'
-
+      featuresets:
+        $ref: '#/definitions/JobFeaturesetModel'
       tags:
         type: array
         description: Custom tags set by user for the job.
@@ -4859,6 +5990,9 @@ definitions:
       deploy:
         type: boolean
         default: false
+      mcname:
+        type: string
+        description: Model catalog item name
       serving_image:
         $ref: '#/definitions/CustomContainerModel'
       transformer:
@@ -4899,11 +6033,16 @@ definitions:
             enum:
               - custom
               - spark
+          buildfromproject:
+            type: boolean
+            default: false
           custom:
             $ref: '#/definitions/CustomContainerModel'
             description: Executor object for custom class
       datums:
         $ref: '#/definitions/JobDatumModel'
+      featuresets:
+        $ref: '#/definitions/JobFeaturesetModel'
       tags:
         type: array
         description: Custom tags set by user for the job.
@@ -4911,6 +6050,12 @@ definitions:
           type: string
       config:
         $ref: '#/definitions/JobConfigModel'
+      ngpus:
+        type: integer
+        format: int32
+      gpus_override:
+        type: boolean
+        default: true
   CustomJobModel:
     type: object
     description: >-
@@ -5173,6 +6318,8 @@ definitions:
                 enum:
                   - template
                   - run
+              cicdstatus:
+                $ref: '#/definitions/CICDStatusModel'
               pipeline:
                 type: object
                 properties:
@@ -5257,6 +6404,28 @@ definitions:
                 type: array
                 items:
                   type: string
+              inputDatumRefs:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    class:
+                     type: string
+                    uuid:
+                     type: string
+              inputFeaturesetRefs:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    fsetuuid:
+                     type: string
+                    version_uuid:
+                     type: string
+                    version_name:
+                     type: string
+                    version_index:
+                     type: integer
               details:
                 type: object
                 properties:
@@ -5275,6 +6444,60 @@ definitions:
                     $ref: '#/definitions/CustomJobResultModel'
                   accesstoken:
                     type: string
+  Image:
+    type: object
+    description: schema for platform images
+    properties:
+       name:
+         type: string
+       registry:
+         type: string
+       image:
+         type: string
+       digest:
+         type: string
+       repo:
+         type: string
+       timestamp:
+         type: integer
+         format: int64
+       private:
+         type: boolean
+       project:
+         type: string
+       description:
+         type: string
+       tags:
+         type: array
+         items:
+           type: string
+  Registry:
+   type: object
+   description: schema for image registry
+   properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum:
+        - docker
+        - ecr
+      iam-role:
+        type: string
+      username:
+        type: string
+      password:
+        type: string
+      token:
+        type: string
+  ImageModel:
+    type: object
+    description: schema for image registry
+    properties:
+      image:
+        $ref: '#/definitions/Image'
+      registry:
+        $ref: '#/definitions/Registry'
   WorkerModel:
     type: object
     description: Schema for workers of a job.
@@ -5928,6 +7151,163 @@ definitions:
       reason:
         type: string
 
+  ProjectUpdateModel:
+    title: ProjectUpdateModel
+    type: object
+    properties:
+      name:
+        title: Name
+        type: string
+      description:
+        title: Description
+        type: string
+      image:
+        title: Image
+        maxLength: 2083
+        minLength: 1
+        type: string
+      leaderboard:
+        title: Leaderboard
+        type: boolean
+        default: false
+      details:
+        title: Project Details
+        type: string
+      eval_repo:
+        title: Eval Repo
+        type: string
+      eval_commit_id:
+        title: Eval Commit Id
+        type: string
+      eval_image:
+        title: Eval Image
+        type: string
+      eval_script:
+        title: Eval Script
+        type: string
+      eval_details:
+        title: Eval Details
+        type: string
+
+  ProjectModel:
+    title: ProjectModel
+    type: object
+    properties:
+      name:
+        title: Name
+        type: string
+      description:
+        title: Description
+        type: string
+      image:
+        title: Image
+        maxLength: 2083
+        minLength: 1
+        type: string
+      leaderboard:
+        title: Leaderboard
+        type: boolean
+        default: false
+      id:
+        title: Id
+        type: string
+      owner:
+        title: Owner
+        type: string
+      last_updated:
+        title: Last Updated
+        type: string
+        format: 'YYYY:MM:DD HH:MM:SS'
+      details:
+        title: Project Details
+        type: string
+      eval_repo:
+        title: Eval Repo
+        type: string
+      eval_commit_id:
+        title: Eval Commit Id
+        type: string
+      eval_image:
+        title: Eval Image
+        type: string
+      eval_script:
+        title: Eval Script
+        type: string
+      eval_details:
+        title: Eval Details
+        type: string
+      submissions:
+        type: array
+        items:
+          $ref: '#/definitions/SubmissionModel'
+      status:
+        $ref: '#/definitions/ProjectStatusModel'
+
+  ProjectListModel:
+    title: ProjectListModel
+    type: object
+    properties:
+      name:
+        title: Name
+        type: string
+      description:
+        title: Description
+        type: string
+      image:
+        title: Image
+        maxLength: 2083
+        minLength: 1
+        type: string
+      leaderboard:
+        title: Leaderboard
+        type: boolean
+        default: false
+      id:
+        title: Id
+        type: string
+      owner:
+        title: Owner
+        type: string
+      last_updated:
+        title: Last Updated
+        type: string
+        format: 'YYYY:MM:DD HH:MM:SS'
+      status:
+        $ref: '#/definitions/ProjectStatusModel'
+
+  SubmissionModel:
+    title: SubmissionModel
+    type: object
+    properties:
+      id:
+        title: Submission Id
+        type: string
+      project_id:
+        title: Project Id
+        type: string
+      group_name:
+        title: Groupname
+        type: string
+      user:
+        title: Username
+        type: string
+      eval_run:
+        title: Eval Run
+        type: string
+      eval_run_name:
+        title: Eval Run Name
+        type: string
+      metrics:
+        title: Metrics
+        type: object
+        additionalProperties: true
+      artifacts_url:
+        title: Artifacts URL
+        type: string
+      timestamp:
+        title: Timestamp
+        type: string
+
   LogViewer:
     type: object
     properties:
@@ -6000,6 +7380,30 @@ definitions:
               status:
                 type: string
 
+  RoleModel:
+    type: object
+    description: Role and details about access permissions
+    properties:
+      name:
+        type: string
+      capabilities:
+        type: array
+        items:
+          $ref: '#/definitions/CapabilitiesModel'
+
+  CapabilitiesModel:
+    type: object
+    description: Capabilities of a role
+    properties:
+      resources:
+        type: array
+        items:
+          type: string
+      access:
+        type: array
+        items:
+          type: string
+
   TokenInfo:
     type: object
     description: Claims for a given jwt token
@@ -6026,4 +7430,224 @@ definitions:
       code:
         type: integer
       message:
+        type: string
+
+#********************featurestore*****************************
+# FestureStore operator object
+  FeatureStore:
+    type: object
+    description: Schema for FeatureStore Configuration
+    properties:
+      class:
+        type: string
+        enum:
+          - DVS
+          - None
+      dvs:
+        type: string
+# FeatureSet Input Definition - create featureset
+  FeatureSetInputDef:
+    type: object
+    description: Schema for FeatureSet Configuration
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+        minLength: 1
+        maxLength: 255
+      tags:
+        type: array
+        description: User specified custom tags
+        items:
+          type: string
+# FeatureSet Output Definition - get/put featureset
+  FeatureSetDef:
+    type: object
+    description: Schema for FeatureSet Configuration
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+        minLength: 1
+        maxLength: 255
+      tags:
+        type: array
+        description: User specified custom tags
+        items:
+          type: string
+      owner:
+        type: string
+      created_ts: # replace with dkube timestamps?
+        type: string
+        format: 'YYYY:MM:DD HH:MM:SS'
+      updated_ts:
+        # Any update, including a new version
+        type: string
+        format: 'YYYY:MM:DD HH:MM:SS'
+      job:
+        # job that creates the first version
+        type: string
+      status:
+        type: string
+        enum:
+          - Created
+          - Ready
+          - Updating
+          - Deleting
+          - Error
+      uuid:
+        type: string
+        description: Unique id generated by system (timestamp in milliseconds)
+      deleted:
+        type: boolean
+        default: false
+      archived:
+        type: boolean
+        default: false
+      originalName:
+        type: string
+  # Schema for a feature
+  FeatureSpecDef:
+    type: object
+    description: Schema for featurespec
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      schema:
+        type: string
+  FeatureSetVersionDef:
+    type: object
+    description: Schema for version of a featureset
+    properties:
+      name:
+        type: string
+        description: Name of the version given by user
+      uuid:
+        type: string
+        description: Unique id generated by system (timestamp in milliseconds)
+      tags:
+        type: array
+        items:
+          type: string
+        description: Unique tags provided by user
+      description:
+        type: string
+        description: User defined description for the version
+      index:
+        type: integer
+        description: Incremental index to sort
+      created_ts:
+        type: string
+        format: 'YYYY:MM:DD HH:MM:SS'
+      updated_ts:
+        # Any update, including a new version
+        type: string
+        format: 'YYYY:MM:DD HH:MM:SS'
+      state:
+        type: string
+        description: State of syncing data from cache to remote or remote to cache
+      user:
+        type: string
+        description: Name of the owner
+      featuresetName:
+        type: string
+        description: Name of the featureset
+      featuresetUUID:
+        type: string
+        description: UUID of featureset.
+      job:
+        type: object
+        properties:
+          kind:
+            type: string
+            enum:
+              - pipeline
+              - dkube_run
+          name:
+            type: string
+            description: UUID of the job/pipeline which created this featureset
+          runid:
+            type: string
+      # do we need the following? datum has them
+      trackingUUID:
+        type: string
+      commitID:
+        type: string
+  FeatureSetUsageDef:
+    type: object
+    description: Schema for details of owner of a datum
+    properties:
+      name:
+        type: string
+        description: Name of the job that uses the datum.
+      user:
+        type: string
+        description: User to which this job belongs.
+      jobid:
+        type: string
+        description: Jobid of job that uses the datum.
+      class:
+        type: string
+        description: Class of job that uses the datum.
+      state:
+        type: string
+        description: State of the job
+      tags:
+        type: array
+        items:
+          type: string
+      pipeline:
+        type: object
+        properties:
+          name:
+            type: string
+          runid:
+            type: string
+  # FeatureSet commit Definition - create a new version
+  FeatureSetCommitDef:
+    type: object
+    description: Schema for FeatureSet Commit
+    required: [job_uuid]
+    properties:
+      job_uuid:
+        type: string
+        description: job uuid. This is available as env parameter
+      description:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: description for the version created
+      tags:
+        type: array
+        description: User specified custom tags for the version
+        items:
+          type: string
+      Path:
+        type: string
+        description: path where featureset is mounted.
+      job:
+        type: object
+        properties:
+          kind:
+            type: string
+            enum:
+              - pipeline
+              - dkube_run
+  FeaturesetLineageInOutModel:
+    type: object
+    description: Schema for FeatureSet Lineage Run inputs and outputs
+    properties:
+      name:
+        type: string
+      uuid:
+        type: string
+      version_name:
+        type: string
+      version_uuid:
+        type: string
+      type:
         type: string

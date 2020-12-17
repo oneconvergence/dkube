@@ -1,7 +1,3 @@
-.. contents:: Table of Contents
-    :depth: 2
-    :local:
-
 .. role:: bash(code)
    :language: bash
 
@@ -18,8 +14,8 @@ Python >=python3.5 is required
 
 Install using *pip* from *git* using below command::
 
-    sudo pip install git+https://github.com/oneconvergence/dkube.git or
-    sudo pip3 install git+https://github.com/oneconvergence/dkube.git
+    sudo pip install git+https://github.com/oneconvergence/dkube.git@2.1.dev or
+    sudo pip3 install git+https://github.com/oneconvergence/dkube.git@2.1.dev
 
 
 It will install all the prerequisites in *requirements.txt*
@@ -39,6 +35,15 @@ DKube Resources
 
 .. automodule:: dkube.sdk.rsrcs.featureset
     :members:
+
+.. automodule:: dkube.sdk.rsrcs.model
+    :members:
+
+DKube Pipeline Components
+=========================
+.. automodule:: dkube.pipelines.ops
+    :members:
+
 
 DKube API Swagger Spec
 ======================

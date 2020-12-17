@@ -248,6 +248,25 @@ class DkubeDataset(object):
         self.nfsaccess.server = server
 
     def update_redshift_details(self, endpoint, password, database, region):
+        """
+            Method to update details of redshift data source.
+
+            *Inputs*
+
+                endpoint
+                    Redshift endpoint
+
+                password
+                    Login password. Username is picked up from the login name in DKube.
+
+                database
+                    Database in redshift to connect to.
+
+                region
+                    AWS region in which the redshift is setup.
+
+        """
+
         self.datum.source = "redshift"
         self.redshift.endpoint = endpoint
         self.redshift.username = self.user

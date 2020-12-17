@@ -26,13 +26,12 @@ class DkubeServing(object):
     def __init__(self, user, name=generate('serving'), description='', tags=[]):
         self.predictor_container = CustomContainerModelImage(
             path='', username=None, password=None, runas=None)
-        self.predictor = CustomContainerModel(image=self.predictor_container)
+        self.predictor = CustomContainerModel(image=None)
         self.transformer_container = CustomContainerModelImage(
             path='', username=None, password=None, runas=None)
-        self.transformer = CustomContainerModel(
-            image=self.transformer_container)
+        self.transformer = CustomContainerModel(image=None)
 
-        self.serving_def = InferenceJobModel(model=None, version=None, owner=None, device=None, deploy=False,
+        self.serving_def = InferenceJobModel(model=None, version=None, owner=None, device=None, deploy=None,
                                              serving_image=self.predictor, transformer=False,
                                              transformer_image=self.transformer, transformer_project=None,
                                              transformer_commit_id=None, transformer_code=None)
@@ -48,23 +47,27 @@ class DkubeServing(object):
 
         self.user = user
         self.name = name
+        self.description = description
 
         self.job.name = name
         self.job.description = description
         self.serving_def.tags = tags
         self.serving_def.device = "cpu"
+        self.serving_def.transformer = False
 
-    def update_transformer_code(self, project=None, commitid=None, code=None):
-        self.serving_def.transformer = True
+    def set_transformer(self, transformer: bool=False, script=None):
+        self.serving_def.transformer = transformer
+        self.serving_def.transformer_code = script
+
+    def update_transformer_project(self, project=None, commitid=None):
         self.serving_def.transformer_project = self.user + ':' + project
         self.serving_def.transformer_commit_id = commitid
-        self.serving_def.transformer_code = code
 
     def update_transformer_image(self, image_url=None, login_uname=None, login_pswd=None):
-        self.serving_def.transformer = True
         self.transformer_container.path = image_url
         self.transformer_container.username = login_uname
         self.transformer_container.password = login_pswd
+        self.transformer.image = self.transformer_container
 
     def update_serving_model(self, model, version=None):
         self.serving_def.model = model
@@ -76,3 +79,4 @@ class DkubeServing(object):
         self.predictor_container.username = login_uname
         self.predictor_container.password = login_pswd
         self.serving_def.deploy = deploy
+        self.predictor.image = self.predictor_container

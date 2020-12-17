@@ -14,7 +14,30 @@ from .util import *
 
 
 class DkubeProject(object):
+
+    """
+
+        This class defines the DKube project with helper functions to set properties of project.::
+
+            from dkube.sdk import *
+            mnist = DkubeProject("oneconv", name="mnist")
+
+            Where first argument is the user of this project. User should be a valid onboarded user in dkube.
+
+    """
+
     GIT_ACCESS_OPTS = ["apikey", "sshkey", "password"]
+
+    """
+    List of authentication options supported for git data source.
+
+    :bash:`apikey` :- Github APIKey based authentication. This must have permission on the repo to clone and checkout.
+
+    :bash:`sshkey` :- Git SSH key based authentication.
+
+    :bash:`password` :- Standard username/password based. 
+
+	"""
 
     def __init__(self, user, name=generate("project"), tags=None):
         self.gitcreds = GitAccessCredentials(
@@ -36,6 +59,33 @@ class DkubeProject(object):
         self.datum.tags = tags
 
     def update_git_details(self, url, branch=None, authopt=GIT_ACCESS_OPTS[0], authval=None):
+
+        """
+            Method to update the details of git datasource.
+
+            *Inputs*
+
+                url
+                    A valid Git URL. Following are considered as valid URLs.
+
+                    - CloneURL : https://github.com/oneconvergence/dkube.git
+
+                    - TreeURL : https://github.com/oneconvergence/dkube/tree/2.1.dev/dkube
+
+                    - BlobURL : https://github.com/oneconvergence/dkube/blob/2.1.dev/dkube/sdk/api.py
+
+                    - ZipURL : https://github.com/oneconvergence/dkube/archive/2.1.dev.zip
+
+                branch
+                    Valid branch of git repo. If not provided then **master** branch is used by default.
+
+                authopt
+                    One of the valid option from **GIT_ACCESS_OPTS**
+
+                authval
+                    Value corresponding to the authopt
+        """
+
         self.datum.url = url
         self.gitaccess.url = url
         self.gitaccess.branch = branch

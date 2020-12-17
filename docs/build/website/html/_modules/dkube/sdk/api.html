@@ -1,35 +1,147 @@
 
+
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dkube.sdk.api &mdash; DKubeSDK 2.1.6.2 documentation</title>
+  
 
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>dkube.sdk.api &#8212; DKubeSDK 2.1.4 documentation</title>
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
-    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/language_data.js"></script>
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> DKubeSDK
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DKubeSDK</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>dkube.sdk.api</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <h1>Source code for dkube.sdk.api</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -50,6 +162,10 @@
 <span class="kn">from</span> <span class="nn">dkube.sdk.internal.files_base</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">dkube.sdk.rsrcs</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">dkube.sdk.rsrcs.featureset</span> <span class="kn">import</span> <span class="n">DkubeFeatureSet</span>
+<span class="kn">from</span> <span class="nn">dkube.sdk.internal.dkube_api.models.conditions</span> <span class="kn">import</span> <span class="n">Conditions</span> <span class="k">as</span> <span class="n">TriggerCondition</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">urllib3</span>
+<span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="DkubeApi"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi">[docs]</a><span class="k">class</span> <span class="nc">DkubeApi</span><span class="p">(</span><span class="n">ApiBase</span><span class="p">,</span> <span class="n">FilesBase</span><span class="p">):</span>
@@ -114,13 +230,121 @@
 
 <div class="viewcode-block" id="DkubeApi.validate_token"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.validate_token">[docs]</a>    <span class="k">def</span> <span class="nf">validate_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Method which can be used to validate the token. </span>
+<span class="sd">            Method which can be used to validate the token.</span>
 <span class="sd">            Returns the JWT Claims. Which contains the role assigned to the user.</span>
 
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate_token</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DkubeApi.launch_jupyter_ide"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.launch_jupyter_ide">[docs]</a>    <span class="k">def</span> <span class="nf">launch_jupyter_ide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ide</span><span class="p">:</span> <span class="n">DkubeIDE</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to launch a Jupyter IDE on DKube platform. Two kinds of IDE are supported,</span>
+<span class="sd">            Jupyter Notebook &amp; RStudio.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                ide</span>
+<span class="sd">                    Instance of :bash:`dkube.sdk.rsrcs.DkubeIDE` class.</span>
+<span class="sd">                    Please see the :bash:`Resources` section for details on this class.</span>
+
+
+<span class="sd">                wait_for_completion</span>
+<span class="sd">                    When set to :bash:`True` this method will wait for job to complete after submission.</span>
+<span class="sd">                    IDE is declared complete if it is one of the :bash:`running/failed/error` state</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="n">ide</span><span class="p">)</span> <span class="o">==</span> <span class="n">DkubeIDE</span><span class="p">,</span> <span class="s2">&quot;Invalid type for run, value must be instance of rsrcs:DkubeIDE class&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">launch_jupyter_ide</span><span class="p">(</span><span class="n">ide</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">wait_for_completion</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_ide</span><span class="p">(</span><span class="s1">&#39;notebook&#39;</span><span class="p">,</span> <span class="n">ide</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">ide</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
+            <span class="n">state</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;running&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;IDE </span><span class="si">{}</span><span class="s2"> - completed with state </span><span class="si">{}</span><span class="s2"> and reason </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ide</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reason</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;IDE </span><span class="si">{}</span><span class="s2"> - waiting for completion, current state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ide</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.launch_rstudio_ide"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.launch_rstudio_ide">[docs]</a>    <span class="k">def</span> <span class="nf">launch_rstudio_ide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ide</span><span class="p">:</span> <span class="n">DkubeIDE</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to launch a Rstudio IDE on DKube platform. Two kinds of IDE are supported,</span>
+<span class="sd">            Jupyter Notebook &amp; RStudio.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                ide</span>
+<span class="sd">                    Instance of :bash:`dkube.sdk.rsrcs.DkubeIDE` class.</span>
+<span class="sd">                    Please see the :bash:`Resources` section for details on this class.</span>
+
+
+<span class="sd">                wait_for_completion</span>
+<span class="sd">                    When set to :bash:`True` this method will wait for job to complete after submission.</span>
+<span class="sd">                    IDE is declared complete if it is one of the :bash:`running/failed/error` state</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="n">ide</span><span class="p">)</span> <span class="o">==</span> <span class="n">DkubeIDE</span><span class="p">,</span> <span class="s2">&quot;Invalid type for run, value must be instance of rsrcs:DkubeIDE class&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">launch_rstudio_ide</span><span class="p">(</span><span class="n">ide</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">wait_for_completion</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_ide</span><span class="p">(</span><span class="s1">&#39;notebook&#39;</span><span class="p">,</span> <span class="n">ide</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">ide</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
+            <span class="n">state</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;running&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;IDE </span><span class="si">{}</span><span class="s2"> - completed with state </span><span class="si">{}</span><span class="s2"> and reason </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ide</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reason</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;IDE </span><span class="si">{}</span><span class="s2"> - waiting for completion, current state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ide</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.list_ides"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.list_ides">[docs]</a>    <span class="k">def</span> <span class="nf">list_ides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to list all the IDEs of a user.</span>
+<span class="sd">            Raises exception on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    User whose IDE instances must be fetched.</span>
+<span class="sd">                    In case of if token is of different user, then the token should have permission to fetch the</span>
+<span class="sd">                    training runs of the :bash:`user` in the input. They should be in same DKube group.</span>
+
+<span class="sd">                filters</span>
+<span class="sd">                    Only :bash:`*` is supported now.</span>
+
+<span class="sd">                    User will able to filter runs based on state or duration</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_ides</span><span class="p">(</span><span class="s1">&#39;notebook&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.delete_ide"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_ide">[docs]</a>    <span class="k">def</span> <span class="nf">delete_ide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method tio delete an IDE.</span>
+<span class="sd">            Raises exception if token is of different user or if training run with name doesnt exist or on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    The token must belong to this user. As IDE instance of different user cannot be deleted.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the IDE which needs to be deleted.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_ide</span><span class="p">(</span><span class="s1">&#39;notebook&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DkubeApi.create_training_run"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.create_training_run">[docs]</a>    <span class="k">def</span> <span class="nf">create_training_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run</span><span class="p">:</span> <span class="n">DkubeTraining</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -316,6 +540,16 @@
 <span class="sd">                    Instance of :bash:`dkube.sdk.rsrcs.serving` class.</span>
 <span class="sd">                    Please see the :bash:`Resources` section for details on this class.</span>
 
+<span class="sd">                    If serving image is not updated in :bash:`run:DkubeServing` argument then,</span>
+<span class="sd">                    - If training used supported standard framework, dkube will pick approp serving image</span>
+<span class="sd">                    - If training used custom image, dkube will try to use the same image for serving</span>
+
+<span class="sd">                    If transformer image is not updated in :bash:`run:DkubeServing` then,</span>
+<span class="sd">                    - Dkube will use same image as training image</span>
+
+<span class="sd">                    If transformer project is not updated in :bash:`run:DkubeServing` then,</span>
+<span class="sd">                    - Dkube will use the project used for training</span>
+
 
 <span class="sd">                wait_for_completion</span>
 <span class="sd">                    When set to :bash:`True` this method will wait for job to complete after submission.</span>
@@ -325,6 +559,37 @@
 
         <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span>
             <span class="n">run</span><span class="p">)</span> <span class="o">==</span> <span class="n">DkubeServing</span><span class="p">,</span> <span class="s2">&quot;Invalid type for run, value must be instance of rsrcs:DkubeServing class&quot;</span>
+
+        <span class="c1"># Fetch training run details and fill in information for serving</span>
+        <span class="k">if</span> <span class="n">run</span><span class="o">.</span><span class="n">predictor</span><span class="o">.</span><span class="n">image</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">transformer</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">run</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">image</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">transformer</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">transformer_project</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model_latest_version</span><span class="p">(</span>
+                    <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+                <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;uuid&#39;</span><span class="p">]</span>
+
+            <span class="n">li</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model_lineage</span><span class="p">(</span>
+                <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">run</span><span class="o">.</span><span class="n">predictor</span><span class="o">.</span><span class="n">image</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">si</span> <span class="o">=</span> <span class="n">li</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">][</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span>
+                    <span class="s1">&#39;generated&#39;</span><span class="p">][</span><span class="s1">&#39;serving_image&#39;</span><span class="p">][</span><span class="s1">&#39;image&#39;</span><span class="p">]</span>
+                <span class="n">run</span><span class="o">.</span><span class="n">update_serving_image</span><span class="p">(</span>
+                    <span class="n">si</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">],</span> <span class="n">si</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">],</span> <span class="n">si</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">transformer</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">run</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">image</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ti</span> <span class="o">=</span> <span class="n">li</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">][</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="s1">&#39;generated&#39;</span><span class="p">][</span>
+                    <span class="s1">&#39;training_image&#39;</span><span class="p">][</span><span class="s1">&#39;image&#39;</span><span class="p">]</span>
+                <span class="n">run</span><span class="o">.</span><span class="n">update_transformer_image</span><span class="p">(</span>
+                    <span class="n">ti</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">],</span> <span class="n">ti</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">],</span> <span class="n">ti</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">transformer</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">transformer_project</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="n">li</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">][</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="s1">&#39;training&#39;</span><span class="p">][</span>
+                    <span class="s1">&#39;datums&#39;</span><span class="p">][</span><span class="s1">&#39;workspace&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">code</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">run</span><span class="o">.</span><span class="n">update_transformer_project</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">code</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">])</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">create_run</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
         <span class="k">while</span> <span class="n">wait_for_completion</span><span class="p">:</span>
             <span class="n">status</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="s1">&#39;inference&#39;</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
@@ -844,68 +1109,563 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">condition</span> <span class="o">=</span> <span class="n">TriggerCondition</span><span class="p">(</span><span class="n">match</span><span class="o">=</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">trigger_runs</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">trigger_runs</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_model_lineage"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_model_lineage">[docs]</a>    <span class="k">def</span> <span class="nf">get_model_lineage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get lineage of a model version.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the model</span>
+
+<span class="sd">                version</span>
+<span class="sd">                    Version of the model</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    Owner of the model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_datum_lineage</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_dataset_lineage"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_dataset_lineage">[docs]</a>    <span class="k">def</span> <span class="nf">get_dataset_lineage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get lineage of a dataset version.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the dataset</span>
+
+<span class="sd">                version</span>
+<span class="sd">                    Version of the dataset</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    Owner of the dataset.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_datum_lineage</span><span class="p">(</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_training_run_lineage"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_training_run_lineage">[docs]</a>    <span class="k">def</span> <span class="nf">get_training_run_lineage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get lineage of a training run.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the run</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    owner of the run</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Get the training run info</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_training_run</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">runid</span> <span class="o">=</span> <span class="n">run</span><span class="p">[</span><span class="s1">&#39;job&#39;</span><span class="p">][</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="s1">&#39;generated&#39;</span><span class="p">][</span><span class="s1">&#39;uuid&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run_lineage</span><span class="p">(</span><span class="s1">&#39;training&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">runid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_preprocessing_run_lineage"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_preprocessing_run_lineage">[docs]</a>    <span class="k">def</span> <span class="nf">get_preprocessing_run_lineage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get lineage of a preprocessing run.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the run</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    owner of the run</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Get the preprocessing run info</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="n">get_preprocessing_run</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">runid</span> <span class="o">=</span> <span class="n">run</span><span class="p">[</span><span class="s1">&#39;job&#39;</span><span class="p">][</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="s1">&#39;generated&#39;</span><span class="p">][</span><span class="s1">&#39;uuid&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run_lineage</span><span class="p">(</span><span class="s1">&#39;preprocessing&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">runid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_model_versions"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_model_versions">[docs]</a>    <span class="k">def</span> <span class="nf">get_model_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get the versions of model.</span>
+<span class="sd">            Versions are returned in ascending order.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the model</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    owner of the model</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model</span><span class="p">[</span><span class="s1">&#39;versions&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_model_latest_version"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_model_latest_version">[docs]</a>    <span class="k">def</span> <span class="nf">get_model_latest_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get the latest version of the given model.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the model</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    owner of the model</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">versions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model_versions</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">versions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;version&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_model_version"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_model_version">[docs]</a>    <span class="k">def</span> <span class="nf">get_model_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get details of a version of the given model.</span>
+<span class="sd">            Raises `NotFoundException` if the version is not found</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the model</span>
+
+<span class="sd">                version</span>
+<span class="sd">                    Version of the model</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    owner of the model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">versions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model_versions</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">versions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">][</span><span class="s1">&#39;uuid&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">version</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">]</span>
+
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1"> not found&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_dataset_versions"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_dataset_versions">[docs]</a>    <span class="k">def</span> <span class="nf">get_dataset_versions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get the versions of dataset.</span>
+<span class="sd">            Versions are returned in ascending order.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the dataset</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    owner of the dataset</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dataset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dataset</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;versions&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_dataset_latest_version"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_dataset_latest_version">[docs]</a>    <span class="k">def</span> <span class="nf">get_dataset_latest_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get the latest version of the given dataset.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the dataset</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    owner of the dataset</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">versions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dataset_versions</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">versions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;version&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_dataset_version"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_dataset_version">[docs]</a>    <span class="k">def</span> <span class="nf">get_dataset_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get details of a version of the given dataset.</span>
+<span class="sd">            Raises `NotFoundException` if the version is not found</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the dataset</span>
+
+<span class="sd">                version</span>
+<span class="sd">                    Version of the dataset</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    owner of the dataset</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">versions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dataset_versions</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">versions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">][</span><span class="s1">&#39;uuid&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">version</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">]</span>
+
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1"> not found&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_datascience_capabilities"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_datascience_capabilities">[docs]</a>    <span class="k">def</span> <span class="nf">get_datascience_capabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get the datascience capabilities of the platform.</span>
+<span class="sd">            Returns the supported frameworks, versions and the corresponding container image details.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_datascience_capability</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_notebook_capabilities"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_notebook_capabilities">[docs]</a>    <span class="k">def</span> <span class="nf">get_notebook_capabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get the notebook capabilities of the platform.</span>
+<span class="sd">            Returns the supported frameworks, versions and the image details.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">caps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_datascience_capabilities</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">caps</span><span class="p">[</span><span class="s1">&#39;nb_ide&#39;</span><span class="p">][</span><span class="s1">&#39;frameworks&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_r_capabilities"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_r_capabilities">[docs]</a>    <span class="k">def</span> <span class="nf">get_r_capabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get the R language capabilities of the platform.</span>
+<span class="sd">            Returns the supported frameworks, versions and the image details.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">caps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_datascience_capabilities</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">caps</span><span class="p">[</span><span class="s1">&#39;r_ide&#39;</span><span class="p">][</span><span class="s1">&#39;frameworks&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_training_capabilities"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_training_capabilities">[docs]</a>    <span class="k">def</span> <span class="nf">get_training_capabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get the training capabilities of the platform.</span>
+<span class="sd">            Returns the supported frameworks, versions and the image details.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">caps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_datascience_capabilities</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">caps</span><span class="p">[</span><span class="s1">&#39;training&#39;</span><span class="p">][</span><span class="s1">&#39;frameworks&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_serving_capabilities"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_serving_capabilities">[docs]</a>    <span class="k">def</span> <span class="nf">get_serving_capabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get the serving capabilities of the platform.</span>
+<span class="sd">            Returns the supported frameworks, versions and the image details.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">caps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_datascience_capabilities</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">caps</span><span class="p">[</span><span class="s1">&#39;serving&#39;</span><span class="p">][</span><span class="s1">&#39;frameworks&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DkubeApi.release_model"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.release_model">[docs]</a>    <span class="k">def</span> <span class="nf">release_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to release a model to model catalog.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                model</span>
+<span class="sd">                    Name with model.</span>
+
+<span class="sd">                version</span>
+<span class="sd">                    Version of the model to be released. </span>
+<span class="sd">                    If not passed then latest version is released automatically.</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    Owner of the model.</span>
+
+<span class="sd">                wait_for_completion</span>
+<span class="sd">                    When set to :bash:`True` this method will wait for publish to finish.</span>
+<span class="sd">                    Publishing is complete if stage of the mode is changed to :bash:`published/failed/error`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model_latest_version</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+            <span class="n">version</span> <span class="o">=</span> <span class="n">version</span><span class="p">[</span><span class="s1">&#39;uuid&#39;</span><span class="p">]</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">release_model</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="n">wait_for_completion</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model_version</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+            <span class="n">stage</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;stage&#39;</span><span class="p">]</span>
+            <span class="n">reason</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">stage</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;released&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;release </span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2"> - completed with state </span><span class="si">{}</span><span class="s2"> and reason </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">reason</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;release </span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2"> - waiting for completion, current state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">stage</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.publish_model"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.publish_model">[docs]</a>    <span class="k">def</span> <span class="nf">publish_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">details</span><span class="p">:</span> <span class="n">DkubeServing</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to publish a model to model catalog.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name with which the model must be published in the model catalog.</span>
+
+<span class="sd">                description</span>
+<span class="sd">                    Human readable text for the model being published</span>
+
+<span class="sd">                details</span>
+<span class="sd">                    Instance of :bash:`dkube.sdk.rsrcs.serving` class.</span>
+<span class="sd">                    Please see the :bash:`Resources` section for details on this class.</span>
+
+<span class="sd">                    If serving image is not updated in :bash:`run:DkubeServing` argument then,</span>
+<span class="sd">                    - If training used supported standard framework, dkube will pick approp serving image</span>
+<span class="sd">                    - If training used custom image, dkube will try to use the same image for serving</span>
+
+<span class="sd">                    If transformer image is not updated in :bash:`run:DkubeServing` then,</span>
+<span class="sd">                    - Dkube will use same image as training image</span>
+
+<span class="sd">                    If transformer project is not updated in :bash:`run:DkubeServing` then,</span>
+<span class="sd">                    - Dkube will use the project used for training</span>
+
+
+<span class="sd">                wait_for_completion</span>
+<span class="sd">                    When set to :bash:`True` this method will wait for publish to finish.</span>
+<span class="sd">                    Publishing is complete if stage of the mode is changed to :bash:`published/failed/error`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">run</span> <span class="o">=</span> <span class="n">details</span>
+        <span class="n">user</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">version</span>
+        <span class="c1"># Fetch training run details and fill in information for serving</span>
+        <span class="k">if</span> <span class="n">run</span><span class="o">.</span><span class="n">predictor</span><span class="o">.</span><span class="n">image</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">transformer</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">run</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">image</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">transformer</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">transformer_project</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model_latest_version</span><span class="p">(</span>
+                    <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+                <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;uuid&#39;</span><span class="p">]</span>
+
+            <span class="n">li</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model_lineage</span><span class="p">(</span>
+                <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">owner</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">run</span><span class="o">.</span><span class="n">predictor</span><span class="o">.</span><span class="n">image</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">si</span> <span class="o">=</span> <span class="n">li</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">][</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span>
+                    <span class="s1">&#39;generated&#39;</span><span class="p">][</span><span class="s1">&#39;serving_image&#39;</span><span class="p">][</span><span class="s1">&#39;image&#39;</span><span class="p">]</span>
+                <span class="n">run</span><span class="o">.</span><span class="n">update_serving_image</span><span class="p">(</span>
+                    <span class="n">si</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">],</span> <span class="n">si</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">],</span> <span class="n">si</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">transformer</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">run</span><span class="o">.</span><span class="n">transformer</span><span class="o">.</span><span class="n">image</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ti</span> <span class="o">=</span> <span class="n">li</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">][</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="s1">&#39;generated&#39;</span><span class="p">][</span>
+                    <span class="s1">&#39;training_image&#39;</span><span class="p">][</span><span class="s1">&#39;image&#39;</span><span class="p">]</span>
+                <span class="n">run</span><span class="o">.</span><span class="n">update_transformer_image</span><span class="p">(</span>
+                    <span class="n">ti</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">],</span> <span class="n">ti</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">],</span> <span class="n">ti</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">transformer</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="o">.</span><span class="n">transformer_project</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">code</span> <span class="o">=</span> <span class="n">li</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">][</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="s1">&#39;training&#39;</span><span class="p">][</span>
+                    <span class="s1">&#39;datums&#39;</span><span class="p">][</span><span class="s1">&#39;workspace&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+                <span class="n">cname</span> <span class="o">=</span> <span class="n">code</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">run</span><span class="o">.</span><span class="n">update_transformer_project</span><span class="p">(</span><span class="n">cname</span><span class="p">,</span> <span class="n">code</span><span class="p">[</span><span class="s1">&#39;version&#39;</span><span class="p">])</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+                <span class="s1">&#39;serving&#39;</span><span class="p">:</span> <span class="n">run</span><span class="o">.</span><span class="n">serving_def</span><span class="p">}</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">publish_model</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="n">wait_for_completion</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model_version</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+            <span class="n">stage</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;stage&#39;</span><span class="p">]</span>
+            <span class="n">reason</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">stage</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;published&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;publish </span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2"> - completed with state </span><span class="si">{}</span><span class="s2"> and reason </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">reason</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;publish </span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2"> - waiting for completion, current state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">stage</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.create_model_deployment"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.create_model_deployment">[docs]</a>    <span class="k">def</span> <span class="nf">create_model_deployment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span>
+                                <span class="n">description</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                <span class="n">stage_or_deploy</span><span class="o">=</span><span class="s2">&quot;stage&quot;</span><span class="p">,</span> <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to create a serving deployment for a model in the model catalog.</span>
+<span class="sd">            Raises Exception in case of errors.</span>
+
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    Name of the user creating the deployment</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the deployment. Must be unique</span>
+
+<span class="sd">                description</span>
+<span class="sd">                    User readable description of the deployment</span>
+
+<span class="sd">                model</span>
+<span class="sd">                    Name of the model to be deployed</span>
+
+<span class="sd">                version</span>
+<span class="sd">                    Version of the model to be deployed</span>
+
+<span class="sd">                                stage_or_deploy</span>
+<span class="sd">                                        Default set to :bash: `stage` which means to stage the model deployment for testing before</span>
+<span class="sd">                                        deploying it for production.</span>
+<span class="sd">                                        Change to :bash: `deploy` to deploy the model in production</span>
+
+<span class="sd">                wait_for_completion</span>
+<span class="sd">                    When set to :bash:`True` this method will wait for job to complete after submission.</span>
+<span class="sd">                    Job is declared complete if it is one of the :bash:`complete/failed/error` state</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">stage_or_deploy</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">&quot;stage&quot;</span><span class="p">,</span> <span class="s2">&quot;deploy&quot;</span><span class="p">],</span> <span class="s2">&quot;Invalid value for stage_or_deploy parameter.&quot;</span>
+
+        <span class="c1"># Fetch the model from modelcatalog</span>
+        <span class="n">mcitem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_modelcatalog_item</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+
+        <span class="n">run</span> <span class="o">=</span> <span class="n">DkubeServing</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">)</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">update_serving_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">)</span>
+        <span class="n">run</span><span class="o">.</span><span class="n">update_serving_image</span><span class="p">(</span><span class="n">image_url</span><span class="o">=</span><span class="n">mcitem</span><span class="p">[</span><span class="s1">&#39;serving&#39;</span><span class="p">][</span><span class="s1">&#39;images&#39;</span><span class="p">][</span>
+                                 <span class="s1">&#39;serving&#39;</span><span class="p">][</span><span class="s1">&#39;image&#39;</span><span class="p">][</span><span class="s1">&#39;path&#39;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">stage_or_deploy</span> <span class="o">==</span> <span class="s2">&quot;stage&quot;</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">stage_model</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">stage_or_deploy</span> <span class="o">==</span> <span class="s2">&quot;deploy&quot;</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">deploy_model</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="n">wait_for_completion</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_run</span><span class="p">(</span><span class="s1">&#39;inference&#39;</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">)</span>
+            <span class="n">state</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">],</span> <span class="n">status</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;complete&#39;</span><span class="p">,</span> <span class="s1">&#39;failed&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;running&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;run </span><span class="si">{}</span><span class="s2"> - completed with state </span><span class="si">{}</span><span class="s2"> and reason </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reason</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;run </span><span class="si">{}</span><span class="s2"> - waiting for completion, current state </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">))</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.delete_model_deployment"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.delete_model_deployment">[docs]</a>    <span class="k">def</span> <span class="nf">delete_model_deployment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to delete a model deployment.</span>
+<span class="sd">            Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    The token must belong to this user. As run of different user cannot be deleted.</span>
+
+<span class="sd">                name</span>
+<span class="sd">                    Name of the run which needs to be deleted.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">delete_run</span><span class="p">(</span><span class="s1">&#39;inference&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.list_model_deployments"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.list_model_deployments">[docs]</a>    <span class="k">def</span> <span class="nf">list_model_deployments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to list all the model deployments.</span>
+<span class="sd">            Raises exception on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    Name of the user.</span>
+
+<span class="sd">                filters</span>
+<span class="sd">                    Only :bash:`*` is supported now.</span>
+
+<span class="sd">                    User will able to filter runs based on state or duration</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">deps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list_runs</span><span class="p">(</span><span class="s1">&#39;inference&#39;</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">resp</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">inf</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;jobs&#39;</span><span class="p">]:</span>
+                <span class="n">deploy</span> <span class="o">=</span> <span class="n">inf</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="s1">&#39;inference&#39;</span><span class="p">][</span><span class="s1">&#39;deploy&#39;</span><span class="p">]</span>
+                <span class="c1"># MAK - BUG - there is no way today from backend response to separate the test-inferences</span>
+                <span class="c1"># vs serving deployments. So appending all.</span>
+                <span class="n">deps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">deps</span></div>
+
+<div class="viewcode-block" id="DkubeApi.modelcatalog"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.modelcatalog">[docs]</a>    <span class="k">def</span> <span class="nf">modelcatalog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to fetch the model catalog from DKube.</span>
+<span class="sd">            Model catalog is list of models published by datascientists and are</span>
+<span class="sd">            ready for staging or deployment on a production cluster.</span>
+<span class="sd">            The user must have permission to fetch the model catalog.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    Name of the user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">modelcatalog</span><span class="p">(</span><span class="n">user</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DkubeApi.get_modelcatalog_item"><a class="viewcode-back" href="../../../index.html#dkube.sdk.api.DkubeApi.get_modelcatalog_item">[docs]</a>    <span class="k">def</span> <span class="nf">get_modelcatalog_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Method to get an item from modelcatalog</span>
+<span class="sd">            Raises exception on any connection errors.</span>
+
+<span class="sd">            *Inputs*</span>
+
+<span class="sd">                user</span>
+<span class="sd">                    Name of the user.</span>
+
+<span class="sd">                model</span>
+<span class="sd">                    Name of the model in the model catalog</span>
+
+<span class="sd">                version</span>
+<span class="sd">                    Version of the model</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modelcatalog</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">mc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">model</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">iversion</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;versions&#39;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">iversion</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">][</span><span class="s1">&#39;version&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">version</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">iversion</span>
+
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1"> not found in model catalog&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">version</span><span class="p">))</span></div></div>
 </pre></div>
 
+           </div>
+           
           </div>
-          
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../../../index.html">DKubeSDK</a></h1>
+          <footer>
+  
 
+  <hr/>
 
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, OneConvergence
 
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-
-
-
-
-<h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../../../index.html">Documentation overview</a><ul>
-  <li><a href="../../index.html">Module code</a><ul>
-  </ul></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
+</footer>
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2020, OneConvergence.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-    </div>
 
-    
+    </section>
 
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
     
-  </body>
+   
+
+</body>
 </html>

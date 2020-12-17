@@ -16,6 +16,10 @@ from dkube.sdk.internal.api_base import *
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet
+from dkube.sdk.internal.dkube_api.models.conditions import Conditions as TriggerCondition
+import time
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class DkubeApi(ApiBase, FilesBase):
@@ -80,13 +84,121 @@ class DkubeApi(ApiBase, FilesBase):
 
     def validate_token(self):
         """
-            Method which can be used to validate the token. 
+            Method which can be used to validate the token.
             Returns the JWT Claims. Which contains the role assigned to the user.
 
 
         """
 
         return super().validate_token()
+
+    def launch_jupyter_ide(self, ide: DkubeIDE, wait_for_completion=True):
+        """
+            Method to launch a Jupyter IDE on DKube platform. Two kinds of IDE are supported,
+            Jupyter Notebook & RStudio.
+            Raises Exception in case of errors.
+
+
+            *Inputs*
+
+                ide
+                    Instance of :bash:`dkube.sdk.rsrcs.DkubeIDE` class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for job to complete after submission.
+                    IDE is declared complete if it is one of the :bash:`running/failed/error` state
+
+        """
+
+        assert type(
+            ide) == DkubeIDE, "Invalid type for run, value must be instance of rsrcs:DkubeIDE class"
+        super().launch_jupyter_ide(ide)
+        while wait_for_completion:
+            status = super().get_ide('notebook', ide.user, ide.name, fields='status')
+            state, reason = status['state'], status['reason']
+            if state.lower() in ['running', 'failed', 'error']:
+                print(
+                    "IDE {} - completed with state {} and reason {}".format(ide.name, state, reason))
+                break
+            else:
+                print(
+                    "IDE {} - waiting for completion, current state {}".format(ide.name, state))
+                time.sleep(10)
+
+    def launch_rstudio_ide(self, ide: DkubeIDE, wait_for_completion=True):
+        """
+            Method to launch a Rstudio IDE on DKube platform. Two kinds of IDE are supported,
+            Jupyter Notebook & RStudio.
+            Raises Exception in case of errors.
+
+
+            *Inputs*
+
+                ide
+                    Instance of :bash:`dkube.sdk.rsrcs.DkubeIDE` class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for job to complete after submission.
+                    IDE is declared complete if it is one of the :bash:`running/failed/error` state
+
+        """
+
+        assert type(
+            ide) == DkubeIDE, "Invalid type for run, value must be instance of rsrcs:DkubeIDE class"
+        super().launch_rstudio_ide(ide)
+        while wait_for_completion:
+            status = super().get_ide('notebook', ide.user, ide.name, fields='status')
+            state, reason = status['state'], status['reason']
+            if state.lower() in ['running', 'failed', 'error']:
+                print(
+                    "IDE {} - completed with state {} and reason {}".format(ide.name, state, reason))
+                break
+            else:
+                print(
+                    "IDE {} - waiting for completion, current state {}".format(ide.name, state))
+                time.sleep(10)
+
+    def list_ides(self, user, filters='*'):
+        """
+            Method to list all the IDEs of a user.
+            Raises exception on any connection errors.
+
+            *Inputs*
+
+                user
+                    User whose IDE instances must be fetched.
+                    In case of if token is of different user, then the token should have permission to fetch the
+                    training runs of the :bash:`user` in the input. They should be in same DKube group.
+
+                filters
+                    Only :bash:`*` is supported now.
+
+                    User will able to filter runs based on state or duration
+
+        """
+
+        return super().list_ides('notebook', user)
+
+    def delete_ide(self, user, name):
+        """
+            Method tio delete an IDE.
+            Raises exception if token is of different user or if training run with name doesnt exist or on any connection errors.
+
+            *Inputs*
+
+                user
+                    The token must belong to this user. As IDE instance of different user cannot be deleted.
+
+                name
+                    Name of the IDE which needs to be deleted.
+
+        """
+
+        super().delete_ide('notebook', user, name)
 
     def create_training_run(self, run: DkubeTraining, wait_for_completion=True):
         """
@@ -282,6 +394,16 @@ class DkubeApi(ApiBase, FilesBase):
                     Instance of :bash:`dkube.sdk.rsrcs.serving` class.
                     Please see the :bash:`Resources` section for details on this class.
 
+                    If serving image is not updated in :bash:`run:DkubeServing` argument then,
+                    - If training used supported standard framework, dkube will pick approp serving image
+                    - If training used custom image, dkube will try to use the same image for serving
+
+                    If transformer image is not updated in :bash:`run:DkubeServing` then,
+                    - Dkube will use same image as training image
+
+                    If transformer project is not updated in :bash:`run:DkubeServing` then,
+                    - Dkube will use the project used for training
+
 
                 wait_for_completion
                     When set to :bash:`True` this method will wait for job to complete after submission.
@@ -291,6 +413,37 @@ class DkubeApi(ApiBase, FilesBase):
 
         assert type(
             run) == DkubeServing, "Invalid type for run, value must be instance of rsrcs:DkubeServing class"
+
+        # Fetch training run details and fill in information for serving
+        if run.predictor.image == None or (
+                run.serving_def.transformer == True and run.transformer.image == None) or (
+                run.serving_def.transformer == True and run.serving_def.transformer_project == None):
+
+            if run.serving_def.version == None:
+                v = self.get_model_latest_version(
+                    run.serving_def.owner, run.serving_def.model)
+                run.serving_def.version = v['uuid']
+
+            li = self.get_model_lineage(
+                run.serving_def.owner, run.serving_def.model, run.serving_def.version)
+            if run.predictor.image == None:
+                si = li['run']['parameters'][
+                    'generated']['serving_image']['image']
+                run.update_serving_image(
+                    si['path'], si['username'], si['password'])
+
+            if run.serving_def.transformer == True and run.transformer.image == None:
+                ti = li['run']['parameters']['generated'][
+                    'training_image']['image']
+                run.update_transformer_image(
+                    ti['path'], ti['username'], ti['password'])
+
+            if run.serving_def.transformer == True and run.serving_def.transformer_project == None:
+                code = li['run']['parameters']['training'][
+                    'datums']['workspace']['data']
+                name = code['name'].split(':')[1]
+                run.update_transformer_project(name, code['version'])
+
         super().create_run(run)
         while wait_for_completion:
             status = super().get_run('inference', run.user, run.name, fields='status')
@@ -811,3 +964,513 @@ class DkubeApi(ApiBase, FilesBase):
 
         condition = TriggerCondition(match='model', name=model, user=user)
         return super().trigger_runs(condition)
+
+    def get_model_lineage(self, user, name, version):
+        """
+            Method to get lineage of a model version.
+
+            *Inputs*
+
+                name
+                    Name of the model
+
+                version
+                    Version of the model
+
+                user
+                    Owner of the model.
+        """
+
+        return super().get_datum_lineage('model', user, name, version)
+
+    def get_dataset_lineage(self, user, name, version):
+        """
+            Method to get lineage of a dataset version.
+
+            *Inputs*
+
+                name
+                    Name of the dataset
+
+                version
+                    Version of the dataset
+
+                user
+                    Owner of the dataset.
+        """
+
+        return super().get_datum_lineage('dataset', user, name, version)
+
+    def get_training_run_lineage(self, user, name):
+        """
+            Method to get lineage of a training run.
+
+            *Inputs*
+
+                name
+                    Name of the run
+
+                user
+                    owner of the run
+
+        """
+
+        # Get the training run info
+        run = self.get_training_run(user, name)
+        runid = run['job']['parameters']['generated']['uuid']
+        return super().get_run_lineage('training', user, runid)
+
+    def get_preprocessing_run_lineage(self, user, name):
+        """
+            Method to get lineage of a preprocessing run.
+
+            *Inputs*
+
+                name
+                    Name of the run
+
+                user
+                    owner of the run
+
+        """
+
+        # Get the preprocessing run info
+        run = get_preprocessing_run(user, name)
+        runid = run['job']['parameters']['generated']['uuid']
+        return super().get_run_lineage('preprocessing', user, runid)
+
+    def get_model_versions(self, user, name):
+        """
+            Method to get the versions of model.
+            Versions are returned in ascending order.
+
+            *Inputs*
+
+                name
+                    Name of the model
+
+                user
+                    owner of the model
+
+        """
+
+        model = self.get_model(user, name)
+        return model['versions']
+
+    def get_model_latest_version(self, user, name):
+        """
+            Method to get the latest version of the given model.
+
+            *Inputs*
+
+                name
+                    Name of the model
+
+                user
+                    owner of the model
+
+        """
+
+        versions = self.get_model_versions(user, name)
+        return versions[0]['version']
+
+    def get_model_version(self, user, name, version):
+        """
+            Method to get details of a version of the given model.
+            Raises `NotFoundException` if the version is not found
+
+            *Inputs*
+
+                name
+                    Name of the model
+
+                version
+                    Version of the model
+
+                user
+                    owner of the model
+        """
+        versions = self.get_model_versions(user, name)
+        for v in versions:
+            if v['version']['uuid'] == version:
+                return v['version']
+
+        raise Exception('{}/{}/{} not found'.format(user, name, version))
+
+    def get_dataset_versions(self, user, name):
+        """
+            Method to get the versions of dataset.
+            Versions are returned in ascending order.
+
+            *Inputs*
+
+                name
+                    Name of the dataset
+
+                user
+                    owner of the dataset
+
+        """
+
+        dataset = self.get_dataset(user, name)
+        return dataset['versions']
+
+    def get_dataset_latest_version(self, user, name):
+        """
+            Method to get the latest version of the given dataset.
+
+            *Inputs*
+
+                name
+                    Name of the dataset
+
+                user
+                    owner of the dataset
+
+        """
+
+        versions = self.get_dataset_versions(user, name)
+        return versions[0]['version']
+
+    def get_dataset_version(self, user, name, version):
+        """
+            Method to get details of a version of the given dataset.
+            Raises `NotFoundException` if the version is not found
+
+            *Inputs*
+
+                name
+                    Name of the dataset
+
+                version
+                    Version of the dataset
+
+                user
+                    owner of the dataset
+        """
+        versions = self.get_dataset_versions(user, name)
+        for v in versions:
+            if v['version']['uuid'] == version:
+                return v['version']
+
+        raise Exception('{}/{}/{} not found'.format(user, name, version))
+
+    def get_datascience_capabilities(self):
+        """
+            Method to get the datascience capabilities of the platform.
+            Returns the supported frameworks, versions and the corresponding container image details.
+
+        """
+        return super().get_datascience_capability()
+
+    def get_notebook_capabilities(self):
+        """
+            Method to get the notebook capabilities of the platform.
+            Returns the supported frameworks, versions and the image details.
+
+        """
+        caps = self.get_datascience_capabilities()
+        return caps['nb_ide']['frameworks']
+
+    def get_r_capabilities(self):
+        """
+            Method to get the R language capabilities of the platform.
+            Returns the supported frameworks, versions and the image details.
+
+        """
+        caps = self.get_datascience_capabilities()
+        return caps['r_ide']['frameworks']
+
+    def get_training_capabilities(self):
+        """
+            Method to get the training capabilities of the platform.
+            Returns the supported frameworks, versions and the image details.
+
+        """
+        caps = self.get_datascience_capabilities()
+        return caps['training']['frameworks']
+
+    def get_serving_capabilities(self):
+        """
+            Method to get the serving capabilities of the platform.
+            Returns the supported frameworks, versions and the image details.
+
+        """
+        caps = self.get_datascience_capabilities()
+        return caps['serving']['frameworks']
+
+    def release_model(self, user, model, version=None, wait_for_completion=True):
+        """
+            Method to release a model to model catalog.
+            Raises Exception in case of errors.
+
+
+            *Inputs*
+
+                model
+                    Name with model.
+
+                version
+                    Version of the model to be released. 
+                    If not passed then latest version is released automatically.
+
+                user
+                    Owner of the model.
+
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for publish to finish.
+                    Publishing is complete if stage of the mode is changed to :bash:`published/failed/error`
+
+        """
+
+        if version == None:
+            version = self.get_model_latest_version(user, model)
+            version = version['uuid']
+
+        super().release_model(user, model, version)
+
+        while wait_for_completion:
+            v = self.get_model_version(user, model, version)
+            stage = v['model']['stage']
+            reason = v['model']['reason']
+            if stage.lower() in ['released', 'failed', 'error']:
+                print(
+                    "release {}/{} - completed with state {} and reason {}".format(model, version, stage, reason))
+                break
+            else:
+                print(
+                    "release {}/{} - waiting for completion, current state {}".format(model, version, stage))
+                time.sleep(10)
+
+    def publish_model(self, name, description, details: DkubeServing, wait_for_completion=True):
+        """
+            Method to publish a model to model catalog.
+            Raises Exception in case of errors.
+
+
+            *Inputs*
+
+                name
+                    Name with which the model must be published in the model catalog.
+
+                description
+                    Human readable text for the model being published
+
+                details
+                    Instance of :bash:`dkube.sdk.rsrcs.serving` class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+                    If serving image is not updated in :bash:`run:DkubeServing` argument then,
+                    - If training used supported standard framework, dkube will pick approp serving image
+                    - If training used custom image, dkube will try to use the same image for serving
+
+                    If transformer image is not updated in :bash:`run:DkubeServing` then,
+                    - Dkube will use same image as training image
+
+                    If transformer project is not updated in :bash:`run:DkubeServing` then,
+                    - Dkube will use the project used for training
+
+
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for publish to finish.
+                    Publishing is complete if stage of the mode is changed to :bash:`published/failed/error`
+
+        """
+
+        run = details
+        user, model, version = run.serving_def.owner, run.serving_def.model, run.serving_def.version
+        # Fetch training run details and fill in information for serving
+        if run.predictor.image == None or (
+                run.serving_def.transformer == True and run.transformer.image == None) or (
+                run.serving_def.transformer == True and run.serving_def.transformer_project == None):
+
+            if run.serving_def.version == None:
+                v = self.get_model_latest_version(
+                    run.serving_def.owner, run.serving_def.model)
+                run.serving_def.version = v['uuid']
+
+            li = self.get_model_lineage(
+                run.serving_def.owner, run.serving_def.model, run.serving_def.version)
+            if run.predictor.image == None:
+                si = li['run']['parameters'][
+                    'generated']['serving_image']['image']
+                run.update_serving_image(
+                    si['path'], si['username'], si['password'])
+
+            if run.serving_def.transformer == True and run.transformer.image == None:
+                ti = li['run']['parameters']['generated'][
+                    'training_image']['image']
+                run.update_transformer_image(
+                    ti['path'], ti['username'], ti['password'])
+
+            if run.serving_def.transformer == True and run.serving_def.transformer_project == None:
+                code = li['run']['parameters']['training'][
+                    'datums']['workspace']['data']
+                cname = code['name'].split(':')[1]
+                run.update_transformer_project(cname, code['version'])
+
+        data = {'name': name, 'description': description,
+                'serving': run.serving_def}
+        super().publish_model(user, model, version, data)
+
+        while wait_for_completion:
+            v = self.get_model_version(user, model, version)
+            stage = v['model']['stage']
+            reason = v['model']['reason']
+            if stage.lower() in ['published', 'failed', 'error']:
+                print(
+                    "publish {}/{} - completed with state {} and reason {}".format(model, version, stage, reason))
+                break
+            else:
+                print(
+                    "publish {}/{} - waiting for completion, current state {}".format(model, version, stage))
+                time.sleep(10)
+
+    def create_model_deployment(self, user, name, model, version,
+                                description=None,
+                                stage_or_deploy="stage", wait_for_completion=True):
+        """
+            Method to create a serving deployment for a model in the model catalog.
+            Raises Exception in case of errors.
+
+
+            *Inputs*
+
+                user
+                    Name of the user creating the deployment
+
+                name
+                    Name of the deployment. Must be unique
+
+                description
+                    User readable description of the deployment
+
+                model
+                    Name of the model to be deployed
+
+                version
+                    Version of the model to be deployed
+
+                                stage_or_deploy
+                                        Default set to :bash: `stage` which means to stage the model deployment for testing before
+                                        deploying it for production.
+                                        Change to :bash: `deploy` to deploy the model in production
+
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for job to complete after submission.
+                    Job is declared complete if it is one of the :bash:`complete/failed/error` state
+
+        """
+
+        assert stage_or_deploy in [
+            "stage", "deploy"], "Invalid value for stage_or_deploy parameter."
+
+        # Fetch the model from modelcatalog
+        mcitem = self.get_modelcatalog_item(user, model, version)
+
+        run = DkubeServing(user, name=name, description=description)
+        run.update_serving_model(model, version=version)
+        run.update_serving_image(image_url=mcitem['serving']['images'][
+                                 'serving']['image']['path'])
+
+        if stage_or_deploy == "stage":
+            super().stage_model(run)
+        if stage_or_deploy == "deploy":
+            super().deploy_model(run)
+
+        while wait_for_completion:
+            status = super().get_run('inference', run.user, run.name, fields='status')
+            state, reason = status['state'], status['reason']
+            if state.lower() in ['complete', 'failed', 'error', 'running']:
+                print(
+                    "run {} - completed with state {} and reason {}".format(run.name, state, reason))
+                break
+            else:
+                print(
+                    "run {} - waiting for completion, current state {}".format(run.name, state))
+                time.sleep(10)
+
+    def delete_model_deployment(self, user, name):
+        """
+            Method to delete a model deployment.
+            Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.
+
+            *Inputs*
+
+                user
+                    The token must belong to this user. As run of different user cannot be deleted.
+
+                name
+                    Name of the run which needs to be deleted.
+
+        """
+
+        super().delete_run('inference', user, name)
+
+    def list_model_deployments(self, user, filters='*'):
+        """
+            Method to list all the model deployments.
+            Raises exception on any connection errors.
+
+            *Inputs*
+
+                user
+                    Name of the user.
+
+                filters
+                    Only :bash:`*` is supported now.
+
+                    User will able to filter runs based on state or duration
+
+        """
+
+        deps = []
+        resp = super().list_runs('inference', user)
+        for item in resp:
+            for inf in item['jobs']:
+                deploy = inf['parameters']['inference']['deploy']
+                # MAK - BUG - there is no way today from backend response to separate the test-inferences
+                # vs serving deployments. So appending all.
+                deps.append(inf)
+        return deps
+
+    def modelcatalog(self, user):
+        """
+            Method to fetch the model catalog from DKube.
+            Model catalog is list of models published by datascientists and are
+            ready for staging or deployment on a production cluster.
+            The user must have permission to fetch the model catalog.
+
+            *Inputs*
+
+                user
+                    Name of the user.
+        """
+        return super().modelcatalog(user)
+
+    def get_modelcatalog_item(self, user, model, version):
+        """
+            Method to get an item from modelcatalog
+            Raises exception on any connection errors.
+
+            *Inputs*
+
+                user
+                    Name of the user.
+
+                model
+                    Name of the model in the model catalog
+
+                version
+                    Version of the model
+
+        """
+        mc = self.modelcatalog(user)
+
+        for item in mc:
+            if item['name'] == model:
+                for iversion in item['versions']:
+                    if iversion['model']['version'] == version:
+                        return iversion
+
+        raise Exception('{}.{} not found in model catalog'.format(model, version))
