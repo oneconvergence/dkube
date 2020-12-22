@@ -12,13 +12,14 @@ import json
 import os
 import time
 
+import urllib3
 from dkube.sdk.internal.api_base import *
+from dkube.sdk.internal.dkube_api.models.conditions import \
+    Conditions as TriggerCondition
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet
-from dkube.sdk.internal.dkube_api.models.conditions import Conditions as TriggerCondition
-import time
-import urllib3
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
@@ -82,6 +83,21 @@ class DkubeApi(ApiBase, FilesBase):
         ApiBase.__init__(self, self.url, self.token)
         FilesBase.__init__(self, self.files_url, self.token)
 
+    def set_active_project(self, project_id):
+        """
+        Set active project. Any resources created using this API instance will belong to the given project.
+
+        *Inputs*
+
+            project_id
+                ID of the project. pass None to unset.
+        """
+        self.common_tags = [
+            tag for tag in self.common_tags if not tag.startswith("project:")
+        ]
+        if project_id:
+            self.common_tags.append(f"project:{project_id}")
+            
     def validate_token(self):
         """
             Method which can be used to validate the token.
