@@ -417,8 +417,8 @@ class DkubeApi(ApiBase, FilesBase):
                     If transformer image is not updated in :bash:`run:DkubeServing` then,
                     - Dkube will use same image as training image
 
-                    If transformer project is not updated in :bash:`run:DkubeServing` then,
-                    - Dkube will use the project used for training
+                    If transformer code is not updated in :bash:`run:DkubeServing` then,
+                    - Dkube will use the code used for training
 
 
                 wait_for_completion
@@ -530,62 +530,62 @@ class DkubeApi(ApiBase, FilesBase):
 
         super().delete_run('inference', user, name)
 
-    def create_project(self, project: DkubeProject, wait_for_completion=True):
+    def create_code(self, code: DkubeCode, wait_for_completion=True):
         """
-            Method to create a project on DKube.
+            Method to create a code repo on DKube.
             Raises Exception in case of errors.
 
 
             *Inputs*
 
-                project
-                    Instance of :bash:`dkube.sdk.rsrcs.project` class.
+                code
+                    Instance of :bash:`dkube.sdk.rsrcs.code` class.
                     Please see the :bash:`Resources` section for details on this class.
 
 
                 wait_for_completion
-                    When set to :bash:`True` this method will wait for project resource to get into one of the complete state.
-                    Project is declared complete if it is one of the :bash:`complete/failed/error` state
+                    When set to :bash:`True` this method will wait for code resource to get into one of the complete state.
+                    code is declared complete if it is one of the :bash:`complete/failed/error` state
 
         """
 
         assert type(
-            project) == DkubeProject, "Invalid type for run, value must be instance of rsrcs:DkubeProject class"
-        super().create_repo(project)
+            code) == DkubeCode, "Invalid type for run, value must be instance of rsrcs:DkubeCode class"
+        super().create_repo(code)
         while wait_for_completion:
-            status = super().get_repo('program', project.user, project.name, fields='status')
+            status = super().get_repo('program', code.user, code.name, fields='status')
             state, reason = status['state'], status['reason']
             if state.lower() in ['ready', 'failed', 'error']:
                 print(
-                    "project {} - completed with state {} and reason {}".format(project.name, state, reason))
+                    "code {} - completed with state {} and reason {}".format(code.name, state, reason))
                 break
             else:
                 print(
-                    "project {} - waiting for completion, current state {}".format(project.name, state))
+                    "code {} - waiting for completion, current state {}".format(code.name, state))
                 time.sleep(10)
 
-    def get_project(self, user, name):
+    def get_code(self, user, name):
         """
-            Method to fetch the project with given name for the given user.
-            Raises exception in case of project is not found or any other connection errors.
+            Method to fetch the code repo with given name for the given user.
+            Raises exception in case of code is not found or any other connection errors.
 
             *Inputs*
 
                 user
-                    User whose project has to be fetched.
+                    User whose code has to be fetched.
                     In case of if token is of different user, then the token should have permission to fetch the
-                    project of the :bash:`user` in the input. They should be in same DKube group.
+                    code of the :bash:`user` in the input. They should be in same DKube group.
 
                 name
-                    Name of the project to be fetched
+                    Name of the code repo to be fetched
 
         """
 
         return super().get_repo('program', user, name)
 
-    def list_projects(self, user, filters='*'):
+    def list_code(self, user, filters='*'):
         """
-            Method to list all the projects of a user.
+            Method to list all the code repos of a user.
             Raises exception on any connection errors.
 
             *Inputs*
@@ -604,18 +604,18 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_repos('program', user)
 
-    def delete_project(self, user, name):
+    def delete_code(self, user, name):
         """
-            Method to delete a project.
-            Raises exception if token is of different user or if project with name doesnt exist or on any connection errors.
+            Method to delete a code repo.
+            Raises exception if token is of different user or if code with name doesnt exist or on any connection errors.
 
             *Inputs*
 
                 user
-                    The token must belong to this user. As project of different user cannot be deleted.
+                    The token must belong to this user. As code of different user cannot be deleted.
 
                 name
-                    Name of the project which needs to be deleted.
+                    Name of the code which needs to be deleted.
 
         """
 
@@ -931,21 +931,21 @@ class DkubeApi(ApiBase, FilesBase):
 
         super().delete_repo('model', user, name)
 
-    def trigger_runs_byproject(self, project, user):
+    def trigger_runs_byproject(self, code, user):
         """
-            Method to trigger all the runs in dkube which uses the mentioned project.
+            Method to trigger all the runs in dkube which uses the mentioned code.
 
             *Inputs*
 
-                project
-                    Name of the project.
+                code
+                    Name of the code.
 
                 user
-                    Owner of the project. All runs of this user will be retriggered.
+                    Owner of the code. All runs of this user will be retriggered.
 
         """
 
-        condition = TriggerCondition(match='project', name=project, user=user)
+        condition = TriggerCondition(match='code', name=code, user=user)
         return super().trigger_runs(condition)
 
     def trigger_runs_bydataset(self, dataset, user):
@@ -1283,8 +1283,8 @@ class DkubeApi(ApiBase, FilesBase):
                     If transformer image is not updated in :bash:`run:DkubeServing` then,
                     - Dkube will use same image as training image
 
-                    If transformer project is not updated in :bash:`run:DkubeServing` then,
-                    - Dkube will use the project used for training
+                    If transformer code is not updated in :bash:`run:DkubeServing` then,
+                    - Dkube will use the code used for training
 
 
                 wait_for_completion

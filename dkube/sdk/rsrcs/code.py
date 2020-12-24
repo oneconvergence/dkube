@@ -1,26 +1,27 @@
 from __future__ import print_function
-from pprint import pprint
 
 import sys
 import time
+from pprint import pprint
 
 from dkube.sdk.internal import dkube_api
-from dkube.sdk.internal.dkube_api.models.git_access_credentials import GitAccessCredentials
-from dkube.sdk.internal.dkube_api.models.git_access_info import GitAccessInfo
 from dkube.sdk.internal.dkube_api.models.datum_model import DatumModel
+from dkube.sdk.internal.dkube_api.models.git_access_credentials import \
+    GitAccessCredentials
+from dkube.sdk.internal.dkube_api.models.git_access_info import GitAccessInfo
 from dkube.sdk.internal.dkube_api.rest import ApiException
 
 from .util import *
 
 
-class DkubeProject(object):
+class DkubeCode(object):
 
     """
 
-        This class defines the DKube project with helper functions to set properties of project.::
+        This class defines the Dkube code with helper functions to set properties of project.::
 
             from dkube.sdk import *
-            mnist = DkubeProject("oneconv", name="mnist")
+            mnist = DkubeCode("oneconv", name="mnist")
 
             Where first argument is the user of this project. User should be a valid onboarded user in dkube.
 

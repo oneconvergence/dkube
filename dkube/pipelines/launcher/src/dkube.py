@@ -10,7 +10,7 @@ Options:
     --version                           Show version.
     --name=NAME                         User specified name of the pipeline stage
     --token=TOKEN                       Authentication token of logged in user
-    --command=COMMAND                   Command to execute. project/dataset/model/training/preprocessing/serving/custom.
+    --command=COMMAND                   Command to execute. code/dataset/model/training/preprocessing/serving/custom.
     --training=TRAINING                 Training job definition. JSON str of dkube.sdk.rsrcs:DkubeTraining
     --preprocessing=PREPROCESSING       Preprocessing job definition. JSON str of dkube.sdk.rsrcs:DkubePreprocessing
     --serving=SERVING                   Serving job definition. JSON str of dkube.sdk.rsrcs:DkubeServing

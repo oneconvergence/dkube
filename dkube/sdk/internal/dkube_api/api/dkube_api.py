@@ -230,7 +230,7 @@ class DkubeApi(object):
             collection_formats=collection_formats)
 
     def create_project(self, body, **kwargs):  # noqa: E501
-        """API to Create a Project  # noqa: E501
+        """API to Create a code  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
@@ -251,7 +251,7 @@ class DkubeApi(object):
             return data
 
     def create_project_with_http_info(self, body, **kwargs):  # noqa: E501
-        """API to Create a Project  # noqa: E501
+        """API to Create a code  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
