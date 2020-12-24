@@ -30,7 +30,7 @@ DKube Resources
 .. automodule:: dkube.sdk.rsrcs.dataset
     :members:
 
-.. automodule:: dkube.sdk.rsrcs.project
+.. automodule:: dkube.sdk.rsrcs.code
     :members:
 
 .. automodule:: dkube.sdk.rsrcs.featureset
