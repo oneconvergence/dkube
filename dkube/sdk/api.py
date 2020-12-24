@@ -458,7 +458,7 @@ class DkubeApi(ApiBase, FilesBase):
                 code = li['run']['parameters']['training'][
                     'datums']['workspace']['data']
                 name = code['name'].split(':')[1]
-                run.update_transformer_project(name, code['version'])
+                run.update_transformer_code(name, code['version'])
 
         super().create_run(run)
         while wait_for_completion:
@@ -1323,7 +1323,7 @@ class DkubeApi(ApiBase, FilesBase):
                 code = li['run']['parameters']['training'][
                     'datums']['workspace']['data']
                 cname = code['name'].split(':')[1]
-                run.update_transformer_project(cname, code['version'])
+                run.update_transformer_code(cname, code['version'])
 
         data = {'name': name, 'description': description,
                 'serving': run.serving_def}

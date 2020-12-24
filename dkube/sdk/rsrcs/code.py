@@ -18,12 +18,12 @@ class DkubeCode(object):
 
     """
 
-        This class defines the Dkube code with helper functions to set properties of project.::
+        This class defines the Dkube code with helper functions to set properties of code repo.::
 
             from dkube.sdk import *
             mnist = DkubeCode("oneconv", name="mnist")
 
-            Where first argument is the user of this project. User should be a valid onboarded user in dkube.
+            Where first argument is the user of this code repo. User should be a valid onboarded user in dkube.
 
     """
 
@@ -40,7 +40,7 @@ class DkubeCode(object):
 
 	"""
 
-    def __init__(self, user, name=generate("project"), tags=None):
+    def __init__(self, user, name=generate("code"), tags=None):
         self.gitcreds = GitAccessCredentials(
             username=None, password=None, apikey=None, sshkey=None, private=True)
         self.gitaccess = GitAccessInfo(

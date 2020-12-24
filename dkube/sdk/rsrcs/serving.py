@@ -59,7 +59,7 @@ class DkubeServing(object):
         self.serving_def.transformer = transformer
         self.serving_def.transformer_code = script
 
-    def update_transformer_project(self, code=None, commitid=None):
+    def update_transformer_code(self, code=None, commitid=None):
         self.serving_def.transformer_project = self.user + ':' + code
         self.serving_def.transformer_commit_id = commitid
 

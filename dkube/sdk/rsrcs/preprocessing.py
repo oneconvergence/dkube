@@ -98,7 +98,7 @@ class DkubePreprocessing(object):
     def update_envvars(self, envs={}):
         self.customkv = [envs]
 
-    def add_project(self, name, commitid=None):
+    def add_code(self, name, commitid=None):
         name = self.user + ':' + name
         self.input_project_data.name = name
         self.input_project_data.version = commitid
