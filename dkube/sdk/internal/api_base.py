@@ -25,6 +25,13 @@ class ApiBase(object):
         configuration.api_key['Authorization'] = token
         configuration.verify_ssl = False
 
+    def update_tags (self, resource):
+        if len(self.common_tags):
+            if resource.tags:
+                resource.tags.extend(self.common_tags)
+            else:
+                resource.tags = self.common_tags
+
     def validate_token(self):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
         response = api.tokeninfo()
@@ -32,10 +39,12 @@ class ApiBase(object):
 
     def launch_jupyter_ide(self, ide):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        self.update_tags(ide.notebook_def)
         response = api.jobs_add_one(ide.user, ide.job, run='false')
 
     def launch_rstudio_ide(self, ide):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        self.update_tags(ide.notebook_def)
         response = api.jobs_add_one(
             ide.user, ide.job, run='false', subclass='rstudio')
 
@@ -94,6 +103,7 @@ class ApiBase(object):
 
     def create_repo(self, repo):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        self.update_tags(repo.datum)
         response = api.datums_add_one(user=repo.user, body=repo.datum)
         print(response.to_dict())
 
@@ -136,6 +146,7 @@ class ApiBase(object):
 
     def create_featureset(self, featureset):
         api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        self.update_tags(featureset.featureset)
         response = api.featureset_add_one(featureset.featureset)
         return response
 

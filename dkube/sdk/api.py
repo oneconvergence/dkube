@@ -237,6 +237,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         assert type(
             run) == DkubeTraining, "Invalid type for run, value must be instance of rsrcs:DkubeTraining class"
+        super().update_tags(run.training_def)
         super().create_run(run)
         while wait_for_completion:
             status = super().get_run('training', run.user, run.name, fields='status')
@@ -328,6 +329,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         assert type(
             run) == DkubePreprocessing, "Invalid type for run, value must be instance of rsrcs:DkubePreprocessing class"
+        super().update_tags(run.pp_def)
         super().create_run(run)
         while wait_for_completion:
             status = super().get_run('preprocessing', run.user, run.name, fields='status')
