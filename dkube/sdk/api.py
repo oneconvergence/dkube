@@ -80,8 +80,7 @@ class DkubeApi(ApiBase, FilesBase):
             self.token = os.getenv("DKUBE_ACCESS_TOKEN", None)
             assert self.token == None, "TOKEN must be specified either by passing argument or by setting DKUBE_ACCESS_TOKEN env variable"
 
-        self.common_tags = common_tags
-        ApiBase.__init__(self, self.url, self.token)
+        ApiBase.__init__(self, self.url, self.token, common_tags)
         FilesBase.__init__(self, self.files_url, self.token)
 
     def set_active_project(self, project_id):
@@ -1503,8 +1502,10 @@ class DkubeApi(ApiBase, FilesBase):
     def create_project(self, project:DkubeProject):
         """Creates DKube Project.
 
-        Arguments:
-            project {DkubeProject} -- instance of DkubeProject.
+        *Inputs*
+
+            project
+                instance of :bash:`dkube.sdk.rsrcs.DkubeProject` class.
         """
         assert type(project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
         response = self._api.create_project(project).to_dict()
@@ -1515,9 +1516,13 @@ class DkubeApi(ApiBase, FilesBase):
         """Update project details. 
         Note: details and evail_details fields are base64 encoded.
         
-        Arguments:
-            project_id {str} -- id of the project
-            project {DkubeProject} -- instance of DkubeProject.
+        *Inputs*
+
+            project_id
+                id of the project
+
+            project
+                instance of :bash:`dkube.sdk.rsrcs.DkubeProject` class.
         """
         assert type(project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
         project.id = project_id
@@ -1527,8 +1532,10 @@ class DkubeApi(ApiBase, FilesBase):
     def get_project(self, project_id):
         """Get project details.
         
-        Arguments:
-            project_id {str} -- id of the project
+        *Inputs*
+
+            project_id
+                id of the project
         """
         response = self._api.get_one_project(project_id).to_dict()
         assert response['response']['code'] == 200, response['response']['message']
@@ -1537,8 +1544,10 @@ class DkubeApi(ApiBase, FilesBase):
     def get_leaderboard(self, project_id):
         """Get project's leaderboard details.
         
-        Arguments:
-            project_id {str} -- id of the project
+        *Inputs*
+
+            project_id
+                id of the project
         """
         response = self._api.get_all_project_submissions(project_id).to_dict()
         assert response['response']['code'] == 200, response['response']['message']
@@ -1547,8 +1556,10 @@ class DkubeApi(ApiBase, FilesBase):
     def delete_project(self, project_id):
         """Delete project. This only deletes the project and not the associated resources.
         
-        Arguments:
-            project_id {str} -- id of the project
+        *Inputs*
+
+            project_id
+                id of the project
         """
         project_ids = {"project_ids": [project_id]}
         response = self._api.projects_delete_list(project_ids).to_dict()

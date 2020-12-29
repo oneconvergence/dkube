@@ -27,6 +27,9 @@ SDK API
 
 DKube Resources
 ===============
+.. automodule:: dkube.sdk.rsrcs.project
+    :members:
+
 .. automodule:: dkube.sdk.rsrcs.dataset
     :members:
 
