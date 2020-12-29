@@ -933,7 +933,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         super().delete_repo('model', user, name)
 
-    def trigger_runs_byproject(self, code, user):
+    def trigger_runs_bycode(self, code, user):
         """
             Method to trigger all the runs in dkube which uses the mentioned code.
 
