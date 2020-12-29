@@ -19,6 +19,7 @@ from dkube.sdk.internal.dkube_api.models.conditions import \
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet
+from dkube.sdk.rsrcs.project import DkubeProject
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -1492,3 +1493,63 @@ class DkubeApi(ApiBase, FilesBase):
                         return iversion
 
         raise Exception('{}.{} not found in model catalog'.format(model, version))
+
+    def list_projects(self):
+        """Return list of DKube projects."""
+        response = self._api.get_all_projects().to_dict()
+        assert response['response']['code'] == 200, response['response']['message']
+        return response['data']
+
+    def create_project(self, project:DkubeProject):
+        """Creates DKube Project.
+
+        Arguments:
+            project {DkubeProject} -- instance of DkubeProject.
+        """
+        assert type(project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
+        response = self._api.create_project(project).to_dict()
+        assert response['response']['code'] == 200, response['response']['message']
+        return response['data']
+
+    def update_project (self, project_id, project:DkubeProject):
+        """Update project details. 
+        Note: details and evail_details fields are base64 encoded.
+        
+        Arguments:
+            project_id {str} -- id of the project
+            project {DkubeProject} -- instance of DkubeProject.
+        """
+        assert type(project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
+        project.id = project_id
+        response = self._api.update_one_project(project, project.id).to_dict()
+        assert response['code'] == 200, response['message']
+
+    def get_project(self, project_id):
+        """Get project details.
+        
+        Arguments:
+            project_id {str} -- id of the project
+        """
+        response = self._api.get_one_project(project_id).to_dict()
+        assert response['response']['code'] == 200, response['response']['message']
+        return response['data']
+
+    def get_leaderboard(self, project_id):
+        """Get project's leaderboard details.
+        
+        Arguments:
+            project_id {str} -- id of the project
+        """
+        response = self._api.get_all_project_submissions(project_id).to_dict()
+        assert response['response']['code'] == 200, response['response']['message']
+        return response['data']
+
+    def delete_project(self, project_id):
+        """Delete project. This only deletes the project and not the associated resources.
+        
+        Arguments:
+            project_id {str} -- id of the project
+        """
+        project_ids = {"project_ids": [project_id]}
+        response = self._api.projects_delete_list(project_ids).to_dict()
+        assert response['code'] == 200, response['message']

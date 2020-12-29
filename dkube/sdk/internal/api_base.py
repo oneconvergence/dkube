@@ -24,7 +24,8 @@ class ApiBase(object):
             '{}/dkube/v2/controller'.format(url))
         configuration.api_key['Authorization'] = token
         configuration.verify_ssl = False
-
+        self._api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+        
     def update_tags (self, resource):
         if len(self.common_tags):
             if resource.tags:
