@@ -153,7 +153,7 @@ class DkubeFeatureSet(object):
         if f_spec == None:
             return {"status": -1, "error": "Featurespec is not found"}
 
-        # Parse featurespec. 
+        # Parse featurespec.
         # - Create a list of feature names
         # - Create a map of feature name and schema
         fspec_dic = {}
@@ -169,20 +169,17 @@ class DkubeFeatureSet(object):
         for i in range(len(df_keys)):
             df_spec[df_keys[i]] = schema[i]
 
-
         # Validations
         # - The number of features should be the same
         # - The feature names should be the same
         # - The feature schema should be the same.
 
-        if len(fspec_keys) != len(df_keys): 
+        if len(fspec_keys) != len(df_keys):
             return {"status": -1, "error": "No. of columns in dataframe and featurespec are not equal"}
         for each_key in df_keys:
             if each_key not in fspec_keys:
-                return { "status": -1, "error": f"Column name {each_key} not found in featurespec" }
+                return {"status": -1, "error": "Column name {} not found in featurespec".format(each_key)}
             if df_spec[each_key] != fspec_dic[each_key]:
-                return { "status": -1, "error": f"Datatype not matched for column {each_key}" }
+                return {"status": -1, "error": "Datatype not matched for column {}".format(each_key)}
 
         return {"status": 0, "error": None}
-
-

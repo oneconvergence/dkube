@@ -26,23 +26,23 @@ class FilesBase(object):
 
         protocol = url.split(':')
         if protocol[0] == "https":
-            self.url = f"{url}/dkube/v2/ext"
+            self.url = "{}/dkube/v2/ext".format(url)
         else:
             assert protocol[0] == "http", "Invalid host"
-            self.url = f"{url}/dkube/v2"
+            self.url = "{}/dkube/v2".format(url)
 
         self.token = token
         self.request_headers = {}
-        self.request_headers['Authorization'] = f'Bearer {self.token}'
+        self.request_headers['Authorization'] = 'Bearer {}'.format(self.token)
 
     def _upload_file(self, urlpath=None, filepath=None):
 
         try:
             fp = open(filepath)
         except BaseException:
-            print(f"Specified filepath {filepath} is not valid")
+            print("Specified filepath {} is not valid".format(filepath))
             return response()
-        ep = f'{self.url}{urlpath}'
+        ep = '{}{}'.format(self.url, urlpath)
         response = requests.post(
             ep,
             headers=self.request_headers,
@@ -65,10 +65,10 @@ class FilesBase(object):
                 The full pathname of features specification file on your workstation
 
         """
-        url = f"/featuresets/" + featureset + "/featurespec/upload"
+        url = "/featuresets/" + featureset + "/featurespec/upload"
         assert (
             os.path.isfile(filepath) == True
-        ), f"Specified file path {filepath} is invalid"
+        ), "Specified file path {} is invalid".format(filepath)
         resp = self._upload_file(url, filepath)
         resp_dict = json.loads(resp.text)
         api_response = ApiResponse(
@@ -89,10 +89,10 @@ class FilesBase(object):
                 The full pathname of features specification file on your workstation
 
         """
-        url = f"/featuresets/" + featureset + "/featurespec/download"
+        url = "/featuresets/" + featureset + "/featurespec/download"
         assert (
             os.path.isfile(filepath) == True
-        ), f"Specified file path {filepath} is invalid"
+        ), "Specified file path {} is invalid".format(filepath)
         resp = self._upload_file(url, filepath)
         resp_dict = json.loads(resp.text)
         api_response = ApiResponse(
