@@ -82,6 +82,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         ApiBase.__init__(self, self.url, self.token, common_tags)
         FilesBase.__init__(self, self.files_url, self.token)
+        self.wait_interval = 10
 
     def set_active_project(self, project_id):
         """
@@ -141,7 +142,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "IDE {} - waiting for completion, current state {}".format(ide.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def launch_rstudio_ide(self, ide: DkubeIDE, wait_for_completion=True):
         """
@@ -176,7 +177,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "IDE {} - waiting for completion, current state {}".format(ide.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def list_ides(self, user, filters='*'):
         """
@@ -249,7 +250,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "run {} - waiting for completion, current state {}".format(run.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def get_training_run(self, user, name):
         """
@@ -341,7 +342,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "run {} - waiting for completion, current state {}".format(run.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def get_preprocessing_run(self, user, name):
         """
@@ -473,7 +474,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "run {} - waiting for completion, current state {}".format(run.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def get_test_inference(self, user, name):
         """
@@ -564,7 +565,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "code {} - waiting for completion, current state {}".format(code.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def get_code(self, user, name):
         """
@@ -783,7 +784,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "dataset {} - waiting for completion, current state {}".format(dataset.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def get_dataset(self, user, name):
         """
@@ -874,7 +875,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "model {} - waiting for completion, current state {}".format(model.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def get_model(self, user, name):
         """
@@ -1258,7 +1259,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "release {}/{} - waiting for completion, current state {}".format(model, version, stage))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def publish_model(self, name, description, details: DkubeServing, wait_for_completion=True):
         """
@@ -1342,7 +1343,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "publish {}/{} - waiting for completion, current state {}".format(model, version, stage))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def create_model_deployment(self, user, name, model, version,
                                 description=None,
@@ -1406,7 +1407,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "run {} - waiting for completion, current state {}".format(run.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def delete_model_deployment(self, user, name):
         """
