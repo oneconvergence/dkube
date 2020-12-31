@@ -148,11 +148,11 @@ i            Method to update the details of git source.
 
         self.gitcreds.username = self.user
 
-        if authmode == 'apikey':
+        if authopt == 'apikey':
             self.gitcreds.apikey = authval
-        elif authmode == 'password':
+        elif authopt == 'password':
             self.gitcreds.password = authval
-        elif authmode == 'sshkey':
+        elif authopt == 'sshkey':
             self.gitcreds.sshkey = authval
 
     def update_awss3_details(self, bucket, prefix, key, secret):
