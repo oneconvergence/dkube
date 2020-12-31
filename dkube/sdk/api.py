@@ -1530,6 +1530,21 @@ class DkubeApi(ApiBase, FilesBase):
         response = self._api.update_one_project(project, project.id).to_dict()
         assert response['code'] == 200, response['message']
 
+    def get_project_id (self, name):
+        """"Get project id from project name.
+
+        *Inputs*
+
+            name
+                name of the project
+        """
+        response = self._api.get_all_projects().to_dict()
+        assert response['response']['code'] == 200, response['response']['message']
+        for project in response['data']:
+            if project['name'] == name:
+                return project['id']
+        return None
+
     def get_project(self, project_id):
         """Get project details.
         
