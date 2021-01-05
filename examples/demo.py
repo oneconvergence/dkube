@@ -1,9 +1,10 @@
-import sys
 import os
+import sys
+
+from dkube.sdk import *
 
 #sys.path.insert(0, os.path.abspath('../'))
 
-from dkube.sdk import *
 
 if __name__ == "__main__":
 
@@ -11,9 +12,9 @@ if __name__ == "__main__":
     authToken = ''
 
     '''
-    project_name = generate('mnist')
-    project = DkubeProject('oc', name=project_name)
-    project.update_git_details('https://github.com/oneconvergence/dkube-examples/tree/2.0.6/tensorflow/classification/mnist/digits/classifier/program', branch='2.0.6')
+    code_name = generate('mnist')
+    code = DkubeCode('oc', name=code_name)
+    code.update_git_details('https://github.com/oneconvergence/dkube-examples/tree/2.0.6/tensorflow/classification/mnist/digits/classifier/program', branch='2.0.6')
 
     dataset_name = generate('mnist')
     dataset = DkubeDataset('oc', name=dataset_name)
@@ -28,7 +29,7 @@ if __name__ == "__main__":
     training = DkubeTraining('mak-454', name=training_name, description='triggered from dkube sdk')
     training.update_container(framework="tensorflow_1.14", image_url="ocdr/d3-datascience-tf-cpu:v1.14")
     training.update_startupscript("python model.py")
-    training.add_project("mnist")
+    training.add_code("mnist")
     training.add_input_dataset("mnist", mountpath='/opt/dkube/input')
     training.add_output_model("mnist", mountpath='/opt/dkube/output')
 
@@ -53,7 +54,7 @@ if __name__ == "__main__":
     #api.launch_rstudio_ide(notebook)
     #print(api.list_ides('mak-454'))
     #api.delete_ide('mak-454', 'mnist-4674')
-    # api.create_project(project)
+    # api.create_code(code)
     # api.create_dataset(dataset)
     # api.create_model(model)
     #v = api.get_model_version("mak-454", "mnist", "1604347322339")

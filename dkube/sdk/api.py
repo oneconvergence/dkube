@@ -19,6 +19,7 @@ from dkube.sdk.internal.dkube_api.models.conditions import \
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet
+from dkube.sdk.rsrcs.project import DkubeProject
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -79,9 +80,9 @@ class DkubeApi(ApiBase, FilesBase):
             self.token = os.getenv("DKUBE_ACCESS_TOKEN", None)
             assert self.token == None, "TOKEN must be specified either by passing argument or by setting DKUBE_ACCESS_TOKEN env variable"
 
-        self.common_tags = common_tags
-        ApiBase.__init__(self, self.url, self.token)
+        ApiBase.__init__(self, self.url, self.token, common_tags)
         FilesBase.__init__(self, self.files_url, self.token)
+        self.wait_interval = 10
 
     def set_active_project(self, project_id):
         """
@@ -141,7 +142,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "IDE {} - waiting for completion, current state {}".format(ide.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def launch_rstudio_ide(self, ide: DkubeIDE, wait_for_completion=True):
         """
@@ -176,7 +177,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "IDE {} - waiting for completion, current state {}".format(ide.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def list_ides(self, user, filters='*'):
         """
@@ -237,6 +238,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         assert type(
             run) == DkubeTraining, "Invalid type for run, value must be instance of rsrcs:DkubeTraining class"
+        super().update_tags(run.training_def)
         super().create_run(run)
         while wait_for_completion:
             status = super().get_run('training', run.user, run.name, fields='status')
@@ -248,7 +250,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "run {} - waiting for completion, current state {}".format(run.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def get_training_run(self, user, name):
         """
@@ -328,6 +330,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         assert type(
             run) == DkubePreprocessing, "Invalid type for run, value must be instance of rsrcs:DkubePreprocessing class"
+        super().update_tags(run.pp_def)
         super().create_run(run)
         while wait_for_completion:
             status = super().get_run('preprocessing', run.user, run.name, fields='status')
@@ -339,7 +342,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "run {} - waiting for completion, current state {}".format(run.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def get_preprocessing_run(self, user, name):
         """
@@ -417,8 +420,8 @@ class DkubeApi(ApiBase, FilesBase):
                     If transformer image is not updated in :bash:`run:DkubeServing` then,
                     - Dkube will use same image as training image
 
-                    If transformer project is not updated in :bash:`run:DkubeServing` then,
-                    - Dkube will use the project used for training
+                    If transformer code is not updated in :bash:`run:DkubeServing` then,
+                    - Dkube will use the code used for training
 
 
                 wait_for_completion
@@ -458,7 +461,7 @@ class DkubeApi(ApiBase, FilesBase):
                 code = li['run']['parameters']['training'][
                     'datums']['workspace']['data']
                 name = code['name'].split(':')[1]
-                run.update_transformer_project(name, code['version'])
+                run.update_transformer_code(name, code['version'])
 
         super().create_run(run)
         while wait_for_completion:
@@ -471,7 +474,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "run {} - waiting for completion, current state {}".format(run.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def get_test_inference(self, user, name):
         """
@@ -530,62 +533,62 @@ class DkubeApi(ApiBase, FilesBase):
 
         super().delete_run('inference', user, name)
 
-    def create_project(self, project: DkubeProject, wait_for_completion=True):
+    def create_code(self, code: DkubeCode, wait_for_completion=True):
         """
-            Method to create a project on DKube.
+            Method to create a code repo on DKube.
             Raises Exception in case of errors.
 
 
             *Inputs*
 
-                project
-                    Instance of :bash:`dkube.sdk.rsrcs.project` class.
+                code
+                    Instance of :bash:`dkube.sdk.rsrcs.code` class.
                     Please see the :bash:`Resources` section for details on this class.
 
 
                 wait_for_completion
-                    When set to :bash:`True` this method will wait for project resource to get into one of the complete state.
-                    Project is declared complete if it is one of the :bash:`complete/failed/error` state
+                    When set to :bash:`True` this method will wait for code resource to get into one of the complete state.
+                    code is declared complete if it is one of the :bash:`complete/failed/error` state
 
         """
 
         assert type(
-            project) == DkubeProject, "Invalid type for run, value must be instance of rsrcs:DkubeProject class"
-        super().create_repo(project)
+            code) == DkubeCode, "Invalid type for run, value must be instance of rsrcs:DkubeCode class"
+        super().create_repo(code)
         while wait_for_completion:
-            status = super().get_repo('program', project.user, project.name, fields='status')
+            status = super().get_repo('program', code.user, code.name, fields='status')
             state, reason = status['state'], status['reason']
             if state.lower() in ['ready', 'failed', 'error']:
                 print(
-                    "project {} - completed with state {} and reason {}".format(project.name, state, reason))
+                    "code {} - completed with state {} and reason {}".format(code.name, state, reason))
                 break
             else:
                 print(
-                    "project {} - waiting for completion, current state {}".format(project.name, state))
-                time.sleep(10)
+                    "code {} - waiting for completion, current state {}".format(code.name, state))
+                time.sleep(self.wait_interval)
 
-    def get_project(self, user, name):
+    def get_code(self, user, name):
         """
-            Method to fetch the project with given name for the given user.
-            Raises exception in case of project is not found or any other connection errors.
+            Method to fetch the code repo with given name for the given user.
+            Raises exception in case of code is not found or any other connection errors.
 
             *Inputs*
 
                 user
-                    User whose project has to be fetched.
+                    User whose code has to be fetched.
                     In case of if token is of different user, then the token should have permission to fetch the
-                    project of the :bash:`user` in the input. They should be in same DKube group.
+                    code of the :bash:`user` in the input. They should be in same DKube group.
 
                 name
-                    Name of the project to be fetched
+                    Name of the code repo to be fetched
 
         """
 
         return super().get_repo('program', user, name)
 
-    def list_projects(self, user, filters='*'):
+    def list_code(self, user, filters='*'):
         """
-            Method to list all the projects of a user.
+            Method to list all the code repos of a user.
             Raises exception on any connection errors.
 
             *Inputs*
@@ -604,18 +607,18 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_repos('program', user)
 
-    def delete_project(self, user, name):
+    def delete_code(self, user, name):
         """
-            Method to delete a project.
-            Raises exception if token is of different user or if project with name doesnt exist or on any connection errors.
+            Method to delete a code repo.
+            Raises exception if token is of different user or if code with name doesnt exist or on any connection errors.
 
             *Inputs*
 
                 user
-                    The token must belong to this user. As project of different user cannot be deleted.
+                    The token must belong to this user. As code of different user cannot be deleted.
 
                 name
-                    Name of the project which needs to be deleted.
+                    Name of the code which needs to be deleted.
 
         """
 
@@ -781,7 +784,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "dataset {} - waiting for completion, current state {}".format(dataset.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def get_dataset(self, user, name):
         """
@@ -872,7 +875,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "model {} - waiting for completion, current state {}".format(model.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def get_model(self, user, name):
         """
@@ -931,21 +934,21 @@ class DkubeApi(ApiBase, FilesBase):
 
         super().delete_repo('model', user, name)
 
-    def trigger_runs_byproject(self, project, user):
+    def trigger_runs_bycode(self, code, user):
         """
-            Method to trigger all the runs in dkube which uses the mentioned project.
+            Method to trigger all the runs in dkube which uses the mentioned code.
 
             *Inputs*
 
-                project
-                    Name of the project.
+                code
+                    Name of the code.
 
                 user
-                    Owner of the project. All runs of this user will be retriggered.
+                    Owner of the code. All runs of this user will be retriggered.
 
         """
 
-        condition = TriggerCondition(match='project', name=project, user=user)
+        condition = TriggerCondition(match='code', name=code, user=user)
         return super().trigger_runs(condition)
 
     def trigger_runs_bydataset(self, dataset, user):
@@ -1256,7 +1259,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "release {}/{} - waiting for completion, current state {}".format(model, version, stage))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def publish_model(self, name, description, details: DkubeServing, wait_for_completion=True):
         """
@@ -1283,8 +1286,8 @@ class DkubeApi(ApiBase, FilesBase):
                     If transformer image is not updated in :bash:`run:DkubeServing` then,
                     - Dkube will use same image as training image
 
-                    If transformer project is not updated in :bash:`run:DkubeServing` then,
-                    - Dkube will use the project used for training
+                    If transformer code is not updated in :bash:`run:DkubeServing` then,
+                    - Dkube will use the code used for training
 
 
                 wait_for_completion
@@ -1323,7 +1326,7 @@ class DkubeApi(ApiBase, FilesBase):
                 code = li['run']['parameters']['training'][
                     'datums']['workspace']['data']
                 cname = code['name'].split(':')[1]
-                run.update_transformer_project(cname, code['version'])
+                run.update_transformer_code(cname, code['version'])
 
         data = {'name': name, 'description': description,
                 'serving': run.serving_def}
@@ -1340,7 +1343,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "publish {}/{} - waiting for completion, current state {}".format(model, version, stage))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def create_model_deployment(self, user, name, model, version,
                                 description=None,
@@ -1404,7 +1407,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "run {} - waiting for completion, current state {}".format(run.name, state))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
 
     def delete_model_deployment(self, user, name):
         """
@@ -1490,3 +1493,90 @@ class DkubeApi(ApiBase, FilesBase):
                         return iversion
 
         raise Exception('{}.{} not found in model catalog'.format(model, version))
+
+    def list_projects(self):
+        """Return list of DKube projects."""
+        response = self._api.get_all_projects().to_dict()
+        assert response['response']['code'] == 200, response['response']['message']
+        return response['data']
+
+    def create_project(self, project:DkubeProject):
+        """Creates DKube Project.
+
+        *Inputs*
+
+            project
+                instance of :bash:`dkube.sdk.rsrcs.DkubeProject` class.
+        """
+        assert type(project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
+        response = self._api.create_project(project).to_dict()
+        assert response['response']['code'] == 200, response['response']['message']
+        return response['data']
+
+    def update_project (self, project_id, project:DkubeProject):
+        """Update project details. 
+        Note: details and evail_details fields are base64 encoded.
+        
+        *Inputs*
+
+            project_id
+                id of the project
+
+            project
+                instance of :bash:`dkube.sdk.rsrcs.DkubeProject` class.
+        """
+        assert type(project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
+        project.id = project_id
+        response = self._api.update_one_project(project, project.id).to_dict()
+        assert response['code'] == 200, response['message']
+
+    def get_project_id (self, name):
+        """"Get project id from project name.
+
+        *Inputs*
+
+            name
+                name of the project
+        """
+        response = self._api.get_all_projects().to_dict()
+        assert response['response']['code'] == 200, response['response']['message']
+        for project in response['data']:
+            if project['name'] == name:
+                return project['id']
+        return None
+
+    def get_project(self, project_id):
+        """Get project details.
+        
+        *Inputs*
+
+            project_id
+                id of the project
+        """
+        response = self._api.get_one_project(project_id).to_dict()
+        assert response['response']['code'] == 200, response['response']['message']
+        return response['data']
+
+    def get_leaderboard(self, project_id):
+        """Get project's leaderboard details.
+        
+        *Inputs*
+
+            project_id
+                id of the project
+        """
+        response = self._api.get_all_project_submissions(project_id).to_dict()
+        assert response['response']['code'] == 200, response['response']['message']
+        return response['data']
+
+    def delete_project(self, project_id):
+        """Delete project. This only deletes the project and not the associated resources.
+        
+        *Inputs*
+
+            project_id
+                id of the project
+        """
+        project_ids = {"project_ids": [project_id]}
+        response = self._api.projects_delete_list(project_ids).to_dict()
+        assert response['code'] == 200, response['message']
