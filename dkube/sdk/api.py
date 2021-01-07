@@ -97,7 +97,7 @@ class DkubeApi(ApiBase, FilesBase):
             tag for tag in self.common_tags if not tag.startswith("project:")
         ]
         if project_id:
-            self.common_tags.append(f"project:{project_id}")
+            self.common_tags.append("project:" + str(project_id))
             
     def validate_token(self):
         """
