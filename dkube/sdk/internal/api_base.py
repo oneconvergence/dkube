@@ -41,15 +41,15 @@ class ApiBase(object):
 
     def launch_jupyter_ide(self, ide):
         self.update_tags(ide.notebook_def)
-        response = self._api.jobs_add_one(ide.user, ide.job, run='false')
+        response = self._api.jobs_add_one(ide.user, data=ide.job, run='false')
 
     def launch_rstudio_ide(self, ide):
         self.update_tags(ide.notebook_def)
         response = self._api.jobs_add_one(
-            ide.user, ide.job, run='false', subclass='rstudio')
+            ide.user, data=ide.job, run='false', subclass='rstudio')
 
     def get_ide(self, category, user, name, fields='*'):
-        response = self._api.jobs_get_collection_one(user, category, name)
+        response = self._api.jobs_get_collection_one(user, category, job=name)
 
         if fields == '*':
             return response.to_dict()['data']
@@ -67,7 +67,7 @@ class ApiBase(object):
         self._api.jobs_list_delete_by_class(user, category, {'jobs': [name]})
 
     def create_run(self, run):
-        response = self._api.jobs_add_one(user=run.user, body=run.job, run='true')
+        response = self._api.jobs_add_one(user=run.user, data=run.job, run='true')
 
     def get_run(self, category, user, name, fields='*'):
         response = self._api.jobs_get_collection_one(user, category, name)
@@ -96,7 +96,7 @@ class ApiBase(object):
 
     def create_repo(self, repo):
         self.update_tags(repo.datum)
-        response = self._api.datums_add_one(user=repo.user, body=repo.datum)
+        response = self._api.datums_add_one(user=repo.user, data=repo.datum)
         print(response.to_dict())
 
     def get_repo(self, category, user, name, fields='*'):
