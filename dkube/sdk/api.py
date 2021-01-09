@@ -11,6 +11,7 @@
 import json
 import os
 import time
+import pandas as pd
 
 import urllib3
 from dkube.sdk.internal.api_base import *
@@ -18,7 +19,7 @@ from dkube.sdk.internal.dkube_api.models.conditions import \
     Conditions as TriggerCondition
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
-from dkube.sdk.rsrcs.featureset import DkubeFeatureSet
+from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
 from dkube.sdk.rsrcs.project import DkubeProject
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -662,7 +663,7 @@ class DkubeApi(ApiBase, FilesBase):
 
                 featureset_list
                     list of featureset names
-                    example: "mnist-fs", "titanic-fs"]
+                    example: ["mnist-fs", "titanic-fs"]
 
             *Outputs*
 
@@ -676,21 +677,100 @@ class DkubeApi(ApiBase, FilesBase):
         ), "Invalid parameter, value must be a list of featureset names"
         return super().delete_featureset(featureset_list)
 
-    def commit_features(self):
+    def delete_featureset(self, name):
+        """
+        Method to delete a a featureset on DKube.
+        Raises Exception in case of errors.
+
+        *Inputs*
+
+            name
+                featureset name to be deleted. 
+                example: "mnist-fs"
+
+        *Outputs*
+
+            A dictionary with response status and the deleted featureset name
+
+        """
+        assert(
+            name
+            and isinstance(name, str)
+        ), "Invalid parameter, value must be a featureset name"
+        list = []
+        list.append(name)
+        return super().delete_featureset(list)
+
+
+    def commit_featureset(self, name, df, metadata=None):
         """
             Method to commit all sticky featuresets mounted as output on DKube.
             Raises Exception in case of errors.
 
             *Inputs*
 
-                None
+                name
+                    featureset name
+                df
+                    Dataframe with features to be written
+                metadata
+                    yaml object with name, description and schema fields
 
             *Outputs*
 
-                A Json string with response status
+                Dictionary with response status
 
         """
-        return super().commit_features()
+        assert (
+            name
+            and isinstance(name,str)
+        ), "name must be a string"
+
+        assert(
+            df
+            and isinstance(df, pd.DataFrame)
+        ), "df must be a DataFrame object"
+        
+        featurespec, valid = super().get_featurespec(name)
+        assert(valid), "featureset not found"
+        if not featurespec:
+            if not metadata:
+                metadata = DKubeFeatureSetUtils.compute_features_metadata(df)
+            assert(metdata), "The specified featureset is invalid"
+            self.upload_featurespec(featureset=name, filepath=None, metadata=metadata)
+            isdf_valid = DKubeFeatureSetUtils.validate_features(df, featurespec)
+            assert(isdf_valid), "DataFrame validation failed"
+
+        return super().commit_featureset(name, df)
+
+    def read_featureset(self, name, version=None):
+        """
+            Method to read a featureset version.
+            Raises Exception in case of errors.
+
+            *Inputs*
+
+                name
+                    featureset to be read
+
+                version
+                    version to be read.
+                    If no version specified, latest version is assumed
+
+            *Outputs*
+
+                Dataframe object
+
+        """
+        assert (
+            name
+            and isinstance(name,str)
+        ), "name must be a string"
+
+        assert (version not None || isinstance(version,str)), "version must be a string"
+
+        return super().read_featureset(name, version)
+
 
     def list_featuresets(self, query=None):
         """
@@ -700,7 +780,6 @@ class DkubeApi(ApiBase, FilesBase):
             *Inputs*
 
                 query
-
                     A query string that is compatible with Bleve search format
 
             *Outputs*
@@ -710,7 +789,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().list_featureset(query)
 
-    def upload_featurespec(self, featureset=None, filepath=None):
+    def upload_featurespec(self, featureset=None, filepath=None, metadata=None):
         """
             Method to upload feature specification file.
             Raises Exception in case of errors.
@@ -718,19 +797,25 @@ class DkubeApi(ApiBase, FilesBase):
             *Inputs*
 
                 featureset
-
                     The name of featureset
 
                 filepath
+                    Filepath for the feature specification metadata yaml file
 
-                    Valid filepath for the feature specification metadata yaml file
+                metadata
+                    feature specification in yaml object. 
+
+                One of filepath or metadata should be specified.
 
             *Outputs*
 
                 A Json string with response status
 
         """
-        return super().featureset_upload_specfile(featureset, filepath)
+        assert(featureset and isinstance(featureset,str)), 
+            "featureset must be string"
+        assert(bool(filepath) ^ bool(metadata)), "One of filepath and metadata should be specified"
+        return super().featureset_upload_featurespec(featureset, filepath, metadata)
 
     def get_featurespec(self, featureset=None):
         """

@@ -13,6 +13,8 @@ from __future__ import print_function
 import json
 import os
 from pprint import pprint
+import tempfile
+import yaml
 
 import requests
 from dkube.sdk.internal.dkube_api.models.api_response import ApiResponse
@@ -51,31 +53,30 @@ class FilesBase(object):
         )
         return response
 
-    def featureset_upload_specfile(self, featureset=None, filepath=None) -> ApiResponse:
+    def featureset_upload_specfile(self, featureset=None, filepath=None, metadata=None) :
         """
         Method to upload features specification file on DKube.
         Raises Exception in case of errors.
 
-        *Inputs*
-
-            featureset
-                FeatureSet name.
-
-            filepath
-                The full pathname of features specification file on your workstation
-
         """
         url = "/featuresets/" + featureset + "/featurespec/upload"
-        assert (
-            os.path.isfile(filepath) == True
-        ), "Specified file path {} is invalid".format(filepath)
-        resp = self._upload_file(url, filepath)
+        resp = None
+        if filepath:
+            assert (
+                os.path.isfile(filepath) == True
+            ), "Specified file path {} is invalid".format(filepath)
+            resp = self._upload_file(url, filepath)
+        else:
+            with tempfile.NamedTemporaryFile() as temp:
+                spec = yaml.safe_dump(metadata)
+                temp.write(spec)
+                resp = self._upload_file(url, temp.name)
         resp_dict = json.loads(resp.text)
         api_response = ApiResponse(
             code=resp_dict['code'], message=resp_dict['message'])
         return api_response
 
-    def featureset_download_specfile(self, featureset=None) -> ApiResponse:
+    def featureset_download_specfile(self, featureset=None):
         """
         Method to upload features specification file on DKube.
         Raises Exception in case of errors.
@@ -98,3 +99,9 @@ class FilesBase(object):
         api_response = ApiResponse(
             code=resp_dict['code'], message=resp_dict['message'])
         return api_response
+
+    def featureset_write(name, df, path=None):
+
+        if path is None:
+            
+

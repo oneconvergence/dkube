@@ -4,6 +4,8 @@ import os
 import sys
 import time
 from pprint import pprint
+import json
+import tempfile
 
 import pandas as pd
 import pyarrow as pa
@@ -70,65 +72,12 @@ class DkubeFeatureSet(object):
         """
         self.features_path = path
 
-    def read(self, filename='featureset.parquet'):
-        """
-            Method to read features 
 
-            *Inputs*
 
-                filename
-                    This is optional. It defaults to featureset.parquet. The features are read from features_path/filename into a Panda's Dataframe object.
 
-            *Outputs*  
-                A dictionaly with the following elements
+class DKubeFeatureSetUtils
 
-                    "data" : Dataframe with features
-
-                    "status" : 0 for success, -1 for failure
-
-                    "error" : None or human readable text in the case of failures
-
-        """
-        df_empty = pd.DataFrame({'A': []})
-        if self.features_path is None:
-            return {"data": df_empty, "status": -1, "error": "Path of featureset not found"}
-        try:
-            table = pq.read_table(os.path.join(self.features_path, filename))
-            feature_df = table.to_pandas()
-            return {"data": feature_df, "status": 0, "error": None}
-        except Exception as e:
-            return {"data": df_empty, "status": -1, "error": e}
-
-    def write(self, dataframe, filename='featureset.parquet'):
-        """
-            Method to write features 
-
-            *Inputs*
-
-                dataframe
-                    Panda's dataframe object with features data. This should confirm to the feature specification metadata.
-
-                filename
-                    This is optional. It defaults to featureset.parquet. The features in 'dataframe' are written to features_path/filename.
-
-            *Outputs*  
-                A dictionaly with the following elements
-
-                    "status" : 0 for success, -1 for failure
-
-                    "error" : None or human readable text in the case of failures
-
-        """
-        if self.features_path is None:
-            return {"status": -1, "error": "Featureset doesn't exist"}
-        try:
-            table = pa.Table.from_pandas(dataframe)
-            pq.write_table(table, os.path.join(self.features_path, filename))
-            return {"status": 0, "error": None}
-        except Exception as e:
-            return {"status": -1, "error": e}
-
-    def validate(self, dataframe=None):
+    def validate_features(dataframe=None, featurespec=None) -> bool:
         """
             Method to validate features data against features specification metadata 
 
@@ -136,23 +85,14 @@ class DkubeFeatureSet(object):
 
                 dataframe
                     Panda's dataframe object with features data. This should confirm to the feature specification metadata.
-
-            *Outputs*  
-                A dictionaly with the following elements
-
-                    "status" : 0 for success, -1 for failure
-
-                    "error" : None or human readable text in the case of failures
+                featurespec
+                    Dictionary 
 
         """
-        # Get featurespec from DKube
-        authToken = os.getenv('DKUBE_USER_ACCESS_TOKEN')
-        d_api = api.DkubeApi(token=authToken)
-        res = d_api.get_featurespec(featureset=self.featureset.name)
-        f_spec = res.data
-        if f_spec == None:
-            return {"status": -1, "error": "Featurespec is not found"}
+        if featurespec is None or dataframe is None:
+            return False
 
+        f_spec = featurespec
         # Parse featurespec.
         # - Create a list of feature names
         # - Create a map of feature name and schema
@@ -175,11 +115,141 @@ class DkubeFeatureSet(object):
         # - The feature schema should be the same.
 
         if len(fspec_keys) != len(df_keys):
-            return {"status": -1, "error": "No. of columns in dataframe and featurespec are not equal"}
+            # "No. of columns in dataframe and featurespec are not equal"
+            return False
         for each_key in df_keys:
             if each_key not in fspec_keys:
-                return {"status": -1, "error": "Column name {} not found in featurespec".format(each_key)}
+                # error": "Column name {} not found in featurespec".format(each_key)
+                return False
             if df_spec[each_key] != fspec_dic[each_key]:
-                return {"status": -1, "error": "Datatype not matched for column {}".format(each_key)}
+                # Datatype not matched for column {}".format(each_key)}
+                return False
 
-        return {"status": 0, "error": None}
+        return True
+
+    def compute_features_metadata(df):
+        # Prepare featurespec - Name, Description, Schema for each feature
+        keys = df.keys()
+        schema = df.dtypes.to_list()
+        featureset_metadata = []
+        print(fs[k], out_path[k])
+        for i in range(len(keys)):
+            metadata = {}
+            metadata["name"] = str(keys[i])
+            metadata["description"] = None
+            metadata["schema"] = str(schema[i])
+            featureset_metadata.append(metadata)
+
+        return featureset_metadata
+        # Convert featureset metadata (featurespec) to yaml
+        #featureset_metadata = yaml.dump(featureset_metadata, default_flow_style=False)
+
+    # return the mounted path for the featureset
+    def _get_featureset_mount_path(name, config, type):
+        # name - featureset name
+        # config - config.json in dict format
+        # type - search in 'outputs' or 'inputs'
+        for keys in config:
+            if keys == type:
+                outputs = config[keys]
+                for rec in outputs:
+                    for keys in rec:
+                        if keys == 'featureset':
+                            for fset in rec[keys]:
+                                if name == fset['name']:
+                                    return fset['location']
+                            return None
+
+
+    def features_write(self, name, dataframe, path=None) ->str,bool:
+        """
+            Method to write features 
+
+            *Inputs*
+
+                name
+                    Featureset name 
+
+                dataframe
+                    Panda's dataframe object with features data. This should confirm to the feature specification metadata.
+
+                path
+                    This is optional. If not specified it derives the path from /etc/dkube/config.json. 
+
+            *Outputs*  
+                path - where the features are written
+                bool - whether write was successful
+
+        """
+        filename = 'featureset.parquet'
+        if path is None:
+            # Get the path
+            try:
+                with open("/etc/dkube/config.json") as fp:
+                    dkube_config = json.load(fp)
+                    path = self._get_featureset_mount_path(name, dkube_config, 'outputs')
+            exception:
+                path = None
+
+            if path is None:
+                dkube_path = os.getenv('DKUBE_DATA_BASE_PATH')
+                if dkube_path is None:
+                    return None, False
+                featureset_folder = '/_dkube_output_' + name + '/'
+                path = os.path.join(dkube_path, featureset_folder)
+                os.makedirs(path, exist_ok=True)
+                # update config.json
+                self._update_featureset_path(name, dkube) 
+
+        try:
+            table = pa.Table.from_pandas(dataframe)
+            pq.write_table(table, os.path.join(path, filename))
+            return path, True
+        except Exception as e:
+            return None, False
+
+    def features_read(self, name, path=None):
+        """
+            Method to read features 
+
+            *Inputs*
+
+                name
+                    featureset name
+                path
+                    This is optional. It points to where featureset is mounted
+
+            *Outputs*  
+                    Dataframe with features
+
+        """
+        filename='featureset.parquet'
+
+        if path is None:
+            # Get the path
+            try:
+                with open("/etc/dkube/config.json") as fp:
+                    dkube_config = json.load(fp)
+                    path = self._get_featureset_mount_path(name, dkube_config, 'inputs')
+            exception:
+                path = None
+
+            if path is None:
+                #dkube_path = os.getenv('DKUBE_DATA_BASE_PATH')
+                #if dkube_path is None:
+                raise ValueError('No valid dkube path found')
+                # update config.json
+                
+                #featureset_folder = '/' + name + '/'
+                #path = os.path.join(dkube_path, featureset_folder) 
+
+
+        df_empty = pd.DataFrame({'A': []})
+        if self.features_path is None:
+            return df_empty
+        try:
+            table = pq.read_table(os.path.join(path, filename))
+            feature_df = table.to_pandas()
+            return feature_df
+        except Exception as e:
+            return df_empty

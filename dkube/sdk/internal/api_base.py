@@ -9,6 +9,7 @@ from dkube.sdk.internal.dkube_api.models.feature_set_commit_def import \
     FeatureSetCommitDef
 from dkube.sdk.internal.dkube_api.models.feature_set_commit_def_job import \
     FeatureSetCommitDefJob
+from dkube.sdk.rsrcs.featureset import DKubeFeatureSetUtils
 from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.rsrcs.util import list_of_strs
 from url_normalize import url_normalize
@@ -133,30 +134,41 @@ class ApiBase(object):
     def create_featureset(self, featureset):
         self.update_tags(featureset.featureset)
         response = self._api.featureset_add_one(featureset.featureset)
-        return response
+        return response.to_dict()['data']
 
-    def commit_features(self):
+    def commit_featureset(self, name, df):
         job_uuid = os.getenv('DKUBE_JOB_UUID')
+        path, _ = DKubeFeatureSetUtils.features_write(name, df, None)
+        assert(path), ""
         job = FeatureSetCommitDefJob(kind='dkube_run')
-        body = FeatureSetCommitDef(job_uuid=job_uuid, job=job)
-        # Todo(osm). Fix API. commit doesn't need featureset name.
+        body = FeatureSetCommitDef(job_uuid=job_uuid, job=job, featureset=name, path=path)
+       
         response = self._api.featureset_commit_version(body=body)
-        return response
+        # Todo if the path is created, clean it up
+        return response.to_dict()['data']
+
+    def read_featureset(self, name, version=None, path=None)
+        # Todo: read even if not mounted
+        return DKubeFeatureSetUtils.features_read(name, version, path)
 
     def delete_featureset(self, delete_list):
         response = self._api.featureset_delete({'featuresets': delete_list})
-        return response
+        return response.to_dict()['data']
 
     def list_featureset(self, filter):
         if filter is None:
             response = self._api.featureset_list()
         else:
             response = self._api.featureset_list(query=filter)
-        return response
+        return response.to_dict()['data']
 
     def get_featurespec(self, featureset):
-        response = self._api.featurespec_list(featureset)
-        return response
+        response = self._api.featureset_get(featureset)
+        if response['response']['code'] != 200
+            return None, False
+        fset = response.to_dict()['data']
+        return fset.featurespec
+
     def get_datascience_capability(self):
         response = self._api.dl_frameworks()
         return response.to_dict()['data']
