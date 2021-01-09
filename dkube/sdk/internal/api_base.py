@@ -147,7 +147,7 @@ class ApiBase(object):
         # Todo if the path is created, clean it up
         return response.to_dict()['data']
 
-    def read_featureset(self, name, version=None, path=None)
+    def read_featureset(self, name, version=None, path=None):
         # Todo: read even if not mounted
         return DKubeFeatureSetUtils.features_read(name, version, path)
 
@@ -164,7 +164,7 @@ class ApiBase(object):
 
     def get_featurespec(self, featureset):
         response = self._api.featureset_get(featureset)
-        if response['response']['code'] != 200
+        if response['response']['code'] != 200:
             return None, False
         fset = response.to_dict()['data']
         return fset.featurespec

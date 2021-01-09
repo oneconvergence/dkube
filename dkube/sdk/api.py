@@ -767,7 +767,7 @@ class DkubeApi(ApiBase, FilesBase):
             and isinstance(name,str)
         ), "name must be a string"
 
-        assert (version not None || isinstance(version,str)), "version must be a string"
+        assert ((version == None) or isinstance(version,str)), "version must be a string"
 
         return super().read_featureset(name, version)
 
@@ -812,8 +812,7 @@ class DkubeApi(ApiBase, FilesBase):
                 A Json string with response status
 
         """
-        assert(featureset and isinstance(featureset,str)), 
-            "featureset must be string"
+        assert(featureset and isinstance(featureset,str)), "featureset must be string"
         assert(bool(filepath) ^ bool(metadata)), "One of filepath and metadata should be specified"
         return super().featureset_upload_featurespec(featureset, filepath, metadata)
 
@@ -855,6 +854,7 @@ class DkubeApi(ApiBase, FilesBase):
                     dataset is declared complete if it is one of the :bash:`complete/failed/error` state
 
         """
+
 
         assert type(
             dataset) == DkubeDataset, "Invalid type for run, value must be instance of rsrcs:DkubeDataset class"

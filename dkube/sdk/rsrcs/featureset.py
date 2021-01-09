@@ -75,7 +75,7 @@ class DkubeFeatureSet(object):
 
 
 
-class DKubeFeatureSetUtils
+class DKubeFeatureSetUtils:
 
     def validate_features(dataframe=None, featurespec=None) -> bool:
         """
@@ -161,7 +161,7 @@ class DKubeFeatureSetUtils
                             return None
 
 
-    def features_write(self, name, dataframe, path=None) ->str,bool:
+    def features_write(self, name, dataframe, path=None) -> (str,bool):
         """
             Method to write features 
 
@@ -188,14 +188,14 @@ class DKubeFeatureSetUtils
                 with open("/etc/dkube/config.json") as fp:
                     dkube_config = json.load(fp)
                     path = self._get_featureset_mount_path(name, dkube_config, 'outputs')
-            exception:
+            except:
                 path = None
 
             if path is None:
-                dkube_path = os.getenv('DKUBE_DATA_BASE_PATH')
+                dkube_path = os.getenv('DKUBE_USER_STORE')
                 if dkube_path is None:
                     return None, False
-                featureset_folder = '/_dkube_output_' + name + '/'
+                featureset_folder = '/gen/outputs/' + name + '/'
                 path = os.path.join(dkube_path, featureset_folder)
                 os.makedirs(path, exist_ok=True)
                 # update config.json
@@ -231,7 +231,7 @@ class DKubeFeatureSetUtils
                 with open("/etc/dkube/config.json") as fp:
                     dkube_config = json.load(fp)
                     path = self._get_featureset_mount_path(name, dkube_config, 'inputs')
-            exception:
+            except:
                 path = None
 
             if path is None:
