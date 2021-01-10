@@ -15,6 +15,7 @@ import os
 from pprint import pprint
 import tempfile
 import yaml
+import pdb
 
 import requests
 from dkube.sdk.internal.dkube_api.models.api_response import ApiResponse
@@ -27,15 +28,17 @@ class FilesBase(object):
     def __init__(self, url=None, token=None):
 
         protocol = url.split(':')
+        url = url.rstrip('/')
         if protocol[0] == "https":
             self.url = "{}/dkube/v2/ext".format(url)
         else:
             assert protocol[0] == "http", "Invalid host"
             self.url = "{}/dkube/v2".format(url)
-
+        
         self.token = token
         self.request_headers = {}
         self.request_headers['Authorization'] = 'Bearer {}'.format(self.token)
+
 
     def _upload_file(self, urlpath=None, filepath=None):
 
@@ -44,7 +47,10 @@ class FilesBase(object):
         except BaseException:
             print("Specified filepath {} is not valid".format(filepath))
             return response()
+        
+        urlpath = os.path.normpath(urlpath)
         ep = '{}{}'.format(self.url, urlpath)
+        
         response = requests.post(
             ep,
             headers=self.request_headers,
@@ -61,6 +67,7 @@ class FilesBase(object):
         """
         url = "/featuresets/" + featureset + "/featurespec/upload"
         resp = None
+        pdb.set_trace()
         if filepath:
             assert (
                 os.path.isfile(filepath) == True
@@ -72,6 +79,7 @@ class FilesBase(object):
                 temp.write(spec.encode('ascii'))
                 temp.flush()
                 resp = self._upload_file(url, temp.name)
+        
         resp_dict = json.loads(resp.text)
         return resp_dict
 
