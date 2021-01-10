@@ -15,7 +15,6 @@ import os
 from pprint import pprint
 import tempfile
 import yaml
-import pdb
 
 import requests
 from dkube.sdk.internal.dkube_api.models.api_response import ApiResponse
@@ -67,7 +66,7 @@ class FilesBase(object):
         """
         url = "/featuresets/" + featureset + "/featurespec/upload"
         resp = None
-        pdb.set_trace()
+        
         if filepath:
             assert (
                 os.path.isfile(filepath) == True

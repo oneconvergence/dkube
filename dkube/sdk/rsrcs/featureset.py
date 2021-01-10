@@ -170,7 +170,7 @@ class DKubeFeatureSetUtils:
         path = '/'
         return (path.join(path_list))
 
-    def features_write(self, name, dataframe, path=None) -> (str,bool):
+    def features_write(self, name, dataframe, path=None) -> str:
         """
             Method to write features 
 
@@ -187,7 +187,6 @@ class DKubeFeatureSetUtils:
 
             *Outputs*  
                 path - where the features are written
-                bool - whether write was successful
 
         """
         filename = 'featureset.parquet'
@@ -217,12 +216,12 @@ class DKubeFeatureSetUtils:
 
             # Get the path relative to DKube base
             path = self._get_d3_rel_path(path)
-            return path, True
+            return path
 
         except Exception as e:
-            return None, False
+            return None
 
-    def features_read(self, name, path=None):
+    def features_read(self, name, path=None) -> (pd.DataFrame, bool):
         """
             Method to read features 
 
@@ -238,6 +237,8 @@ class DKubeFeatureSetUtils:
 
         """
         filename='featureset.parquet'
+        df_empty = pd.DataFrame({'A': []})
+        is_mounted = False
 
         if path is None:
             # Get the path
@@ -245,25 +246,16 @@ class DKubeFeatureSetUtils:
                 with open("/etc/dkube/config.json") as fp:
                     dkube_config = json.load(fp)
                     path = self._get_featureset_mount_path(name, dkube_config, 'inputs')
+                    if path is not None:
+                        is_mounted=True
             except:
                 path = None
 
-            if path is None:
-                #dkube_path = os.getenv('DKUBE_DATA_BASE_PATH')
-                #if dkube_path is None:
-                raise ValueError('No valid dkube path found')
-                # update config.json
-                
-                #featureset_folder = '/' + name + '/'
-                #path = os.path.join(dkube_path, featureset_folder) 
-
-
-        df_empty = pd.DataFrame({'A': []})
-        if self.features_path is None:
-            return df_empty
+        if path is None:
+            return df_empty,  is_mounted
         try:
             table = pq.read_table(os.path.join(path, filename))
             feature_df = table.to_pandas()
-            return feature_df
+            return feature_df, is_mounted
         except Exception as e:
-            return df_empty
+            return df_empty, is_mounted

@@ -12,7 +12,6 @@ import json
 import os
 import time
 import pandas as pd
-import pdb
 
 import urllib3
 from dkube.sdk.internal.api_base import *
@@ -744,7 +743,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().commit_featureset(name, df)
 
-    def read_featureset(self, name, version=None):
+    def read_featureset(self, name, version=None, path=None):
         """
             Method to read a featureset version.
             Raises Exception in case of errors.
@@ -770,7 +769,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         assert ((version == None) or isinstance(version,str)), "version must be a string"
 
-        return super().read_featureset(name, version)
+        return super().read_featureset(name, version, path)
 
 
     def list_featuresets(self, query=None):

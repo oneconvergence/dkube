@@ -9,11 +9,11 @@ from dkube.sdk.internal.dkube_api.models.feature_set_commit_def import \
     FeatureSetCommitDef
 from dkube.sdk.internal.dkube_api.models.feature_set_commit_def_job import \
     FeatureSetCommitDefJob
+from dkube.sdk.internal.dkube_api.models import *
 from dkube.sdk.rsrcs.featureset import DKubeFeatureSetUtils
 from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.rsrcs.util import list_of_strs
 from url_normalize import url_normalize
-import pdb
 
 # Configure API key authorization: d3apikey
 configuration = dkube_api.Configuration()
@@ -141,7 +141,7 @@ class ApiBase(object):
 
     def commit_featureset(self, name, df):
         job_uuid = os.getenv('DKUBE_JOB_UUID')
-        path, _ = DKubeFeatureSetUtils().features_write(name, df, None)
+        path = DKubeFeatureSetUtils().features_write(name, df, None)
         assert(path), "path can't be found"
         job = FeatureSetCommitDefJob(kind='dkube_run')
         body = FeatureSetCommitDef(job_uuid=job_uuid, job=job, featureset=name, path=path)
@@ -152,7 +152,39 @@ class ApiBase(object):
 
     def read_featureset(self, name, version=None, path=None):
         # Todo: read even if not mounted
-        return DKubeFeatureSetUtils().features_read(name, version, path)
+        
+        if version is None:
+            # Get the latest version. How?
+            version = 'v2'
+        df, ismounted = DKubeFeatureSetUtils().features_read(name, path)
+        if not df.empty or ismounted:
+            return df
+
+        copybody = Body81(job_class=os.getenv("DKUBE_JOB_CLASS"), job_uuid=os.getenv("DKUBE_JOB_UUID"))
+        # To call async - pass async_req=True
+        r = self._api.featureset_copy_version(body=copybody, featureset=name, version=version)
+        data_copy_resp = InlineResponse20055()
+        while True:
+            # check the status
+            copystatus = Body85(job_class=os.getenv("DKUBE_JOB_CLASS"), job_uuid=os.getenv("DKUBE_JOB_ID"))
+            r = self._api.featureset_copy_version_status(featureset=name, body=copystatus, version=version)
+            response = r.to_dict()
+            if respone['status'] == 200:
+                data_copy_resp = response['data']
+                status = data_copy_resp['status']
+                if status == 'completed':
+                    break
+                elif status == 'copying' or status == 'starting':
+                    time.sleep(5)
+                    continue
+                else:
+                    assert(status == 'aborted' or status == 'error')
+                    break
+        if data_copy_resp['target_path']:
+            path = os.path.join(os.getenv("DKUBE_USER_STORE"), data_copy_resp['target_path'])
+            df, _ = DKubeFeatureSetUtils().features_read(name, version, path)
+        return df
+            
 
     def delete_featureset(self, delete_list):
         response = self._api.featureset_delete({'featuresets': delete_list})
