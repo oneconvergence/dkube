@@ -77,7 +77,7 @@ class DkubeFeatureSet(object):
 
 class DKubeFeatureSetUtils:
 
-    def validate_features(dataframe=None, featurespec=None) -> bool:
+    def validate_features(self, dataframe=None, featurespec=None) -> bool:
         """
             Method to validate features data against features specification metadata 
 
@@ -99,8 +99,8 @@ class DKubeFeatureSetUtils:
         fspec_dic = {}
         fspec_keys = []
         for each_spec in f_spec:
-            fspec_dic[str(each_spec.name)] = str(each_spec.schema)
-            fspec_keys.append(str(each_spec.name))
+            fspec_dic[str(each_spec['name'])] = str(each_spec['schema'])
+            fspec_keys.append(str(each_spec['name']))
 
         # Get the feature names and schema from the dataframe
         schema = [str(sma) for sma in dataframe.dtypes.to_list()]
@@ -127,12 +127,12 @@ class DKubeFeatureSetUtils:
 
         return True
 
-    def compute_features_metadata(df):
+    def compute_features_metadata(self, df):
         # Prepare featurespec - Name, Description, Schema for each feature
         keys = df.keys()
         schema = df.dtypes.to_list()
         featureset_metadata = []
-        print(fs[k], out_path[k])
+        
         for i in range(len(keys)):
             metadata = {}
             metadata["name"] = str(keys[i])
@@ -145,7 +145,7 @@ class DKubeFeatureSetUtils:
         #featureset_metadata = yaml.dump(featureset_metadata, default_flow_style=False)
 
     # return the mounted path for the featureset
-    def _get_featureset_mount_path(name, config, type):
+    def _get_featureset_mount_path(self, name, config, type):
         # name - featureset name
         # config - config.json in dict format
         # type - search in 'outputs' or 'inputs'
@@ -160,6 +160,15 @@ class DKubeFeatureSetUtils:
                                     return fset['location']
                             return None
 
+    def _get_d3_rel_path(self, full_path):
+        # Get relative path from dkube store                    
+        base = os.getenv("DKUBE_DATA_BASE_PATH")
+        relpath = os.path.relpath(full_path, base)
+        path_list = relpath.split("/")
+        if path_list[0] == 'home':
+            path_list[0] = 'users'
+        path = '/'
+        return (path.join(path_list))
 
     def features_write(self, name, dataframe, path=None) -> (str,bool):
         """
@@ -185,9 +194,10 @@ class DKubeFeatureSetUtils:
         if path is None:
             # Get the path
             try:
-                with open("/etc/dkube/config.json") as fp:
-                    dkube_config = json.load(fp)
-                    path = self._get_featureset_mount_path(name, dkube_config, 'outputs')
+                if os.path.exists("/etc/dkube/config.json"):
+                    with open("/etc/dkube/config.json") as fp:
+                        dkube_config = json.load(fp)
+                        path = self._get_featureset_mount_path(name, dkube_config, 'outputs')
             except:
                 path = None
 
@@ -195,16 +205,20 @@ class DKubeFeatureSetUtils:
                 dkube_path = os.getenv('DKUBE_USER_STORE')
                 if dkube_path is None:
                     return None, False
-                featureset_folder = '/gen/outputs/' + name + '/'
+                featureset_folder = 'gen/outputs/' + name
                 path = os.path.join(dkube_path, featureset_folder)
                 os.makedirs(path, exist_ok=True)
                 # update config.json
-                self._update_featureset_path(name, dkube) 
+                #_update_featureset_path(name, dkube) 
 
         try:
             table = pa.Table.from_pandas(dataframe)
             pq.write_table(table, os.path.join(path, filename))
+
+            # Get the path relative to DKube base
+            path = self._get_d3_rel_path(path)
             return path, True
+
         except Exception as e:
             return None, False
 

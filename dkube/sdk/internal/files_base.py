@@ -53,7 +53,7 @@ class FilesBase(object):
         )
         return response
 
-    def featureset_upload_specfile(self, featureset=None, filepath=None, metadata=None) :
+    def featureset_upload_featurespec(self, featureset=None, filepath=None, metadata=None) :
         """
         Method to upload features specification file on DKube.
         Raises Exception in case of errors.
@@ -69,12 +69,11 @@ class FilesBase(object):
         else:
             with tempfile.NamedTemporaryFile() as temp:
                 spec = yaml.safe_dump(metadata)
-                temp.write(spec)
+                temp.write(spec.encode('ascii'))
+                temp.flush()
                 resp = self._upload_file(url, temp.name)
         resp_dict = json.loads(resp.text)
-        api_response = ApiResponse(
-            code=resp_dict['code'], message=resp_dict['message'])
-        return api_response
+        return resp_dict
 
     def featureset_download_specfile(self, featureset=None):
         """
@@ -96,12 +95,7 @@ class FilesBase(object):
         ), "Specified file path {} is invalid".format(filepath)
         resp = self._upload_file(url, filepath)
         resp_dict = json.loads(resp.text)
-        api_response = ApiResponse(
-            code=resp_dict['code'], message=resp_dict['message'])
-        return api_response
+        return resp_dict
 
-    def featureset_write(name, df, path=None):
 
-        if path is None:
-            
 

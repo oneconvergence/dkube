@@ -12,6 +12,7 @@ import json
 import os
 import time
 import pandas as pd
+import pdb
 
 import urllib3
 from dkube.sdk.internal.api_base import *
@@ -646,10 +647,10 @@ class DkubeApi(ApiBase, FilesBase):
         assert type(
             featureset) == DkubeFeatureSet, "Invalid type for run, value must be instance of rsrcs:DkubeFeatureset class"
         response = super().create_featureset(featureset)
-        if response.code == 200 and featureset.featurespec_path is not None:
-            spec_response = super().featureset_upload_specfile(
+        if response['code'] == 200 and featureset.featurespec_path is not None:
+            spec_response = super().featureset_upload_featurespec(
                 featureset.featureset.name, featureset.featurespec_path)
-            if spec_response.code != 200:
+            if spec_response['code'] != 200:
                 super().delete_featureset(featureset)
                 return spec_response
         return response
@@ -726,20 +727,20 @@ class DkubeApi(ApiBase, FilesBase):
             and isinstance(name,str)
         ), "name must be a string"
 
-        assert(
-            df
-            and isinstance(df, pd.DataFrame)
+        assert(isinstance(df, pd.DataFrame)
         ), "df must be a DataFrame object"
         
         featurespec, valid = super().get_featurespec(name)
         assert(valid), "featureset not found"
         if not featurespec:
             if not metadata:
-                metadata = DKubeFeatureSetUtils.compute_features_metadata(df)
-            assert(metdata), "The specified featureset is invalid"
+                metadata = DKubeFeatureSetUtils().compute_features_metadata(df)
+            assert(metadata), "The specified featureset is invalid"
             self.upload_featurespec(featureset=name, filepath=None, metadata=metadata)
-            isdf_valid = DKubeFeatureSetUtils.validate_features(df, featurespec)
-            assert(isdf_valid), "DataFrame validation failed"
+            featurespec = metadata
+
+        isdf_valid = DKubeFeatureSetUtils().validate_features(df, featurespec)
+        assert(isdf_valid), "DataFrame validation failed"
 
         return super().commit_featureset(name, df)
 
