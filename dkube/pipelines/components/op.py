@@ -1,24 +1,26 @@
-from pathlib import Path
+import kfp
+import os
+from kubernetes.client.models import V1EnvVar
 
-import json
+class DkubeOp(kfp.dsl.ContainerOp):
 
-from kfp.components._yaml_utils import load_yaml
-from kfp.components._yaml_utils import dump_yaml
-from kfp import components
+    def __init__(self, name, authtoken, stage, args = []):
+        VALID_STAGES = ['training', 'preprocessing', 'serving', 'storage', 'submit']
 
-VALID_STAGES = ['training', 'preprocessing', 'serving']
-def dkube_op(name, token, stage, **kwargs):
-    assert stage in VALID_STAGES, "Invalid value for stage, must be one of training/preprocessing/serving/custom"
+        assert stage in VALID_STAGES, "Invalid value for stage, must be one of training/preprocessing/serving/storage/submit"
 
-    component = None
-    path = Path(__file__).parent
-    with open('{}/dkube.yaml'.format(path), 'rb') as stream:
-        cdict = load_yaml(stream)
-        cdict['name'] = name
-        cdict['metadata']['labels']['stage'] = stage
-        cyaml = dump_yaml(cdict)
-        component = components.load_component_from_text(cyaml)
+        kwargs = {"name":name, "image": "ocdr/dkube_launcher:storage"}
+        kwargs["command"] = ['python3',"/dkubepl/main.py", name, authtoken]
+        kwargs["command"].extend(["{{workflow.uid}}", "{{pod.name}}", stage])
+        kwargs["arguments"] = args
+        
 
-    assert component != None, "Internal error, loading DKube component failed"
+        super().__init__(**kwargs)
 
-    return component(name, token, stage, **kwargs)
+        self.add_pod_label(name="dkube.garbagecollect", value="true")
+        self.add_pod_label(name="dkube.garbagecollect.policy", value="all")
+        self.add_pod_label(name="stage", value=stage)
+        self.add_pod_label(name="runid", value="{{pod.name}}")
+        self.add_pod_label(name="wfid", value="{{workflow.uid}}")
+        env_var = V1EnvVar(name='DKUBE_OP_DEBUG', value=os.environ.get("DKUBE_OP_DEBUG","0"))
+        self.add_env_variable(env_var) 

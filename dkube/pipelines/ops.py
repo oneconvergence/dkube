@@ -11,7 +11,7 @@ import json
 
 from dkube.sdk import *
 
-from .components import *
+from .components import DkubeOp
 
 
 def dkube_training_op(name=generate('training'), authtoken=None, training=DkubeTraining):
@@ -36,7 +36,7 @@ def dkube_training_op(name=generate('training'), authtoken=None, training=DkubeT
     assert type(training) == DkubeTraining, "Invalid type for training argument, must be instance of dkube.sdk.rsrcs:DkubeTraining"
     assert authtoken == None, "Auth token is must"
 
-    return dkube_op(name, authtoken, 'training', training=json.dumps(training.job.to_dict()))
+    return DkubeOp(name, authtoken, "training", args = [json.dumps(training.job.to_dict())])
 
 def dkube_preprocessing_op(name=generate('data'), authtoken=None, preprocessing=DkubePreprocessing):
 
@@ -60,7 +60,7 @@ def dkube_preprocessing_op(name=generate('data'), authtoken=None, preprocessing=
     assert type(preprocessing) == DkubePreprocessing, "Invalid type for preprocessing argument, must be instance of dkube.sdk.rsrcs:DkubePreprocessing"
     assert authtoken == None, "Auth token is must"
 
-    return dkube_op(name, authtoken, 'preprocessing', preprocessing=json.dumps(preprocesing.job.to_dict()))
+    return DkubeOp(name, authtoken, "preprocessing", args = [json.dumps(preprocessing.job.to_dict())])
 
 def dkube_serving_op(name=generate('serving'), authtoken=None, serving=DkubeServing):
 
@@ -84,4 +84,55 @@ def dkube_serving_op(name=generate('serving'), authtoken=None, serving=DkubeServ
     assert type(serving) == DkubeServing, "Invalid type for serving argument, must be instance of dkube.sdk.rsrcs:DkubeServing"
     assert authtoken == None, "Auth token is must"
 
-    return dkube_op(name, authtoken, 'serving', serving=json.dumps(serving.job.to_dict()))
+    return DkubeOp(name, authtoken, "serving", args = [json.dumps(serving.job.to_dict())])
+
+def dkube_storage_op(name=generate('storage'), authtoken=None,command=None,  claims=[]):
+    """
+        DKube Op to export dkube resoources as a kubernetes volume claim.
+
+        *Inputs*
+
+            name
+                Name of the stage. The passed name will be set as display_name for the stage.
+
+            authtoken
+                API authentication token. User can get this find under DeveloperSettings in DKube UI.
+
+            command
+                "export" or "reclaim". "export" would exports the given volume requests. "reclaim" would
+                delete any volume claim created in this pipeline
+
+            claims
+                List of Instance of :bash:`dkube.sdk.rsrcs.DkubeResourcePVC` class.
+                
+    """
+    assert command != None, "command is required"
+    assert authtoken == None, "Auth token is must"
+
+    claims = [{"volume":claim.volume.to_dict(), "kind":claim.kind} for claim in claims]
+    return DkubeOp(name, authtoken, "storage", args = [command, "kubeflow", json.dumps(claims)])
+
+def dkube_submit_op(name=generate('submit'), authtoken=None, project_id=None,  predictions=None):
+    """
+        DKube Op to submit predictions to project leaderboard.
+
+        *Inputs*
+
+            name
+                Name of the stage. The passed name will be set as display_name for the stage.
+
+            authtoken
+                API authentication token. User can get this find under DeveloperSettings in DKube UI.
+            
+            project_id
+                ID of the project to which this submission would be done
+
+            predictions
+                prediction output from previous kubeflow component
+                
+    """
+    assert project_id != None, "project_id is required"
+    assert authtoken == None, "Auth token is must"
+    assert predictions != None, "predictions is required"
+    
+    return DkubeOp(name, authtoken, "submit", args = [project_id, predictions])
