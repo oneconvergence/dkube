@@ -28,10 +28,16 @@ def command_serving(
     ):
 
         if inf["version"] is None:
-            v = api.get_model_latest_version(inf["owner"], inf["model"])
+            response = api.datums_get_one_by_class(inf["owner"], "model", inf["model"])
+            versions = response.to_dict()["data"]["versions"]
+            v = versions[0]["version"]
             inf["version"] = v["uuid"]
 
-        li = api.get_model_lineage(inf["owner"], inf["model"], inf["version"])
+        li = api.datums_get_one_version_lineage(
+            inf["owner"], "model", inf["model"], inf["version"]
+        )
+        li = li.to_dict()["data"]
+
         if inf["serving_image"]["image"] is None:
             si = li["run"]["parameters"]["generated"]["serving_image"]["image"]
             inf["serving_image"]["image"] = dict(si)
