@@ -170,6 +170,28 @@ class DKubeFeatureSetUtils:
         path = '/'
         return (path.join(path_list))
 
+    def get_top_version(self, versions):
+        # Get the latest version
+        # Shortcut for now, get the length of the list and return it
+        top = len(versions)
+        return ('v{}'.format(top))
+
+    def validate_version(self, versions, version):
+        # Does the version specified exists?
+        index = int(version[1:])
+        if index >= 1 and index <= len(versions):
+            return True
+        return False
+    
+    def get_version_status(self, versions, version):
+        # Get the state of the specified version
+        index = int(version[1:])
+        if index < 1 and index > len(versions):
+            return 'INVALID'
+        versions = sorted(versions, key=lambda k: k['version'].get('index', 0), reverse=False)
+        return versions[index-1]['version']['state']
+
+
     def features_write(self, name, dataframe, path=None) -> str:
         """
             Method to write features 
@@ -203,7 +225,7 @@ class DKubeFeatureSetUtils:
             if path is None:
                 dkube_path = os.getenv('DKUBE_USER_STORE')
                 if dkube_path is None:
-                    return None, False
+                    return None
                 featureset_folder = 'gen/outputs/' + name
                 path = os.path.join(dkube_path, featureset_folder)
                 os.makedirs(path, exist_ok=True)
@@ -243,11 +265,12 @@ class DKubeFeatureSetUtils:
         if path is None:
             # Get the path
             try:
-                with open("/etc/dkube/config.json") as fp:
-                    dkube_config = json.load(fp)
-                    path = self._get_featureset_mount_path(name, dkube_config, 'inputs')
-                    if path is not None:
-                        is_mounted=True
+                if os.path.exists("/etc/dkube/config.json"):
+                    with open("/etc/dkube/config.json") as fp:
+                        dkube_config = json.load(fp)
+                        path = self._get_featureset_mount_path(name, dkube_config, 'inputs')
+                        if path is not None:
+                            is_mounted=True
             except:
                 path = None
 

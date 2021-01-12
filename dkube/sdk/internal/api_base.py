@@ -140,6 +140,25 @@ class ApiBase(object):
     
 
     def commit_featureset(self, name, df):
+        # Make sure the dvs is setup
+
+        while True:
+            versions = self.get_versions(name)
+            if versions is None:
+                print("no initial version found. waiting")
+                time.sleep(1)
+                continue
+
+            # Only need to wait for the v1 to reach synced state
+            if len(versions) > 1:
+                break
+            
+            version_status = DKubeFeatureSetUtils().get_version_status(versions, 'v1')
+            if version_status.lower() == 'synced':
+                break
+            print("version v1 state {} - waiting for synced state".format(version_status.lower()))
+            time.sleep(1)
+
         job_uuid = os.getenv('DKUBE_JOB_UUID')
         path = DKubeFeatureSetUtils().features_write(name, df, None)
         assert(path), "path can't be found"
@@ -154,8 +173,19 @@ class ApiBase(object):
         # Todo: read even if not mounted
         
         if version is None:
-            # Get the latest version. How?
-            version = 'v2'
+            versions = self.get_versions(name)
+            assert(versions), "no versions found"
+            version = DKubeFeatureSetUtils().get_top_version(versions)
+            while True:
+                # don't get the top version within this loop
+                version_status = DKubeFeatureSetUtils().get_version_status(versions, version)
+                if version_status.lower() == 'synced':
+                    break
+                print("version {} state {} - waiting for synced state".format(version, version_status.lower()))
+                time.sleep(1)
+                versions = self.get_versions(name)
+        
+
         df, ismounted = DKubeFeatureSetUtils().features_read(name, path)
         if not df.empty or ismounted:
             return df
@@ -166,19 +196,20 @@ class ApiBase(object):
         data_copy_resp = InlineResponse20055()
         while True:
             # check the status
-            copystatus = Body85(job_class=os.getenv("DKUBE_JOB_CLASS"), job_uuid=os.getenv("DKUBE_JOB_ID"))
+            copystatus = Body85(job_class=os.getenv("DKUBE_JOB_CLASS"), job_uuid=os.getenv("DKUBE_JOB_UUID"))
             r = self._api.featureset_copy_version_status(featureset=name, body=copystatus, version=version)
             response = r.to_dict()
             if respone['status'] == 200:
                 data_copy_resp = response['data']
                 status = data_copy_resp['status']
-                if status == 'completed':
+                if status.lower() == 'completed':
                     break
-                elif status == 'copying' or status == 'starting':
-                    time.sleep(5)
+                elif status.lower() == 'copying' or status.lower() == 'starting':
+                    print("features status {} waiting for completion".format(status))
+                    time.sleep(2)
                     continue
                 else:
-                    assert(status == 'aborted' or status == 'error')
+                    assert(status.lower() == 'aborted' or status.lower() == 'error')
                     break
         if data_copy_resp['target_path']:
             path = os.path.join(os.getenv("DKUBE_USER_STORE"), data_copy_resp['target_path'])
@@ -205,6 +236,15 @@ class ApiBase(object):
             return None, False
         fset = response['data']
         return fset['featurespec'], True
+
+    def get_versions(self, featureset):
+        r = self._api.featureset_get(featureset)
+        response = r.to_dict()
+        if response['response']['code'] != 200:
+            return None
+        fset = response['data']
+        return fset['versions']
+
 
     def get_datascience_capability(self):
         response = self._api.dl_frameworks()
