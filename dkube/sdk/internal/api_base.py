@@ -140,7 +140,7 @@ class ApiBase(object):
         job = FeatureSetCommitDefJob(kind='dkube_run')
         body = FeatureSetCommitDef(job_uuid=job_uuid, job=job)
         # Todo(osm). Fix API. commit doesn't need featureset name.
-        response = self._api.featureset_commit_version(body=body)
+        response = self._api.featureset_commit_version(data=body)
         return response
 
     def delete_featureset(self, delete_list):

@@ -1,6 +1,5 @@
 import base64
 import json
-import os
 import zipfile
 
 import boto3
@@ -12,6 +11,8 @@ import requests
 from botocore.client import Config
 from json2html import json2html
 
+from utils import debug_requests_on
+
 
 def download_s3_file(bucket, remote_file, local_file):
     s3 = boto3.resource(
@@ -22,6 +23,7 @@ def download_s3_file(bucket, remote_file, local_file):
         config=Config(signature_version="s3v4"),
     )
     s3.meta.client.download_file(bucket, remote_file, local_file)
+
 
 def get_run_metadata(run_id):
     client = kfp.Client()
@@ -45,7 +47,7 @@ def get_run_metadata(run_id):
 @click.argument("project_id")
 @click.argument("input_file", type=click.Path(exists=True))
 @click.pass_obj
-def submit(obj,  project_id, input_file ):
+def submit(obj, project_id, input_file):
 
     run_id = obj["workflowid"]
     token = obj["token"]
@@ -59,6 +61,8 @@ def submit(obj,  project_id, input_file ):
         "file": open(input_file, "rb"),
         "meta": json.dumps(metadata).encode("utf8"),
     }
+    if obj["debug"] == "1":
+        debug_requests_on()
 
     r = requests.post(url + "/submit/predictions/", headers=headers, files=files)
 
@@ -86,9 +90,7 @@ def submit(obj,  project_id, input_file ):
             with open("/metadata.json", "w") as f:
                 json.dump(metadata, f)
         if "artifacts_url" in response:
-            download_s3_file(
-                "dkube", response["artifacts_url"], "/results.zip"
-            )
+            download_s3_file("dkube", response["artifacts_url"], "/results.zip")
 
             with zipfile.ZipFile("/results.zip", "r") as zip_ref:
                 zip_ref.extractall("/results")

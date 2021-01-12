@@ -1,6 +1,9 @@
-import click
 import json
+
+import click
+
 from utils import print_json
+
 
 @click.command()
 @click.pass_obj
@@ -8,25 +11,22 @@ from utils import print_json
 @click.argument("namespace")
 @click.argument("claims")
 def storage(obj, command, namespace, claims):
-    print ("command: {}\nnamespace: {}\n".format(command, namespace))
+    print("command: {}\nnamespace: {}\n".format(command, namespace))
     api = obj["api"]
-    data = {
-        "uid": obj["workflowid"],
-        "namespace": namespace
-    }
+    data = {"uid": obj["workflowid"], "namespace": namespace}
     if command == "reclaim":
         api.storage_volume_reclaim(data)
         return
-    
+
     claims = json.loads(claims)
-    print_json({"claims":claims})
-    
-    for kind in ["input","output","intermediate"]:
+    print_json({"claims": claims})
+
+    for kind in ["input", "output", "intermediate"]:
         data = {
             "uid": obj["workflowid"],
             "namespace": namespace,
             "kind": kind,
-            "volumes": []
+            "volumes": [],
         }
         for claim in claims:
             if claim["kind"] == kind:
