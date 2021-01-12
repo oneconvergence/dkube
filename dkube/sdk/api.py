@@ -650,7 +650,7 @@ class DkubeApi(ApiBase, FilesBase):
             spec_response = super().featureset_upload_featurespec(
                 featureset.featureset.name, featureset.featurespec_path)
             if spec_response['code'] != 200:
-                super().delete_featureset(featureset)
+                self.delete_featureset(featureset.featureset.name)
                 return spec_response
         return response
 
@@ -697,9 +697,7 @@ class DkubeApi(ApiBase, FilesBase):
             name
             and isinstance(name, str)
         ), "Invalid parameter, value must be a featureset name"
-        list = []
-        list.append(name)
-        return super().delete_featureset(list)
+        return super().delete_featureset([name])
 
 
     def commit_featureset(self, name, df, metadata=None):

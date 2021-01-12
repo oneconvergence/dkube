@@ -160,15 +160,19 @@ class DKubeFeatureSetUtils:
                                     return fset['location']
                             return None
 
+    def _get_d3_full_path(self, rel_path):
+        # Get full path to dkube store
+        rel_path = rel_path.replace('users','home',1)                     
+        base = os.getenv("DKUBE_DATA_BASE_PATH")
+        fullpath = os.path.join(base, rel_path)
+        return (fullpath)
+
     def _get_d3_rel_path(self, full_path):
-        # Get relative path from dkube store                    
+        # Get relative path from dkube store       
         base = os.getenv("DKUBE_DATA_BASE_PATH")
         relpath = os.path.relpath(full_path, base)
-        path_list = relpath.split("/")
-        if path_list[0] == 'home':
-            path_list[0] = 'users'
-        path = '/'
-        return (path.join(path_list))
+        relpath = relpath.replace('home','users',1) 
+        return (relpath)
 
     def get_top_version(self, versions):
         # Get the latest version

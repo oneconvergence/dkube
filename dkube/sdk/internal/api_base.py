@@ -20,6 +20,7 @@ configuration = dkube_api.Configuration()
 configuration.api_key_prefix['Authorization'] = 'Bearer'
 
 
+
 class ApiBase(object):
 
     def __init__(self, url, token, common_tags):
@@ -145,8 +146,8 @@ class ApiBase(object):
         while True:
             versions = self.get_versions(name)
             if versions is None:
-                print("no initial version found. waiting")
-                time.sleep(1)
+                print("commit_featureset: waiting for featureset to be setup")
+                time.sleep(5)
                 continue
 
             # Only need to wait for the v1 to reach synced state
@@ -156,8 +157,8 @@ class ApiBase(object):
             version_status = DKubeFeatureSetUtils().get_version_status(versions, 'v1')
             if version_status.lower() == 'synced':
                 break
-            print("version v1 state {} - waiting for synced state".format(version_status.lower()))
-            time.sleep(1)
+            print("commit_featureset: not ready, state:{} expected:synced".format(version_status.lower()))
+            time.sleep(5)
 
         job_uuid = os.getenv('DKUBE_JOB_UUID')
         path = DKubeFeatureSetUtils().features_write(name, df, None)
@@ -165,7 +166,7 @@ class ApiBase(object):
         job = FeatureSetCommitDefJob(kind='dkube_run')
         body = FeatureSetCommitDef(job_uuid=job_uuid, job=job, featureset=name, path=path)
        
-        response = self._api.featureset_commit_version(body=body)
+        response = self._api.featureset_commit_version(body)
         # Todo if the path is created, clean it up
         return response.to_dict()
 
@@ -176,13 +177,15 @@ class ApiBase(object):
             versions = self.get_versions(name)
             assert(versions), "no versions found"
             version = DKubeFeatureSetUtils().get_top_version(versions)
+            print("read_featureset: No version specified, using the latest version {}".format(version))
             while True:
                 # don't get the top version within this loop
                 version_status = DKubeFeatureSetUtils().get_version_status(versions, version)
-                if version_status.lower() == 'synced':
-                    break
-                print("version {} state {} - waiting for synced state".format(version, version_status.lower()))
-                time.sleep(1)
+                if version_status is not None:
+                    if version_status.lower() == 'synced':
+                        break
+                    print("read_featureset: version {} not ready, state:{} expected:synced".format(version, version_status.lower()))
+                time.sleep(5)
                 versions = self.get_versions(name)
         
 
@@ -190,36 +193,35 @@ class ApiBase(object):
         if not df.empty or ismounted:
             return df
 
-        copybody = Body81(job_class=os.getenv("DKUBE_JOB_CLASS"), job_uuid=os.getenv("DKUBE_JOB_UUID"))
+        copy_body = FeaturesetVersionCopyDef(job_class=os.getenv("DKUBE_JOB_CLASS"), job_uuid=os.getenv("DKUBE_JOB_UUID"))
         # To call async - pass async_req=True
-        r = self._api.featureset_copy_version(body=copybody, featureset=name, version=version)
-        data_copy_resp = InlineResponse20055()
+        r = self._api.featureset_copy_version(data=copy_body, featureset=name, version=version)
+        data_copy_resp = DataCopy()
+        
         while True:
             # check the status
-            copystatus = Body85(job_class=os.getenv("DKUBE_JOB_CLASS"), job_uuid=os.getenv("DKUBE_JOB_UUID"))
-            r = self._api.featureset_copy_version_status(featureset=name, body=copystatus, version=version)
+            r = self._api.featureset_copy_version_status(featureset=name, data=copy_body, version=version)
             response = r.to_dict()
-            if respone['status'] == 200:
+            if response['response']['code']:
                 data_copy_resp = response['data']
                 status = data_copy_resp['status']
                 if status.lower() == 'completed':
                     break
                 elif status.lower() == 'copying' or status.lower() == 'starting':
-                    print("features status {} waiting for completion".format(status))
-                    time.sleep(2)
+                    print("read_featureset: features not ready, status:{} expected:completed".format(status))
+                    time.sleep(5)
                     continue
                 else:
                     assert(status.lower() == 'aborted' or status.lower() == 'error')
                     break
         if data_copy_resp['target_path']:
-            path = os.path.join(os.getenv("DKUBE_USER_STORE"), data_copy_resp['target_path'])
-            df, _ = DKubeFeatureSetUtils().features_read(name, version, path)
+            path = DKubeFeatureSetUtils()._get_d3_full_path(data_copy_resp['target_path'])
+            df, _ = DKubeFeatureSetUtils().features_read(name, path)
         return df
             
 
     def delete_featureset(self, delete_list):
         response = self._api.featureset_delete({'featuresets': delete_list})
-        print(response)
         return response.to_dict()
 
     def list_featureset(self, filter):
