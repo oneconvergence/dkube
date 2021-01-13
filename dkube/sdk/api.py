@@ -700,10 +700,20 @@ class DkubeApi(ApiBase, FilesBase):
         return super().delete_featureset([name])
 
 
-    def commit_featureset(self, name, df, metadata=None):
+    def commit_featureset(self, name, df, path=None, metadata=None):
         """
             Method to commit all sticky featuresets mounted as output on DKube.
-            Raises Exception in case of errors.
+
+            featureset should be in ready state. It will be in created state if no featurespec is uploaded. 
+            If the featureset is in created state, the following will happen.
+                a) If metadata is passed, it will be uploaded as featurespec
+                b) If no metadata is passed, it derives from df and uploads it.
+            If the featureset is in ready state, the following will happen.
+                a) metadata if passed any will be ignored
+                b) featurespec will be downloaded for the specifed featureset and df is validated for conformance.
+
+            If name is specified, it derives the path for committing the features
+            If path is also specified, it doesn't derive the path. It uses the specified path. However, path should a mount path into dkube store.
 
             *Inputs*
 
@@ -712,39 +722,42 @@ class DkubeApi(ApiBase, FilesBase):
                 df
                     Dataframe with features to be written
                 metadata
-                    yaml object with name, description and schema fields
-
+                    optional yaml object with name, description and schema fields or None
+                path
+                    Mount path where featureset is mounted or None
+                   
             *Outputs*
 
                 Dictionary with response status
 
         """
-        assert (
-            name
-            and isinstance(name,str)
-        ), "name must be a string"
 
         assert(isinstance(df, pd.DataFrame)
         ), "df must be a DataFrame object"
+
+        featurespec = None
         
-        featurespec, valid = super().get_featurespec(name)
-        assert(valid), "featureset not found"
-        if not featurespec:
+        if name is not None:
+            featurespec, valid = super().get_featurespec(name)
+            assert(valid), "featureset not found"
+        if ((not featurespec) and (name is not None)):
             if not metadata:
                 metadata = DKubeFeatureSetUtils().compute_features_metadata(df)
             assert(metadata), "The specified featureset is invalid"
             self.upload_featurespec(featureset=name, filepath=None, metadata=metadata)
             featurespec = metadata
 
-        isdf_valid = DKubeFeatureSetUtils().validate_features(df, featurespec)
-        assert(isdf_valid), "DataFrame validation failed"
+        if featurespec is not None:
+            isdf_valid = DKubeFeatureSetUtils().validate_features(df, featurespec)
+            assert(isdf_valid), "DataFrame validation failed"
 
-        return super().commit_featureset(name, df)
+        return super().commit_featureset(name, df, path)
 
-    def read_featureset(self, name, version=None, path=None):
+    def read_featureset(self, name=None, version=None, path=None):
         """
             Method to read a featureset version.
-            Raises Exception in case of errors.
+            If name is specified, path is derived. If featureset is not mounted, a copy is made to user's homedir
+            If path is specified, it should be a mounted path
 
             *Inputs*
 
@@ -755,16 +768,14 @@ class DkubeApi(ApiBase, FilesBase):
                     version to be read.
                     If no version specified, latest version is assumed
 
+                path
+                    path where featureset is mounted. 
+
             *Outputs*
 
                 Dataframe object
 
         """
-        assert (
-            name
-            and isinstance(name,str)
-        ), "name must be a string"
-
         assert ((version == None) or isinstance(version,str)), "version must be a string"
 
         return super().read_featureset(name, version, path)

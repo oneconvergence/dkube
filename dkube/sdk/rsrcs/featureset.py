@@ -160,6 +160,23 @@ class DKubeFeatureSetUtils:
                                     return fset['location']
                             return None
 
+    # return the mounted featureset name, given the mount point
+    def _get_featureset_name(self, path, config, type):
+        # path - featureset mount path
+        # config - config.json in dict format
+        # type - search in 'outputs' or 'inputs'
+        for keys in config:
+            if keys == type:
+                outputs = config[keys]
+                for rec in outputs:
+                    for keys in rec:
+                        if keys == 'featureset':
+                            for fset in rec[keys]:
+                                if path == fset['location'] or path == fset['dkube_path']:
+                                    return fset['name']
+                            return None
+
+
     def _get_d3_full_path(self, rel_path):
         # Get full path to dkube store
         rel_path = rel_path.replace('users','home',1)                     
@@ -168,11 +185,32 @@ class DKubeFeatureSetUtils:
         return (fullpath)
 
     def _get_d3_rel_path(self, full_path):
-        # Get relative path from dkube store       
-        base = os.getenv("DKUBE_DATA_BASE_PATH")
-        relpath = os.path.relpath(full_path, base)
-        relpath = relpath.replace('home','users',1) 
+        # Is this a mounted path
+        relpath = self._get_d3_path_from_mountpoint(full_path)
+
+        # This might have been created 
+        if relpath is None:
+            # Get relative path from dkube store       
+            base = os.getenv("DKUBE_DATA_BASE_PATH")
+            relpath = os.path.relpath(full_path, base)
+            relpath = relpath.replace('home','users',1) 
         return (relpath)
+
+    def _get_d3_path_from_mountpoint(self, path):
+        # For the following df output, it returns featuresets/train-fs-1936/1610480719061/data
+        #   10.233.59.86:/dkube/featuresets/train-fs-1936/1610480719061/data  /fset  
+        src = target = None
+        for l in open("/proc/mounts", "r"):
+            tabs = l.split(" ")
+            src = tabs[0]
+            target = tabs[1]
+            if( path == target ):
+                break
+        if src is not None:
+            src = src.split(":")[1]
+            src = os.path.relpath(src, "/dkube")
+        return src
+
 
     def get_top_version(self, versions):
         # Get the latest version
@@ -194,6 +232,19 @@ class DKubeFeatureSetUtils:
             return 'INVALID'
         versions = sorted(versions, key=lambda k: k['version'].get('index', 0), reverse=False)
         return versions[index-1]['version']['state']
+
+    def get_featureset_name_from_mountpath(self, path, type):
+
+        try:
+            if os.path.exists("/etc/dkube/config.json"):
+                with open("/etc/dkube/config.json") as fp:
+                    dkube_config = json.load(fp)
+                    name = self._get_featureset_name(path, dkube_config, type)
+        except:
+            name = None
+
+        return name
+
 
 
     def features_write(self, name, dataframe, path=None) -> str:
@@ -217,6 +268,7 @@ class DKubeFeatureSetUtils:
         """
         filename = 'featureset.parquet'
         if path is None:
+            assert(name)
             # Get the path
             try:
                 if os.path.exists("/etc/dkube/config.json"):

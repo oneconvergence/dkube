@@ -140,10 +140,11 @@ class ApiBase(object):
         return response.to_dict()
     
 
-    def commit_featureset(self, name, df):
+    def commit_featureset(self, name, df, path):
         # Make sure the dvs is setup
 
-        while True:
+        mount_path = path
+        while True and name is not None:
             versions = self.get_versions(name)
             if versions is None:
                 print("commit_featureset: waiting for featureset to be setup")
@@ -161,8 +162,12 @@ class ApiBase(object):
             time.sleep(5)
 
         job_uuid = os.getenv('DKUBE_JOB_UUID')
-        path = DKubeFeatureSetUtils().features_write(name, df, None)
+        path = DKubeFeatureSetUtils().features_write(name, df, path)
         assert(path), "path can't be found"
+        if name is None:
+            name = DKubeFeatureSetUtils().get_featureset_name_from_mountpath(mount_path, 'outputs')
+            assert(name), "unknown featureset, name not found in /etc/dkube/config.json"
+
         job = FeatureSetCommitDefJob(kind='dkube_run')
         body = FeatureSetCommitDef(job_uuid=job_uuid, job=job, featureset=name, path=path)
        
@@ -173,6 +178,10 @@ class ApiBase(object):
     def read_featureset(self, name, version=None, path=None):
         # Todo: read even if not mounted
         
+        df, ismounted = DKubeFeatureSetUtils().features_read(name, path)
+        if not df.empty or ismounted:
+            return df
+
         if version is None:
             versions = self.get_versions(name)
             assert(versions), "no versions found"
@@ -188,10 +197,6 @@ class ApiBase(object):
                 time.sleep(5)
                 versions = self.get_versions(name)
         
-
-        df, ismounted = DKubeFeatureSetUtils().features_read(name, path)
-        if not df.empty or ismounted:
-            return df
 
         copy_body = FeaturesetVersionCopyDef(job_class=os.getenv("DKUBE_JOB_CLASS"), job_uuid=os.getenv("DKUBE_JOB_UUID"))
         # To call async - pass async_req=True
