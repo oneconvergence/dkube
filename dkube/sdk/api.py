@@ -700,9 +700,9 @@ class DkubeApi(ApiBase, FilesBase):
         return super().delete_featureset([name])
 
 
-    def commit_featureset(self, name, df, path=None, metadata=None):
+    def commit_featureset(self, **kwargs):
         """
-            Method to commit all sticky featuresets mounted as output on DKube.
+            Method to commit sticky featuresets.
 
             featureset should be in ready state. It will be in created state if no featurespec is uploaded. 
             If the featureset is in created state, the following will happen.
@@ -718,13 +718,17 @@ class DkubeApi(ApiBase, FilesBase):
             *Inputs*
 
                 name
-                    featureset name
+                    featureset name or None
+                    example: name='fset'
                 df
                     Dataframe with features to be written
+                    type: pandas.DataFrame
                 metadata
                     optional yaml object with name, description and schema fields or None
+                    example:metadata=[{'name':gender, 'description:'', 'schema':int64}]
                 path
                     Mount path where featureset is mounted or None
+                    example: path='/opt/dkube/fset'
                    
             *Outputs*
 
@@ -732,8 +736,14 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
+        name = kwargs.get('name', None)
+        df = kwargs.get('df', pd.DataFrame({'A': []}))
+        metadata = kwargs.get('metadata', None)
+        path = kwargs.get('path', None)
+
         assert(isinstance(df, pd.DataFrame)
         ), "df must be a DataFrame object"
+        assert(not df.empty), "df can not be empty"
 
         featurespec = None
         
@@ -753,7 +763,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().commit_featureset(name, df, path)
 
-    def read_featureset(self, name=None, version=None, path=None):
+    def read_featureset(self, **kwargs):
         """
             Method to read a featureset version.
             If name is specified, path is derived. If featureset is not mounted, a copy is made to user's homedir
@@ -763,19 +773,26 @@ class DkubeApi(ApiBase, FilesBase):
 
                 name
                     featureset to be read
+                    example: name='fset' or None
 
                 version
                     version to be read.
                     If no version specified, latest version is assumed
+                    example: version='v2' or None
 
                 path
-                    path where featureset is mounted. 
+                    path where featureset is mounted.
+                    path='/opt/dkube/fset' or None 
 
             *Outputs*
 
                 Dataframe object
 
         """
+        name = kwargs.get('name', None)
+        version = kwargs.get('version', None)
+        path = kwargs.get('path', None)
+        
         assert ((version == None) or isinstance(version,str)), "version must be a string"
 
         return super().read_featureset(name, version, path)

@@ -146,25 +146,41 @@ class DKubeFeatureSetUtils:
 
     # return the mounted path for the featureset
     def _get_featureset_mount_path(self, name, config, type):
+        
         # name - featureset name
         # config - config.json in dict format
         # type - search in 'outputs' or 'inputs'
-        for keys in config:
-            if keys == type:
-                outputs = config[keys]
-                for rec in outputs:
-                    for keys in rec:
-                        if keys == 'featureset':
-                            for fset in rec[keys]:
-                                if name == fset['name']:
-                                    return fset['location']
-                            return None
+        object = config.get(type, None)
+        if object is None:
+            return None
+        
+        for rec in object:
+            fset = rec.get('featureset', None)
+            if fset is None:
+                continue
+            if name == fset['name']:
+                return fset['location']
+        return None
 
     # return the mounted featureset name, given the mount point
     def _get_featureset_name(self, path, config, type):
+        
         # path - featureset mount path
         # config - config.json in dict format
         # type - search in 'outputs' or 'inputs'
+        object = config.get(type, None)
+        if object is None:
+            return None
+        
+        for rec in object:
+            fset = rec.get('featureset', None)
+            if fset is None:
+                continue
+            if path == fset['location'] or path == fset['dkube_path']:
+                return fset['name']
+            
+        return None
+        """
         for keys in config:
             if keys == type:
                 outputs = config[keys]
@@ -175,6 +191,7 @@ class DKubeFeatureSetUtils:
                                 if path == fset['location'] or path == fset['dkube_path']:
                                     return fset['name']
                             return None
+        """
 
 
     def _get_d3_full_path(self, rel_path):
@@ -198,16 +215,20 @@ class DKubeFeatureSetUtils:
 
     def _get_d3_path_from_mountpoint(self, path):
         # For the following df output, it returns featuresets/train-fs-1936/1610480719061/data
-        #   10.233.59.86:/dkube/featuresets/train-fs-1936/1610480719061/data  /fset  
+        #   10.233.59.86:/dkube/featuresets/train-fs-1936/1610480719061/data  /fset 
+
         src = target = None
         for l in open("/proc/mounts", "r"):
             tabs = l.split(" ")
-            src = tabs[0]
-            target = tabs[1]
-            if( path == target ):
+            if( tabs[0] == tabs[1] ):
+                src = tabs[0]
                 break
         if src is not None:
-            src = src.split(":")[1]
+            mnt_fields = src.split(":")
+            if len(mnt_fields) > 1:
+                src = mnt_fields[1]
+            else:
+                src = mnt_fields[0]
             src = os.path.relpath(src, "/dkube")
         return src
 
