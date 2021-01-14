@@ -146,7 +146,7 @@ class DKubeFeatureSetUtils:
 
     # return the mounted path for the featureset
     def _get_featureset_mount_path(self, name, config, type):
-        
+       
         # name - featureset name
         # config - config.json in dict format
         # type - search in 'outputs' or 'inputs'
@@ -155,16 +155,17 @@ class DKubeFeatureSetUtils:
             return None
         
         for rec in object:
-            fset = rec.get('featureset', None)
-            if fset is None:
+            fsets = rec.get('featureset', None)
+            if fsets is None:
                 continue
-            if name == fset['name']:
-                return fset['location']
+            for fset in fsets:
+                if name == fset['name']:
+                    return fset['location']
         return None
 
     # return the mounted featureset name, given the mount point
     def _get_featureset_name(self, path, config, type):
-        
+       
         # path - featureset mount path
         # config - config.json in dict format
         # type - search in 'outputs' or 'inputs'
@@ -173,28 +174,17 @@ class DKubeFeatureSetUtils:
             return None
         
         for rec in object:
-            fset = rec.get('featureset', None)
-            if fset is None:
+            fsets = rec.get('featureset', None)
+            if fsets is None:
                 continue
-            if path == fset['location'] or path == fset['dkube_path']:
-                return fset['name']
+            for fset in fsets:
+                if path == fset['location'] or path == fset['dkube_path']:
+                    return fset['name']
             
         return None
-        """
-        for keys in config:
-            if keys == type:
-                outputs = config[keys]
-                for rec in outputs:
-                    for keys in rec:
-                        if keys == 'featureset':
-                            for fset in rec[keys]:
-                                if path == fset['location'] or path == fset['dkube_path']:
-                                    return fset['name']
-                            return None
-        """
-
-
+        
     def _get_d3_full_path(self, rel_path):
+
         # Get full path to dkube store
         rel_path = rel_path.replace('users','home',1)                     
         base = os.getenv("DKUBE_DATA_BASE_PATH")
@@ -220,7 +210,7 @@ class DKubeFeatureSetUtils:
         src = target = None
         for l in open("/proc/mounts", "r"):
             tabs = l.split(" ")
-            if( tabs[0] == tabs[1] ):
+            if( path == tabs[1] ):
                 src = tabs[0]
                 break
         if src is not None:
@@ -309,16 +299,21 @@ class DKubeFeatureSetUtils:
                 # update config.json
                 #_update_featureset_path(name, dkube) 
 
-        try:
-            table = pa.Table.from_pandas(dataframe)
-            pq.write_table(table, os.path.join(path, filename))
+        # Try writing 2 times
+        # After commit, the parquet file becomes read-only
+        for i in range(2):
+            try:
+                table = pa.Table.from_pandas(dataframe)
+                pq.write_table(table, os.path.join(path, filename))
 
-            # Get the path relative to DKube base
-            path = self._get_d3_rel_path(path)
-            return path
+                # Get the path relative to DKube base
+                path = self._get_d3_rel_path(path)
+                return path
 
-        except Exception as e:
-            return None
+            except Exception as e:
+                print("features_write: write failed {}".format(str(e)))
+                if i == 1:
+                    return None
 
     def features_read(self, name, path=None) -> (pd.DataFrame, bool):
         """
