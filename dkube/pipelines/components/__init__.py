@@ -1,3 +1,3 @@
-from .op import dkube_op
+from .op import DkubeOp
 
-__all__ = ['dkube_op']
+__all__ = ['DkubeOp']

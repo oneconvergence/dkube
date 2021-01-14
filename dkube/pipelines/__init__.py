@@ -1,5 +1,4 @@
-from .ops import dkube_training_op
-from .ops import dkube_preprocessing_op
-from .ops import dkube_serving_op
+from .ops import (dkube_preprocessing_op, dkube_serving_op, dkube_storage_op,
+                  dkube_training_op,dkube_submit_op)
 
-__all__ = ['dkube_training_op', 'dkube_preprocessing_op', 'dkube_serving_op']
+__all__ = ['dkube_training_op', 'dkube_preprocessing_op', 'dkube_serving_op', 'dkube_storage_op','dkube_submit_op']

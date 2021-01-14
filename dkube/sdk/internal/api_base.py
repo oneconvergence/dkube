@@ -223,7 +223,6 @@ class ApiBase(object):
             path = DKubeFeatureSetUtils()._get_d3_full_path(data_copy_resp['target_path'])
             df, _ = DKubeFeatureSetUtils().features_read(name, path)
         return df
-            
 
     def delete_featureset(self, delete_list):
         response = self._api.featureset_delete({'featuresets': delete_list})

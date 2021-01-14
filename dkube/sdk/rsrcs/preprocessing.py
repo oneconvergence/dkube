@@ -98,13 +98,15 @@ class DkubePreprocessing(object):
     def update_envvars(self, envs={}):
         self.customkv = [envs]
 
-    def add_code(self, name, commitid=None):
-        name = self.user + ':' + name
+    def add_code(self, name, commitid=""):
+        if ":" not in name:
+            name = self.user + ':' + name
         self.input_project_data.name = name
         self.input_project_data.version = commitid
 
     def add_input_dataset(self, name, version=None, mountpath=None):
-        name = self.user + ':' + name
+        if ":" not in name:
+            name = self.user + ':' + name
         repo = self.repo(name=name, version=version, mountpath=mountpath)
         self.input_datasets.append(repo)
 

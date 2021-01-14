@@ -1,24 +1,34 @@
-from pathlib import Path
+import os
 
-import json
+import kfp
+from kubernetes.client.models import V1EnvVar
 
-from kfp.components._yaml_utils import load_yaml
-from kfp.components._yaml_utils import dump_yaml
-from kfp import components
 
-VALID_STAGES = ['training', 'preprocessing', 'serving']
-def dkube_op(name, token, stage, **kwargs):
-    assert stage in VALID_STAGES, "Invalid value for stage, must be one of training/preprocessing/serving/custom"
+class DkubeOp(kfp.dsl.ContainerOp):
+    _DISABLE_REUSABLE_COMPONENT_WARNING = True
 
-    component = None
-    path = Path(__file__).parent
-    with open('{}/dkube.yaml'.format(path), 'rb') as stream:
-        cdict = load_yaml(stream)
-        cdict['name'] = name
-        cdict['metadata']['labels']['stage'] = stage
-        cyaml = dump_yaml(cdict)
-        component = components.load_component_from_text(cyaml)
+    def __init__(self, name, authtoken, stage, args=[]):
+        VALID_STAGES = ["training", "preprocessing", "serving", "storage", "submit"]
 
-    assert component != None, "Internal error, loading DKube component failed"
+        assert (
+            stage in VALID_STAGES
+        ), "stage must be one of training/preprocessing/serving/storage/submit"
 
-    return component(name, token, stage, **kwargs)
+        kwargs = {"name": name, "image": "ocdr/dkube_launcher:storage"}
+        kwargs["command"] = ["python3", "/dkubepl/main.py", name, authtoken]
+        kwargs["command"].extend(["{{workflow.uid}}", "{{pod.name}}", stage])
+        kwargs["arguments"] = args
+
+        super().__init__(**kwargs)
+
+        if stage in ["training", "preprocessing", "serving"]:
+            self.add_pod_label(name="platform", value="Dkube")
+        self.add_pod_label(name="dkube.garbagecollect", value="false")
+        self.add_pod_label(name="dkube.garbagecollect.policy", value="all")
+        self.add_pod_label(name="stage", value=stage)
+        self.add_pod_label(name="runid", value="{{pod.name}}")
+        self.add_pod_label(name="wfid", value="{{workflow.uid}}")
+        env_var = V1EnvVar(
+            name="DKUBE_OP_DEBUG", value=os.environ.get("DKUBE_OP_DEBUG", "0")
+        )
+        self.add_env_variable(env_var)

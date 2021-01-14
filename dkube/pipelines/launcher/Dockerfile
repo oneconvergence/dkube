@@ -1,13 +1,10 @@
-FROM python:3.5.4
+FROM python:3.6
 
 RUN apt install -y git
-RUN pip install git+https://github.com/oneconvergence/dkube.git@2.1.dev --upgrade
 COPY requirements.txt .
 RUN pip install -r requirements.txt
+RUN pip install git+https://github.com/oneconvergence/dkube.git@pipeline --upgrade
 
-RUN mkdir -p /opt/dkube/
+ADD src/ /dkubepl
+RUN python3 /dkubepl/main.py
 
-COPY bin/dkube /opt/dkube/
-RUN chmod +x /opt/dkube/dkube
-
-ENV PATH="/opt/dkube/:${PATH}"

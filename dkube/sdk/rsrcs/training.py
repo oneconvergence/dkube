@@ -46,7 +46,7 @@ from .util import *
 
 class DkubeTraining(object):
 
-    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0",
+    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0.0",
                       "pytorch_2.6", "scikit_0.2.2"]
 
     DISTRIBUTION_OPTS = ["manual", "auto"]
@@ -55,7 +55,7 @@ class DkubeTraining(object):
         self.repo = JobInputDatumModel  # class assignment, caller creates objects
 
         self.dkube_framework_details = DkubeContainerModelFrameworkDetails(
-            version='v1.14')
+            version='v2.0.0')
         self.executor_dkube_framework = DkubeContainerModelFramework(
             choice='tensorflow', details=self.dkube_framework_details)
         self.executor_dkube = DkubeContainerModel(
@@ -104,7 +104,7 @@ class DkubeTraining(object):
         self.training_def.tags = tags
 
         # Defaults
-        self.dkube_framework_details.version = '1.14'
+        self.dkube_framework_details.version = '2.0.0'
         self.executor_def.custom = None
         self.input_project.script = 'python model.py'
         return self
@@ -144,7 +144,7 @@ class DkubeTraining(object):
         return self
 
     def add_envvar(self, key, value):
-        self.customenv.append(str(dict(key=value)))
+        self.customenv.append(str({key:value}))
         return self
 
     def add_code(self, name, commitid=None):
