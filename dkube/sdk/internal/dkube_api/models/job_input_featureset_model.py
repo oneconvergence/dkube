@@ -35,7 +35,8 @@ class JobInputFeaturesetModel(object):
         'version': 'str',
         'owner': 'str',
         'mountpath': 'str',
-        'version_name': 'str'
+        'version_name': 'str',
+        'job_added': 'bool'
     }
 
     attribute_map = {
@@ -43,10 +44,11 @@ class JobInputFeaturesetModel(object):
         'version': 'version',
         'owner': 'owner',
         'mountpath': 'mountpath',
-        'version_name': 'version_name'
+        'version_name': 'version_name',
+        'job_added': 'job_added'
     }
 
-    def __init__(self, name=None, version=None, owner=None, mountpath=None, version_name=None):  # noqa: E501
+    def __init__(self, name=None, version=None, owner=None, mountpath=None, version_name=None, job_added=False):  # noqa: E501
         """JobInputFeaturesetModel - a model defined in Swagger"""  # noqa: E501
 
         self._name = None
@@ -54,6 +56,7 @@ class JobInputFeaturesetModel(object):
         self._owner = None
         self._mountpath = None
         self._version_name = None
+        self._job_added = None
         self.discriminator = None
 
         if name is not None:
@@ -66,6 +69,8 @@ class JobInputFeaturesetModel(object):
             self.mountpath = mountpath
         if version_name is not None:
             self.version_name = version_name
+        if job_added is not None:
+            self.job_added = job_added
 
     @property
     def name(self):
@@ -171,6 +176,27 @@ class JobInputFeaturesetModel(object):
         """
 
         self._version_name = version_name
+
+    @property
+    def job_added(self):
+        """Gets the job_added of this JobInputFeaturesetModel.  # noqa: E501
+
+
+        :return: The job_added of this JobInputFeaturesetModel.  # noqa: E501
+        :rtype: bool
+        """
+        return self._job_added
+
+    @job_added.setter
+    def job_added(self, job_added):
+        """Sets the job_added of this JobInputFeaturesetModel.
+
+
+        :param job_added: The job_added of this JobInputFeaturesetModel.  # noqa: E501
+        :type: bool
+        """
+
+        self._job_added = job_added
 
     def to_dict(self):
         """Returns the model properties as a dict"""

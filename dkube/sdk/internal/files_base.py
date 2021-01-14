@@ -13,6 +13,8 @@ from __future__ import print_function
 import json
 import os
 from pprint import pprint
+import tempfile
+import yaml
 
 import requests
 from dkube.sdk.internal.dkube_api.models.api_response import ApiResponse
@@ -25,15 +27,17 @@ class FilesBase(object):
     def __init__(self, url=None, token=None):
 
         protocol = url.split(':')
+        url = url.rstrip('/')
         if protocol[0] == "https":
             self.url = "{}/dkube/v2/ext".format(url)
         else:
             assert protocol[0] == "http", "Invalid host"
             self.url = "{}/dkube/v2".format(url)
-
+        
         self.token = token
         self.request_headers = {}
         self.request_headers['Authorization'] = 'Bearer {}'.format(self.token)
+
 
     def _upload_file(self, urlpath=None, filepath=None):
 
@@ -42,7 +46,10 @@ class FilesBase(object):
         except BaseException:
             print("Specified filepath {} is not valid".format(filepath))
             return response()
+        
+        urlpath = os.path.normpath(urlpath)
         ep = '{}{}'.format(self.url, urlpath)
+        
         response = requests.post(
             ep,
             headers=self.request_headers,
@@ -51,31 +58,31 @@ class FilesBase(object):
         )
         return response
 
-    def featureset_upload_specfile(self, featureset=None, filepath=None) -> ApiResponse:
+    def featureset_upload_featurespec(self, featureset=None, filepath=None, metadata=None) :
         """
         Method to upload features specification file on DKube.
         Raises Exception in case of errors.
 
-        *Inputs*
-
-            featureset
-                FeatureSet name.
-
-            filepath
-                The full pathname of features specification file on your workstation
-
         """
         url = "/featuresets/" + featureset + "/featurespec/upload"
-        assert (
-            os.path.isfile(filepath) == True
-        ), "Specified file path {} is invalid".format(filepath)
-        resp = self._upload_file(url, filepath)
+        resp = None
+        
+        if filepath:
+            assert (
+                os.path.isfile(filepath) == True
+            ), "Specified file path {} is invalid".format(filepath)
+            resp = self._upload_file(url, filepath)
+        else:
+            with tempfile.NamedTemporaryFile() as temp:
+                spec = yaml.safe_dump(metadata)
+                temp.write(spec.encode('ascii'))
+                temp.flush()
+                resp = self._upload_file(url, temp.name)
+        
         resp_dict = json.loads(resp.text)
-        api_response = ApiResponse(
-            code=resp_dict['code'], message=resp_dict['message'])
-        return api_response
+        return resp_dict
 
-    def featureset_download_specfile(self, featureset=None) -> ApiResponse:
+    def featureset_download_specfile(self, featureset=None):
         """
         Method to upload features specification file on DKube.
         Raises Exception in case of errors.
@@ -95,6 +102,7 @@ class FilesBase(object):
         ), "Specified file path {} is invalid".format(filepath)
         resp = self._upload_file(url, filepath)
         resp_dict = json.loads(resp.text)
-        api_response = ApiResponse(
-            code=resp_dict['code'], message=resp_dict['message'])
-        return api_response
+        return resp_dict
+
+
+

@@ -99,6 +99,7 @@ from dkube.sdk.internal.dkube_api.models.data6 import Data6
 from dkube.sdk.internal.dkube_api.models.data7 import Data7
 from dkube.sdk.internal.dkube_api.models.data8 import Data8
 from dkube.sdk.internal.dkube_api.models.data9 import Data9
+from dkube.sdk.internal.dkube_api.models.data_copy import DataCopy
 from dkube.sdk.internal.dkube_api.models.datum_job_details import DatumJobDetails
 from dkube.sdk.internal.dkube_api.models.datum_job_details_pipeline import DatumJobDetailsPipeline
 from dkube.sdk.internal.dkube_api.models.datum_metrics import DatumMetrics
@@ -130,6 +131,7 @@ from dkube.sdk.internal.dkube_api.models.feature_set_version_def_job import Feat
 from dkube.sdk.internal.dkube_api.models.feature_spec_def import FeatureSpecDef
 from dkube.sdk.internal.dkube_api.models.feature_store import FeatureStore
 from dkube.sdk.internal.dkube_api.models.featureset_lineage_in_out_model import FeaturesetLineageInOutModel
+from dkube.sdk.internal.dkube_api.models.featureset_version_copy_def import FeaturesetVersionCopyDef
 from dkube.sdk.internal.dkube_api.models.gcs_access_info import GCSAccessInfo
 from dkube.sdk.internal.dkube_api.models.git_access_credentials import GitAccessCredentials
 from dkube.sdk.internal.dkube_api.models.git_access_info import GitAccessInfo
@@ -215,6 +217,7 @@ from dkube.sdk.internal.dkube_api.models.inline_response20052 import InlineRespo
 from dkube.sdk.internal.dkube_api.models.inline_response20053 import InlineResponse20053
 from dkube.sdk.internal.dkube_api.models.inline_response20054 import InlineResponse20054
 from dkube.sdk.internal.dkube_api.models.inline_response20054_data import InlineResponse20054Data
+from dkube.sdk.internal.dkube_api.models.inline_response20055 import InlineResponse20055
 from dkube.sdk.internal.dkube_api.models.inline_response2006 import InlineResponse2006
 from dkube.sdk.internal.dkube_api.models.inline_response2006_data import InlineResponse2006Data
 from dkube.sdk.internal.dkube_api.models.inline_response2007 import InlineResponse2007

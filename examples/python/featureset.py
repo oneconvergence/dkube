@@ -53,8 +53,8 @@ def _create_featureset_specfiles(spec1_path, spec2_path):
 
 if __name__ == "__main__":
 
-    user = os.getenv('USERNAME')
-    dkubeURL = 'https://172.16.146.128:32222'
+
+    user = os.getenv('USERNAME', 'songole')
     authToken = os.getenv('DKUBE_USER_ACCESS_TOKEN')
 
     spec1_path = "/tmp/spec1.yaml"
@@ -69,27 +69,26 @@ if __name__ == "__main__":
     featureset.update_featurespec_file(spec1_path)
     print(f"---- Featureset name {featureset_name} -- Create featureset \n")
 
-    api = DkubeApi(URL=dkubeURL, token=authToken)
+    api = DkubeApi(token=authToken)
     api.create_featureset(featureset)
 
     print(f"---- Featureset name {featureset_name} -- uploading new spec file \n")
     api.upload_featurespec(featureset_name, spec2_path)
 
-    response = api.list_featuresets()
-    print("\nfeatureset lists\n")
-    print(response)
+    #response = api.list_featuresets()
+    #print("\nfeatureset lists\n")
+    #print(response)
 
-    """
     # Delete a featureset
 
-    print(f"\n deleting featureset {featureset_name}")
-    featuresets = []
-    featuresets.append(featureset_name)
-    response = api.delete_featureset(featuresets)
-    print(response)
-    """
+    #print(f"\n deleting featureset {featureset_name}")
+    #response = api.delete_featureset(featureset_name)
 
-    """
+    #featuresets = []
+    #featuresets.append(featureset_name)
+    #response = api.delete_featuresets(featuresets)
+    #print(response)
+
     # Create a dataset
 
     dataset_name = generate('mnist')
@@ -100,8 +99,6 @@ if __name__ == "__main__":
     api.create_dataset(dataset)
 
     # Create a code
-
-    
     code_name = generate('mnist')
     code = DkubeCode(user, name=code_name)
     code.update_git_details('https://github.com/oneconvergence/dkube-examples/tree/2.0.6/tensorflow/classification/mnist/digits/classifier/program', branch='2.0.6')
@@ -116,18 +113,12 @@ if __name__ == "__main__":
 
     api.create_model(model)
 
-    """
-
-    """
     # Preprocessing run
-    code_name = "mnist-fs"
-    dataset_name = "mnist-fs"
-    featureset_name = "A"
     preprocess_name = generate('mnist-fs')
     preprocess = DkubePreprocessing(
         user, name=preprocess_name, description='triggered from dkube sdk')
     preprocess.update_container(image_url="ocdr/d3-datascience-tf-cpu:v1.14")
-    preprocess.update_startupscript("sleep 200000")
+    preprocess.update_startupscript("sleep 20")
     preprocess.add_code(code_name)
     preprocess.add_input_dataset(dataset_name, mountpath='/opt/dkube/input')
     preprocess.add_output_featureset(
@@ -138,9 +129,9 @@ if __name__ == "__main__":
     
     training_name= generate('mnist')
     training = DkubeTraining(user, name=training_name, description='triggered from dkube sdk')
-    training.update_container(framework="tensorflow_v1.14", image_url="ocdr/d3-datascience-tf-cpu:v1.14")
-    #training.update_startupscript("python model.py")
-    training.update_startupscript("sleep 1000")
+    training.update_container(framework="tensorflow_1.14", image_url="ocdr/d3-datascience-tf-cpu:v1.14")
+    training.update_startupscript("python model.py")
+    #training.update_startupscript("sleep 1000")
     training.add_code(code_name)
     training.add_input_dataset(dataset_name, mountpath='/opt/dkube/input')
     training.add_output_model(model_name, mountpath='/opt/dkube/output')
@@ -148,4 +139,3 @@ if __name__ == "__main__":
     
 
     api.create_training_run(training)
-    """
