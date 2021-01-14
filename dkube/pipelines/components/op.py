@@ -5,6 +5,8 @@ from kubernetes.client.models import V1EnvVar
 
 
 class DkubeOp(kfp.dsl.ContainerOp):
+    _DISABLE_REUSABLE_COMPONENT_WARNING = True
+
     def __init__(self, name, authtoken, stage, args=[]):
         VALID_STAGES = ["training", "preprocessing", "serving", "storage", "submit"]
 
