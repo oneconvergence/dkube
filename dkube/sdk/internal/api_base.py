@@ -9,6 +9,8 @@ from dkube.sdk.internal.dkube_api.models.feature_set_commit_def import \
     FeatureSetCommitDef
 from dkube.sdk.internal.dkube_api.models.feature_set_commit_def_job import \
     FeatureSetCommitDefJob
+from dkube.sdk.internal.dkube_api.models import *
+from dkube.sdk.rsrcs.featureset import DKubeFeatureSetUtils
 from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.rsrcs.util import list_of_strs
 from url_normalize import url_normalize
@@ -16,6 +18,7 @@ from url_normalize import url_normalize
 # Configure API key authorization: d3apikey
 configuration = dkube_api.Configuration()
 configuration.api_key_prefix['Authorization'] = 'Bearer'
+
 
 
 class ApiBase(object):
@@ -133,30 +136,122 @@ class ApiBase(object):
     def create_featureset(self, featureset):
         self.update_tags(featureset.featureset)
         response = self._api.featureset_add_one(featureset.featureset)
-        return response
+        print(response.to_dict())
+        return response.to_dict()
+    
 
-    def commit_features(self):
+    def commit_featureset(self, name, df, path):
+        # Make sure the dvs is setup
+
+        mount_path = path
+        while True and name is not None:
+            versions = self.get_versions(name)
+            if versions is None:
+                print("commit_featureset: waiting for featureset to be setup")
+                time.sleep(5)
+                continue
+
+            # Only need to wait for the v1 to reach synced state
+            if len(versions) > 1:
+                break
+            
+            version_status = DKubeFeatureSetUtils().get_version_status(versions, 'v1')
+            if version_status.lower() == 'synced':
+                break
+            print("commit_featureset: not ready, state:{} expected:synced".format(version_status.lower()))
+            time.sleep(5)
+
         job_uuid = os.getenv('DKUBE_JOB_UUID')
+        path = DKubeFeatureSetUtils().features_write(name, df, path)
+        assert(path), "path can't be found"
+        if name is None:
+            name = DKubeFeatureSetUtils().get_featureset_name_from_mountpath(mount_path, 'outputs')
+            assert(name), "unknown featureset, name not found in /etc/dkube/config.json"
+
         job = FeatureSetCommitDefJob(kind='dkube_run')
-        body = FeatureSetCommitDef(job_uuid=job_uuid, job=job)
-        # Todo(osm). Fix API. commit doesn't need featureset name.
-        response = self._api.featureset_commit_version(data=body)
-        return response
+        body = FeatureSetCommitDef(job_uuid=job_uuid, job=job, featureset=name, path=path)
+       
+        response = self._api.featureset_commit_version(body)
+        # Todo if the path is created, clean it up
+        return response.to_dict()
+
+    def read_featureset(self, name, version=None, path=None):
+        # Todo: read even if not mounted
+        
+        df, ismounted = DKubeFeatureSetUtils().features_read(name, path)
+        if not df.empty or ismounted:
+            return df
+
+        if version is None:
+            versions = self.get_versions(name)
+            assert(versions), "no versions found"
+            version = DKubeFeatureSetUtils().get_top_version(versions)
+            print("read_featureset: No version specified, using the latest version {}".format(version))
+            while True:
+                # don't get the top version within this loop
+                version_status = DKubeFeatureSetUtils().get_version_status(versions, version)
+                if version_status is not None:
+                    if version_status.lower() == 'synced':
+                        break
+                    print("read_featureset: version {} not ready, state:{} expected:synced".format(version, version_status.lower()))
+                time.sleep(5)
+                versions = self.get_versions(name)
+        
+
+        copy_body = FeaturesetVersionCopyDef(job_class=os.getenv("DKUBE_JOB_CLASS"), job_uuid=os.getenv("DKUBE_JOB_UUID"))
+        # To call async - pass async_req=True
+        r = self._api.featureset_copy_version(data=copy_body, featureset=name, version=version)
+        data_copy_resp = DataCopy()
+        
+        while True:
+            # check the status
+            r = self._api.featureset_copy_version_status(featureset=name, data=copy_body, version=version)
+            response = r.to_dict()
+            if response['response']['code']:
+                data_copy_resp = response['data']
+                status = data_copy_resp['status']
+                if status.lower() == 'completed':
+                    break
+                elif status.lower() == 'copying' or status.lower() == 'starting':
+                    print("read_featureset: features not ready, status:{} expected:completed".format(status))
+                    time.sleep(5)
+                    continue
+                else:
+                    assert(status.lower() == 'aborted' or status.lower() == 'error')
+                    break
+        if data_copy_resp['target_path']:
+            path = DKubeFeatureSetUtils()._get_d3_full_path(data_copy_resp['target_path'])
+            df, _ = DKubeFeatureSetUtils().features_read(name, path)
+        return df
 
     def delete_featureset(self, delete_list):
         response = self._api.featureset_delete({'featuresets': delete_list})
-        return response
+        return response.to_dict()
 
     def list_featureset(self, filter):
         if filter is None:
             response = self._api.featureset_list()
         else:
             response = self._api.featureset_list(query=filter)
-        return response
+        return response.to_dict()['data']
 
     def get_featurespec(self, featureset):
-        response = self._api.featurespec_list(featureset)
-        return response
+        r = self._api.featureset_get(featureset)
+        response = r.to_dict()
+        if response['response']['code'] != 200:
+            return None, False
+        fset = response['data']
+        return fset['featurespec'], True
+
+    def get_versions(self, featureset):
+        r = self._api.featureset_get(featureset)
+        response = r.to_dict()
+        if response['response']['code'] != 200:
+            return None
+        fset = response['data']
+        return fset['versions']
+
+
     def get_datascience_capability(self):
         response = self._api.dl_frameworks()
         return response.to_dict()['data']

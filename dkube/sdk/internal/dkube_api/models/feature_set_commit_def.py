@@ -34,6 +34,7 @@ class FeatureSetCommitDef(object):
         'job_uuid': 'str',
         'description': 'str',
         'tags': 'list[str]',
+        'featureset': 'str',
         'path': 'str',
         'job': 'FeatureSetCommitDefJob'
     }
@@ -42,16 +43,18 @@ class FeatureSetCommitDef(object):
         'job_uuid': 'job_uuid',
         'description': 'description',
         'tags': 'tags',
+        'featureset': 'featureset',
         'path': 'Path',
         'job': 'job'
     }
 
-    def __init__(self, job_uuid=None, description=None, tags=None, path=None, job=None):  # noqa: E501
+    def __init__(self, job_uuid=None, description=None, tags=None, featureset=None, path=None, job=None):  # noqa: E501
         """FeatureSetCommitDef - a model defined in Swagger"""  # noqa: E501
 
         self._job_uuid = None
         self._description = None
         self._tags = None
+        self._featureset = None
         self._path = None
         self._job = None
         self.discriminator = None
@@ -61,6 +64,8 @@ class FeatureSetCommitDef(object):
             self.description = description
         if tags is not None:
             self.tags = tags
+        if featureset is not None:
+            self.featureset = featureset
         if path is not None:
             self.path = path
         if job is not None:
@@ -140,6 +145,29 @@ class FeatureSetCommitDef(object):
         """
 
         self._tags = tags
+
+    @property
+    def featureset(self):
+        """Gets the featureset of this FeatureSetCommitDef.  # noqa: E501
+
+        Name of the featureset  # noqa: E501
+
+        :return: The featureset of this FeatureSetCommitDef.  # noqa: E501
+        :rtype: str
+        """
+        return self._featureset
+
+    @featureset.setter
+    def featureset(self, featureset):
+        """Sets the featureset of this FeatureSetCommitDef.
+
+        Name of the featureset  # noqa: E501
+
+        :param featureset: The featureset of this FeatureSetCommitDef.  # noqa: E501
+        :type: str
+        """
+
+        self._featureset = featureset
 
     @property
     def path(self):
