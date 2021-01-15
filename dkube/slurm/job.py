@@ -159,4 +159,4 @@ def launch_slurmjob(slurm_cluster: str, slurm_jobprops: type(JobProperties),
 
 
 dkube_slurmjob_op = componentize(launch_slurmjob, "dkube_slurmjob_launcher", "Launcher for slurmjob using DKube APIs.",
-                                 "ocdr/dkube_launcher:py", {'platform': 'Dkube'}, {'platform': 'Dkube'})
+                                 "ocdr/dkube_launcher:slurm", {'platform': 'Dkube'}, {'platform': 'Dkube'})
