@@ -1,12 +1,12 @@
 from dkube.sdk import *
 from dkube.slurm.job import *
-from dkube.slurm.job_properties import *
+from dkube.slurm.job_properties import JobProperties
 
 training_name= generate('mnist')
 training = DkubeTraining("ravih1", name=training_name, description='triggered from dkube pl launcher')
 training.update_container(framework="tensorflow_1.14", image_url="ocdr/d3-datascience-tf-cpu:v1.14")
 training.update_startupscript('python model.py')
-training.add_project("mn")
+training.add_code("mn")
 training.add_input_dataset("tf-mnist", mountpath='/opt/dkube/input')
 training.add_output_model("mn", mountpath='/opt/dkube/output')
 

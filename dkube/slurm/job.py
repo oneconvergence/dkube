@@ -1,4 +1,4 @@
-from __init__ import componentize
+from .__init__ import componentize
 
 import os
 import json
@@ -6,7 +6,7 @@ import kfp
 
 from typing import NamedTuple
 
-from job_properties import JobProperties
+from .job_properties import JobProperties
 from dkube.sdk.internal.dkube_api.models.job_model import JobModel
 
 __all__ = [
@@ -38,7 +38,7 @@ def launch_slurmjob(slurm_cluster: str, slurm_jobprops: type(JobProperties),
     from url_normalize import url_normalize
     from collections import namedtuple
     from dkube.sdk.internal.dkube_api.models.job_model import JobModel
-    from dkube.slurm.job_properties import *
+    from dkube.slurm.job_properties import JobProperties
     from json import JSONDecodeError
 
     def run_dict():

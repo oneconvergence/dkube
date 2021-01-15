@@ -1,0 +1,226 @@
+name: dkube_slurmjob_launcher
+description: Launcher for slurmjob using DKube APIs.
+metadata:
+  annotations: {platform: Dkube}
+  labels: {platform: Dkube, wfid: '{{workflow.uid}}', runid: '{{pod.name}}'}
+inputs:
+- {name: slurm_cluster, type: String}
+- {name: slurm_jobprops, type: type}
+- {name: dkube_user, type: String}
+- {name: dkube_token, type: String}
+- {name: dkube_job, type: type}
+- {name: dkube_url, type: String, default: 'https://dkube-proxy.dkube', optional: true}
+- {name: execution_id, type: String, default: '{{workflow.uid}}', optional: true}
+- {name: run_id, type: String, default: '{{pod.name}}', optional: true}
+outputs:
+- {name: artifacts, type: String}
+- {name: run_details, type: String}
+implementation:
+  container:
+    image: ocdr/dkube_launcher:py
+    command:
+    - python3
+    - -u
+    - -c
+    - |
+      def launch_slurmjob(slurm_cluster, slurm_jobprops,
+                          dkube_user, dkube_token, dkube_job,
+                          dkube_url = 'https://dkube-proxy.dkube',
+                          execution_id = "{{workflow.uid}}",
+                          run_id = "{{pod.name}}"):
+
+          import ast
+          import time
+          import os
+          import json
+          import kfp
+          import json
+          from pyfiglet import Figlet
+          from dkube.sdk.internal import dkube_api
+          from dkube.sdk.internal.dkube_api.rest import ApiException
+          from url_normalize import url_normalize
+          from collections import namedtuple
+          from dkube.sdk.internal.dkube_api.models.job_model import JobModel
+          from dkube.slurm.job_properties import JobProperties
+          from json import JSONDecodeError
+
+          def run_dict():
+              if isinstance(dkube_job, JobModel) == True:
+                  return dkube_job.to_dict()
+              elif isinstance(dkube_job, str):
+                  # try to json load
+                  try:
+                      return json.loads(dkube_job)
+                  except JSONDecodeError:
+                      # not a json str, attempt diff method
+                      return ast.literal_eval(dkube_job)
+              else:
+                  assert True, "Unsupported type for dkube_job parameter."
+
+          run = run_dict()
+          _class = run['parameters']['_class']
+          pipeline = run_id == os.getenv("HOSTNAME")
+          assert _class in [
+              "training", "preprocessing"], "Slurm job is supported only for Training/Preprocessing DKube job types"
+
+          def display():
+              f = Figlet(font='slant', width=200)
+              print(f.renderText('Dkube {}'.format("SlurmJob")))
+
+          display()
+
+          def fill():
+              if pipeline == True:
+                  run['name'] = run_id
+                  run['parameters']['training']['tags'].extend(
+                      ['owner=pipeline', 'workflowid=' + execution_id, 'runid=' + run_id])
+                  # Update pipeline information
+                  run['parameters']['generated'] = dict()
+                  run['parameters']['generated'].update(
+                      {'pipeline': {'runid': execution_id}})
+              return run
+
+          run = fill()
+          run['parameters']['class'] = _class
+          runname = run['name']
+
+          def slurm_jobprops_dict():
+              if isinstance(slurm_jobprops, JobProperties) == True:
+                  return slurm_jobprops.to_dict()
+              elif isinstance(slurm_jobprops, str):
+                  # try to json load
+                  try:
+                      return json.loads(slurm_jobprops)
+                  except BaseException:
+                      # not a json str, attempt diff method
+                      return ast.literal_eval(slurm_jobprops)
+              else:
+                  assert True, "Unsupported type for slurm_jobprops parameter."
+
+          def cluster():
+              slurm = {
+                  "name": slurm_cluster,
+                  "kind": "CLUSTER_SLURMHPC_REMOTE",
+                  "scheduling_opts": {
+                      "slurmhpc": {
+                          "file": {
+                              "name": "job_config.json",
+                              "body": json.dumps({"extra": json.dumps(slurm_jobprops)})}}}}
+              run['parameters'][_class]["cluster"] = slurm
+
+          slurm_jobprops = slurm_jobprops_dict()
+          cluster()
+
+          def client():
+              configuration = dkube_api.Configuration()
+              configuration.api_key_prefix['Authorization'] = 'Bearer'
+              configuration.host = url_normalize(
+                  '{}/dkube/v2/controller'.format(dkube_url))
+              configuration.verify_ssl = False
+              configuration.api_key['Authorization'] = dkube_token
+              api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
+              return api
+
+          api = client()
+          print(run)
+          api.jobs_add_one(dkube_user, run, run='true')
+
+          def wait():
+              while True:
+                  response = api.jobs_get_collection_one(dkube_user, _class, runname)
+                  status = response.to_dict(
+                  )['data']['job']['parameters']['generated']['status']
+                  run = response.to_dict()['data']['job']
+                  state, reason = status['state'], status['reason']
+                  if state.lower() in ['complete', 'failed', 'error']:
+                      print(
+                          "run {} - completed with state {} and reason {}".format(runname, state, reason))
+                      return run
+                  else:
+                      print(
+                          "run {} - waiting for completion, current state {}".format(runname, state))
+                  time.sleep(10)
+
+          run = wait()
+
+          rundetails = json.dumps(run)
+
+          uuid = run['parameters']['generated']['uuid']
+          lineage = api.get_one_run_lineage(dkube_user, _class, uuid)
+          outputs = lineage.to_dict()['data']['outputs']
+          artifacts = [
+              {'datum': output['version']['datum_name'], 'class': output['version']['datum_type'],
+               'version': output['version']['uuid'], 'index': output['version']['index']
+               }
+              for output in outputs
+          ]
+
+          artifacts = json.dumps(artifacts)
+
+          output = namedtuple('Outputs', ['artifacts', 'run_details'])
+          return output(artifacts, rundetails)
+
+      def _serialize_str(str_value: str) -> str:
+          if not isinstance(str_value, str):
+              raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+          return str_value
+
+      import argparse
+      _parser = argparse.ArgumentParser(prog='dkube_slurmjob_launcher', description='Launcher for slurmjob using DKube APIs.')
+      _parser.add_argument("--slurm-cluster", dest="slurm_cluster", type=str, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--slurm-jobprops", dest="slurm_jobprops", type=str, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--dkube-user", dest="dkube_user", type=str, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--dkube-token", dest="dkube_token", type=str, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--dkube-job", dest="dkube_job", type=str, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--dkube-url", dest="dkube_url", type=str, required=False, default=argparse.SUPPRESS)
+      _parser.add_argument("--execution-id", dest="execution_id", type=str, required=False, default=argparse.SUPPRESS)
+      _parser.add_argument("--run-id", dest="run_id", type=str, required=False, default=argparse.SUPPRESS)
+      _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=2)
+      _parsed_args = vars(_parser.parse_args())
+      _output_files = _parsed_args.pop("_output_paths", [])
+
+      _outputs = launch_slurmjob(**_parsed_args)
+
+      _output_serializers = [
+          _serialize_str,
+          _serialize_str,
+
+      ]
+
+      import os
+      for idx, output_file in enumerate(_output_files):
+          try:
+              os.makedirs(os.path.dirname(output_file))
+          except OSError:
+              pass
+          with open(output_file, 'w') as f:
+              f.write(_output_serializers[idx](_outputs[idx]))
+    args:
+    - --slurm-cluster
+    - {inputValue: slurm_cluster}
+    - --slurm-jobprops
+    - {inputValue: slurm_jobprops}
+    - --dkube-user
+    - {inputValue: dkube_user}
+    - --dkube-token
+    - {inputValue: dkube_token}
+    - --dkube-job
+    - {inputValue: dkube_job}
+    - if:
+        cond: {isPresent: dkube_url}
+        then:
+        - --dkube-url
+        - {inputValue: dkube_url}
+    - if:
+        cond: {isPresent: execution_id}
+        then:
+        - --execution-id
+        - {inputValue: execution_id}
+    - if:
+        cond: {isPresent: run_id}
+        then:
+        - --run-id
+        - {inputValue: run_id}
+    - '----output-paths'
+    - {outputPath: artifacts}
+    - {outputPath: run_details}
