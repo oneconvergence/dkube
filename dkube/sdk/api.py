@@ -11,8 +11,8 @@
 import json
 import os
 import time
-import pandas as pd
 
+import pandas as pd
 import urllib3
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.internal.dkube_api.models.conditions import \
@@ -1638,7 +1638,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         assert type(project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
         project.id = project_id
-        response = self._api.update_one_project(project, project.id).to_dict()
+        response = self._api.update_one_project( project_id=project.id, data=project).to_dict()
         assert response['code'] == 200, response['message']
 
     def get_project_id (self, name):
