@@ -5,13 +5,13 @@ import time
 from pprint import pprint
 
 from dkube.sdk.internal import dkube_api
+from dkube.sdk.internal.dkube_api.models import *
 from dkube.sdk.internal.dkube_api.models.feature_set_commit_def import \
     FeatureSetCommitDef
 from dkube.sdk.internal.dkube_api.models.feature_set_commit_def_job import \
     FeatureSetCommitDefJob
-from dkube.sdk.internal.dkube_api.models import *
-from dkube.sdk.rsrcs.featureset import DKubeFeatureSetUtils
 from dkube.sdk.internal.dkube_api.rest import ApiException
+from dkube.sdk.rsrcs.featureset import DKubeFeatureSetUtils
 from dkube.sdk.rsrcs.util import list_of_strs
 from url_normalize import url_normalize
 
@@ -136,7 +136,6 @@ class ApiBase(object):
     def create_featureset(self, featureset):
         self.update_tags(featureset.featureset)
         response = self._api.featureset_add_one(featureset.featureset)
-        print(response.to_dict())
         return response.to_dict()
     
 
@@ -145,7 +144,7 @@ class ApiBase(object):
 
         mount_path = path
         while True and name is not None:
-            versions = self.get_versions(name)
+            versions = self.get_featureset_versions(name)
             if versions is None:
                 print("commit_featureset: waiting for featureset to be setup")
                 time.sleep(5)
@@ -183,7 +182,7 @@ class ApiBase(object):
             return df
 
         if version is None:
-            versions = self.get_versions(name)
+            versions = self.get_featureset_versions(name)
             assert(versions), "no versions found"
             version = DKubeFeatureSetUtils().get_top_version(versions)
             print("read_featureset: No version specified, using the latest version {}".format(version))
@@ -195,7 +194,7 @@ class ApiBase(object):
                         break
                     print("read_featureset: version {} not ready, state:{} expected:synced".format(version, version_status.lower()))
                 time.sleep(5)
-                versions = self.get_versions(name)
+                versions = self.get_featureset_versions(name)
         
 
         copy_body = FeaturesetVersionCopyDef(job_class=os.getenv("DKUBE_JOB_CLASS"), job_uuid=os.getenv("DKUBE_JOB_UUID"))
@@ -235,6 +234,10 @@ class ApiBase(object):
             response = self._api.featureset_list(query=filter)
         return response.to_dict()['data']
 
+    def get_featureset(self, featureset):
+        r = self._api.featureset_get(featureset)
+        return r.to_dict()
+
     def get_featurespec(self, featureset):
         r = self._api.featureset_get(featureset)
         response = r.to_dict()
@@ -243,7 +246,7 @@ class ApiBase(object):
         fset = response['data']
         return fset['featurespec'], True
 
-    def get_versions(self, featureset):
+    def get_featureset_versions(self, featureset):
         r = self._api.featureset_get(featureset)
         response = r.to_dict()
         if response['response']['code'] != 200:

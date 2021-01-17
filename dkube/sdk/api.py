@@ -11,8 +11,8 @@
 import json
 import os
 import time
-import pandas as pd
 
+import pandas as pd
 import urllib3
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.internal.dkube_api.models.conditions import \
@@ -626,10 +626,9 @@ class DkubeApi(ApiBase, FilesBase):
         super().delete_repo('program', user, name)
 
 ################### Feature Store ############################
-    def create_featureset(self, featureset: DkubeFeatureSet):
+    def create_featureset(self, featureset: DkubeFeatureSet, wait_for_completion=True):
         """
             Method to create a featureset on DKube.
-            Raises Exception in case of errors.
 
 
             *Inputs*
@@ -637,10 +636,14 @@ class DkubeApi(ApiBase, FilesBase):
                 featureset
                     Instance of :bash:`dkube.sdk.rsrcs.featureSet` class.
                     Please see the :bash:`Resources` section for details on this class.
+        
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for featureset resource to be ready or created
+                    with v1 version in :bash:`sync` state
 
             *Outputs*
 
-                A Json string with response status 
+                A dictionary object with response status 
 
         """
         assert type(
@@ -652,7 +655,21 @@ class DkubeApi(ApiBase, FilesBase):
             if spec_response['code'] != 200:
                 self.delete_featureset(featureset.featureset.name)
                 return spec_response
+        while wait_for_completion:
+            versions = super().get_featureset_versions(featureset.featureset.name)
+            if versions is None:
+                print("create_featureset: waiting for featureset to be setup")
+                time.sleep(self.wait_interval)
+                continue
+
+            version_status = DKubeFeatureSetUtils().get_version_status(versions, 'v1')
+            if version_status.lower() == 'synced':
+                print("create_featureset: waiting for featureset to be setup")
+                break
+            time.sleep(self.wait_interval)
+
         return response
+
 
     def delete_featuresets(self, featureset_list):
         """
@@ -667,7 +684,7 @@ class DkubeApi(ApiBase, FilesBase):
 
             *Outputs*
 
-                A Json string with response status with the list of deleted featureset names
+                A dictionary object  with response status with the list of deleted featureset names
 
         """
         assert (
@@ -679,8 +696,7 @@ class DkubeApi(ApiBase, FilesBase):
 
     def delete_featureset(self, name):
         """
-        Method to delete a a featureset on DKube.
-        Raises Exception in case of errors.
+        Method to delete a a featureset.
 
         *Inputs*
 
@@ -690,7 +706,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         *Outputs*
 
-            A dictionary with response status and the deleted featureset name
+            A dictionary object with response status and the deleted featureset name
 
         """
         assert(
@@ -706,26 +722,33 @@ class DkubeApi(ApiBase, FilesBase):
 
             featureset should be in ready state. It will be in created state if no featurespec is uploaded. 
             If the featureset is in created state, the following will happen.
+            
                 a) If metadata is passed, it will be uploaded as featurespec
                 b) If no metadata is passed, it derives from df and uploads it.
+
             If the featureset is in ready state, the following will happen.
+
                 a) metadata if passed any will be ignored
                 b) featurespec will be downloaded for the specifed featureset and df is validated for conformance.
 
             If name is specified, it derives the path for committing the features
             If path is also specified, it doesn't derive the path. It uses the specified path. However, path should a mount path into dkube store.
+            If df is not specified, it assumes the df is already written to the featureset path
 
             *Inputs*
 
                 name
                     featureset name or None
                     example: name='fset'
+
                 df
                     Dataframe with features to be written
                     type: pandas.DataFrame
+
                 metadata
                     optional yaml object with name, description and schema fields or None
                     example:metadata=[{'name':gender, 'description:'', 'schema':int64}]
+
                 path
                     Mount path where featureset is mounted or None
                     example: path='/opt/dkube/fset'
@@ -741,9 +764,7 @@ class DkubeApi(ApiBase, FilesBase):
         metadata = kwargs.get('metadata', None)
         path = kwargs.get('path', None)
 
-        assert(isinstance(df, pd.DataFrame)
-        ), "df must be a DataFrame object"
-        assert(not df.empty), "df can not be empty"
+        assert(not df.empty or (path and os.path.exists(os.path.join(path, 'featureset.parquet')))), "df is not found"
 
         featurespec = None
         
@@ -810,7 +831,7 @@ class DkubeApi(ApiBase, FilesBase):
 
             *Outputs*
 
-                A Json string with response status and the list of featuresets
+                A dictionary object  with response status and the list of featuresets
 
         """
         return super().list_featureset(query)
@@ -818,7 +839,6 @@ class DkubeApi(ApiBase, FilesBase):
     def upload_featurespec(self, featureset=None, filepath=None, metadata=None):
         """
             Method to upload feature specification file.
-            Raises Exception in case of errors.
 
             *Inputs*
 
@@ -835,17 +855,16 @@ class DkubeApi(ApiBase, FilesBase):
 
             *Outputs*
 
-                A Json string with response status
+                A dictionary object with response status
 
         """
         assert(featureset and isinstance(featureset,str)), "featureset must be string"
         assert(bool(filepath) ^ bool(metadata)), "One of filepath and metadata should be specified"
         return super().featureset_upload_featurespec(featureset, filepath, metadata)
 
-    def get_featurespec(self, featureset=None):
+    def get_featureset(self, featureset=None):
         """
-            Method to retrieve feature specification method.
-            Raises Exception in case of errors.
+            Method to retrieve details of a featureset 
 
             *Inputs*
 
@@ -855,7 +874,24 @@ class DkubeApi(ApiBase, FilesBase):
 
             *Outputs*
 
-                A Json string with response status and feature specification metadata
+                A dictionary object with response status, featureset metadata and feature versions
+
+        """
+        return super().get_featureset(featureset)
+
+    def get_featurespec(self, featureset=None):
+        """
+            Method to retrieve feature specification method.
+
+            *Inputs*
+
+                featureset
+
+                    The name of featureset
+
+            *Outputs*
+
+                A dictionary object with response status and feature specification metadata
 
         """
         return super().get_featurespec(featureset)

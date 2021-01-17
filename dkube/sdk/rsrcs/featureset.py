@@ -1,11 +1,11 @@
 from __future__ import print_function
 
+import json
 import os
 import sys
+import tempfile
 import time
 from pprint import pprint
-import json
-import tempfile
 
 import pandas as pd
 import pyarrow as pa
@@ -34,7 +34,6 @@ class DkubeFeatureSet(object):
 
         self.update_basic(name, description, tags, config_file)
         self.update_featurespec_file(path)
-        self.update_features_path()
 
     def update_basic(self, name, description, tags, config_file):
         if name is not None:
@@ -60,19 +59,41 @@ class DkubeFeatureSet(object):
     def upload_featurespec(self):
         pass
 
-    def update_features_path(self, path=None):
+    def read_features(path):
         """
-            Method to update the directory path for features data
+            Method to read features from the specified path
 
             *Inputs*
 
                 path
-                    A valid directory path. This folder is typically where the featureset is mounted by DKube. The folder contains features saved in Apache Parquet file format. 
+                    A valid filepath.
+
+            *Outputs*
+
+                df
+                    features DataFrame object
 
         """
-        self.features_path = path
+        assert(path), "path should be specified"
+        df, _ = DKubeFeatureSetUtils().features_read(name=None, path=path)
+        return df
 
+    def write_features(df, path):
+        """
+            Method to write features at the specified path
 
+            *Inputs*
+
+                df
+                    features DataFrame object
+
+                path
+                    A valid filepath. 
+
+        """
+
+        assert(df and path), "Both df and path should be specified"
+        DKubeFeatureSetUtils().features_write(name=None, df=dataframe, path=path)
 
 
 class DKubeFeatureSetUtils:
@@ -301,19 +322,20 @@ class DKubeFeatureSetUtils:
 
         # Try writing 2 times
         # After commit, the parquet file becomes read-only
-        for i in range(2):
-            try:
-                table = pa.Table.from_pandas(dataframe)
-                pq.write_table(table, os.path.join(path, filename))
+        if not dataframe.empty:
+            for i in range(2):
+                try:
+                    table = pa.Table.from_pandas(dataframe)
+                    pq.write_table(table, os.path.join(path, filename))
 
-                # Get the path relative to DKube base
-                path = self._get_d3_rel_path(path)
-                return path
+                except Exception as e:
+                    print("features_write: write failed {}".format(str(e)))
+                    if i == 1:
+                        return None
 
-            except Exception as e:
-                print("features_write: write failed {}".format(str(e)))
-                if i == 1:
-                    return None
+        # Get the path relative to DKube base
+        path = self._get_d3_rel_path(path)
+        return path
 
     def features_read(self, name, path=None) -> (pd.DataFrame, bool):
         """
