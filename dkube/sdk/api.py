@@ -764,7 +764,10 @@ class DkubeApi(ApiBase, FilesBase):
         metadata = kwargs.get('metadata', None)
         path = kwargs.get('path', None)
 
-        assert(not df.empty or (path and os.path.exists(os.path.join(path, 'featureset.parquet')))), "df is not found"
+        if (df.empty and (path and os.path.exists(os.path.join(path, 'featureset.parquet')))):
+            df = DkubeFeatureSet.read_features(path)
+
+        assert(not df.empty), "df should not be empty"
 
         featurespec = None
         

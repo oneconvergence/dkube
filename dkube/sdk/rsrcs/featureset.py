@@ -59,7 +59,8 @@ class DkubeFeatureSet(object):
     def upload_featurespec(self):
         pass
 
-    def read_features(path):
+    @classmethod
+    def read_features(cls, path):
         """
             Method to read features from the specified path
 
@@ -78,7 +79,8 @@ class DkubeFeatureSet(object):
         df, _ = DKubeFeatureSetUtils().features_read(name=None, path=path)
         return df
 
-    def write_features(df, path):
+    @classmethod
+    def write_features(cls, df, path):
         """
             Method to write features at the specified path
 
@@ -92,8 +94,8 @@ class DkubeFeatureSet(object):
 
         """
 
-        assert(df and path), "Both df and path should be specified"
-        DKubeFeatureSetUtils().features_write(name=None, df=dataframe, path=path)
+        assert(not df.empty and path), "Both df and path should be specified"
+        DKubeFeatureSetUtils().features_write(name=None, dataframe=df, path=path)
 
 
 class DKubeFeatureSetUtils:
