@@ -1,11 +1,7 @@
 from __future__ import print_function
 
-import os
-import sys
-import time
-from pprint import pprint
 import json
-import tempfile
+import os
 
 import pandas as pd
 import pyarrow as pa
@@ -34,7 +30,6 @@ class DkubeFeatureSet(object):
 
         self.update_basic(name, description, tags, config_file)
         self.update_featurespec_file(path)
-        self.update_features_path()
 
     def update_basic(self, name, description, tags, config_file):
         if name is not None:
@@ -60,33 +55,57 @@ class DkubeFeatureSet(object):
     def upload_featurespec(self):
         pass
 
-    def update_features_path(self, path=None):
+    @classmethod
+    def read_features(cls, path):
         """
-            Method to update the directory path for features data
+            Method to read features from the specified path
 
             *Inputs*
 
                 path
-                    A valid directory path. This folder is typically where the featureset is mounted by DKube. The folder contains features saved in Apache Parquet file format. 
+                    A valid filepath.
+
+            *Outputs*
+
+                df
+                    features DataFrame object
 
         """
-        self.features_path = path
+        assert(path), "path should be specified"
+        df, _ = DKubeFeatureSetUtils().features_read(name=None, path=path)
+        return df
 
+    @classmethod
+    def write_features(cls, df, path):
+        """
+            Method to write features at the specified path
 
+            *Inputs*
+
+                df
+                    features DataFrame object
+
+                path
+                    A valid filepath.
+
+        """
+
+        assert(not df.empty and path), "Both df and path should be specified"
+        DKubeFeatureSetUtils().features_write(name=None, dataframe=df, path=path)
 
 
 class DKubeFeatureSetUtils:
 
     def validate_features(self, dataframe=None, featurespec=None) -> bool:
         """
-            Method to validate features data against features specification metadata 
+            Method to validate features data against features specification metadata
 
             *Inputs*
 
                 dataframe
                     Panda's dataframe object with features data. This should confirm to the feature specification metadata.
                 featurespec
-                    Dictionary 
+                    Dictionary
 
         """
         if featurespec is None or dataframe is None:
@@ -142,7 +161,7 @@ class DKubeFeatureSetUtils:
 
         return featureset_metadata
         # Convert featureset metadata (featurespec) to yaml
-        #featureset_metadata = yaml.dump(featureset_metadata, default_flow_style=False)
+        # featureset_metadata = yaml.dump(featureset_metadata, default_flow_style=False)
 
     # return the mounted path for the featureset
     def _get_featureset_mount_path(self, name, config, type):
@@ -186,7 +205,7 @@ class DKubeFeatureSetUtils:
     def _get_d3_full_path(self, rel_path):
 
         # Get full path to dkube store
-        rel_path = rel_path.replace('users','home',1)                     
+        rel_path = rel_path.replace('users', 'home', 1)
         base = os.getenv("DKUBE_DATA_BASE_PATH")
         fullpath = os.path.join(base, rel_path)
         return (fullpath)
@@ -195,22 +214,22 @@ class DKubeFeatureSetUtils:
         # Is this a mounted path
         relpath = self._get_d3_path_from_mountpoint(full_path)
 
-        # This might have been created 
+        # This might have been created
         if relpath is None:
-            # Get relative path from dkube store       
+            # Get relative path from dkube store
             base = os.getenv("DKUBE_DATA_BASE_PATH")
             relpath = os.path.relpath(full_path, base)
-            relpath = relpath.replace('home','users',1) 
+            relpath = relpath.replace('home', 'users', 1)
         return (relpath)
 
     def _get_d3_path_from_mountpoint(self, path):
         # For the following df output, it returns featuresets/train-fs-1936/1610480719061/data
-        #   10.233.59.86:/dkube/featuresets/train-fs-1936/1610480719061/data  /fset 
+        #   10.233.59.86:/dkube/featuresets/train-fs-1936/1610480719061/data  /fset
 
-        src = target = None
+        src = None
         for l in open("/proc/mounts", "r"):
             tabs = l.split(" ")
-            if( path == tabs[1] ):
+            if(path == tabs[1]):
                 src = tabs[0]
                 break
         if src is not None:
@@ -221,7 +240,6 @@ class DKubeFeatureSetUtils:
                 src = mnt_fields[0]
             src = os.path.relpath(src, "/dkube")
         return src
-
 
     def get_top_version(self, versions):
         # Get the latest version
@@ -256,24 +274,35 @@ class DKubeFeatureSetUtils:
 
         return name
 
+    def get_featureset_mountpath_from_name(self, name, type):
 
+        path = None
+        try:
+            if os.path.exists("/etc/dkube/config.json"):
+                with open("/etc/dkube/config.json") as fp:
+                    dkube_config = json.load(fp)
+                    path = self._get_featureset_mount_path(name, dkube_config, type)
+        except:
+            path = None
+
+        return path
 
     def features_write(self, name, dataframe, path=None) -> str:
         """
-            Method to write features 
+            Method to write features
 
             *Inputs*
 
                 name
-                    Featureset name 
+                    Featureset name
 
                 dataframe
                     Panda's dataframe object with features data. This should confirm to the feature specification metadata.
 
                 path
-                    This is optional. If not specified it derives the path from /etc/dkube/config.json. 
+                    This is optional. If not specified it derives the path from /etc/dkube/config.json.
 
-            *Outputs*  
+            *Outputs*
                 path - where the features are written
 
         """
@@ -297,27 +326,28 @@ class DKubeFeatureSetUtils:
                 path = os.path.join(dkube_path, featureset_folder)
                 os.makedirs(path, exist_ok=True)
                 # update config.json
-                #_update_featureset_path(name, dkube) 
+                # _update_featureset_path(name, dkube)
 
         # Try writing 2 times
         # After commit, the parquet file becomes read-only
-        for i in range(2):
-            try:
-                table = pa.Table.from_pandas(dataframe)
-                pq.write_table(table, os.path.join(path, filename))
+        if not dataframe.empty:
+            for i in range(2):
+                try:
+                    table = pa.Table.from_pandas(dataframe)
+                    pq.write_table(table, os.path.join(path, filename))
 
-                # Get the path relative to DKube base
-                path = self._get_d3_rel_path(path)
-                return path
+                except Exception as e:
+                    print("features_write: write failed {}".format(str(e)))
+                    if i == 1:
+                        return None
 
-            except Exception as e:
-                print("features_write: write failed {}".format(str(e)))
-                if i == 1:
-                    return None
+        # Get the path relative to DKube base
+        path = self._get_d3_rel_path(path)
+        return path
 
     def features_read(self, name, path=None) -> (pd.DataFrame, bool):
         """
-            Method to read features 
+            Method to read features
 
             *Inputs*
 
@@ -326,11 +356,11 @@ class DKubeFeatureSetUtils:
                 path
                     This is optional. It points to where featureset is mounted
 
-            *Outputs*  
+            *Outputs*
                     Dataframe with features
 
         """
-        filename='featureset.parquet'
+        filename = 'featureset.parquet'
         df_empty = pd.DataFrame({'A': []})
         is_mounted = False
 
