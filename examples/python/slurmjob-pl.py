@@ -20,7 +20,7 @@ def print_op(artifacts: str):
 )
 def slurm_pipeline(
         user = None,
-        token = None,
+        authtoken = None,
         code = None,
         dataset = None,
         model = None,
@@ -38,7 +38,7 @@ def slurm_pipeline(
     training.add_output_model(str(model), mountpath='/opt/dkube/output')
 
     slurm_job = dkube_slurmjob_op(
-        slurm_cluster, slurm_jobprops, str(user), str(token), training.job)
+        slurm_cluster, slurm_jobprops, str(user), str(authtoken), training.job)
 
     print_artifacts = print_op(slurm_job.outputs['artifacts']).after(slurm_job)
 
@@ -51,7 +51,7 @@ def slurm_pipeline(
 
     serving_op = dkube_serving_op(
         name='mnist-serving',
-        authtoken=token,
+        authtoken=authtoken,
         serving=serving).after(print_artifacts)
 
 

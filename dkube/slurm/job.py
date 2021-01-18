@@ -17,9 +17,8 @@ __all__ = [
 
 def launch_slurmjob(slurm_cluster: str, slurm_jobprops: type(JobProperties),
                     dkube_user: str, dkube_token: str, dkube_job: type(JobModel),
-                    dkube_url: str = 'https://dkube-proxy.dkube',
-                    execution_id: str = "{{workflow.uid}}",
-                    run_id: str = "{{pod.name}}") -> NamedTuple(
+                    dkube_url: str = 'https://dkube-proxy.dkube') -> NamedTuple(
+ 
         'outputs',
         [
             ('artifacts', str),
@@ -56,7 +55,6 @@ def launch_slurmjob(slurm_cluster: str, slurm_jobprops: type(JobProperties),
 
     run = run_dict()
     _class = run['parameters']['_class']
-    pipeline = run_id == os.getenv("HOSTNAME")
     assert _class in [
         "training", "preprocessing"], "Slurm job is supported only for Training/Preprocessing DKube job types"
 
@@ -66,18 +64,23 @@ def launch_slurmjob(slurm_cluster: str, slurm_jobprops: type(JobProperties),
 
     display()
 
-    def fill():
-        if pipeline == True:
-            run['name'] = run_id
+    def pipeline():
+        _pipeline = os.getenv("pipeline", 'false')
+        if _pipeline == 'true':
+            _wfid = os.getenv("wfid")
+            _runid = os.getenv("runid")
+            print(_wfid)
+            print(_runid)
+            run['name'] = _runid
             run['parameters']['training']['tags'].extend(
-                ['owner=pipeline', 'workflowid=' + execution_id, 'runid=' + run_id])
+                ['owner=pipeline', 'workflowid=' + _wfid, 'runid=' + _runid])
             # Update pipeline information
             run['parameters']['generated'] = dict()
             run['parameters']['generated'].update(
-                {'pipeline': {'runid': execution_id}})
+                {'pipeline': {'runid': _wfid}})
         return run
 
-    run = fill()
+    run = pipeline()
     run['parameters']['class'] = _class
     runname = run['name']
 

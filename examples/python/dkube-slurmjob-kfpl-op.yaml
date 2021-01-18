@@ -10,8 +10,6 @@ inputs:
 - {name: dkube_token, type: String}
 - {name: dkube_job, type: type}
 - {name: dkube_url, type: String, default: 'https://dkube-proxy.dkube', optional: true}
-- {name: execution_id, type: String, default: '{{workflow.uid}}', optional: true}
-- {name: run_id, type: String, default: '{{pod.name}}', optional: true}
 outputs:
 - {name: artifacts, type: String}
 - {name: run_details, type: String}
@@ -25,9 +23,7 @@ implementation:
     - |
       def launch_slurmjob(slurm_cluster, slurm_jobprops,
                           dkube_user, dkube_token, dkube_job,
-                          dkube_url = 'https://dkube-proxy.dkube',
-                          execution_id = "{{workflow.uid}}",
-                          run_id = "{{pod.name}}"):
+                          dkube_url = 'https://dkube-proxy.dkube'):
 
           import ast
           import time
@@ -59,7 +55,6 @@ implementation:
 
           run = run_dict()
           _class = run['parameters']['_class']
-          pipeline = run_id == os.getenv("HOSTNAME")
           assert _class in [
               "training", "preprocessing"], "Slurm job is supported only for Training/Preprocessing DKube job types"
 
@@ -69,18 +64,23 @@ implementation:
 
           display()
 
-          def fill():
-              if pipeline == True:
-                  run['name'] = run_id
+          def pipeline():
+              _pipeline = os.getenv("pipeline", 'false')
+              if _pipeline == 'true':
+                  _wfid = os.getenv("wfid")
+                  _runid = os.getenv("runid")
+                  print(_wfid)
+                  print(_runid)
+                  run['name'] = _runid
                   run['parameters']['training']['tags'].extend(
-                      ['owner=pipeline', 'workflowid=' + execution_id, 'runid=' + run_id])
+                      ['owner=pipeline', 'workflowid=' + _wfid, 'runid=' + _runid])
                   # Update pipeline information
                   run['parameters']['generated'] = dict()
                   run['parameters']['generated'].update(
-                      {'pipeline': {'runid': execution_id}})
+                      {'pipeline': {'runid': _wfid}})
               return run
 
-          run = fill()
+          run = pipeline()
           run['parameters']['class'] = _class
           runname = run['name']
 
@@ -173,8 +173,6 @@ implementation:
       _parser.add_argument("--dkube-token", dest="dkube_token", type=str, required=True, default=argparse.SUPPRESS)
       _parser.add_argument("--dkube-job", dest="dkube_job", type=str, required=True, default=argparse.SUPPRESS)
       _parser.add_argument("--dkube-url", dest="dkube_url", type=str, required=False, default=argparse.SUPPRESS)
-      _parser.add_argument("--execution-id", dest="execution_id", type=str, required=False, default=argparse.SUPPRESS)
-      _parser.add_argument("--run-id", dest="run_id", type=str, required=False, default=argparse.SUPPRESS)
       _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=2)
       _parsed_args = vars(_parser.parse_args())
       _output_files = _parsed_args.pop("_output_paths", [])
@@ -211,16 +209,10 @@ implementation:
         then:
         - --dkube-url
         - {inputValue: dkube_url}
-    - if:
-        cond: {isPresent: execution_id}
-        then:
-        - --execution-id
-        - {inputValue: execution_id}
-    - if:
-        cond: {isPresent: run_id}
-        then:
-        - --run-id
-        - {inputValue: run_id}
     - '----output-paths'
     - {outputPath: artifacts}
     - {outputPath: run_details}
+    env:
+      pipeline: "true"
+      wfid: '{{workflow.uid}}'
+      runid: '{{pod.name}}'
