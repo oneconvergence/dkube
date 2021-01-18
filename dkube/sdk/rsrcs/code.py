@@ -42,7 +42,7 @@ class DkubeCode(object):
 
     def __init__(self, user, name=generate("code"), tags=None):
         self.gitcreds = GitAccessCredentials(
-            username=None, password=None, apikey=None, sshkey=None, private=True)
+            username=None, password=None, apikey=None, sshkey=None, private=False)
         self.gitaccess = GitAccessInfo(
             path=None, url=None, branch=None, credentials=self.gitcreds)
         self.datum = DatumModel(name=None, tags=None, _class='program',
@@ -94,8 +94,11 @@ class DkubeCode(object):
         self.gitcreds.username = self.user
 
         if authopt == 'apikey':
+            self.gitcreds.private = True
             self.gitcreds.apikey = authval
         elif authopt == 'password':
+            self.gitcreds.private = True
             self.gitcreds.password = authval
         elif authopt == 'sshkey':
+            self.gitcreds.private = True
             self.gitcreds.sshkey = authval
