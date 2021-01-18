@@ -30,7 +30,8 @@ class ApiBase(object):
         configuration.verify_ssl = False
         self._api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
         self.common_tags = list_of_strs(common_tags)
-        
+        self.wait_interval = 10
+
     def update_tags (self, resource):
         if len(self.common_tags):
             if resource.tags:
@@ -147,7 +148,7 @@ class ApiBase(object):
             versions = self.get_featureset_versions(name)
             if versions is None:
                 print("commit_featureset: waiting for featureset to be setup")
-                time.sleep(10)
+                time.sleep(self.wait_interval)
                 continue
 
             # Only need to wait for the v1 to reach synced state
@@ -158,7 +159,7 @@ class ApiBase(object):
             if version_status.lower() == 'synced':
                 break
             print("commit_featureset: not ready, state:{} expected:synced".format(version_status.lower()))
-            time.sleep(10)
+            time.sleep(self.wait_interval)
 
         job_uuid = os.getenv('DKUBE_JOB_UUID')
 
@@ -209,7 +210,7 @@ class ApiBase(object):
                     if version_status.lower() == 'synced':
                         break
                     print("read_featureset: version {} not ready, state:{} expected:synced".format(version, version_status.lower()))
-                time.sleep(10)
+                time.sleep(self.wait_interval)
                 versions = self.get_featureset_versions(name)
         
 
@@ -229,7 +230,7 @@ class ApiBase(object):
                     break
                 elif status.lower() == 'copying' or status.lower() == 'starting':
                     print("read_featureset: features not ready, status:{} expected:completed".format(status))
-                    time.sleep(10)
+                    time.sleep(self.wait_interval)
                     continue
                 else:
                     assert(status.lower() == 'aborted' or status.lower() == 'error')

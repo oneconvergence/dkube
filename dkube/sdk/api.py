@@ -83,7 +83,6 @@ class DkubeApi(ApiBase, FilesBase):
 
         ApiBase.__init__(self, self.url, self.token, common_tags)
         FilesBase.__init__(self, self.files_url, self.token)
-        self.wait_interval = 10
 
     def set_active_project(self, project_id):
         """
