@@ -1,3 +1,4 @@
+import kfp.compiler as compiler
 import kfp
 import kfp.components as kfplc
 import json
@@ -5,30 +6,54 @@ import json
 from dkube.sdk import *
 from dkube.slurm.job import *
 from dkube.slurm.job_properties import *
+from dkube.pipelines import *
+
 
 @kfplc.create_component_from_func
 def print_op(artifacts: str):
     print(artifacts)
 
+
 @kfp.dsl.pipeline(
-  name='slurm job pipeline',
-  description='An example pipeline for launching slurm job.'
+    name='slurm job pipeline',
+    description='An example pipeline for launching slurm job.'
 )
-def slurm_pipeline():
-    training_name= generate('mnist')
-    training = DkubeTraining("ravih1", name=training_name, description='triggered from dkube pl launcher')
-    training.update_container(framework="tensorflow_1.14", image_url="ocdr/d3-datascience-tf-cpu:v1.14")
+def slurm_pipeline(
+        user: str = None,
+        token: str = None,
+        code: str = None,
+        dataset: str = None,
+        model: str = None,
+        slurm_cluster: str = None,
+        slurm_partition: str = None):
+
+    training_name = generate('mnist')
+    training = DkubeTraining(
+        str(user), name=training_name, description='triggered from dkube pl launcher')
+    training.update_container(
+        framework="tensorflow_1.14", image_url="ocdr/d3-datascience-tf-cpu:v1.14")
     training.update_startupscript('python model.py')
-    training.add_code("mn")
-    training.add_input_dataset("tf-mnist", mountpath='/opt/dkube/input')
-    training.add_output_model("mn", mountpath='/opt/dkube/output')
+    training.add_code(str(code))
+    training.add_input_dataset(str(dataset), mountpath='/opt/dkube/input')
+    training.add_output_model(str(model), mountpath='/opt/dkube/output')
 
-    props = JobProperties(partition="C-16Cpu-30GB")
-        
-    slurm_job = dkube_slurmjob_op("dap20", props, "ravih1", "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijc0YmNkZjBmZWJmNDRiOGRhZGQxZWIyOGM2MjhkYWYxIn0.eyJ1c2VybmFtZSI6InJhdmloMSIsInJvbGUiOiJkYXRhc2NpZW50aXN0LG1sZSxwZSIsImV4cCI6NDg0NTUxMzY0MCwiaWF0IjoxNjA1NTEzNjQwLCJpc3MiOiJES3ViZSJ9.J3gLupMf9oJ0LFr7khHJ8ClfCpp-ClI8sav6GHwO76p1Oae_DVO7LEYWLpULtEiFvDAXjwHtZrJhs69TTSvS4QElM27F3Pi67t9nbku5y3XaowvbwZwmLxQwWfKITA_u0BKdnEyUHg9ON7Ncdb1GW8qlYNh9L5Y3hEKMJsXqXtJF1wPSKxvsjOV_zEwsX90JVkXUluAUrtZaA4yYTDXQUYPsYSWScZvPwQ_mJBL-ghWZomzVx4yLFliwBn_iANA4iCCOoSs7Y9pU1PlBMr24_2nrSQ1HSdsGX5pX-9zj9JCo6i5XhKFTqLak_4UD2ME7c6WibRujjTK4vvVwxwhGDw", training.job)
-    
-    print_artifacts = print_op(slurm_job.outputs['artifacts'])
+    props = JobProperties(partition=str(slurm_partition))
+    slurm_job = dkube_slurmjob_op(
+        slurm_cluster, props, str(user), str(token), training.job)
+
+    print_artifacts = print_op(slurm_job.outputs['artifacts']).after(slurm_job)
+
+    serving_name = generate(str(model))
+    serving = DkubeServing(str(user), name=serving_name,
+                           description='triggered from dkube pl launcher')
+    serving.set_transformer(
+        True, script='tensorflow/classification/mnist/digits/transformer/transformer.py')
+    serving.update_serving_model(str(model))
+
+    serving_op = dkube_serving_op(
+        name='mnist-serving',
+        authtoken=token,
+        serving=serving).after(print_artifacts)
 
 
-import kfp.compiler as compiler
 compiler.Compiler().compile(slurm_pipeline, __file__ + '.tar.gz')
