@@ -68,7 +68,7 @@ class DkubeApi(ApiBase, FilesBase):
     def __init__(self, URL=None, token=None, common_tags=[], req_timeout=None, req_retries=None):
 
         self.url = URL
-        if self.url == None:
+        if self.url is None:
             self.url = os.getenv(
                 "DKUBE_ACCESS_URL", "http://dkube-controller-master.dkube.svc.cluster.local:5000")
             self.files_url = os.getenv(
@@ -664,8 +664,8 @@ class DkubeApi(ApiBase, FilesBase):
 
             version_status = DKubeFeatureSetUtils().get_version_status(versions, 'v1')
             if version_status.lower() == 'synced':
-                print("create_featureset: waiting for featureset to be setup")
                 break
+            print("create_featureset: waiting for featureset to be setup")
             time.sleep(self.wait_interval)
 
         return response
@@ -743,6 +743,7 @@ class DkubeApi(ApiBase, FilesBase):
 
                 df
                     Dataframe with features to be written
+                    None or empty df are invalid
                     type: pandas.DataFrame
 
                 metadata
@@ -760,28 +761,29 @@ class DkubeApi(ApiBase, FilesBase):
         """
 
         name = kwargs.get('name', None)
-        df = kwargs.get('df', pd.DataFrame({'A': []}))
+        df = kwargs.get('df', None)
         metadata = kwargs.get('metadata', None)
         path = kwargs.get('path', None)
 
-        if (df.empty and (path and os.path.exists(os.path.join(path, 'featureset.parquet')))):
-            df = DkubeFeatureSet.read_features(path)
-
-        assert(not df.empty), "df should not be empty"
+        if not df is None: 
+            assert(not df.empty), "df should not be empty"
+        else:
+            # Todo: Handle commit for featuresets mounted as k8s volumes
+            assert(name or path),  "name or path should be specified"
 
         featurespec = None
         
         if name is not None:
             featurespec, valid = super().get_featurespec(name)
             assert(valid), "featureset not found"
-        if ((not featurespec) and (name is not None)):
+        if ((not featurespec) and (name is not None) and (df is not None)):
             if not metadata:
                 metadata = DKubeFeatureSetUtils().compute_features_metadata(df)
             assert(metadata), "The specified featureset is invalid"
             self.upload_featurespec(featureset=name, filepath=None, metadata=metadata)
             featurespec = metadata
 
-        if featurespec is not None:
+        if featurespec is not None and df is not None:
             isdf_valid = DKubeFeatureSetUtils().validate_features(df, featurespec)
             assert(isdf_valid), "DataFrame validation failed"
 
