@@ -17,7 +17,7 @@ outputs:
 - {name: run_details, type: String}
 implementation:
   container:
-    image: ocdr/dkube_launcher:py
+    image: ocdr/dkube_launcher:slurm
     command:
     - python3
     - -u
