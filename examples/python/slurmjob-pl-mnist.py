@@ -19,13 +19,13 @@ def print_op(artifacts: str):
     description='An example pipeline for launching slurm job.'
 )
 def slurm_pipeline(
-        user: str = None,
-        token: str = None,
-        code: str = None,
-        dataset: str = None,
-        model: str = None,
-        slurm_cluster: str = None,
-        slurm_partition: str = None):
+        user = None,
+        token = None,
+        code = None,
+        dataset = None,
+        model = None,
+        slurm_cluster = None,
+        slurm_jobprops = json.dumps(JobProperties().to_dict())):
 
     training_name = generate('mnist')
     training = DkubeTraining(
@@ -37,9 +37,8 @@ def slurm_pipeline(
     training.add_input_dataset(str(dataset), mountpath='/opt/dkube/input')
     training.add_output_model(str(model), mountpath='/opt/dkube/output')
 
-    props = JobProperties(partition=str(slurm_partition))
     slurm_job = dkube_slurmjob_op(
-        slurm_cluster, props, str(user), str(token), training.job)
+        slurm_cluster, slurm_jobprops, str(user), str(token), training.job)
 
     print_artifacts = print_op(slurm_job.outputs['artifacts']).after(slurm_job)
 
