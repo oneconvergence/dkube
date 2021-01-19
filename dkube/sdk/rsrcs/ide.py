@@ -1,35 +1,49 @@
 from __future__ import print_function
-import time
+
 import sys
+import time
+from pprint import pprint
 
 from dkube.sdk.internal import dkube_api
-from dkube.sdk.internal.dkube_api.rest import ApiException
-from dkube.sdk.internal.dkube_api.models.job_model import JobModel
-from dkube.sdk.internal.dkube_api.models.job_model_parameters import JobModelParameters
-from dkube.sdk.internal.dkube_api.models.ds_job_model import DSJobModel
-from dkube.sdk.internal.dkube_api.models.ds_job_model_executor import DSJobModelExecutor
-from dkube.sdk.internal.dkube_api.models.dkube_container_model import DkubeContainerModel
-from dkube.sdk.internal.dkube_api.models.dkube_container_model_framework import DkubeContainerModelFramework
-from dkube.sdk.internal.dkube_api.models.dkube_container_model_framework_details import DkubeContainerModelFrameworkDetails
-from dkube.sdk.internal.dkube_api.models.job_datum_model import JobDatumModel
-from dkube.sdk.internal.dkube_api.models.job_datum_model_workspace import JobDatumModelWorkspace
-from dkube.sdk.internal.dkube_api.models.job_input_datum_model import JobInputDatumModel
-from dkube.sdk.internal.dkube_api.models.job_model_parameters_run import JobModelParametersRun
-from dkube.sdk.internal.dkube_api.models.ds_job_model_hyperparams import DSJobModelHyperparams
+from dkube.sdk.internal.dkube_api.models.config_file_model import \
+    ConfigFileModel
+from dkube.sdk.internal.dkube_api.models.custom_container_model import \
+    CustomContainerModel
+from dkube.sdk.internal.dkube_api.models.custom_container_model_image import \
+    CustomContainerModelImage
 from dkube.sdk.internal.dkube_api.models.custom_kv_model import CustomKVModel
-from dkube.sdk.internal.dkube_api.models.config_file_model import ConfigFileModel
-from dkube.sdk.internal.dkube_api.models.custom_container_model import CustomContainerModel
-from dkube.sdk.internal.dkube_api.models.custom_container_model_image import CustomContainerModelImage
-from dkube.sdk.internal.dkube_api.models.ds_job_model_hptuning import DSJobModelHptuning
-from pprint import pprint
+from dkube.sdk.internal.dkube_api.models.dkube_container_model import \
+    DkubeContainerModel
+from dkube.sdk.internal.dkube_api.models.dkube_container_model_framework import \
+    DkubeContainerModelFramework
+from dkube.sdk.internal.dkube_api.models.dkube_container_model_framework_details import \
+    DkubeContainerModelFrameworkDetails
+from dkube.sdk.internal.dkube_api.models.ds_job_model import DSJobModel
+from dkube.sdk.internal.dkube_api.models.ds_job_model_executor import \
+    DSJobModelExecutor
+from dkube.sdk.internal.dkube_api.models.ds_job_model_hptuning import \
+    DSJobModelHptuning
+from dkube.sdk.internal.dkube_api.models.ds_job_model_hyperparams import \
+    DSJobModelHyperparams
+from dkube.sdk.internal.dkube_api.models.job_datum_model import JobDatumModel
+from dkube.sdk.internal.dkube_api.models.job_datum_model_workspace import \
+    JobDatumModelWorkspace
+from dkube.sdk.internal.dkube_api.models.job_input_datum_model import \
+    JobInputDatumModel
+from dkube.sdk.internal.dkube_api.models.job_model import JobModel
+from dkube.sdk.internal.dkube_api.models.job_model_parameters import \
+    JobModelParameters
+from dkube.sdk.internal.dkube_api.models.job_model_parameters_run import \
+    JobModelParametersRun
+from dkube.sdk.internal.dkube_api.rest import ApiException
 
 from .util import *
 
 
 class DkubeIDE(object):
 
-    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0",
-                      "pytorch_2.6", "scikit_0.2.2"]
+    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0.0",
+                      "pytorch_1.6", "sklearn_0.23.2"]
 
     def __init__(self, user, name=generate('notebook'), description='', tags=[]):
         self.repo = JobInputDatumModel  # class assignment, caller creates objects

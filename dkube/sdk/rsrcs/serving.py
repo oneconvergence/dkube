@@ -64,7 +64,7 @@ class DkubeServing(object):
         self.serving_def.transformer_commit_id = commitid
 
     def update_transformer_image(self, image_url=None, login_uname=None, login_pswd=None):
-        self.transformer_container.path = image_url
+        self.transformer_container.image = image_url
         self.transformer_container.username = login_uname
         self.transformer_container.password = login_pswd
         self.transformer.image = self.transformer_container
@@ -75,7 +75,7 @@ class DkubeServing(object):
         self.serving_def.owner = self.user
 
     def update_serving_image(self, deploy=None, image_url=None, login_uname=None, login_pswd=None):
-        self.predictor_container.path = image_url
+        self.predictor_container.image = image_url
         self.predictor_container.username = login_uname
         self.predictor_container.password = login_pswd
         self.serving_def.deploy = deploy

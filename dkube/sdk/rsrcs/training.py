@@ -47,7 +47,7 @@ from .util import *
 class DkubeTraining(object):
 
     FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0.0",
-                      "pytorch_2.6", "scikit_0.2.2"]
+                      "pytorch_1.6", "sklearn_0.23.2"]
 
     DISTRIBUTION_OPTS = ["manual", "auto"]
 
