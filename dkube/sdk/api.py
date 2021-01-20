@@ -1464,7 +1464,7 @@ class DkubeApi(ApiBase, FilesBase):
             if run.predictor.image == None:
                 si = li['run']['parameters'][
                     'generated']['serving_image']['image']
-                run.update_serving_image(
+                run.update_serving_image(None,
                     si['path'], si['username'], si['password'])
 
             if run.serving_def.transformer == True and run.transformer.image == None:
