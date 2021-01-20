@@ -25,7 +25,7 @@ def slurm_pipeline(
         dataset = None,
         model = None,
         slurm_cluster = None,
-        slurm_jobprops = json.dumps(JobProperties().to_dict())):
+        slurm_jobprops : type(JobProperties) = JobProperties()):
 
     training_name = generate('mnist')
     training = DkubeTraining(
