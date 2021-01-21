@@ -304,5 +304,4 @@ class ApiBase(object):
 
     def is_model_catalog_enabled(self):
         response = self._api.dkubeinfo()
-        print(response.to_dict())
         return response.to_dict()['data']['model_catalog_enabled']

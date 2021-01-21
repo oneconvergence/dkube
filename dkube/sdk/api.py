@@ -463,7 +463,7 @@ class DkubeApi(ApiBase, FilesBase):
                 name = code['name'].split(':')[1]
                 run.update_transformer_code(name, code['version'])
         # Don't allow prod deploy using this API, if MODEL_CATALOG_ENABLED=true
-        if run.serving_def.deploy == True and super().is_model_catalog_enabled() == 'true':
+        if run.serving_def.deploy == True and super().is_model_catalog_enabled().lower() == 'true':
             run.serving_def.deploy = None
 
         super().create_run(run)
