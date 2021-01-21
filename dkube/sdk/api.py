@@ -1552,6 +1552,7 @@ class DkubeApi(ApiBase, FilesBase):
         run.update_serving_model(model, version=version)
         run.update_serving_image(image_url=mcitem['serving']['images'][
                                  'serving']['image']['path'])
+        run.update_autoscaling_config(min_replicas, max_concurrent_requests)
 
         if stage_or_deploy == "stage":
             super().stage_model(run)
@@ -1648,7 +1649,7 @@ class DkubeApi(ApiBase, FilesBase):
         mc = self.modelcatalog(user)
 
         for item in mc:
-            if item['name'] == model:
+            if item['model']['name'] == model:
                 for iversion in item['versions']:
                     if iversion['model']['version'] == version:
                         return iversion
