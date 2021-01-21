@@ -1526,6 +1526,14 @@ class DkubeApi(ApiBase, FilesBase):
                                         deploying it for production.
                                         Change to :bash: `deploy` to deploy the model in production
 
+                min_replicas
+                    Minimum number of replicas that each Revision should have.
+                    If not prvided, uses value set in platform config map.
+
+                max_concurrent_requests
+                    Soft limit that specifies the maximum number of requests an inf pod can process at a time.
+                    If not prvided, uses value set in platform config map.
+
                 wait_for_completion
                     When set to :bash:`True` this method will wait for job to complete after submission.
                     Job is declared complete if it is one of the :bash:`complete/failed/error` state

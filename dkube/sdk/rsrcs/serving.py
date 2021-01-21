@@ -81,7 +81,7 @@ class DkubeServing(object):
         self.serving_def.deploy = deploy
         self.predictor.image = self.predictor_container
     def set_production_deploy(self):
-        self.serving_def.deploy = true
+        self.serving_def.deploy = True
     def update_autoscaling_config(self, min_replicas, max_concurrent_requests):
         self.serving_def.min_replicas = min_replicas
         self.serving_def.max_concurrent_requests = max_concurrent_requests
