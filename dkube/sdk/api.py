@@ -1649,7 +1649,7 @@ class DkubeApi(ApiBase, FilesBase):
         mc = self.modelcatalog(user)
 
         for item in mc:
-            if item['model']['name'] == model:
+            if item['name'] == model:
                 for iversion in item['versions']:
                     if iversion['model']['version'] == version:
                         return iversion
