@@ -301,3 +301,8 @@ class ApiBase(object):
             dkube_api.ApiClient(configuration))
         response = api.get_model_catalog(user)
         return response.to_dict()['data']
+
+    def is_model_catalog_enabled(self):
+        response = self._api.dkubeinfo()
+        print(response.to_dict())
+        return response.to_dict()['data']['model_catalog_enabled']
