@@ -1498,7 +1498,9 @@ class DkubeApi(ApiBase, FilesBase):
 
     def create_model_deployment(self, user, name, model, version,
                                 description=None,
-                                stage_or_deploy="stage", wait_for_completion=True):
+                                stage_or_deploy="stage",
+                                min_replicas=0,
+                                max_concurrent_requests=0, wait_for_completion=True):
         """
             Method to create a serving deployment for a model in the model catalog.
             Raises Exception in case of errors.
