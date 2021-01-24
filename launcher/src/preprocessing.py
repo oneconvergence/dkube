@@ -25,7 +25,10 @@ def command_preprocessing(
     )
 
     # Update pipeline information
-    run["parameters"]["generated"] = {"pipeline": {"runid": runid, "name": stagename}}
+    run["parameters"]["generated"] = {
+        "uuid": runid,
+        "pipeline": {"runid": workflowid, "name": stagename},
+    }
 
     api.jobs_add_one(user, run, run="true")
     while True:

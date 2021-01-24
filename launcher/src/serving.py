@@ -18,7 +18,10 @@ def command_serving(
     run["parameters"]["class"] = "inference"
 
     # Update pipeline information
-    run["parameters"]["generated"] = {"pipeline": {"runid": runid, "name": stagename}}
+    run["parameters"]["generated"] = {
+        "uuid": runid,
+        "pipeline": {"runid": workflowid, "name": stagename},
+    }
 
     inf = run["parameters"]["inference"]
     if (
