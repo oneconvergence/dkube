@@ -111,7 +111,8 @@ class DkubePreprocessing(object):
         self.input_datasets.append(repo)
 
     def add_input_model(self, name, version=None, mountpath=None):
-        name = self.user + ':' + name
+        if ":" not in name:
+            name = self.user + ':' + name
         repo = self.repo(name=name, version=version, mountpath=mountpath)
         self.input_models.append(repo)
 

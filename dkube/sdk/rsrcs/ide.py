@@ -138,17 +138,20 @@ class DkubeIDE(object):
         return self
 
     def add_code(self, name, commitid=None):
-        name = self.user + ':' + name
+        if ":" not in name:
+            name = self.user + ':' + name
         self.input_project_data.name = name
         self.input_project_data.version = commitid
 
     def add_input_dataset(self, name, version=None, mountpath=None):
-        name = self.user + ':' + name
+        if ":" not in name:
+            name = self.user + ':' + name
         repo = self.repo(name=name, version=version, mountpath=mountpath)
         self.input_datasets.append(repo)
 
     def add_input_model(self, name, version=None, mountpath=None):
-        name = self.user + ':' + name
+        if ":" not in name:
+            name = self.user + ':' + name
         repo = self.repo(name=name, version=version, mountpath=mountpath)
         self.input_models.append(repo)
 
