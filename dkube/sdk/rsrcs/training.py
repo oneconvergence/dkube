@@ -77,11 +77,9 @@ class DkubeTraining(object):
         self.input_featuresets = []
         self.output_featuresets = []
         self.featuresets = JobFeaturesetModel(inputs=self.input_featuresets, outputs=self.output_featuresets)
-        self.customkv = CustomKVModel()
         self.configfile = ConfigFileModel()
-        self.customenv = []
-        self.hyperparameters = DSJobModelHyperparams(
-            file=self.configfile, custom=self.customenv)
+        self.customenv = {}
+        self.hyperparameters = DSJobModelHyperparams(file=self.configfile)
         self.hptuning = DSJobModelHptuning()
         
         self.training_def = DSJobModel(executor=self.executor_def, datums=self.input_datums,
@@ -144,7 +142,15 @@ class DkubeTraining(object):
         return self
 
     def add_envvar(self, key, value):
-        self.customenv.append(str({key:value}))
+        self.customenv[key] = value
+        return self.add_envvars(self.customenv)
+
+    def add_envvars(self, vars={}):
+        envs = []
+        for k, v in vars.items():
+            envs.append({"key": k, "value": v})
+
+        self.hyperparameters.customkv = envs
         return self
 
     def add_code(self, name, commitid=None):
