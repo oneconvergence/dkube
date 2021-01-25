@@ -42,7 +42,8 @@ from .util import *
 
 class DkubeIDE(object):
 
-    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0.0",
+    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0.0", "tensorflow_2.3.0",
+                      "tensorflow_r-1.14", "tensorflow_r-2.0.0",
                       "pytorch_1.6", "sklearn_0.23.2"]
 
     def __init__(self, user, name=generate('notebook'), description='', tags=[]):
