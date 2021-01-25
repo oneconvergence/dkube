@@ -1,5 +1,6 @@
 from __future__ import print_function
 
+import json
 import sys
 import time
 from pprint import pprint
@@ -46,7 +47,8 @@ from .util import *
 
 class DkubeTraining(object):
 
-    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0.0",
+    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0.0", "tensorflow_2.3.0",
+                      "tensorflow_r-1.14", "tensorflow_r-2.0.0",
                       "pytorch_1.6", "sklearn_0.23.2"]
 
     DISTRIBUTION_OPTS = ["manual", "auto"]
@@ -195,3 +197,6 @@ class DkubeTraining(object):
     def add_input_featureset(self, name, version=None, mountpath=None):
         featureset_model = JobInputFeaturesetModel(name=name, version=version, mountpath=mountpath)
         self.input_featuresets.append(featureset_model)
+
+    def list_frameworks(self):
+        return json.dumps(self.FRAMEWORK_OPTS)
