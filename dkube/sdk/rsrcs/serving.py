@@ -34,7 +34,8 @@ class DkubeServing(object):
         self.serving_def = InferenceJobModel(model=None, version=None, owner=None, device=None, deploy=None,
                                              serving_image=self.predictor, transformer=False,
                                              transformer_image=self.transformer, transformer_project=None,
-                                             transformer_commit_id=None, transformer_code=None, min_replicas=0, max_concurrent_requests=0)
+                                             transformer_commit_id=None, transformer_code=None,
+                                             min_replicas=0, max_concurrent_requests=0)
         self.run_def = JobModelParametersRun(template=None, group='default')
         self.job_parameters = JobModelParameters(
             _class='inference', inference=self.serving_def, run=self.run_def)
