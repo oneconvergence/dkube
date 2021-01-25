@@ -196,3 +196,5 @@ class DkubeTraining(object):
     def add_input_featureset(self, name, version=None, mountpath=None):
         featureset_model = JobInputFeaturesetModel(name=name, version=version, mountpath=mountpath)
         self.input_featuresets.append(featureset_model)
+     def list_frameworks(self):
+        return json.dumps(self.FRAMEWORK_OPTS)

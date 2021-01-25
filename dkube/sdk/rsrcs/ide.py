@@ -171,3 +171,5 @@ class DkubeIDE(object):
 
     def update_resources(self, cpus=None, mem=None, ngpus=0):
         self.notebook_def.ngpus = ngpus
+    def list_frameworks(self):
+        return json.dumps(self.FRAMEWORK_OPTS)
