@@ -23,7 +23,7 @@ outputs:
   - {name: rundetails,       description: 'Details of the run'}
 implementation:
   container:
-    image: ocdr/dkubepl:2.2.1.4
+    image: ocdr/dkubepl:2.2.1.10
     command: ['dkubepl']
     args: [
       viewer,
