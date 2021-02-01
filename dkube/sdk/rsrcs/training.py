@@ -47,9 +47,9 @@ from .util import *
 
 class DkubeTraining(object):
 
-    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0.0", "tensorflow_2.3.0",
-                      "tensorflow_r-1.14", "tensorflow_r-2.0.0",
-                      "pytorch_1.6", "sklearn_0.23.2"]
+    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_1.14-gpu", "tensorflow_2.0.0", "tensorflow_2.0.0-gpu", "tensorflow_2.3.0", "tensorflow_2.3.0-gpu",
+                      "tensorflow_r-1.14", "tensorflow_r-1.14-gpu", "tensorflow_r-2.0.0", "tensorflow_r-2.0.0-gpu",
+                      "pytorch_1.6", "pytorch_1.6-gpu", "sklearn_0.23.2"]
 
     DISTRIBUTION_OPTS = ["manual", "auto"]
 
