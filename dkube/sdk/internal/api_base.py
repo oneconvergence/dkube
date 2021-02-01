@@ -62,9 +62,9 @@ class ApiBase(object):
         else:
             raise Exception('Unsupported fields parameter')
 
-    def list_ides(self, category, user, filters='*'):
+    def list_ides(self, category, user, shared=False, filters='*'):
         response = self._api.jobs_get_by_class(
-            user, category, False, run='false')
+            user, category, shared, run='false')
         return response.to_dict()['data']
 
     def delete_ide(self, category, user, name):
@@ -83,7 +83,7 @@ class ApiBase(object):
         else:
             raise Exception('Unsupported fields parameter')
 
-    def list_runs(self, category, user, filters='*'):
+    def list_runs(self, category, user, shared=False, filters='*'):
         # MAK - [HACK - TODO] - Correct from backend.
         # all=true is always returning training+preprocessing and ignoring
         # inference runs
@@ -92,7 +92,7 @@ class ApiBase(object):
         else:
             all = 'true'
         response = self._api.jobs_get_by_class(
-            user, category, False, run='true', all=all)
+            user, category, shared, run='true', all=all)
         return response.to_dict()['data']
 
     def delete_run(self, category, user, name):
@@ -113,8 +113,8 @@ class ApiBase(object):
         else:
             raise Exception('Unsupported fields parameter')
 
-    def list_repos(self, category, user, filters='*'):
-        response = self._api.datums_get_by_class(user, category, False)
+    def list_repos(self, category, user, shared=False, filters='*'):
+        response = self._api.datums_get_by_class(user, category, shared)
         return response.to_dict()['data']
 
     def delete_repo(self, category, user, name):

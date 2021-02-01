@@ -179,7 +179,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "IDE {} - waiting for completion, current state {}".format(ide.name, state))
                 time.sleep(self.wait_interval)
 
-    def list_ides(self, user, filters='*'):
+    def list_ides(self, user, shared=False, filters='*'):
         """
             Method to list all the IDEs of a user.
             Raises exception on any connection errors.
@@ -198,7 +198,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().list_ides('notebook', user)
+        return super().list_ides('notebook', user, shared)
 
     def delete_ide(self, user, name):
         """
@@ -271,7 +271,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_run('training', user, name)
 
-    def list_training_runs(self, user, filters='*'):
+    def list_training_runs(self, user, shared=False, filters='*'):
         """
             Method to list all the training runs of a user.
             Raises exception on any connection errors.
@@ -290,7 +290,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().list_runs('training', user)
+        return super().list_runs('training', user, shared)
 
     def delete_training_run(self, user, name):
         """
@@ -363,7 +363,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_run('preprocessing', user, name)
 
-    def list_preprocessing_runs(self, user, filters='*'):
+    def list_preprocessing_runs(self, user, shared=False, filters='*'):
         """
             Method to list all the preprocessing runs of a user.
             Raises exception on any connection errors.
@@ -382,7 +382,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().list_runs('preprocessing', user)
+        return super().list_runs('preprocessing', user, shared)
 
     def delete_preprocessing_run(self, user, name):
         """
@@ -495,7 +495,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_run('inference', user, name)
 
-    def list_test_inferences(self, user, filters='*'):
+    def list_test_inferences(self, user, shared=False, filters='*'):
         """
             Method to list all the training inferences of a user.
             Raises exception on any connection errors.
@@ -514,7 +514,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().list_runs('inference', user)
+        return super().list_runs('inference', user, shared)
 
     def delete_test_inference(self, user, name):
         """
@@ -586,7 +586,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_repo('program', user, name)
 
-    def list_code(self, user, filters='*'):
+    def list_code(self, user, shared=False, filters='*'):
         """
             Method to list all the code repos of a user.
             Raises exception on any connection errors.
@@ -605,7 +605,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().list_repos('program', user)
+        return super().list_repos('program', user, shared)
 
     def delete_code(self, user, name):
         """
@@ -956,7 +956,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_repo('dataset', user, name)
 
-    def list_datasets(self, user, filters='*'):
+    def list_datasets(self, user, shared=False, filters='*'):
         """
             Method to list all the datasets of a user.
             Raises exception on any connection errors.
@@ -975,7 +975,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().list_repos('dataset', user)
+        return super().list_repos('dataset', user, shared)
 
     def delete_dataset(self, user, name):
         """
@@ -1047,7 +1047,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_repo('model', user, name)
 
-    def list_models(self, user, filters='*'):
+    def list_models(self, user, shared=False, filters='*'):
         """
             Method to list all the models of a user.
             Raises exception on any connection errors.
@@ -1066,7 +1066,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().list_repos('model', user)
+        return super().list_repos('model', user, shared)
 
     def delete_model(self, user, name):
         """
@@ -1577,7 +1577,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         super().delete_run('inference', user, name)
 
-    def list_model_deployments(self, user, filters='*'):
+    def list_model_deployments(self, user, shared=False, filters='*'):
         """
             Method to list all the model deployments.
             Raises exception on any connection errors.
@@ -1595,7 +1595,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
 
         deps = []
-        resp = super().list_runs('inference', user)
+        resp = super().list_runs('inference', user, shared)
         for item in resp:
             for inf in item['jobs']:
                 deploy = inf['parameters']['inference']['deploy']
