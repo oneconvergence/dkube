@@ -6614,6 +6614,7 @@ class DkubeApi(object):
         :param str run:
         :param str rerun:
         :param str subclass:
+        :param bool execute:
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
@@ -6639,12 +6640,13 @@ class DkubeApi(object):
         :param str run:
         :param str rerun:
         :param str subclass:
+        :param bool execute:
         :return: ApiResponse
                  If the method is called asynchronously,
                  returns the request thread.
         """
 
-        all_params = ['user', 'data', 'run', 'rerun', 'subclass']  # noqa: E501
+        all_params = ['user', 'data', 'run', 'rerun', 'subclass', 'execute']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
         all_params.append('_preload_content')
@@ -6681,6 +6683,8 @@ class DkubeApi(object):
             query_params.append(('rerun', params['rerun']))  # noqa: E501
         if 'subclass' in params:
             query_params.append(('subclass', params['subclass']))  # noqa: E501
+        if 'execute' in params:
+            query_params.append(('execute', params['execute']))  # noqa: E501
 
         header_params = {}
 

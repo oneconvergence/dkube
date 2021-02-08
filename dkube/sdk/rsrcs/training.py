@@ -92,6 +92,7 @@ class DkubeTraining(object):
         self.job = JobModel(name=None, parameters=self.job_parameters)
 
         self.update_basic(user, name, description, tags)
+        self.execute = True
 
     def update_basic(self, user, name, description, tags):
         tags = list_of_strs(tags)
@@ -200,3 +201,6 @@ class DkubeTraining(object):
 
     def list_frameworks(self):
         return json.dumps(self.FRAMEWORK_OPTS)
+    
+    def disable_execution(self):
+        self.execute = False
