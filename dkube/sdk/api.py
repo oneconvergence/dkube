@@ -243,7 +243,7 @@ class DkubeApi(ApiBase, FilesBase):
         while wait_for_completion:
             status = super().get_run('training', run.user, run.name, fields='status')
             state, reason = status['state'], status['reason']
-            if state.lower() in ['complete', 'failed', 'error', 'stopped']:
+            if state.lower() in ['complete', 'failed', 'error', 'stopped', 'created']:
                 print(
                     "run {} - completed with state {} and reason {}".format(run.name, state, reason))
                 break
