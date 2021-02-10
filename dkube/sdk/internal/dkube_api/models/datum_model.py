@@ -44,6 +44,7 @@ class DatumModel(object):
         'redshift': 'RedshiftAccessInfo',
         's3access': 'S3AccessCredentials',
         'k8svolume': 'DatumModelK8svolume',
+        'hostpath': 'DatumModelHostpath',
         'nfsaccess': 'NFSAccessInfo',
         'gcsaccess': 'GCSAccessInfo',
         'generated': 'DatumModelGenerated'
@@ -63,12 +64,13 @@ class DatumModel(object):
         'redshift': 'redshift',
         's3access': 's3access',
         'k8svolume': 'k8svolume',
+        'hostpath': 'hostpath',
         'nfsaccess': 'nfsaccess',
         'gcsaccess': 'gcsaccess',
         'generated': 'generated'
     }
 
-    def __init__(self, version=None, name=None, description=None, tags=None, _class=None, dvs=None, source=None, url=None, remote=False, gitaccess=None, redshift=None, s3access=None, k8svolume=None, nfsaccess=None, gcsaccess=None, generated=None):  # noqa: E501
+    def __init__(self, version=None, name=None, description=None, tags=None, _class=None, dvs=None, source=None, url=None, remote=False, gitaccess=None, redshift=None, s3access=None, k8svolume=None, hostpath=None, nfsaccess=None, gcsaccess=None, generated=None):  # noqa: E501
         """DatumModel - a model defined in Swagger"""  # noqa: E501
 
         self._version = None
@@ -84,6 +86,7 @@ class DatumModel(object):
         self._redshift = None
         self._s3access = None
         self._k8svolume = None
+        self._hostpath = None
         self._nfsaccess = None
         self._gcsaccess = None
         self._generated = None
@@ -115,6 +118,8 @@ class DatumModel(object):
             self.s3access = s3access
         if k8svolume is not None:
             self.k8svolume = k8svolume
+        if hostpath is not None:
+            self.hostpath = hostpath
         if nfsaccess is not None:
             self.nfsaccess = nfsaccess
         if gcsaccess is not None:
@@ -274,7 +279,7 @@ class DatumModel(object):
         :param source: The source of this DatumModel.  # noqa: E501
         :type: str
         """
-        allowed_values = ["git", "aws_s3", "s3", "pub_url", "k8s_volume", "dkube", "nfs", "gcs", "dvs", "workstation", "redshift"]  # noqa: E501
+        allowed_values = ["git", "aws_s3", "s3", "pub_url", "k8s_volume", "dkube", "nfs", "gcs", "dvs", "workstation", "redshift", "hostpath"]  # noqa: E501
         if source not in allowed_values:
             raise ValueError(
                 "Invalid value for `source` ({0}), must be one of {1}"  # noqa: E501
@@ -412,6 +417,27 @@ class DatumModel(object):
         """
 
         self._k8svolume = k8svolume
+
+    @property
+    def hostpath(self):
+        """Gets the hostpath of this DatumModel.  # noqa: E501
+
+
+        :return: The hostpath of this DatumModel.  # noqa: E501
+        :rtype: DatumModelHostpath
+        """
+        return self._hostpath
+
+    @hostpath.setter
+    def hostpath(self, hostpath):
+        """Sets the hostpath of this DatumModel.
+
+
+        :param hostpath: The hostpath of this DatumModel.  # noqa: E501
+        :type: DatumModelHostpath
+        """
+
+        self._hostpath = hostpath
 
     @property
     def nfsaccess(self):
