@@ -14,6 +14,7 @@ from dkube.sdk.internal.dkube_api.models.repo_gcs_access_info_secret import Repo
 from dkube.sdk.internal.dkube_api.models.nfs_access_info import NFSAccessInfo
 from dkube.sdk.internal.dkube_api.models.redshift_access_info import RedshiftAccessInfo
 from dkube.sdk.internal.dkube_api.models.datum_model_k8svolume import DatumModelK8svolume
+from dkube.sdk.internal.dkube_api.models.datum_model_hostpath import DatumModelHostpath
 
 from pprint import pprint
 

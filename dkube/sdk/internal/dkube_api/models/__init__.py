@@ -109,6 +109,7 @@ from dkube.sdk.internal.dkube_api.models.datum_metrics_inner_versions import Dat
 from dkube.sdk.internal.dkube_api.models.datum_model import DatumModel
 from dkube.sdk.internal.dkube_api.models.datum_model_generated import DatumModelGenerated
 from dkube.sdk.internal.dkube_api.models.datum_model_generated_details import DatumModelGeneratedDetails
+from dkube.sdk.internal.dkube_api.models.datum_model_hostpath import DatumModelHostpath
 from dkube.sdk.internal.dkube_api.models.datum_model_k8svolume import DatumModelK8svolume
 from dkube.sdk.internal.dkube_api.models.datum_source_details import DatumSourceDetails
 from dkube.sdk.internal.dkube_api.models.datum_source_details_job import DatumSourceDetailsJob
