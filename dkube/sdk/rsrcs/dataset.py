@@ -54,6 +54,8 @@ class DkubeDataset(object):
 	:bash:`redshift` :- Redshift as data source. :bash:`Remote`
 
 	:bash:`k8svolume` :- Kubernetes volume as data source. :bash:`Remote`
+	
+        :bash:`hostpath` :- If data is in a path in host machine. :bash:`Remote`
 
     """
 
@@ -88,10 +90,13 @@ class DkubeDataset(object):
             username=None, password=None, apikey=None, sshkey=None, private=True)
         self.gitaccess = GitAccessInfo(
             path=None, url=None, branch=None, credentials=self.gitcreds)
+        self.hostpath = DatumModelHostpath(
+            path=None)
 
         self.datum = DatumModel(name=None, tags=None, _class='dataset',
                                 dvs=None, source='dvs', url=None, remote=False, gitaccess=self.gitaccess,
-                                s3access=self.s3access, nfsaccess=self.nfsaccess, gcsaccess=self.gcsaccess)
+                                s3access=self.s3access, nfsaccess=self.nfsaccess, gcsaccess=self.gcsaccess,
+                                hostpath=self.hostpath)
 
         self.update_basic(user, name, tags)
 
@@ -287,3 +292,16 @@ class DkubeDataset(object):
 
         self.datum.source = "k8svolume"
         self.k8svolume.name = name
+    
+    def update_hostpath_details(self, path):
+        """
+            Method to update details of hostpath.
+
+            *Inputs*
+
+                path
+                    Location in the host machine where the data is stored.
+        """
+
+        self.datum.source = "hostpath"
+        self.hostpath.path = path
