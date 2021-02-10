@@ -305,4 +305,5 @@ class DkubeDataset(object):
         """
 
         self.datum.source = "hostpath"
+        self.datum.remote = True
         self.hostpath.path = path
