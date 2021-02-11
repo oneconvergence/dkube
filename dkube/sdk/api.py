@@ -1751,6 +1751,9 @@ class DkubeApi(ApiBase, FilesBase):
             extract
                 if extract is set to True, the file will be extracted after upload.
 
+            wait_for_completion
+                When set to :bash:`True` this method will wait for model resource to get into one of the complete state.
+                model is declared complete if it is one of the :bash:`complete/failed/error` state
         """
         
         filesize = os.stat(filename).st_size
@@ -1762,6 +1765,7 @@ class DkubeApi(ApiBase, FilesBase):
                 'filesize': filesize,
                 'extract': extract}
         response = requests.post(url, params=params, files=files, headers=headers, verify=False)
+        print(response.json())
         while wait_for_completion:
             status = super().get_repo('model', user, modelname, fields='status')
             state, reason = status['state'], status['reason']
