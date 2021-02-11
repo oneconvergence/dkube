@@ -1733,7 +1733,7 @@ class DkubeApi(ApiBase, FilesBase):
         response = self._api.projects_delete_list(project_ids).to_dict()
         assert response['code'] == 200, response['message']
 
-    def upload_model(self, user, modelname, filename, extract=False, wait_for_completeion=True):
+    def upload_model(self, user, modelname, filename, extract=False, wait_for_completion=True):
         """Upload model. This creates a model and uploads the file residing in your local workstation.
         Supported formats are tar, gz, tar.gz, tgz, zip, csv and txt.
 
@@ -1771,9 +1771,9 @@ class DkubeApi(ApiBase, FilesBase):
             state, reason = status['state'], status['reason']
             if state.lower() in ['ready', 'failed', 'error']:
                 print(
-                    "model {} - completed with state {} and reason {}".format(model.name, state, reason))
+                    "model {} - completed with state {} and reason {}".format(modelname, state, reason))
                 break
             else:
                 print(
-                    "model {} - waiting for completion, current state {}".format(model.name, state))
+                    "model {} - waiting for completion, current state {}".format(modelname, state))
                 time.sleep(self.wait_interval)
