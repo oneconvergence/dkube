@@ -15,7 +15,6 @@ import time
 import pandas as pd
 import urllib3
 import requests
-import logging
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.internal.dkube_api.models.conditions import \
     Conditions as TriggerCondition
@@ -1734,7 +1733,7 @@ class DkubeApi(ApiBase, FilesBase):
         response = self._api.projects_delete_list(project_ids).to_dict()
         assert response['code'] == 200, response['message']
 
-    def upload_model(self, user, modelname, filename, extract=False):
+    def upload_model(self, user, modelname, filename, extract=False, wait_for_completeion=True):
         """Upload model. This creates a model and uploads the file residing in your local workstation.
         Supported formats are tar, gz, tar.gz, tgz, zip, csv and txt.
 
@@ -1754,24 +1753,6 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         
-        # These two lines enable debugging at httplib level (requests->urllib3->http.client)
-        # You will see the REQUEST, including HEADERS and DATA, and RESPONSE with HEADERS but without DATA.
-        # The only thing missing will be the response.body which is not logged.
-        try:
-            import http.client as http_client
-        except ImportError:
-            # Python 2
-            import httplib as http_client
-        http_client.HTTPConnection.debuglevel = 1
-
-        # You must initialize logging, otherwise you'll not see debug output.
-        logging.basicConfig()
-        logging.getLogger().setLevel(logging.DEBUG)
-        requests_log = logging.getLogger("requests.packages.urllib3")
-        requests_log.setLevel(logging.DEBUG)
-        requests_log.propagate = True
-
-
         filesize = os.stat(filename).st_size
         files = {'upfile': open(filename, 'rb')}
         url = self.files_url + "/dkube/v2/users/"+user+"/class/model/datum/"+modelname+"/upload"
@@ -1781,3 +1762,14 @@ class DkubeApi(ApiBase, FilesBase):
                 'filesize': filesize,
                 'extract': extract}
         response = requests.post(url, params=params, files=files, headers=headers, verify=False)
+        while wait_for_completion:
+            status = super().get_repo('model', user, modelname, fields='status')
+            state, reason = status['state'], status['reason']
+            if state.lower() in ['ready', 'failed', 'error']:
+                print(
+                    "model {} - completed with state {} and reason {}".format(model.name, state, reason))
+                break
+            else:
+                print(
+                    "model {} - waiting for completion, current state {}".format(model.name, state))
+                time.sleep(self.wait_interval)
