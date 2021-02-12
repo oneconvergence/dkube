@@ -98,7 +98,7 @@ class DkubeApi(ApiBase, FilesBase):
         ]
         if project_id:
             self.common_tags.append("project:" + str(project_id))
-            
+
     def validate_token(self):
         """
             Method which can be used to validate the token.
@@ -449,7 +449,7 @@ class DkubeApi(ApiBase, FilesBase):
                 si = li['run']['parameters'][
                     'generated']['serving_image']['image']
                 run.update_serving_image(None,
-                    si['path'], si['username'], si['password'])
+                                         si['path'], si['username'], si['password'])
 
             if run.serving_def.transformer == True and run.transformer.image == None:
                 ti = li['run']['parameters']['generated'][
@@ -638,7 +638,7 @@ class DkubeApi(ApiBase, FilesBase):
                 featureset
                     Instance of :bash:`dkube.sdk.rsrcs.featureSet` class.
                     Please see the :bash:`Resources` section for details on this class.
-        
+
                 wait_for_completion
                     When set to :bash:`True` this method will wait for featureset resource to be ready or created
                     with v1 version in :bash:`sync` state
@@ -671,7 +671,6 @@ class DkubeApi(ApiBase, FilesBase):
             time.sleep(self.wait_interval)
 
         return response
-
 
     def delete_featuresets(self, featureset_list):
         """
@@ -717,14 +716,13 @@ class DkubeApi(ApiBase, FilesBase):
         ), "Invalid parameter, value must be a featureset name"
         return super().delete_featureset([name])
 
-
     def commit_featureset(self, **kwargs):
         """
             Method to commit sticky featuresets.
 
             featureset should be in ready state. It will be in created state if no featurespec is uploaded. 
             If the featureset is in created state, the following will happen.
-            
+
                 a) If metadata is passed, it will be uploaded as featurespec
                 b) If no metadata is passed, it derives from df and uploads it.
 
@@ -755,7 +753,7 @@ class DkubeApi(ApiBase, FilesBase):
                 path
                     Mount path where featureset is mounted or None
                     example: path='/opt/dkube/fset'
-                   
+
             *Outputs*
 
                 Dictionary with response status
@@ -767,14 +765,14 @@ class DkubeApi(ApiBase, FilesBase):
         metadata = kwargs.get('metadata', None)
         path = kwargs.get('path', None)
 
-        if not df is None: 
+        if not df is None:
             assert(not df.empty), "df should not be empty"
         else:
             # Todo: Handle commit for featuresets mounted as k8s volumes
             assert(name or path),  "name or path should be specified"
 
         featurespec = None
-        
+
         if name is not None:
             featurespec, valid = super().get_featurespec(name)
             assert(valid), "featureset not found"
@@ -782,7 +780,8 @@ class DkubeApi(ApiBase, FilesBase):
             if not metadata:
                 metadata = DKubeFeatureSetUtils().compute_features_metadata(df)
             assert(metadata), "The specified featureset is invalid"
-            self.upload_featurespec(featureset=name, filepath=None, metadata=metadata)
+            self.upload_featurespec(
+                featureset=name, filepath=None, metadata=metadata)
             featurespec = metadata
 
         if featurespec is not None and df is not None:
@@ -820,11 +819,11 @@ class DkubeApi(ApiBase, FilesBase):
         name = kwargs.get('name', None)
         version = kwargs.get('version', None)
         path = kwargs.get('path', None)
-        
-        assert ((version == None) or isinstance(version,str)), "version must be a string"
+
+        assert ((version == None) or isinstance(
+            version, str)), "version must be a string"
 
         return super().read_featureset(name, version, path)
-
 
     def list_featuresets(self, query=None):
         """
@@ -865,8 +864,10 @@ class DkubeApi(ApiBase, FilesBase):
                 A dictionary object with response status
 
         """
-        assert(featureset and isinstance(featureset,str)), "featureset must be string"
-        assert(bool(filepath) ^ bool(metadata)), "One of filepath and metadata should be specified"
+        assert(featureset and isinstance(featureset, str)
+               ), "featureset must be string"
+        assert(bool(filepath) ^ bool(metadata)
+               ), "One of filepath and metadata should be specified"
         return super().featureset_upload_featurespec(featureset, filepath, metadata)
 
     def get_featureset(self, featureset=None):
@@ -923,7 +924,6 @@ class DkubeApi(ApiBase, FilesBase):
                     dataset is declared complete if it is one of the :bash:`complete/failed/error` state
 
         """
-
 
         assert type(
             dataset) == DkubeDataset, "Invalid type for run, value must be instance of rsrcs:DkubeDataset class"
@@ -1468,7 +1468,7 @@ class DkubeApi(ApiBase, FilesBase):
                 si = li['run']['parameters'][
                     'generated']['serving_image']['image']
                 run.update_serving_image(None,
-                    si['path'], si['username'], si['password'])
+                                         si['path'], si['username'], si['password'])
 
             if run.serving_def.transformer == True and run.transformer.image == None:
                 ti = li['run']['parameters']['generated'][
@@ -1657,7 +1657,8 @@ class DkubeApi(ApiBase, FilesBase):
                     if iversion['model']['version'] == version:
                         return iversion
 
-        raise Exception('{}.{} not found in model catalog'.format(model, version))
+        raise Exception(
+            '{}.{} not found in model catalog'.format(model, version))
 
     def list_projects(self):
         """Return list of DKube projects."""
@@ -1665,7 +1666,7 @@ class DkubeApi(ApiBase, FilesBase):
         assert response['response']['code'] == 200, response['response']['message']
         return response['data']
 
-    def create_project(self, project:DkubeProject):
+    def create_project(self, project: DkubeProject):
         """Creates DKube Project.
 
         *Inputs*
@@ -1673,15 +1674,16 @@ class DkubeApi(ApiBase, FilesBase):
             project
                 instance of :bash:`dkube.sdk.rsrcs.DkubeProject` class.
         """
-        assert type(project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
+        assert type(
+            project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
         response = self._api.create_project(project).to_dict()
         assert response['response']['code'] == 200, response['response']['message']
         return response['data']
 
-    def update_project (self, project_id, project:DkubeProject):
+    def update_project(self, project_id, project: DkubeProject):
         """Update project details. 
         Note: details and evail_details fields are base64 encoded.
-        
+
         *Inputs*
 
             project_id
@@ -1690,12 +1692,14 @@ class DkubeApi(ApiBase, FilesBase):
             project
                 instance of :bash:`dkube.sdk.rsrcs.DkubeProject` class.
         """
-        assert type(project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
+        assert type(
+            project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
         project.id = project_id
-        response = self._api.update_one_project( project_id=project.id, data=project).to_dict()
+        response = self._api.update_one_project(
+            project_id=project.id, data=project).to_dict()
         assert response['code'] == 200, response['message']
 
-    def get_project_id (self, name):
+    def get_project_id(self, name):
         """"Get project id from project name.
 
         *Inputs*
@@ -1712,7 +1716,7 @@ class DkubeApi(ApiBase, FilesBase):
 
     def get_project(self, project_id):
         """Get project details.
-        
+
         *Inputs*
 
             project_id
@@ -1724,7 +1728,7 @@ class DkubeApi(ApiBase, FilesBase):
 
     def get_leaderboard(self, project_id):
         """Get project's leaderboard details.
-        
+
         *Inputs*
 
             project_id
@@ -1736,7 +1740,7 @@ class DkubeApi(ApiBase, FilesBase):
 
     def delete_project(self, project_id):
         """Delete project. This only deletes the project and not the associated resources.
-        
+
         *Inputs*
 
             project_id
