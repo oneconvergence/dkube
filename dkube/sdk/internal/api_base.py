@@ -20,7 +20,6 @@ configuration = dkube_api.Configuration()
 configuration.api_key_prefix['Authorization'] = 'Bearer'
 
 
-
 class ApiBase(object):
 
     def __init__(self, url, token, common_tags):
@@ -32,7 +31,7 @@ class ApiBase(object):
         self.common_tags = list_of_strs(common_tags)
         self.wait_interval = 10
 
-    def update_tags (self, resource):
+    def update_tags(self, resource):
         if len(self.common_tags):
             if resource.tags:
                 resource.tags.extend(self.common_tags)
@@ -138,7 +137,6 @@ class ApiBase(object):
         self.update_tags(featureset.featureset)
         response = self._api.featureset_add_one(featureset.featureset)
         return response.to_dict()
-    
 
     def commit_featureset(self, name, df, mount_path):
         # Make sure the dvs is setup
@@ -154,17 +152,18 @@ class ApiBase(object):
             # Only need to wait for the v1 to reach synced state
             if len(versions) > 1:
                 break
-            
+
             version_status = DKubeFeatureSetUtils().get_version_status(versions, 'v1')
             if version_status.lower() == 'synced':
                 break
-            print("commit_featureset: not ready, state:{} expected:synced".format(version_status.lower()))
+            print("commit_featureset: not ready, state:{} expected:synced".format(
+                version_status.lower()))
             time.sleep(self.wait_interval)
 
         job_uuid = os.getenv('DKUBE_JOB_UUID')
 
         # commit api needs relative path from dkube store & featureset name
-        
+
         if df is not None:
             if mount_path is None:
                 assert(name), 'name should be specified'
@@ -178,22 +177,23 @@ class ApiBase(object):
         if path is None:
             if mount_path is None and name is not None:
                 mount_path = DKubeFeatureSetUtils().get_featureset_mountpath_from_name(name, 'outputs')
-                assert(mount_path), 'No valid path for the featureset' 
+                assert(mount_path), 'No valid path for the featureset'
 
             assert(mount_path and os.path.isabs(mount_path)), "path is invalid"
             path = DKubeFeatureSetUtils()._get_d3_rel_path(mount_path)
             assert(path), "Dkube relative path can't be computed"
 
         job = FeatureSetCommitDefJob(kind='dkube_run')
-        body = FeatureSetCommitDef(job_uuid=job_uuid, job=job, featureset=name, path=path)
-       
+        body = FeatureSetCommitDef(
+            job_uuid=job_uuid, job=job, featureset=name, path=path)
+
         response = self._api.featureset_commit_version(body)
         # Todo if the path is created, clean it up
         return response.to_dict()
 
     def read_featureset(self, name, version=None, path=None):
         # Todo: read even if not mounted
-        
+
         df, ismounted = DKubeFeatureSetUtils().features_read(name, path)
         if not df.empty or ismounted:
             return df
@@ -202,26 +202,30 @@ class ApiBase(object):
             versions = self.get_featureset_versions(name)
             assert(versions), "no versions found"
             version = DKubeFeatureSetUtils().get_top_version(versions)
-            print("read_featureset: No version specified, using the latest version {}".format(version))
+            print("read_featureset: No version specified, using the latest version {}".format(
+                version))
             while True:
                 # don't get the top version within this loop
                 version_status = DKubeFeatureSetUtils().get_version_status(versions, version)
                 if version_status is not None:
                     if version_status.lower() == 'synced':
                         break
-                    print("read_featureset: version {} not ready, state:{} expected:synced".format(version, version_status.lower()))
+                    print("read_featureset: version {} not ready, state:{} expected:synced".format(
+                        version, version_status.lower()))
                 time.sleep(self.wait_interval)
                 versions = self.get_featureset_versions(name)
-        
 
-        copy_body = FeaturesetVersionCopyDef(job_class=os.getenv("DKUBE_JOB_CLASS"), job_uuid=os.getenv("DKUBE_JOB_UUID"))
+        copy_body = FeaturesetVersionCopyDef(job_class=os.getenv(
+            "DKUBE_JOB_CLASS"), job_uuid=os.getenv("DKUBE_JOB_UUID"))
         # To call async - pass async_req=True
-        r = self._api.featureset_copy_version(data=copy_body, featureset=name, version=version)
+        r = self._api.featureset_copy_version(
+            data=copy_body, featureset=name, version=version)
         data_copy_resp = DataCopy()
-        
+
         while True:
             # check the status
-            r = self._api.featureset_copy_version_status(featureset=name, data=copy_body, version=version)
+            r = self._api.featureset_copy_version_status(
+                featureset=name, data=copy_body, version=version)
             response = r.to_dict()
             if response['response']['code']:
                 data_copy_resp = response['data']
@@ -229,14 +233,17 @@ class ApiBase(object):
                 if status.lower() == 'completed':
                     break
                 elif status.lower() == 'copying' or status.lower() == 'starting':
-                    print("read_featureset: features not ready, status:{} expected:completed".format(status))
+                    print(
+                        "read_featureset: features not ready, status:{} expected:completed".format(status))
                     time.sleep(self.wait_interval)
                     continue
                 else:
-                    assert(status.lower() == 'aborted' or status.lower() == 'error')
+                    assert(status.lower() ==
+                           'aborted' or status.lower() == 'error')
                     break
         if data_copy_resp['target_path']:
-            path = DKubeFeatureSetUtils()._get_d3_full_path(data_copy_resp['target_path'])
+            path = DKubeFeatureSetUtils()._get_d3_full_path(
+                data_copy_resp['target_path'])
             df, _ = DKubeFeatureSetUtils().features_read(name, path)
         return df
 
@@ -271,13 +278,13 @@ class ApiBase(object):
         fset = response['data']
         return fset['versions']
 
-
     def get_datascience_capability(self):
         response = self._api.dl_frameworks()
         return response.to_dict()['data']
 
     def publish_model(self, user, model, version, details):
-        response = self._api.datums_publish_one_model(user, model, version, details)
+        response = self._api.datums_publish_one_model(
+            user, model, version, details)
 
     def release_model(self, user, model, version):
         response = self._api.datums_release_one_model(user, model, version)
@@ -301,3 +308,7 @@ class ApiBase(object):
             dkube_api.ApiClient(configuration))
         response = api.get_model_catalog(user)
         return response.to_dict()['data']
+
+    def is_model_catalog_enabled(self):
+        response = self._api.dkubeinfo()
+        return response.to_dict()['data']['model_catalog_enabled']
