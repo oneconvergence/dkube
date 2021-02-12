@@ -14,7 +14,6 @@ import time
 
 import pandas as pd
 import urllib3
-import requests
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.internal.dkube_api.models.conditions import \
     Conditions as TriggerCondition
@@ -1751,7 +1750,7 @@ class DkubeApi(ApiBase, FilesBase):
         response = self._api.projects_delete_list(project_ids).to_dict()
         assert response['code'] == 200, response['message']
 
-    def upload_model(self, user, modelname, filepath, extract=False, wait_for_completion=True):
+    def upload_model(self, user, name, filepath, extract=False, wait_for_completion=True):
         """Upload model. This creates a model and uploads the file residing in your local workstation.
         Supported formats are tar, gz, tar.gz, tgz, zip, csv and txt.
 
@@ -1760,7 +1759,7 @@ class DkubeApi(ApiBase, FilesBase):
             user
                 name of user under which model is to be created in dkube.
             
-            modelname
+            name
                 name of model to be created in dkube.
 
             filepath
@@ -1773,17 +1772,17 @@ class DkubeApi(ApiBase, FilesBase):
                 When set to :bash:`True` this method will wait for model resource to get into one of the complete state.
                 model is declared complete if it is one of the :bash:`complete/failed/error` state
         """
-        upl_resp = super().upload_model(user, modelname, filepath, extract=extract)
+        upl_resp = super().upload_model(user, name, filepath, extract=extract)
         print(upl_resp)
         while wait_for_completion:
-            status = super().get_repo('model', user, modelname, fields='status')
+            status = super().get_repo('model', user, name, fields='status')
             state, reason = status['state'], status['reason']
             if state.lower() in ['ready', 'failed', 'error']:
                 print(
-                    "model {} - completed with state {} and reason {}".format(modelname, state, reason))
+                    "model {} - completed with state {} and reason {}".format(name, state, reason))
                 break
             else:
                 print(
-                    "model {} - waiting for completion, current state {}".format(modelname, state))
+                    "model {} - waiting for completion, current state {}".format(name, state))
                 time.sleep(self.wait_interval)
 

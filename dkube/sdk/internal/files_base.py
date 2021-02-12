@@ -108,7 +108,7 @@ class FilesBase(object):
         resp_dict = json.loads(resp.text)
         return resp_dict
 
-    def upload_model(self, user, modelname, filepath, extract=False, wait_for_completion=True):
+    def upload_model(self, user, name, filepath, extract=False, wait_for_completion=True):
         """
         Upload model. This creates a model and uploads the file residing in your local workstation.
         Supported formats are tar, gz, tar.gz, tgz, zip, csv and txt.
@@ -118,7 +118,7 @@ class FilesBase(object):
             user
                 name of user under which model is to be created in dkube.
             
-            modelname
+            name
                 name of model to be created in dkube.
             
             filepath
@@ -134,7 +134,7 @@ class FilesBase(object):
         ), "Specified file path {} is invalid".format(filepath)
         
         filesize = os.stat(filepath).st_size
-        url = "/users/"+user+"/class/model/datum/"+modelname+"/upload"
+        url = "/users/"+user+"/class/model/datum/"+name+"/upload"
         
         filename = os.path.basename(filepath)
         params = {'filename': filename,
