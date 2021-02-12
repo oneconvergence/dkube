@@ -1755,25 +1755,17 @@ class DkubeApi(ApiBase, FilesBase):
                 When set to :bash:`True` this method will wait for model resource to get into one of the complete state.
                 model is declared complete if it is one of the :bash:`complete/failed/error` state
         """
-        
-        filesize = os.stat(filename).st_size
-        files = {'upfile': open(filename, 'rb')}
-        url = self.files_url + "/dkube/v2/users/"+user+"/class/model/datum/"+modelname+"/upload"
-        authn = 'Bearer ' + self.token
-        headers = {'Authorization': authn} 
-        params = {'filename': filename,
-                'filesize': filesize,
-                'extract': extract}
-        response = requests.post(url, params=params, files=files, headers=headers, verify=False)
-        print(response.json())
+        upl_resp = super().upload_model(user, modelname, filename, extract=extract)
+        print(upl_resp)
         while wait_for_completion:
-            status = super().get_repo('model', user, modelname, fields='status')
-            state, reason = status['state'], status['reason']
-            if state.lower() in ['ready', 'failed', 'error']:
-                print(
-                    "model {} - completed with state {} and reason {}".format(modelname, state, reason))
-                break
-            else:
-                print(
-                    "model {} - waiting for completion, current state {}".format(modelname, state))
-                time.sleep(self.wait_interval)
+        status = super().get_repo('model', user, modelname, fields='status')
+        state, reason = status['state'], status['reason']
+        if state.lower() in ['ready', 'failed', 'error']:
+            print(
+                "model {} - completed with state {} and reason {}".format(modelname, state, reason))
+            break
+        else:
+            print(
+                "model {} - waiting for completion, current state {}".format(modelname, state))
+            time.sleep(self.wait_interval)
+
