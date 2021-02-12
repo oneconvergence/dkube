@@ -1751,7 +1751,7 @@ class DkubeApi(ApiBase, FilesBase):
         response = self._api.projects_delete_list(project_ids).to_dict()
         assert response['code'] == 200, response['message']
 
-    def upload_model(self, user, modelname, filename, extract=False, wait_for_completion=True):
+    def upload_model(self, user, modelname, filepath, extract=False, wait_for_completion=True):
         """Upload model. This creates a model and uploads the file residing in your local workstation.
         Supported formats are tar, gz, tar.gz, tgz, zip, csv and txt.
 
@@ -1763,8 +1763,8 @@ class DkubeApi(ApiBase, FilesBase):
             modelname
                 name of model to be created in dkube.
 
-            filename
-                name of the file to be uploaded
+            filepath
+                path of the file to be uploaded
 
             extract
                 if extract is set to True, the file will be extracted after upload.
@@ -1773,7 +1773,7 @@ class DkubeApi(ApiBase, FilesBase):
                 When set to :bash:`True` this method will wait for model resource to get into one of the complete state.
                 model is declared complete if it is one of the :bash:`complete/failed/error` state
         """
-        upl_resp = super().upload_model(user, modelname, filename, extract=extract)
+        upl_resp = super().upload_model(user, modelname, filepath, extract=extract)
         print(upl_resp)
         while wait_for_completion:
             status = super().get_repo('model', user, modelname, fields='status')

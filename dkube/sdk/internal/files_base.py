@@ -108,7 +108,7 @@ class FilesBase(object):
         resp_dict = json.loads(resp.text)
         return resp_dict
 
-    def upload_model(self, user, modelname, filename, extract=False, wait_for_completion=True):
+    def upload_model(self, user, modelname, filepath, extract=False, wait_for_completion=True):
         """
         Upload model. This creates a model and uploads the file residing in your local workstation.
         Supported formats are tar, gz, tar.gz, tgz, zip, csv and txt.
@@ -121,8 +121,8 @@ class FilesBase(object):
             modelname
                 name of model to be created in dkube.
             
-            filename
-                name of the file to be uploaded
+            filepath
+                path of the file to be uploaded
             
             extract
                 if extract is set to True, the file will be extracted after upload.
@@ -130,15 +130,17 @@ class FilesBase(object):
         """
         
         assert (
-            os.path.isfile(filename) == True
-        ), "Specified file path {} is invalid".format(filename)
+            os.path.isfile(filepath) == True
+        ), "Specified file path {} is invalid".format(filepath)
         
-        filesize = os.stat(filename).st_size
+        filesize = os.stat(filepath).st_size
         url = "/users/"+user+"/class/model/datum/"+modelname+"/upload"
+        
+        filename = os.path.basename(filepath)
         params = {'filename': filename,
                 'filesize': filesize,
                 'extract': extract}
         
-        resp = self._upload_file(url, filename, params=params, is_binary=True)
+        resp = self._upload_file(url, filepath, params=params, is_binary=True)
         resp_dict = json.loads(resp.text)
         return resp_dict
