@@ -1776,14 +1776,14 @@ class DkubeApi(ApiBase, FilesBase):
         upl_resp = super().upload_model(user, modelname, filename, extract=extract)
         print(upl_resp)
         while wait_for_completion:
-        status = super().get_repo('model', user, modelname, fields='status')
-        state, reason = status['state'], status['reason']
-        if state.lower() in ['ready', 'failed', 'error']:
-            print(
-                "model {} - completed with state {} and reason {}".format(modelname, state, reason))
-            break
-        else:
-            print(
-                "model {} - waiting for completion, current state {}".format(modelname, state))
-            time.sleep(self.wait_interval)
+            status = super().get_repo('model', user, modelname, fields='status')
+            state, reason = status['state'], status['reason']
+            if state.lower() in ['ready', 'failed', 'error']:
+                print(
+                    "model {} - completed with state {} and reason {}".format(modelname, state, reason))
+                break
+            else:
+                print(
+                    "model {} - waiting for completion, current state {}".format(modelname, state))
+                time.sleep(self.wait_interval)
 
