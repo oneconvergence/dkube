@@ -246,7 +246,7 @@ class DKubeFeatureSetUtils:
                 continue
             for fset in fsets:
                 if path == fset['location'] or path == fset['dkube_path']:
-                    return fset['storage_path']
+                    return os.path.relpath(fset['storage_path'], "dkube")
             
         return None
 
@@ -362,6 +362,7 @@ class DKubeFeatureSetUtils:
                 try:
                     table = pa.Table.from_pandas(dataframe)
                     pq.write_table(table, os.path.join(path, filename))
+                    break
 
                 except Exception as e:
                     print("features_write: write failed {}".format(str(e)))
