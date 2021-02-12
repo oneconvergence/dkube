@@ -39,10 +39,13 @@ class FilesBase(object):
         self.request_headers['Authorization'] = 'Bearer {}'.format(self.token)
 
 
-    def _upload_file(self, urlpath=None, filepath=None, params=None):
+    def _upload_file(self, urlpath=None, filepath=None, params=None, is_binary=False):
 
         try:
-            fp = open(filepath, 'rb')
+            if is_binary:
+                fp = open(filepath, 'rb')
+            else:
+                fp = open(filepath)
         except BaseException:
             print("Specified filepath {} is not valid".format(filepath))
             return response()
@@ -136,6 +139,6 @@ class FilesBase(object):
                 'filesize': filesize,
                 'extract': extract}
         
-        resp = self._upload_file(url, filename, params=params)
+        resp = self._upload_file(url, filename, params=params, is_binary=True)
         resp_dict = json.loads(resp.text)
         return resp_dict
