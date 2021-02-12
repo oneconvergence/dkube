@@ -5361,6 +5361,7 @@ definitions:
           - dvs
           - workstation
           - redshift
+          - hostpath
       url:
         type: string
         description: Actual URL to download/access from based on the source.
@@ -5380,6 +5381,11 @@ definitions:
         type: object
         properties:
           name:
+           type: string
+      hostpath:
+        type: object
+        properties:
+          path:
            type: string
       nfsaccess:
         $ref: '#/definitions/NFSAccessInfo'

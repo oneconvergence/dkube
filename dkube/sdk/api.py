@@ -243,7 +243,7 @@ class DkubeApi(ApiBase, FilesBase):
         while wait_for_completion:
             status = super().get_run('training', run.user, run.name, fields='status')
             state, reason = status['state'], status['reason']
-            if state.lower() in ['complete', 'failed', 'error', 'stopped']:
+            if state.lower() in ['complete', 'failed', 'error', 'stopped', 'created']:
                 print(
                     "run {} - completed with state {} and reason {}".format(run.name, state, reason))
                 break
@@ -1749,3 +1749,40 @@ class DkubeApi(ApiBase, FilesBase):
         project_ids = {"project_ids": [project_id]}
         response = self._api.projects_delete_list(project_ids).to_dict()
         assert response['code'] == 200, response['message']
+
+    def upload_model(self, user, name, filepath, extract=False, wait_for_completion=True):
+        """Upload model. This creates a model and uploads the file residing in your local workstation.
+        Supported formats are tar, gz, tar.gz, tgz, zip, csv and txt.
+
+        *Inputs*
+
+            user
+                name of user under which model is to be created in dkube.
+            
+            name
+                name of model to be created in dkube.
+
+            filepath
+                path of the file to be uploaded
+
+            extract
+                if extract is set to True, the file will be extracted after upload.
+
+            wait_for_completion
+                When set to :bash:`True` this method will wait for model resource to get into one of the complete state.
+                model is declared complete if it is one of the :bash:`complete/failed/error` state
+        """
+        upl_resp = super().upload_model(user, name, filepath, extract=extract)
+        print(upl_resp)
+        while wait_for_completion:
+            status = super().get_repo('model', user, name, fields='status')
+            state, reason = status['state'], status['reason']
+            if state.lower() in ['ready', 'failed', 'error']:
+                print(
+                    "model {} - completed with state {} and reason {}".format(name, state, reason))
+                break
+            else:
+                print(
+                    "model {} - waiting for completion, current state {}".format(name, state))
+                time.sleep(self.wait_interval)
+

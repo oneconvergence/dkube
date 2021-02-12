@@ -37,7 +37,7 @@ class DkubeModel(object):
 
     """
 
-    MODEL_SOURCES = ["dvs", "git", "aws_s3", "s3", "gcs", "nfs", "k8svolume"]
+    MODEL_SOURCES = ["dvs", "git", "aws_s3", "s3", "gcs", "nfs", "k8svolume", "workstation"]
 
     """
     List of valid model sources in DKube.
@@ -57,6 +57,7 @@ class DkubeModel(object):
 
     :bash:`k8svolume` :- Kubernetes volume as data source. :bash:`Remote`
 
+    :bash:`workstation` :- To upload data that is present on the local workstation. :bash:`Uploaded`
     """
 
     GIT_ACCESS_OPTS = ["apikey", "sshkey", "password"]
