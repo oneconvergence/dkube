@@ -127,8 +127,8 @@ class FilesBase(object):
         """
         
         assert (
-            os.path.isfile(filepath) == True
-        ), "Specified file path {} is invalid".format(filepath)
+            os.path.isfile(filename) == True
+        ), "Specified file path {} is invalid".format(filename)
         
         filesize = os.stat(filename).st_size
         url = "/users/"+user+"/class/model/datum/"+modelname+"/upload"
