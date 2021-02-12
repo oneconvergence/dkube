@@ -42,7 +42,7 @@ class FilesBase(object):
     def _upload_file(self, urlpath=None, filepath=None, params=None):
 
         try:
-            fp = open(filepath)
+            fp = open(filepath, 'rb')
         except BaseException:
             print("Specified filepath {} is not valid".format(filepath))
             return response()
