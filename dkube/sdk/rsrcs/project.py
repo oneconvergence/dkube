@@ -4,6 +4,8 @@ from dkube.sdk.internal.dkube_api import ProjectModel
 class DkubeProject(ProjectModel):
     """This class defines the properties which can be set on the instance of DkubeProject.
 
+        *Available in DKube Release: 2.2*
+        
         *Properties*
 
             name

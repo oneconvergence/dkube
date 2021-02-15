@@ -19,6 +19,8 @@ class DkubeFeatureSet(object):
 
         This class defines the DKube featureset with helper functions to set properties of featureset.::
 
+        *Available in DKube Release: 2.2*
+        
             from dkube.sdk import *
              mnist = DkubeFeatureSet(name="mnist-fs")
 
