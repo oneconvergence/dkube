@@ -88,6 +88,8 @@ class DkubeApi(ApiBase, FilesBase):
         """
         Set active project. Any resources created using this API instance will belong to the given project.
 
+        *Available in DKube Release: 2.2*
+
         *Inputs*
 
             project_id
@@ -632,6 +634,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
             Method to create a featureset on DKube.
 
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -677,6 +680,8 @@ class DkubeApi(ApiBase, FilesBase):
             Method to delete a list of featuresets on DKube.
             Raises Exception in case of errors.
 
+            *Available in DKube Release: 2.2*
+
             *Inputs*
 
                 featureset_list
@@ -698,6 +703,8 @@ class DkubeApi(ApiBase, FilesBase):
     def delete_featureset(self, name):
         """
         Method to delete a a featureset.
+
+        *Available in DKube Release: 2.2*
 
         *Inputs*
 
@@ -731,9 +738,13 @@ class DkubeApi(ApiBase, FilesBase):
                 a) metadata if passed any will be ignored
                 b) featurespec will be downloaded for the specifed featureset and df is validated for conformance.
 
-            If name is specified, it derives the path for committing the features
+            If name is specified, it derives the path for committing the features. 
+            
             If path is also specified, it doesn't derive the path. It uses the specified path. However, path should a mount path into dkube store.
-            If df is not specified, it assumes the df is already written to the featureset path
+
+            If df is not specified, it assumes the df is already written to the featureset path. Features can be written to featureset mount path using DkubeFeatureSet.write_features
+
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -748,7 +759,7 @@ class DkubeApi(ApiBase, FilesBase):
 
                 metadata
                     optional yaml object with name, description and schema fields or None
-                    example:metadata=[{'name':gender, 'description:'', 'schema':int64}]
+                    example:metadata=[{'name':age, 'description:'', 'schema':int64}]
 
                 path
                     Mount path where featureset is mounted or None
@@ -796,6 +807,8 @@ class DkubeApi(ApiBase, FilesBase):
             If name is specified, path is derived. If featureset is not mounted, a copy is made to user's homedir
             If path is specified, it should be a mounted path
 
+            *Available in DKube Release: 2.2*
+
             *Inputs*
 
                 name
@@ -830,6 +843,8 @@ class DkubeApi(ApiBase, FilesBase):
             Method to list featuresets based on query string.
             Raises Exception in case of errors.
 
+            *Available in DKube Release: 2.2*
+
             *Inputs*
 
                 query
@@ -845,6 +860,8 @@ class DkubeApi(ApiBase, FilesBase):
     def upload_featurespec(self, featureset=None, filepath=None, metadata=None):
         """
             Method to upload feature specification file.
+
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -874,6 +891,8 @@ class DkubeApi(ApiBase, FilesBase):
         """
             Method to retrieve details of a featureset 
 
+            *Available in DKube Release: 2.2*
+
             *Inputs*
 
                 featureset
@@ -890,6 +909,8 @@ class DkubeApi(ApiBase, FilesBase):
     def get_featurespec(self, featureset=None):
         """
             Method to retrieve feature specification method.
+
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -1377,6 +1398,7 @@ class DkubeApi(ApiBase, FilesBase):
             Method to release a model to model catalog.
             Raises Exception in case of errors.
 
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -1420,6 +1442,7 @@ class DkubeApi(ApiBase, FilesBase):
             Method to publish a model to model catalog.
             Raises Exception in case of errors.
 
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -1625,6 +1648,8 @@ class DkubeApi(ApiBase, FilesBase):
             ready for staging or deployment on a production cluster.
             The user must have permission to fetch the model catalog.
 
+            *Available in DKube Release: 2.2*
+
             *Inputs*
 
                 user
@@ -1636,6 +1661,8 @@ class DkubeApi(ApiBase, FilesBase):
         """
             Method to get an item from modelcatalog
             Raises exception on any connection errors.
+
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -1661,13 +1688,19 @@ class DkubeApi(ApiBase, FilesBase):
             '{}.{} not found in model catalog'.format(model, version))
 
     def list_projects(self):
-        """Return list of DKube projects."""
+        """
+            Return list of DKube projects.
+
+            *Available in DKube Release: 2.2*    
+        """
         response = self._api.get_all_projects().to_dict()
         assert response['response']['code'] == 200, response['response']['message']
         return response['data']
 
     def create_project(self, project: DkubeProject):
         """Creates DKube Project.
+
+        *Available in DKube Release: 2.2*
 
         *Inputs*
 
@@ -1682,6 +1715,8 @@ class DkubeApi(ApiBase, FilesBase):
 
     def update_project(self, project_id, project: DkubeProject):
         """Update project details. 
+
+        *Available in DKube Release: 2.2*
         Note: details and evail_details fields are base64 encoded.
 
         *Inputs*
@@ -1702,6 +1737,8 @@ class DkubeApi(ApiBase, FilesBase):
     def get_project_id(self, name):
         """"Get project id from project name.
 
+        *Available in DKube Release: 2.2*
+
         *Inputs*
 
             name
@@ -1717,6 +1754,8 @@ class DkubeApi(ApiBase, FilesBase):
     def get_project(self, project_id):
         """Get project details.
 
+        *Available in DKube Release: 2.2*
+
         *Inputs*
 
             project_id
@@ -1728,6 +1767,8 @@ class DkubeApi(ApiBase, FilesBase):
 
     def get_leaderboard(self, project_id):
         """Get project's leaderboard details.
+
+        *Available in DKube Release: 2.2*
 
         *Inputs*
 
@@ -1741,6 +1782,8 @@ class DkubeApi(ApiBase, FilesBase):
     def delete_project(self, project_id):
         """Delete project. This only deletes the project and not the associated resources.
 
+        *Available in DKube Release: 2.2*
+
         *Inputs*
 
             project_id
@@ -1753,6 +1796,8 @@ class DkubeApi(ApiBase, FilesBase):
     def upload_model(self, user, name, filepath, extract=False, wait_for_completion=True):
         """Upload model. This creates a model and uploads the file residing in your local workstation.
         Supported formats are tar, gz, tar.gz, tgz, zip, csv and txt.
+
+        *Available in DKube Release: 2.2*
 
         *Inputs*
 
