@@ -203,7 +203,8 @@ class DKubeFeatureSetUtils:
                     return fset['name']
             
         return None
-        
+
+    '''  
     def _get_d3_full_path(self, rel_path):
 
         # Get full path to dkube store
@@ -211,18 +212,7 @@ class DKubeFeatureSetUtils:
         base = os.getenv("DKUBE_DATA_BASE_PATH")
         fullpath = os.path.join(base, rel_path)
         return (fullpath)
-
-    def _get_d3_rel_path(self, full_path):
-        # Is this a mounted path
-        relpath = self._get_d3_path_from_mountpoint(full_path)
-
-        # This might have been created
-        if relpath is None:
-            # Get relative path from dkube store
-            base = os.getenv("DKUBE_DATA_BASE_PATH")
-            relpath = os.path.relpath(full_path, base)
-            relpath = relpath.replace('home', 'users', 1)
-        return (relpath)
+    
 
     def _get_d3_path_from_mountpoint(self, path):
         # For the following df output, it returns featuresets/train-fs-1936/1610480719061/data
@@ -242,6 +232,43 @@ class DKubeFeatureSetUtils:
                 src = mnt_fields[0]
             src = os.path.relpath(src, "/dkube")
         return src
+    '''
+
+    def _get_d3_rel_path(self, path, config, type):
+        # path - featureset mount path
+        # config - config.json in dict format
+        # type - search in 'outputs' or 'inputs'
+        object = config.get(type, None)
+        if object is None:
+            return None
+        
+        for rec in object:
+            fsets = rec.get('featureset', None)
+            if fsets is None:
+                continue
+            for fset in fsets:
+                if path == fset['location'] or path == fset['dkube_path']:
+                    return os.path.relpath(fset['storage_path'], "dkube")
+            
+        return None
+
+    def get_rel_path_for_commit(self, full_path):
+        # Don't go by mount path. Check config.json
+        try:
+            if os.path.exists("/etc/dkube/config.json"):
+                with open("/etc/dkube/config.json") as fp:
+                    dkube_config = json.load(fp)
+                    relpath = self._get_d3_rel_path(full_path, dkube_config, 'outputs')
+        except:
+            relpath = None
+
+        # This might have been created
+        if relpath is None:
+            # Get relative path from dkube store
+            base = os.getenv("DKUBE_DATA_BASE_PATH")
+            relpath = os.path.relpath(full_path, base)
+            relpath = relpath.replace('home', 'users', 1)
+        return (relpath)
 
     def get_top_version(self, versions):
         # Get the latest version
@@ -337,6 +364,7 @@ class DKubeFeatureSetUtils:
                 try:
                     table = pa.Table.from_pandas(dataframe)
                     pq.write_table(table, os.path.join(path, filename))
+                    break
 
                 except Exception as e:
                     print("features_write: write failed {}".format(str(e)))
@@ -344,7 +372,7 @@ class DKubeFeatureSetUtils:
                         return None
 
         # Get the path relative to DKube base
-        path = self._get_d3_rel_path(path)
+        path = self.get_rel_path_for_commit(path)
         return path
 
     def features_read(self, name, path=None) -> (pd.DataFrame, bool):
