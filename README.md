@@ -1,5 +1,5 @@
 # dkube R SDK
-R libraries for DKube
+R library for DKube
 
 ## Install dkubeR package in Rstudio
   - `install.packages("devtools")`
