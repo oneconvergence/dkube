@@ -1,4 +1,0 @@
-pyfiglet
-boto3
-json2html
-flatten_json==0.1.7

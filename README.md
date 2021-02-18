@@ -1,14 +1,7 @@
-# dkube
-Repository for dkube sdk and libraries which can be used by client side applications to interface with Dkube platform.
+# dkube R SDK
+R libraries for DKube
 
-Prerequisites
--------------
->=python3
-
-sudo pip install -r requirements.txt or
-sudo pip3 install -r requirements.txt
-
-How to install using pip
-------------------------
-`sudo pip install  git+https://github.com/oneconvergence/dkube.git@2.2` or
-`sudo pip3 install git+https://github.com/oneconvergence/dkube.git@2.2`
+## Install dkubeR package in Rstudio
+  - `install.packages("devtools")`
+  - `devtools::install_github('oneconvergence/dkube@dkubeR')`
+  - `reticulate::py_install("git+https://github.com/oneconvergence/dkube.git@2.2")`

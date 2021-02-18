@@ -1,0 +1,14 @@
+Package: dkubeR
+Type: Package
+Title: Dkube sdk for R
+Version: 0.1.0
+Author: One Convergecne
+Maintainer: The package maintainer <ritesh.k@oneconvergence.com>
+Description: R wrappers for dkube sdk to be used in R
+Encoding: UTF-8
+LazyData: true
+Imports:
+    methods,
+    reticulate (>= 1.10),
+    import
+RoxygenNote: 7.1.1
