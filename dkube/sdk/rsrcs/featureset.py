@@ -15,15 +15,16 @@ from .util import *
 
 
 class DkubeFeatureSet(object):
+
     """
 
         This class defines the DKube featureset with helper functions to set properties of featureset.::
 
-        *Available in DKube Release: 2.2*
-        
             from dkube.sdk import *
              mnist = DkubeFeatureSet(name="mnist-fs")
 
+        *Available in DKube Release: 2.2*
+        
     """
 
     def __init__(self, name=generate("featureset"), tags=None, description=None, path=None, config_file="/opt/dkube/conf/conf.json"):

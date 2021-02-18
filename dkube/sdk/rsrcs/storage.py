@@ -4,7 +4,10 @@ from .util import generate
 
 
 class DkubeResourcePVC(object):
+
     """This class represent kubernetes PVC for DKube resources.
+
+        Available in DKube Release: 2.2
 
         *Arguments*
 
