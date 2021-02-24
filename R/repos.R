@@ -49,6 +49,6 @@ DkubeProject <- function(user = NULL, name = NULL){
 #' @param description additional details for the repo
 #'
 #' @export
-DkubeFeatureSet <- function(user = NULL, name = NULL){
-  model <- dkube$sdk$rsrcs$DkubeFeatureSet(user, name = name)
+DkubeFeatureSet <- function(name = NULL, description = NULL){
+  model <- dkube$sdk$rsrcs$DkubeFeatureSet(name = name, description = description)
 }
