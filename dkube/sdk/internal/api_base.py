@@ -12,6 +12,8 @@ from dkube.sdk.internal.dkube_api.models.feature_set_commit_def_job import \
     FeatureSetCommitDefJob
 from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.rsrcs.featureset import DKubeFeatureSetUtils
+from dkube.sdk.rsrcs.training import DkubeTraining
+from dkube.sdk.rsrcs.util import list_of_strs
 from dkube.sdk.rsrcs.util import list_of_strs
 from url_normalize import url_normalize
 
