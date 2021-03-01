@@ -52,6 +52,7 @@ DkubeFeatureSet <- R6::R6Class(
         metadata = featureset_metadata(df)
       }
       self$write_feature(df, path)
+      token <- Sys.getenv("DKUBE_USER_ACCESS_TOKEN")
       dkubeapi <- dkube$sdk$DkubeApi
       api <- dkubeapi(token = token)
       api$commit_featureset(name=name,path=path, metadata=r_to_py(metadata), dftype="R")
