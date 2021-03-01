@@ -12,6 +12,7 @@ from dkube.sdk.internal.dkube_api.models.feature_set_commit_def_job import \
     FeatureSetCommitDefJob
 from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.rsrcs.featureset import DKubeFeatureSetUtils
+from dkube.sdk.rsrcs.training import DkubeTraining
 from dkube.sdk.rsrcs.util import list_of_strs
 from url_normalize import url_normalize
 
@@ -70,7 +71,10 @@ class ApiBase(object):
         self._api.jobs_list_delete_by_class(user, category, {'jobs': [name]})
 
     def create_run(self, run):
-        response = self._api.jobs_add_one(user=run.user, data=run.job, run='true', execute=run.execute)
+        if hasattr(run, 'execute'):
+            response = self._api.jobs_add_one(user=run.user, data=run.job, run='true', execute=run.execute)
+        else:
+            response = self._api.jobs_add_one(user=run.user, data=run.job, run='true')
 
     def get_run(self, category, user, name, fields='*'):
         response = self._api.jobs_get_collection_one(user, category, name)
