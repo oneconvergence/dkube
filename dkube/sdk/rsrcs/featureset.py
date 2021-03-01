@@ -229,6 +229,7 @@ class DKubeFeatureSetUtils:
         #   10.233.59.86:/dkube/featuresets/train-fs-1936/1610480719061/data  /fset
 
         src = None
+        path = path.rstrip("/")
         for l in open("/proc/mounts", "r"):
             tabs = l.split(" ")
             if(path == tabs[1]):
