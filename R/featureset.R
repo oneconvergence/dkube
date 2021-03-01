@@ -12,25 +12,25 @@ DkubeFeatureSet <- R6::R6Class(
         return(FALSE)
       }
     },
-    write_feature = function(df, path=NULL){
+    write_feature = function(df, filename = "featureset.parquet", path=NULL){
       if(self$is_df_null(df)){
         stop("Error: Dataframe is empty, can't write featureset")
       }
       if(is.null(path)){
         return()
       }
-      write_parquet(df, path)
+      write_parquet(df, file.path(path, filename))
     },
-    read_features = function(name = NULL, path=NULL){
+    read_features = function(name = NULL, filename = "featureset.parquet", path=NULL){
       if(is.null(path)){
         return(data.frame())
       }
-      df <- read_parquet(path)
+      df <- read_parquet(file.path(path, filename))
       return(data.frame(df))
     },
     featureset_metadata = function(df){
       if(self$is_df_null(df)){
-        stop("Error: Dataframe is empty, can't computer metadata")
+        stop("Error: Dataframe is empty, can't compute metadata")
       }
       metadata = list()
       index = 1
