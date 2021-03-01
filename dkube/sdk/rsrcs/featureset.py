@@ -242,13 +242,14 @@ class DKubeFeatureSetUtils:
         object = config.get(type, None)
         if object is None:
             return None
+        path = path.rstrip("/")
         
         for rec in object:
             fsets = rec.get('featureset', None)
             if fsets is None:
                 continue
             for fset in fsets:
-                if path == fset['location'] or path == fset['dkube_path']:
+                if path == fset['location'].rstrip("/") or path == fset['dkube_path'].rstrip("/"):
                     return os.path.relpath(fset['storage_path'], "dkube")
             
         return None
