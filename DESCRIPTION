@@ -9,6 +9,7 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     methods,
+    arrow,
     reticulate (>= 1.10),
     import
 RoxygenNote: 7.1.1
