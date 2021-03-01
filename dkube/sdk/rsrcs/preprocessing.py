@@ -70,6 +70,7 @@ class DkubePreprocessing(object):
         self.job = JobModel(name=None, parameters=self.job_parameters)
 
         self.update_basic(user, name, description, tags)
+        self.execute = True
 
     def update_basic(self, user, name, description, tags):
         tags = list_of_strs(tags)
@@ -128,3 +129,6 @@ class DkubePreprocessing(object):
     def add_output_featureset(self, name, version=None, mountpath=None):
         featureset_model = JobInputFeaturesetModel(name=name, version=version, mountpath=mountpath)
         self.output_featuresets.append(featureset_model)
+
+    def disable_execution(self):
+        self.execute = False
