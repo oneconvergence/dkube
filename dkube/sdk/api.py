@@ -447,19 +447,26 @@ class DkubeApi(ApiBase, FilesBase):
 
             li = self.get_model_lineage(
                 run.serving_def.owner, run.serving_def.model, run.serving_def.version)
-            if run.predictor.image == None:
+
+            if li == None or li['run'] == None:
+                li = None
+
+            if li == None and run.predictor.image == None:
+                raise Exception("Lineage is nil, predictor image must be provided.")
+
+            if li != None and run.predictor.image == None:
                 si = li['run']['parameters'][
                     'generated']['serving_image']['image']
                 run.update_serving_image(None,
                                          si['path'], si['username'], si['password'])
 
-            if run.serving_def.transformer == True and run.transformer.image == None:
+            if li != None and run.serving_def.transformer == True and run.transformer.image == None:
                 ti = li['run']['parameters']['generated'][
                     'training_image']['image']
                 run.update_transformer_image(
                     ti['path'], ti['username'], ti['password'])
 
-            if run.serving_def.transformer == True and run.serving_def.transformer_project == None:
+            if li != None and run.serving_def.transformer == True and run.serving_def.transformer_project == None:
                 code = li['run']['parameters']['training'][
                     'datums']['workspace']['data']
                 name = code['name'].split(':')[1]
