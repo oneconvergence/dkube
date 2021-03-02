@@ -3,7 +3,7 @@
 export(DkubeAPI)
 export(DkubeCode)
 export(DkubeDataset)
-export(DkubeFeatureSet)
+export(DkubeFeature)
 export(DkubeIDE)
 export(DkubeModel)
 export(DkubePreprocessing)
