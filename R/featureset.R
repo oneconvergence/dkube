@@ -1,6 +1,6 @@
 #' @export
-DkubeFeatureSet <- R6::R6Class(
-  'DkubeFeatureSet',
+DkubeFeature <- R6::R6Class(
+  'DkubeFeature',
   public = list(
     `token` = NULL,
     is_df_null = function(df){
