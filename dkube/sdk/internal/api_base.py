@@ -157,6 +157,7 @@ class ApiBase(object):
             if len(versions) > 1:
                 break
 
+
             version_status = DKubeFeatureSetUtils().get_version_status(versions, 'v1')
             if version_status.lower() == 'synced':
                 break
@@ -174,7 +175,9 @@ class ApiBase(object):
                 path = DKubeFeatureSetUtils().features_write(name, df, mount_path)
                 assert(path), "Dkube relative path can't be computed"
         else:
+            print("dftype is R")
             path = DKubeFeatureSetUtils().features_write(name, df, mount_path, dftype)
+            print(path, name)
             assert(path), "Dkube relative path can't be computed"
             
         if path is not None:
