@@ -44,7 +44,7 @@ DkubeFeature <- R6::R6Class(
       }
       return(data.frame(metadata))
     },
-    featureset_commit = function(name=NULL, df=NULL, path=NULL, metadata=NULL){
+    featureset_commit = function(name=NULL, df=NULL, mount_path=NULL, metadata=NULL){
       if(is.null(name) && is.null(df)){
         stop("Error: Name and dataframe both cannot be empty")
       }
