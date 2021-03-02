@@ -19,13 +19,13 @@ DkubeFeature <- R6::R6Class(
       if(is.null(path)){
         return()
       }
-      write_parquet(df, file.path(path, filename))
+      arrow::write_parquet(df, file.path(path, filename))
     },
     read_features = function(name = NULL, filename = "featureset.parquet", path=NULL){
       if(is.null(path)){
         return(data.frame())
       }
-      df <- read_parquet(file.path(path, filename))
+      df <- arrow::read_parquet(file.path(path, filename))
       return(data.frame(df))
     },
     featureset_metadata = function(df){
