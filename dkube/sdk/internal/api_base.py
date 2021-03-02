@@ -146,6 +146,7 @@ class ApiBase(object):
         # Make sure the dvs is setup
 
         path = None
+        print("committing fs type ", dftype)
         while True and name is not None:
             versions = self.get_featureset_versions(name)
             if versions is None:
