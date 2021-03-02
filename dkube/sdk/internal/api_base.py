@@ -177,7 +177,7 @@ class ApiBase(object):
             path = DKubeFeatureSetUtils().features_write(name, df, mount_path, dftype)
             assert(path), "Dkube relative path can't be computed"
             
-        elif path is not None:
+        if path is not None:
             path = mount_path
             path = DKubeFeatureSetUtils()._get_d3_rel_path(mount_path)
             assert(path), "Dkube relative path can't be computed"
