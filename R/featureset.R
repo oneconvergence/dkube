@@ -38,7 +38,7 @@ DkubeFeature <- R6::R6Class(
         met_data = list()
         met_data[["name"]] = i
         met_data[["description"]] = "none"
-        met_data[["type"]] = typeof(df[[i]])
+        met_data[["schema"]] = typeof(df[[i]])
         metadata[[index]] = met_data
         index = index + 1
       }
