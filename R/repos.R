@@ -42,13 +42,13 @@ DkubeProject <- function(user = NULL, name = NULL){
   model <- dkube$sdk$rsrcs$DkubeProject(user, name = name)
 }
 
-#' Dkube Featureset
-#'
-#' @param user username
-#' @param name repo/resource name
-#' @param description additional details for the repo
-#'
-#' @export
-DkubeFeatureSet <- function(name = NULL, description = NULL){
-  model <- dkube$sdk$rsrcs$DkubeFeatureSet(name = name, description = description)
-}
+#' #' Dkube Featureset
+#' #'
+#' #' @param user username
+#' #' @param name repo/resource name
+#' #' @param description additional details for the repo
+#' #'
+#' #' @export
+#' DkubeFeatureSet <- function(name = NULL, description = NULL){
+#'   model <- dkube$sdk$rsrcs$DkubeFeatureSet(name = name, description = description)
+#' }
