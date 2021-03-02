@@ -104,3 +104,4 @@ ENV/
 .DS_Store
 website
 api.ipynb
+.Rproj.user
