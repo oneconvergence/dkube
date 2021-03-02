@@ -146,7 +146,7 @@ class ApiBase(object):
         # Make sure the dvs is setup
 
         path = None
-        print("committing fs type ", dftype)
+        print("committing fs type ", dftype, name)
         while True and name is not None:
             versions = self.get_featureset_versions(name)
             if versions is None:
@@ -169,12 +169,11 @@ class ApiBase(object):
         job_uuid = os.getenv('DKUBE_JOB_UUID')
 
         # commit api needs relative path from dkube store & featureset name
-        if dftype == "Py":
-            if df is not None:
-                if mount_path is None:
-                    assert(name), 'name should be specified'
-                path = DKubeFeatureSetUtils().features_write(name, df, mount_path)
-                assert(path), "Dkube relative path can't be computed"
+        if dftype == "Py" and df is not None:
+            if mount_path is None:
+                assert(name), 'name should be specified'
+            path = DKubeFeatureSetUtils().features_write(name, df, mount_path)
+            assert(path), "Dkube relative path can't be computed"
         else:
             print("dftype is R")
             path = DKubeFeatureSetUtils().features_write(name, df, mount_path, dftype)

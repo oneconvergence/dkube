@@ -775,8 +775,9 @@ class DkubeApi(ApiBase, FilesBase):
         df = kwargs.get('df', None)
         metadata = kwargs.get('metadata', None)
         path = kwargs.get('path', None)
-
-        if not df is None:
+        dftype = kwargs.get('dftype', "Py")
+        
+        if dftype == "Py" and not df is None:
             assert(not df.empty), "df should not be empty"
         else:
             # Todo: Handle commit for featuresets mounted as k8s volumes
@@ -795,11 +796,11 @@ class DkubeApi(ApiBase, FilesBase):
                 featureset=name, filepath=None, metadata=metadata)
             featurespec = metadata
 
-        if featurespec is not None and df is not None:
+        if dftype == "Py" and featurespec is not None and df is not None:
             isdf_valid = DKubeFeatureSetUtils().validate_features(df, featurespec)
             assert(isdf_valid), "DataFrame validation failed"
 
-        return super().commit_featureset(name, df, path)
+        return super().commit_featureset(name, df, path, dftype)
 
     def read_featureset(self, **kwargs):
         """
