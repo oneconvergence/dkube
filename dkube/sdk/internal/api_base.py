@@ -146,14 +146,12 @@ class ApiBase(object):
         # Make sure the dvs is setup
 
         path = None
-        print("committing fs type ", dftype, name)
         while True and name is not None:
             versions = self.get_featureset_versions(name)
             if versions is None:
                 print("commit_featureset: waiting for featureset to be setup")
                 time.sleep(self.wait_interval)
                 continue
-
             # Only need to wait for the v1 to reach synced state
             if len(versions) > 1:
                 break
@@ -180,6 +178,7 @@ class ApiBase(object):
             
         if path is not None:
             path = mount_path
+            print("Where R is giving error2")
             path = DKubeFeatureSetUtils()._get_d3_rel_path(mount_path)
             assert(path), "Dkube relative path can't be computed"
 
@@ -191,7 +190,7 @@ class ApiBase(object):
             if mount_path is None and name is not None:
                 mount_path = DKubeFeatureSetUtils().get_featureset_mountpath_from_name(name, 'outputs')
                 assert(mount_path), 'No valid path for the featureset'
-
+            print("Where R is giving error")
             assert(mount_path and os.path.isabs(mount_path)), "path is invalid"
             path = DKubeFeatureSetUtils()._get_d3_rel_path(mount_path)
             assert(path), "Dkube relative path can't be computed"
