@@ -49,7 +49,7 @@ DkubeFeature <- R6::R6Class(
         stop("Error: Name and dataframe both cannot be empty")
       }
       if(is.null(metadata)){
-        metadata = featureset_metadata(df)
+        metadata = self$featureset_metadata(df)
       }
       self$write_feature(df, path)
       token <- Sys.getenv("DKUBE_USER_ACCESS_TOKEN")
