@@ -242,13 +242,14 @@ class DKubeFeatureSetUtils:
         object = config.get(type, None)
         if object is None:
             return None
+        path = path.rstrip("/")
         
         for rec in object:
             fsets = rec.get('featureset', None)
             if fsets is None:
                 continue
             for fset in fsets:
-                if path == fset['location'] or path == fset['dkube_path']:
+                if path == fset['location'] or path == fset['dkube_path'].rstrip("/"):
                     return os.path.relpath(fset['storage_path'], "dkube")
             
         return None
@@ -317,7 +318,7 @@ class DKubeFeatureSetUtils:
 
         return path
 
-    def features_write(self, name, dataframe, path=None) -> str:
+    def features_write(self, name, dataframe, path=None, dftype="Py") -> str:
         """
             Method to write features
 
@@ -360,7 +361,7 @@ class DKubeFeatureSetUtils:
 
         # Try writing 2 times
         # After commit, the parquet file becomes read-only
-        if not dataframe.empty:
+        if dftype == "Py" and not dataframe.empty:
             for i in range(2):
                 try:
                     table = pa.Table.from_pandas(dataframe)
