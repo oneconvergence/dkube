@@ -235,10 +235,19 @@ class DKubeFeatureSetUtils:
         return src
     '''
 
-    def _get_d3_rel_path(self, path, config, type):
+    def _get_d3_rel_path(self, path, config=None, type=None):
         # path - featureset mount path
         # config - config.json in dict format
         # type - search in 'outputs' or 'inputs'
+        if config is None:
+            try:
+                if os.path.exists("/etc/dkube/config.json"):
+                    with open("/etc/dkube/config.json") as fp:
+                        config = json.load(fp)
+                        type = 'outputs'
+            except:
+                path = None
+
         object = config.get(type, None)
         if object is None:
             return None
