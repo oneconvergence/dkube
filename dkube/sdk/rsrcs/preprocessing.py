@@ -55,7 +55,7 @@ class DkubePreprocessing(object):
         self.input_datasets = []
         self.input_models = []
         self.input_datums = JobDatumModel(
-            workspace=self.input_project, datasets=self.input_datasets, outputs=self.output_datasets)
+            workspace=self.input_project, datasets=self.input_datasets, models=self.input_models, outputs=self.output_datasets)
         self.input_featuresets = []
         self.output_featuresets = []
         self.featuresets = JobFeaturesetModel(inputs=self.input_featuresets, outputs=self.output_featuresets)
