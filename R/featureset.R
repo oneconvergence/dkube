@@ -28,34 +28,32 @@ DkubeFeature <- R6::R6Class(
       df <- arrow::read_parquet(file.path(path, filename))
       return(data.frame(df))
     },
-    featureset_metadata = function(df){
-      if(self$is_df_null(df)){
-        stop("Error: Dataframe is empty, can't compute metadata")
-      }
+    write_metadata = function(df){
       metadata = list()
       index = 1
       for (i in colnames(df)){
-        met_data = list()
-        met_data[["name"]] = i
-        met_data[["description"]] = "none"
-        met_data[["schema"]] = typeof(df[[i]])
+        met_data = vector(mode="list", length=3)
+        names(met_data) = c("name", "description", "schema")
+        met_data[[1]] = i; met_data[[2]] = "none"; met_data[[3]] = typeof(df[[i]])
         metadata[[index]] = met_data
         index = index + 1
       }
-      return(data.frame(metadata))
+      yaml::write_yaml(metadata, "/tmp/metadata.yaml")
+      return("/tmp/metadata.yaml")
     },
-    featureset_commit = function(name=NULL, df=NULL, path=NULL, metadata=NULL){
+    featureset_commit = function(name=NULL, df=NULL, path=NULL, filepath=NULL){
       if(is.null(name) && is.null(df)){
         stop("Error: Name and dataframe both cannot be empty")
       }
       if(is.null(metadata)){
-        metadata = self$featureset_metadata(df=df)
+        filepath = self$write_metadata(df=df)
       }
       self$write_feature(df=df, path=path)
       token <- Sys.getenv("DKUBE_USER_ACCESS_TOKEN")
       dkubeapi <- dkube$sdk$DkubeApi
       api <- dkubeapi(token = token)
-      api$commit_featureset(name=name,path=path, metadata=reticulate::r_to_py(metadata), dftype="R")
+      api$upload_featurespec(featureset=name, filepath=filepath)
+      api$commit_featureset(name=name, path=path, dftype="R")
     }
   ) 
 )
