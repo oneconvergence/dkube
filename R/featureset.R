@@ -28,7 +28,10 @@ DkubeFeature <- R6::R6Class(
       df <- arrow::read_parquet(file.path(path, filename))
       return(data.frame(df))
     },
-    write_metadata = function(df){
+    write_metadata = function(df, filepath=NULL){
+      if(is.null(filepath)){
+        stop("File path not provided to write metadata")
+      }
       metadata = list()
       index = 1
       for (i in colnames(df)){
@@ -38,14 +41,14 @@ DkubeFeature <- R6::R6Class(
         metadata[[index]] = met_data
         index = index + 1
       }
-      yaml::write_yaml(metadata, "/tmp/metadata.yaml")
-      return("/tmp/metadata.yaml")
+      yaml::write_yaml(metadata, filepath)
+      return(filepath)
     },
-    featureset_commit = function(name=NULL, df=NULL, path=NULL, filepath=NULL){
+    featureset_commit = function(name=NULL, df=NULL, path=NULL, filepath="/tmp/metadata.yaml"){
       if(is.null(name) && is.null(df)){
         stop("Error: Name and dataframe both cannot be empty")
       }
-      if(is.null(metadata)){
+      if(is.null(filepath)){
         filepath = self$write_metadata(df=df)
       }
       self$write_feature(df=df, path=path)
