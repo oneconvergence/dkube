@@ -48,9 +48,7 @@ DkubeFeature <- R6::R6Class(
       if(is.null(name) && is.null(df)){
         stop("Error: Name and dataframe both cannot be empty")
       }
-      if(is.null(filepath)){
-        filepath = self$write_metadata(df=df)
-      }
+      filepath = self$write_metadata(df=df, filepath)
       self$write_feature(df=df, path=path)
       token <- Sys.getenv("DKUBE_USER_ACCESS_TOKEN")
       dkubeapi <- dkube$sdk$DkubeApi
