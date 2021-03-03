@@ -318,7 +318,7 @@ class DKubeFeatureSetUtils:
 
         return path
 
-    def features_write(self, name, dataframe, path=None) -> str:
+    def features_write(self, name, dataframe, path=None, dftype="Py") -> str:
         """
             Method to write features
 
@@ -358,10 +358,9 @@ class DKubeFeatureSetUtils:
                 os.makedirs(path, exist_ok=True)
                 # update config.json
                 # _update_featureset_path(name, dkube)
-
         # Try writing 2 times
         # After commit, the parquet file becomes read-only
-        if not dataframe.empty:
+        if (dftype == "Py") and (not dataframe.empty):
             for i in range(2):
                 try:
                     table = pa.Table.from_pandas(dataframe)
