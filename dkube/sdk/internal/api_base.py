@@ -184,7 +184,7 @@ class ApiBase(object):
                 assert(mount_path), 'No valid path for the featureset'
 
             assert(mount_path and os.path.isabs(mount_path)), "path is invalid"
-            path = DKubeFeatureSetUtils()._get_d3_rel_path(mount_path)
+            path = DKubeFeatureSetUtils().get_rel_path_for_commit(mount_path)
             assert(path), "Dkube relative path can't be computed"
 
         job = FeatureSetCommitDefJob(kind='dkube_run')
