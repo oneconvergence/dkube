@@ -5,6 +5,7 @@ import click
 from dkube.sdk.internal import dkube_api
 from pyfiglet import Figlet
 
+from job import job
 from preprocessing import preprocessing
 from serving import serving
 from storage import storage
@@ -43,6 +44,7 @@ def main(ctx, name, token, wfid, runid):
 
     ctx.obj = {
         "api": api,
+        "token": token,
         "name": name,
         "token": token,
         "workflowid": wfid,
@@ -53,6 +55,7 @@ def main(ctx, name, token, wfid, runid):
     }
 
 
+main.add_command(job)
 main.add_command(preprocessing)
 main.add_command(training)
 main.add_command(serving)

@@ -60,7 +60,7 @@ def run_outputs(api, user, _class, name):
             }
         artifacts.append(entry)
 
-    with open("/tmp/artifacts", "w+") as op:
+    with open("/tmp/artifact", "w+") as op:
         op.write(json.dumps(artifacts))
 
 
