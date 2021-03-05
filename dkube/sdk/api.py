@@ -782,6 +782,7 @@ class DkubeApi(ApiBase, FilesBase):
         df = kwargs.get('df', None)
         metadata = kwargs.get('metadata', None)
         path = kwargs.get('path', None)
+        dftype = kwargs.get('dftype', "Py")
 
         if not df is None:
             assert(not df.empty), "df should not be empty"
@@ -794,7 +795,7 @@ class DkubeApi(ApiBase, FilesBase):
         if name is not None:
             featurespec, valid = super().get_featurespec(name)
             assert(valid), "featureset not found"
-        if ((not featurespec) and (name is not None) and (df is not None)):
+        if (dftype == "Py") and ((not featurespec) and (name is not None) and (df is not None)):
             if not metadata:
                 metadata = DKubeFeatureSetUtils().compute_features_metadata(df)
             assert(metadata), "The specified featureset is invalid"
@@ -802,11 +803,11 @@ class DkubeApi(ApiBase, FilesBase):
                 featureset=name, filepath=None, metadata=metadata)
             featurespec = metadata
 
-        if featurespec is not None and df is not None:
+        if (dftype == "Py") and (featurespec is not None) and (df is not None):
             isdf_valid = DKubeFeatureSetUtils().validate_features(df, featurespec)
             assert(isdf_valid), "DataFrame validation failed"
 
-        return super().commit_featureset(name, df, path)
+        return super().commit_featureset(name, df, path, dftype)
 
     def read_featureset(self, **kwargs):
         """

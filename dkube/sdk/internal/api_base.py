@@ -142,7 +142,7 @@ class ApiBase(object):
         response = self._api.featureset_add_one(featureset.featureset)
         return response.to_dict()
 
-    def commit_featureset(self, name, df, mount_path):
+    def commit_featureset(self, name, df, mount_path, dftype="Py"):
         # Make sure the dvs is setup
 
         path = None
@@ -168,10 +168,13 @@ class ApiBase(object):
 
         # commit api needs relative path from dkube store & featureset name
 
-        if df is not None:
+        if dftype == "Py" and df is not None:
             if mount_path is None:
                 assert(name), 'name should be specified'
             path = DKubeFeatureSetUtils().features_write(name, df, mount_path)
+            assert(path), "Dkube relative path can't be computed"
+        else:
+            path = DKubeFeatureSetUtils().features_write(name, df, mount_path, dftype)
             assert(path), "Dkube relative path can't be computed"
 
         if mount_path is not None and name is None:
@@ -182,7 +185,6 @@ class ApiBase(object):
             if mount_path is None and name is not None:
                 mount_path = DKubeFeatureSetUtils().get_featureset_mountpath_from_name(name, 'outputs')
                 assert(mount_path), 'No valid path for the featureset'
-
             assert(mount_path and os.path.isabs(mount_path)), "path is invalid"
             path = DKubeFeatureSetUtils().get_rel_path_for_commit(mount_path)
             assert(path), "Dkube relative path can't be computed"
