@@ -345,7 +345,17 @@ class DkubeApi(ApiBase, FilesBase):
         super().update_tags(run.pp_def)
         super().create_run(run)
         while wait_for_completion:
-            status = super().get_run('preprocessing', run.user, run.name, fields='status')
+            status = {}
+            try:
+                status = super().get_run('preprocessing', run.user, run.name, fields='status')
+            except ValueError as ve:
+                ve_without_num = ''.join(i for i in str(ve) if not i.isdigit())
+                if "Invalid value for `state` (Waiting for  gpu(s))" in ve_without_num:
+                    num = ''.join(i for i in str(ve) if i.isdigit())
+                    status['state'] = "Waiting for {} gpu(s)".format(num)
+                    status['reason'] = ""
+                else:
+                    raise ve
             state, reason = status['state'], status['reason']
             if state.lower() in ['complete', 'failed', 'error', 'stopped']:
                 print(
