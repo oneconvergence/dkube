@@ -242,12 +242,12 @@ class DkubeApi(ApiBase, FilesBase):
             run) == DkubeTraining, "Invalid type for run, value must be instance of rsrcs:DkubeTraining class"
         super().update_tags(run.training_def)
         response = super().create_run(run)
-        new_run_name = response["message"].split()[-1]
-        print("New run name: ", new_run_name)
+        msg = response['message']
+        resp_run_name = msg.split()[-1]
         while wait_for_completion:
             status = {}
             try:
-                status = super().get_run('training', run.user, new_run_name, fields='status')
+                status = super().get_run('training', run.user, resp_run_name, fields='status')
             except ValueError as ve:
                 ve_without_num = ''.join(i for i in str(ve) if not i.isdigit())
                 if "Invalid value for `state` (Waiting for  gpu(s))" in ve_without_num:
@@ -259,11 +259,11 @@ class DkubeApi(ApiBase, FilesBase):
             state, reason = status['state'], status['reason']
             if state.lower() in ['complete', 'failed', 'error', 'stopped', 'created']:
                 print(
-                    "run {} - completed with state {} and reason {}".format(run.name, state, reason))
+                    "run {} - completed with state {} and reason {}".format(resp_run_name, state, reason))
                 break
             else:
                 print(
-                    "run {} - waiting for completion, current state {}".format(run.name, state))
+                    "run {} - waiting for completion, current state {}".format(resp_run_name, state))
                 time.sleep(self.wait_interval)
 
     def get_training_run(self, user, name):
@@ -346,12 +346,12 @@ class DkubeApi(ApiBase, FilesBase):
             run) == DkubePreprocessing, "Invalid type for run, value must be instance of rsrcs:DkubePreprocessing class"
         super().update_tags(run.pp_def)
         response = super().create_run(run)
-        new_run_name = response["message"].split()[-1]
-        print("New run name: ", new_run_name)
+        msg = response['message']
+        resp_run_name = msg.split()[-1]
         while wait_for_completion:
             status = {}
             try:
-                status = super().get_run('preprocessing', run.user, new_run_name, fields='status')
+                status = super().get_run('preprocessing', run.user, resp_run_name, fields='status')
             except ValueError as ve:
                 ve_without_num = ''.join(i for i in str(ve) if not i.isdigit())
                 if "Invalid value for `state` (Waiting for  gpu(s))" in ve_without_num:
@@ -363,11 +363,11 @@ class DkubeApi(ApiBase, FilesBase):
             state, reason = status['state'], status['reason']
             if state.lower() in ['complete', 'failed', 'error', 'stopped']:
                 print(
-                    "run {} - completed with state {} and reason {}".format(run.name, state, reason))
+                    "run {} - completed with state {} and reason {}".format(resp_run_name, state, reason))
                 break
             else:
                 print(
-                    "run {} - waiting for completion, current state {}".format(run.name, state))
+                    "run {} - waiting for completion, current state {}".format(resp_run_name, state))
                 time.sleep(self.wait_interval)
 
     def get_preprocessing_run(self, user, name):
@@ -500,18 +500,18 @@ class DkubeApi(ApiBase, FilesBase):
             run.serving_def.deploy = None
 
         response = super().create_run(run)
-        new_run_name = response["message"].split()[-1]
-        print("New run name: ", new_run_name)
+        msg = response['message']
+        resp_run_name = msg.split()[-1]
         while wait_for_completion:
-            status = super().get_run('inference', run.user, new_run_name, fields='status')
+            status = super().get_run('inference', run.user, resp_run_name, fields='status')
             state, reason = status['state'], status['reason']
             if state.lower() in ['complete', 'failed', 'error', 'running','stopped']:
                 print(
-                    "run {} - completed with state {} and reason {}".format(run.name, state, reason))
+                    "run {} - completed with state {} and reason {}".format(resp_run_name, state, reason))
                 break
             else:
                 print(
-                    "run {} - waiting for completion, current state {}".format(run.name, state))
+                    "run {} - waiting for completion, current state {}".format(resp_run_name, state))
                 time.sleep(self.wait_interval)
 
     def get_test_inference(self, user, name):
