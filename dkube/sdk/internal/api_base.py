@@ -71,10 +71,12 @@ class ApiBase(object):
         self._api.jobs_list_delete_by_class(user, category, {'jobs': [name]})
 
     def create_run(self, run):
+        response = {}
         if hasattr(run, 'execute'):
             response = self._api.jobs_add_one(user=run.user, data=run.job, run='true', execute=run.execute)
         else:
             response = self._api.jobs_add_one(user=run.user, data=run.job, run='true')
+        return response
 
     def get_run(self, category, user, name, fields='*'):
         response = self._api.jobs_get_collection_one(user, category, name)
