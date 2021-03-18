@@ -594,17 +594,17 @@ class DkubeApi(ApiBase, FilesBase):
             code) == DkubeCode, "Invalid type for run, value must be instance of rsrcs:DkubeCode class"
         response = super().create_repo(code)
         msg = response['message']
-        resp_code_name = msg.split()[-1]
+        resp_code_name = msg.split()[-2]
         while wait_for_completion:
             status = super().get_repo('program', code.user, resp_code_name, fields='status')
             state, reason = status['state'], status['reason']
             if state.lower() in ['ready', 'failed', 'error']:
                 print(
-                    "code {} - completed with state {} and reason {}".format(code.name, state, reason))
+                    "code {} - completed with state {} and reason {}".format(resp_code_name, state, reason))
                 break
             else:
                 print(
-                    "code {} - waiting for completion, current state {}".format(code.name, state))
+                    "code {} - waiting for completion, current state {}".format(resp_code_name, state))
                 time.sleep(self.wait_interval)
 
     def get_code(self, user, name):
@@ -984,9 +984,9 @@ class DkubeApi(ApiBase, FilesBase):
 
         assert type(
             dataset) == DkubeDataset, "Invalid type for run, value must be instance of rsrcs:DkubeDataset class"
-        response = super().create_repo(code)
+        response = super().create_repo(dataset)
         msg = response['message']
-        resp_dataset_name = msg.split()[-1]
+        resp_dataset_name = msg.split()[-2]
         while wait_for_completion:
             status = super().get_repo('dataset', dataset.user, resp_dataset_name, fields='status')
             state, reason = status['state'], status['reason']
@@ -1077,9 +1077,9 @@ class DkubeApi(ApiBase, FilesBase):
 
         assert type(
             model) == DkubeModel, "Invalid type for run, value must be instance of rsrcs:DkubeModel class"
-        response = super().create_repo(code)
+        response = super().create_repo(model)
         msg = response['message']
-        resp_model_name = msg.split()[-1]
+        resp_model_name = msg.split()[-2]
         while wait_for_completion:
             status = super().get_repo('model', model.user, resp_model_name, fields='status')
             state, reason = status['state'], status['reason']
