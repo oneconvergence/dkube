@@ -107,6 +107,7 @@ class ApiBase(object):
         self.update_tags(repo.datum)
         response = self._api.datums_add_one(user=repo.user, data=repo.datum)
         print(response.to_dict())
+        return response.to_dict()
 
     def get_repo(self, category, user, name, fields='*'):
         response = self._api.datums_get_one_by_class(user, category, name)

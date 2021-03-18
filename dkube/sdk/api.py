@@ -592,9 +592,11 @@ class DkubeApi(ApiBase, FilesBase):
 
         assert type(
             code) == DkubeCode, "Invalid type for run, value must be instance of rsrcs:DkubeCode class"
-        super().create_repo(code)
+        response = super().create_repo(code)
+        msg = response['message']
+        resp_code_name = msg.split()[-1]
         while wait_for_completion:
-            status = super().get_repo('program', code.user, code.name, fields='status')
+            status = super().get_repo('program', code.user, resp_code_name, fields='status')
             state, reason = status['state'], status['reason']
             if state.lower() in ['ready', 'failed', 'error']:
                 print(
@@ -982,17 +984,19 @@ class DkubeApi(ApiBase, FilesBase):
 
         assert type(
             dataset) == DkubeDataset, "Invalid type for run, value must be instance of rsrcs:DkubeDataset class"
-        super().create_repo(dataset)
+        response = super().create_repo(code)
+        msg = response['message']
+        resp_dataset_name = msg.split()[-1]
         while wait_for_completion:
-            status = super().get_repo('dataset', dataset.user, dataset.name, fields='status')
+            status = super().get_repo('dataset', dataset.user, resp_dataset_name, fields='status')
             state, reason = status['state'], status['reason']
             if state.lower() in ['ready', 'failed', 'error']:
                 print(
-                    "dataset {} - completed with state {} and reason {}".format(dataset.name, state, reason))
+                    "dataset {} - completed with state {} and reason {}".format(resp_dataset_name, state, reason))
                 break
             else:
                 print(
-                    "dataset {} - waiting for completion, current state {}".format(dataset.name, state))
+                    "dataset {} - waiting for completion, current state {}".format(resp_dataset_name, state))
                 time.sleep(self.wait_interval)
 
     def get_dataset(self, user, name):
@@ -1073,17 +1077,19 @@ class DkubeApi(ApiBase, FilesBase):
 
         assert type(
             model) == DkubeModel, "Invalid type for run, value must be instance of rsrcs:DkubeModel class"
-        super().create_repo(model)
+        response = super().create_repo(code)
+        msg = response['message']
+        resp_model_name = msg.split()[-1]
         while wait_for_completion:
-            status = super().get_repo('model', model.user, model.name, fields='status')
+            status = super().get_repo('model', model.user, resp_model_name, fields='status')
             state, reason = status['state'], status['reason']
             if state.lower() in ['ready', 'failed', 'error']:
                 print(
-                    "model {} - completed with state {} and reason {}".format(model.name, state, reason))
+                    "model {} - completed with state {} and reason {}".format(resp_model_name, state, reason))
                 break
             else:
                 print(
-                    "model {} - waiting for completion, current state {}".format(model.name, state))
+                    "model {} - waiting for completion, current state {}".format(resp_model_name, state))
                 time.sleep(self.wait_interval)
 
     def get_model(self, user, name):
