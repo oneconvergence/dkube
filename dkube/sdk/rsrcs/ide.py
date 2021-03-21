@@ -43,9 +43,42 @@ from .util import *
 
 class DkubeIDE(object):
 
+    """
+
+        This class defines DKube IDE with helper functions to set properties of IDE.::
+
+            from dkube.sdk import *
+            ide = DkubeIDE("oneconv", name="ide")
+
+            Where first argument is the user of the IDE. User should be a valid onboarded user in dkube.
+
+    """
+
     FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0.0", "tensorflow_2.3.0",
                       "tensorflow_r-1.14", "tensorflow_r-2.0.0",
                       "pytorch_1.6", "sklearn_0.23.2"]
+
+    """
+	List of valid frameworks for the IDE images
+        Framework is used to derive the image used for Model Serving
+
+	:bash:`custom` :- Custom framework
+
+	:bash:`tensorflow_1.14` :- TF v1.14
+
+	:bash:`tensorflow_2.0.0` :- TF v2.0.0
+
+	:bash:`tensorflow_2.3.0` :- TF v2.3.0
+
+	:bash:`tensorflow_r-1.14` :- TF v1.14 with R
+
+	:bash:`tensorflow_r-2.0.0` :- TF v2.0.0 with R
+
+	:bash:`pytorch_1.6` :- Pytroch v1.6
+
+	:bash:`sklearn_0.23.2` :- Scikit-learn v0.23.2
+
+    """
 
     def __init__(self, user, name=generate('notebook'), description='', tags=[]):
         self.repo = JobInputDatumModel  # class assignment, caller creates objects
@@ -86,6 +119,9 @@ class DkubeIDE(object):
         self.update_basic(user, name, description, tags)
 
     def update_basic(self, user, name, description, tags):
+        """
+            Method to update the attributes specified at creation. Description and tags can be updated. tags is a list of string values.
+        """
         tags = list_of_strs(tags)
 
         self.user = user
@@ -102,10 +138,31 @@ class DkubeIDE(object):
         return self
 
     def update_group(self, group='default'):
+        """
+            Method to update the group to place the IDE.
+        """
         self.run_def.group = group
 
     def update_container(self, framework=FRAMEWORK_OPTS[0],
                          image_url="", login_uname="", login_pswd=""):
+        """
+            Method to update the framework and image to use for the IDE.
+
+            *Inputs*
+
+                framework
+                    One of the frameworks from **FRAMEWORK_OPTS**
+
+                image_url
+                    url for the image repository |br|
+                    e.g, docker.io/ocdr/dkube-datascience-tf-cpu:v2.0.0
+
+                login_uname
+                    username to access the image repository
+
+                login_pswd
+                    password to access the image repository
+        """
 
         framework = framework.lower()
         framework_opts = DkubeIDE.FRAMEWORK_OPTS
@@ -136,22 +193,74 @@ class DkubeIDE(object):
         return self
 
     def add_envvar(self, key, value):
+        """
+            Method to add env variable for the IDE
+
+            *Inputs*
+
+                key
+                    Name of env variable
+
+                value
+                    Value of env variable
+        """
         self.customenv.append(str(dict(key=value)))
         return self
 
     def add_code(self, name, commitid=None):
+        """
+            Method to update Code Repo for IDE
+
+            *Inputs*
+
+                name
+                    Name of Code Repo
+
+                commitid
+                    commit id to retreive from code repository
+        """
         if ":" not in name:
             name = self.user + ':' + name
         self.input_project_data.name = name
         self.input_project_data.version = commitid
 
     def add_input_dataset(self, name, version=None, mountpath=None):
+        """
+            Method to update Dataset Repo input for IDE
+
+            *Inputs*
+
+                name
+                    Name of Dataset Repo
+
+                version
+                    Version (unique id) to use from Dataset
+
+                mountpath
+                    Path at which the Dataset contents are made available in the IDE pod.
+                    For local Dataset, mountpath points to the contents of Dataset.
+                    For remote Dataset, mounpath contains the metadata for the Dataset.
+        """
         if ":" not in name:
             name = self.user + ':' + name
         repo = self.repo(name=name, version=version, mountpath=mountpath)
         self.input_datasets.append(repo)
 
     def add_input_model(self, name, version=None, mountpath=None):
+        """
+            Method to update Model Repo input for IDE
+
+            *Inputs*
+
+                name
+                    Name of Model Repo
+
+                version
+                    Version (unique id) to use from Model
+
+                mountpath
+                    Path at which the Model contents are made available in the IDE pod
+        """
         if ":" not in name:
             name = self.user + ':' + name
         repo = self.repo(name=name, version=version, mountpath=mountpath)
@@ -163,15 +272,54 @@ class DkubeIDE(object):
         self.output_models.append(repo)
 
     def update_config_file(self, name, body=None):
+        """
+            Method to update config file for IDE
+
+            *Inputs*
+
+                name
+                    Name of config file
+
+                body
+                    Config data which is made available as file with the specified name to the IDE under /mnt/dkube/config
+        """
         self.configfile.name = name
         self.configfile.body = body
 
     def update_hptuning(self, name, body=None):
+        """
+            Method to update hyperparameter tuning file for IDE
+
+            *Inputs*
+
+                name
+                    Name of hyperparameter tuning file
+
+                body
+                    Hyperparameter tuning data in yaml format which is made available as file with the specified name to the IDE pod under /mnt/dkube/config
+        """
         self.hptuning.name = name
         self.hptuning.body = body
 
     def update_resources(self, cpus=None, mem=None, ngpus=0):
+        """
+            Method to update resource requirements for IDE
+
+            *Inputs*
+
+                cpus
+                    Number of required cpus
+
+                mem
+                    Memory requied in MB (TODO)
+
+                gpus
+                    Number of required gpus
+        """
         self.notebook_def.ngpus = ngpus
         
     def list_frameworks(self):
+        """
+            Method to list frameworks available for IDE
+        """
         return json.dumps(self.FRAMEWORK_OPTS)

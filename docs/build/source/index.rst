@@ -1,6 +1,10 @@
 .. role:: bash(code)
    :language: bash
 
+.. |br| raw:: html
+
+   <br />
+
 DKube SDK Developer Guide
 **************************
 
@@ -40,6 +44,18 @@ DKube Resources
     :members:
 
 .. automodule:: dkube.sdk.rsrcs.model
+    :members:
+
+.. automodule:: dkube.sdk.rsrcs.training
+    :members:
+
+.. automodule:: dkube.sdk.rsrcs.preprocessing
+    :members:
+
+.. automodule:: dkube.sdk.rsrcs.ide
+    :members:
+
+.. automodule:: dkube.sdk.rsrcs.serving
     :members:
 
 
