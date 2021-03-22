@@ -38,11 +38,11 @@ write_feature = function(df, filename = "featureset.parquet", path=NULL){
 #'
 #' @export
 read_features = function(name = NULL, filename = "featureset.parquet", path=NULL){
+  is_mounted = FALSE
   if(is.null(path) && is.null(name)){
     message("Name and path both can't be empty")
     return(data.frame())
   }
-  is_mounted = FALSE
   if(is.null(path) && file.exists("/etc/dkube/config.json")){
     dkube_config = jsonlite::fromJSON("/etc/dkube/config.json")
     mounted_featuresets = dkube_config$inputs$featureset
@@ -53,12 +53,19 @@ read_features = function(name = NULL, filename = "featureset.parquet", path=NULL
       }
     }
   }
+  if (is_mounted == FALSE){
+    token <- Sys.getenv("DKUBE_USER_ACCESS_TOKEN")
+    dkubeapi <- dkube$sdk$DkubeApi
+    api <- dkubeapi(token = token)
+    path = api$read_featureset(name=name, dftype="R")
+  }
   if(!is.null(path)){
     df <- arrow::read_parquet(file.path(path, filename))
     return(data.frame(df))
-  } else{
+  }
+  else{
     message("Featureset not found")
-    return(data.frame())
+    return(list(data.frame(), is_mounted))
   }
 }
 
