@@ -197,12 +197,12 @@ class ApiBase(object):
         # Todo if the path is created, clean it up
         return response.to_dict()
 
-    def read_featureset(self, name, version=None, path=None):
+    def read_featureset(self, name, version=None, path=None, dftype="Py", ismounted=False):
         # Todo: read even if not mounted
-
-        df, ismounted = DKubeFeatureSetUtils().features_read(name, path)
-        if not df.empty or ismounted:
-            return df
+        if dftype == "Py":
+            df, ismounted = DKubeFeatureSetUtils().features_read(name, path)
+            if not df.empty or ismounted:
+                return df
 
         if version is None:
             versions = self.get_featureset_versions(name)
@@ -250,7 +250,10 @@ class ApiBase(object):
         if data_copy_resp['target_path']:
             path = DKubeFeatureSetUtils()._get_d3_full_path(
                 data_copy_resp['target_path'])
-            df, _ = DKubeFeatureSetUtils().features_read(name, path)
+            if dftype == "Py":
+                df, _ = DKubeFeatureSetUtils().features_read(name, path)
+            else:
+                return path
         return df
 
     def delete_featureset(self, delete_list):
