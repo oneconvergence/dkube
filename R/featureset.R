@@ -60,7 +60,6 @@ read_featureset = function(name = NULL, filename = "featureset.parquet", path=NU
     dkubeapi <- dkube$sdk$DkubeApi
     api <- dkubeapi(token = token)
     path = api$read_featureset(name=name, dftype="R")
-    print(path)
   }
   if(!is.null(path)){
     df <- arrow::read_parquet(file.path(path, filename))
