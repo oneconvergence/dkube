@@ -205,7 +205,6 @@ class DKubeFeatureSetUtils:
             
         return None
 
-    '''  
     def _get_d3_full_path(self, rel_path):
 
         # Get full path to dkube store
@@ -233,7 +232,6 @@ class DKubeFeatureSetUtils:
                 src = mnt_fields[0]
             src = os.path.relpath(src, "/dkube")
         return src
-    '''
 
     def _get_d3_rel_path(self, path, config, type):
         # path - featureset mount path
