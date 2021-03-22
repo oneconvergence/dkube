@@ -1,4 +1,4 @@
-#' Dkube Featureset 
+#' Dkube Featureset
 #'
 #' @param df dataframe
 #'
@@ -17,10 +17,10 @@ is_df_null = function(df){
 #'
 #' @param df dataframe
 #' @param filename parquet file name
-#' @param path output mount path 
+#' @param path output mount path
 #'
 #' @export
-write_feature = function(df, filename = "featureset.parquet", path=NULL){
+write_featureset = function(df, filename = "featureset.parquet", path=NULL){
   if(is_df_null(df)){
     stop("Error: Dataframe is empty, can't write featureset")
   }
@@ -34,10 +34,10 @@ write_feature = function(df, filename = "featureset.parquet", path=NULL){
 #'
 #' @param df dataframe
 #' @param filename parquet file name
-#' @param path input mount path 
+#' @param path input mount path
 #'
 #' @export
-read_features = = function(name = NULL, filename = "featureset.parquet", path=NULL){
+read_featureset = function(name = NULL, filename = "featureset.parquet", path=NULL){
   is_mounted = FALSE
   if(is.null(path) && is.null(name)){
     message("Name and path both can't be empty")
@@ -98,9 +98,9 @@ write_metadata = function(df, filepath=NULL){
 
 #' Dkube Featureset
 #'
-#' @param name featureset name 
+#' @param name featureset name
 #' @param df dataframe
-#' @param path output mount path 
+#' @param path output mount path
 #' @param filepath parquet file name
 #'
 #' @export
@@ -109,7 +109,7 @@ featureset_commit = function(name=NULL, df=NULL, path=NULL, filepath="/tmp/metad
     stop("Error: Name and dataframe both cannot be empty")
   }
   filepath = write_metadata(df=df, filepath)
-  write_feature(df=df, path=path)
+  write_featureset(df=df, path=path)
   token <- Sys.getenv("DKUBE_USER_ACCESS_TOKEN")
   dkubeapi <- dkube$sdk$DkubeApi
   api <- dkubeapi(token = token)
