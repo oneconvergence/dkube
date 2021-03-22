@@ -47,11 +47,51 @@ from .util import *
 
 class DkubeTraining(object):
 
+    """
+
+        This class defines DKube Training Run with helper functions to set properties of Training Run.::
+
+            from dkube.sdk import *
+            training = DkubeTraining("oneconv", name="mnist-run")
+
+            Where first argument is the user of the Training Run. User should be a valid onboarded user in dkube.
+
+    """
+    
     FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0.0", "tensorflow_2.3.0",
                       "tensorflow_r-1.14", "tensorflow_r-2.0.0",
                       "pytorch_1.6", "sklearn_0.23.2"]
+    """
+	List of valid frameworks for the training images
+        Framework is used to derive the image used for Model Serving
 
+	:bash:`custom` :- Custom framework
+
+	:bash:`tensorflow_1.14` :- TF v1.14
+
+	:bash:`tensorflow_2.0.0` :- TF v2.0.0
+
+	:bash:`tensorflow_2.3.0` :- TF v2.3.0
+
+	:bash:`tensorflow_r-1.14` :- TF v1.14 with R
+
+	:bash:`tensorflow_r-2.0.0` :- TF v2.0.0 with R
+
+	:bash:`pytorch_1.6` :- Pytroch v1.6
+
+	:bash:`sklearn_0.23.2` :- Scikit-learn v0.23.2
+
+    """
     DISTRIBUTION_OPTS = ["manual", "auto"]
+    """
+	Options for GPU jobs configured to run on multiple nodes
+        Default option is 'auto' where distribution is configured by the framework
+
+	:bash:`auto` :- Framework configures the distribution mechanism
+
+	:bash:`manual` :- User configures the distribution mechanism
+
+    """
 
     def __init__(self, user, name=generate('train'), description='', tags=[]):
         self.repo = JobInputDatumModel  # class assignment, caller creates objects
@@ -95,6 +135,9 @@ class DkubeTraining(object):
         self.execute = True
 
     def update_basic(self, user, name, description, tags):
+        """
+            Method to update the attributes specified at creation. Description and tags can be updated. tags is a list of string values.
+        """
         tags = list_of_strs(tags)
 
         self.user = user
@@ -111,10 +154,31 @@ class DkubeTraining(object):
         return self
 
     def update_group(self, group='default'):
+        """
+            Method to update the group to place the Training Run.
+        """
         self.run_def.group = group
 
     def update_container(self, framework=FRAMEWORK_OPTS[0],
                          image_url="", login_uname="", login_pswd=""):
+        """
+            Method to update the framework and image to use for the training run.
+
+            *Inputs*
+
+                framework
+                    One of the frameworks from **FRAMEWORK_OPTS**
+
+                image_url
+                    url for the image repository |br|
+                    e.g, docker.io/ocdr/dkube-datascience-tf-cpu:v2.0.0
+
+                login_uname
+                    username to access the image repository
+
+                login_pswd
+                    password to access the image repository
+        """
 
         framework = framework.lower()
         framework_opts = DkubeTraining.FRAMEWORK_OPTS
@@ -141,14 +205,41 @@ class DkubeTraining(object):
         return self
 
     def update_startupscript(self, startup_script=None):
+        """
+            Method to update startup command for the training run
+
+            *Inputs*
+
+                startup_script
+                    Startup command for the training run pod. Relative path from the root of the code repository should be specified.
+        """
         self.input_project.script = startup_script
         return self
 
     def add_envvar(self, key, value):
+        """
+            Method to add env variable for the training run
+
+            *Inputs*
+
+                key
+                    Name of env variable
+
+                value
+                    Value of env variable
+        """
         self.customenv[key] = value
         return self.add_envvars(self.customenv)
 
     def add_envvars(self, vars={}):
+        """
+            Method to add env variables for the training run
+
+            *Inputs*
+
+                vars
+                    Dictionary of env variable name and value
+        """
         envs = []
         for k, v in vars.items():
             envs.append({"key": k, "value": v})
@@ -157,50 +248,172 @@ class DkubeTraining(object):
         return self
 
     def add_code(self, name, commitid=None):
+        """
+            Method to update Code Repo for training run
+
+            *Inputs*
+
+                name
+                    Name of Code Repo
+
+                commitid
+                    commit id to retreive from code repository
+        """
         if ":" not in name:
             name = self.user + ':' + name
         self.input_project_data.name = name
         self.input_project_data.version = commitid
 
     def add_input_dataset(self, name, version=None, mountpath=None):
+        """
+            Method to update Dataset Repo input for training run
+
+            *Inputs*
+
+                name
+                    Name of Dataset Repo
+
+                version
+                    Version (unique id) to use from Dataset
+
+                mountpath
+                    Path at which the Dataset contents are made available in the training run pod.
+                    For local Dataset, mountpath points to the contents of Dataset.
+                    For remote Dataset, mounpath contains the metadata for the Dataset.
+        """
         if ":" not in name:
             name = self.user + ':' + name
         repo = self.repo(name=name, version=version, mountpath=mountpath)
         self.input_datasets.append(repo)
 
     def add_input_model(self, name, version=None, mountpath=None):
+        """
+            Method to update Model Repo input for training run
+
+            *Inputs*
+
+                name
+                    Name of Model Repo
+
+                version
+                    Version (unique id) to use from Model
+
+                mountpath
+                    Path at which the Model contents are made available in the training run pod
+        """
         if ":" not in name:
             name = self.user + ':' + name
         repo = self.repo(name=name, version=version, mountpath=mountpath)
         self.input_models.append(repo)
 
     def add_output_model(self, name, version=None, mountpath=None):
+        """
+            Method to update Model Repo output for training run
+
+            *Inputs*
+
+                name
+                    Name of Model Repo
+
+                version
+                    Version (unique id) to use from Model (TODO)
+
+                mountpath
+                    Path to write model files in the training run. A new version is created in the Model Repo with files written to this path.
+        """
         name = self.user + ':' + name
         repo = self.repo(name=name, version=version, mountpath=mountpath)
         self.output_models.append(repo)
 
     def update_config_file(self, name, body=None):
+        """
+            Method to update config file for training run
+
+            *Inputs*
+
+                name
+                    Name of config file
+
+                body
+                    Config data which is made available as file with the specified name to the training pod under /mnt/dkube/config
+        """
         self.configfile.name = name
         self.configfile.body = body
 
     def update_hptuning(self, name, body=None):
+        """
+            Method to update hyperparameter tuning file for training run
+
+            *Inputs*
+
+                name
+                    Name of hyperparameter tuning file
+
+                body
+                    Hyperparameter tuning data in yaml format which is made available as file with the specified name to the training pod under /mnt/dkube/config
+        """
         self.hptuning.name = name
         self.hptuning.body = body
 
     def update_resources(self, cpus=None, mem=None, ngpus=0):
+        """
+            Method to update resource requirements for training run
+
+            *Inputs*
+
+                cpus
+                    Number of required cpus
+
+                mem
+                    Memory requied in MB (TODO)
+
+                gpus
+                    Number of required gpus
+        """
         self.training_def.ngpus = ngpus
 
     def update_distribution(self, opt=DISTRIBUTION_OPTS[0], nworkers=0):
+        """
+            Method to update gpu distribution method for training run
+
+            *Inputs*
+
+                opt
+                    GPU distribution method specified as one of **DISTRIBUTION_OPTS**
+
+                nworkers
+                    Number of required workers
+        """
         self.training_def.nworkers = nworkers
         if opt == "auto":
             self.training_def.gpus_override = True
 
     def add_input_featureset(self, name, version=None, mountpath=None):
+        """
+            Method to update Featureset input for training run
+
+            *Inputs*
+
+                name
+                    Name of Featureset
+
+                version
+                    Version (unique id) to use from Featureset
+
+                mountpath
+                    Path at which the Featureset contents are made available in the training run pod
+        """
         featureset_model = JobInputFeaturesetModel(name=name, version=version, mountpath=mountpath)
         self.input_featuresets.append(featureset_model)
 
     def list_frameworks(self):
+        """
+            Method to list frameworks available for training run
+        """
         return json.dumps(self.FRAMEWORK_OPTS)
     
     def disable_execution(self):
+        """
+            Method to create Run with no execution to track external execution
+        """
         self.execute = False
