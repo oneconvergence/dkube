@@ -197,7 +197,7 @@ class ApiBase(object):
         # Todo if the path is created, clean it up
         return response.to_dict()
 
-    def read_featureset(self, name, version=None, path=None, dftype="Py", ismounted=False):
+    def read_featureset(self, name, version=None, path=None, dftype="Py"):
         # Todo: read even if not mounted
         if dftype == "Py":
             df, ismounted = DKubeFeatureSetUtils().features_read(name, path)
