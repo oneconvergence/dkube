@@ -423,6 +423,69 @@ class DkubeApi(ApiBase, FilesBase):
 
         super().delete_run('preprocessing', user, name)
 
+    def update_test_inference(self, run: DkubeServing, wait_for_completion=True):
+        """
+            Method to create a test inference on DKube.
+            Raises Exception in case of errors.
+
+
+            *Inputs*
+
+                run
+                    Instance of :bash:`dkube.sdk.rsrcs.serving` class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+                    Picks defaults for predictor, transformer configs from the existing inference deployment.
+                    If version is not specified then deployment is updated to latest version.
+
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for job to complete after submission.
+                    Job is declared complete if it is one of the :bash:`complete/failed/error` state
+
+        """
+
+        inference = super().get_run('inference', run.user, run.name)
+        inference = inference['job']['parameters']['inference']
+
+        if run.predictor.image == None:
+            run.predictor.update_serving_image(None, inference['serving_image']['image']['path'],
+                                               inference['serving_image']['image']['username'], inference['serving_image']['image']['password'])
+
+        if run.serving_def.version == None:
+            # Update to latest version
+            v = self.get_model_latest_version(
+                run.serving_def.owner, run.serving_def.model)
+            run.serving_def.version = v['uuid']
+
+        transformer = inference['transformer']
+        if transformer == True and run.transformer.image == None:
+            run.update_transformer_image(inference['transformer_image']['image']['path'],
+                                         inference['transformer_image']['image']['username'],
+                                         inference['transformer_image']['image']['password'])
+
+        if transformer == True and run.serving_def.transformer_project == None:
+            run.set_transformer(True, script=inference['transformer_code'])
+            run.update_transformer_code(
+                inference['transformer_project'], inference['transformer_commit_id'])
+
+        # Don't allow prod deploy using this API, if MODEL_CATALOG_ENABLED=true
+        if run.serving_def.deploy == True and super().is_model_catalog_enabled() == True:
+            run.serving_def.deploy = None
+
+        super().update_inference(run)
+
+        while wait_for_completion:
+            status = super().get_run('inference', run.user, run.name, fields='status')
+            state, reason = status['state'], status['reason']
+            if state.lower() in ['complete', 'failed', 'error', 'running', 'stopped']:
+                print(
+                    "run {} - completed with state {} and reason {}".format(run.name, state, reason))
+                break
+            else:
+                print(
+                    "run {} - waiting for completion, current state {}".format(run.name, state))
+                time.sleep(self.wait_interval)
+
     def create_test_inference(self, run: DkubeServing, wait_for_completion=True):
         """
             Method to create a test inference on DKube.
@@ -472,7 +535,8 @@ class DkubeApi(ApiBase, FilesBase):
                 li = None
 
             if li == None and run.predictor.image == None:
-                raise Exception("Lineage is nil, predictor image must be provided.")
+                raise Exception(
+                    "Lineage is nil, predictor image must be provided.")
 
             if li != None and run.predictor.image == None:
                 si = li['run']['parameters'][
@@ -499,7 +563,7 @@ class DkubeApi(ApiBase, FilesBase):
         while wait_for_completion:
             status = super().get_run('inference', run.user, run.name, fields='status')
             state, reason = status['state'], status['reason']
-            if state.lower() in ['complete', 'failed', 'error', 'running','stopped']:
+            if state.lower() in ['complete', 'failed', 'error', 'running', 'stopped']:
                 print(
                     "run {} - completed with state {} and reason {}".format(run.name, state, reason))
                 break
@@ -766,7 +830,7 @@ class DkubeApi(ApiBase, FilesBase):
                 b) featurespec will be downloaded for the specifed featureset and df is validated for conformance.
 
             If name is specified, it derives the path for committing the features. 
-            
+
             If path is also specified, it doesn't derive the path. It uses the specified path. However, path should a mount path into dkube store.
 
             If df is not specified, it assumes the df is already written to the featureset path. Features can be written to featureset mount path using DkubeFeatureSet.write_features
@@ -1831,7 +1895,7 @@ class DkubeApi(ApiBase, FilesBase):
 
             user
                 name of user under which model is to be created in dkube.
-            
+
             name
                 name of model to be created in dkube.
 
@@ -1858,4 +1922,3 @@ class DkubeApi(ApiBase, FilesBase):
                 print(
                     "model {} - waiting for completion, current state {}".format(name, state))
                 time.sleep(self.wait_interval)
-

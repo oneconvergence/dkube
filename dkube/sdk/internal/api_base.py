@@ -70,6 +70,9 @@ class ApiBase(object):
     def delete_ide(self, category, user, name):
         self._api.jobs_list_delete_by_class(user, category, {'jobs': [name]})
 
+    def update_inference(self, run):
+        self._api.update_inference(run.user, run.job.name, run.serving_def)
+
     def create_run(self, run):
         if hasattr(run, 'execute'):
             response = self._api.jobs_add_one(user=run.user, data=run.job, run='true', execute=run.execute)
