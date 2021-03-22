@@ -213,7 +213,7 @@ class DKubeFeatureSetUtils:
         fullpath = os.path.join(base, rel_path)
         return (fullpath)
     
-'''
+    '''
     def _get_d3_path_from_mountpoint(self, path):
         # For the following df output, it returns featuresets/train-fs-1936/1610480719061/data
         #   10.233.59.86:/dkube/featuresets/train-fs-1936/1610480719061/data  /fset
@@ -232,7 +232,7 @@ class DKubeFeatureSetUtils:
                 src = mnt_fields[0]
             src = os.path.relpath(src, "/dkube")
         return src
-'''
+    '''
     def _get_d3_rel_path(self, path, config, type):
         # path - featureset mount path
         # config - config.json in dict format
