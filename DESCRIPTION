@@ -11,5 +11,6 @@ Imports:
     methods,
     arrow,
     reticulate (>= 1.10),
-    import
+    import,
+    httr
 RoxygenNote: 7.1.1
