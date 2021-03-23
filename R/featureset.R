@@ -40,10 +40,11 @@ write_featureset = function(name, df, filename = "featureset.parquet", path=NULL
   }
   if(is.null(path)){
     dkube_path = Sys.getenv("DKUBE_USER_STORE")
+    jobuuid = Sys.getenv("DKUBE_JOB_UUID")
     if(length(dkube_path) < 2){
       return()
     }
-    featureset_folder = paste0("gen/outputs/", name)
+    featureset_folder = file.path("gen/outputs/", jobuuid, name)
     path = file.path(dkube_path, featureset_folder)
     dir.create(path, recursive = TRUE, showWarnings = FALSE)
   }
@@ -124,7 +125,7 @@ write_metadata = function(df, filepath=NULL){
 #' @param filepath parquet file name
 #'
 #' @export
-featureset_commit = function(name=NULL, df=NULL, path=NULL, filepath="/tmp/metadata.yaml"){
+commit_featureset = function(name=NULL, df=NULL, path=NULL, filepath="/tmp/metadata.yaml"){
   if(is.null(name) && is.null(df)){
     stop("Error: Name and dataframe both cannot be empty")
   }
