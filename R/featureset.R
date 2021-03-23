@@ -16,6 +16,19 @@ is_df_null = function(df){
 #' Dkube Featureset
 #'
 #' @param name featureset name
+#'
+#' @export
+create_featureset = function(name){
+  token <- Sys.getenv("DKUBE_USER_ACCESS_TOKEN")
+  featureset = dkube$sdk$rsrcs$DkubeFeatureSet(name=name)
+  dkubeapi <- dkube$sdk$DkubeApi
+  api <- dkubeapi(token = token)
+  api$create_featureset(featureset)
+}
+
+#' Dkube Featureset
+#'
+#' @param name featureset name
 #' @param df dataframe
 #' @param filename parquet file name
 #' @param path output mount path
