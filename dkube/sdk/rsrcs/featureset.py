@@ -349,7 +349,7 @@ class DKubeFeatureSetUtils:
 
             if path is None:
                 dkube_path = os.getenv('DKUBE_USER_STORE')
-                job_uuid=os.getenv("DKUBE_JOB_UUID"))
+                job_uuid=os.getenv("DKUBE_JOB_UUID")
                 if dkube_path is None:
                     return None
                 featureset_folder = os.path.join('gen/outputs/', job_uuid, name)
