@@ -2,15 +2,15 @@
 #'
 #' @export
 rs_fetch_datasets <- function(){
-  ds <- fromJSON("/etc/dkube/redshift.json")
+  ds <- jsonlite::fromJSON("/etc/dkube/redshift.json")
   user <- Sys.getenv("USER")
   url <- "http://dkube-controller-worker.dkube:5000/dkube/v2/controller/users/%s/datums/class/dataset/datum/%s"
   token <- Sys.getenv("DKUBE_USER_ACCESS_TOKEN")
   header_data <- sprintf("Bearer %s", token)
 
   for (row in 1:nrow(ds)){
-    r <- GET(sprintf(url, Sys.getenv("LOGNAME"), ds[row, "rs_name"]), add_headers(Authorization = header_data))
-    password <- content(r)$data$datum$redshift$password
+    r <- httr::GET(sprintf(url, Sys.getenv("LOGNAME"), ds[row, "rs_name"]), add_headers(Authorization = header_data))
+    password <- httr::content(r)$data$datum$redshift$password
     ds[row, "password"] <- password
   }
   ds
