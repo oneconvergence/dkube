@@ -804,6 +804,7 @@ class DkubeApi(ApiBase, FilesBase):
         path = kwargs.get('path', None)
         dftype = kwargs.get('dftype', "Py")
 
+
         if not df is None:
             assert(not df.empty), "df should not be empty"
         else:
@@ -860,11 +861,12 @@ class DkubeApi(ApiBase, FilesBase):
         name = kwargs.get('name', None)
         version = kwargs.get('version', None)
         path = kwargs.get('path', None)
+        dftype = kwargs.get('dftype', "Py")
 
         assert ((version == None) or isinstance(
             version, str)), "version must be a string"
 
-        return super().read_featureset(name, version, path)
+        return super().read_featureset(name, version, path, dftype)
 
     def list_featuresets(self, query=None):
         """
