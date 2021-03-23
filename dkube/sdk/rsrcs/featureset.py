@@ -348,7 +348,7 @@ class DKubeFeatureSetUtils:
                 path = None
 
             if path is None:
-                dkube_path = "/tmp/fsdata/"
+                dkube_path = "/home/tmp/fsdata/"
                 # os.getenv('DKUBE_USER_STORE')
                 if dkube_path is None:
                     return None
