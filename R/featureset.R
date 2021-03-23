@@ -15,17 +15,37 @@ is_df_null = function(df){
 
 #' Dkube Featureset
 #'
+#' @param name featureset name
 #' @param df dataframe
 #' @param filename parquet file name
 #' @param path output mount path
 #'
 #' @export
-write_featureset = function(df, filename = "featureset.parquet", path=NULL){
+write_featureset = function(name, df, filename = "featureset.parquet", path=NULL){
   if(is_df_null(df)){
     stop("Error: Dataframe is empty, can't write featureset")
   }
+  if(is.null(path) && file.exists("/etc/dkube/config.json")){
+    dkube_config = jsonlite::fromJSON("/etc/dkube/config.json")
+    mounted_featuresets = dkube_config$outputs$featureset
+    for (each_mounted_fs in mounted_featuresets){
+      if(!is.null(each_mounted_fs)){
+        if (each_mounted_fs$name == name){
+          path = each_mounted_fs$location
+          is_mounted = TRUE
+          break
+        }
+      }
+    }
+  }
   if(is.null(path)){
-    return()
+    dkube_path = Sys.getenv("DKUBE_USER_STORE")
+    if(length(dkube_path) < 2){
+      return()
+    }
+    featureset_folder = paste0("gen/outputs/", name)
+    path = file.path(dkube_path, featureset_folder)
+    dir.create(path, recursive = TRUE, showWarnings = FALSE)
   }
   arrow::write_parquet(df, file.path(path, filename))
 }
@@ -51,6 +71,7 @@ read_featureset = function(name = NULL, filename = "featureset.parquet", path=NU
         if (each_mounted_fs$name == name){
           path = each_mounted_fs$location
           is_mounted = TRUE
+          break
         }
       }
     }
@@ -108,7 +129,7 @@ featureset_commit = function(name=NULL, df=NULL, path=NULL, filepath="/tmp/metad
     stop("Error: Name and dataframe both cannot be empty")
   }
   filepath = write_metadata(df=df, filepath)
-  write_featureset(df=df, path=path)
+  write_featureset(name=name, df=df, path=path)
   token <- Sys.getenv("DKUBE_USER_ACCESS_TOKEN")
   dkubeapi <- dkube$sdk$DkubeApi
   api <- dkubeapi(token = token)

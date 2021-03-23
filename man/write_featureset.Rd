@@ -4,9 +4,11 @@
 \alias{write_featureset}
 \title{Dkube Featureset}
 \usage{
-write_featureset(df, filename = "featureset.parquet", path = NULL)
+write_featureset(name, df, filename = "featureset.parquet", path = NULL)
 }
 \arguments{
+\item{name}{featureset name}
+
 \item{df}{dataframe}
 
 \item{filename}{parquet file name}
