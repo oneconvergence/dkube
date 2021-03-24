@@ -59,7 +59,7 @@ write_featureset = function(name, df, filename = "featureset.parquet", path=NULL
     }
     featureset_folder = file.path("gen/outputs/", jobuuid, name)
     path = file.path(dkube_path, featureset_folder)
-    dir.create(path, recursive = TRUE, showWarnings = FALSE)
+    dir.create(path, recursive = TRUE)
   }
   arrow::write_parquet(df, file.path(path, filename))
 }
