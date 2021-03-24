@@ -57,7 +57,7 @@ write_featureset = function(name, df, filename = "featureset.parquet", path=NULL
   if(is.null(path)){
     dkube_path = Sys.getenv("DKUBE_USER_STORE")
     jobuuid = Sys.getenv("DKUBE_JOB_UUID")
-    if(length(dkube_path) < 2){
+    if(dkube_path == ""){
       return()
     }
     featureset_folder = file.path("gen/outputs/", jobuuid, name)
