@@ -38,13 +38,16 @@ write_featureset = function(name, df, filename = "featureset.parquet", path=NULL
   if(is_df_null(df)){
     stop("Error: Dataframe is empty, can't write featureset")
   }
+  print("inside write")
   if(is.null(path) && file.exists("/etc/dkube/config.json")){
+    print("loading config")
     dkube_config = jsonlite::fromJSON("/etc/dkube/config.json")
     mounted_featuresets = dkube_config$outputs$featureset
     for (each_mounted_fs in mounted_featuresets){
       if(!is.null(each_mounted_fs)){
         if (each_mounted_fs$name == name){
           path = each_mounted_fs$location
+          print(path)
           is_mounted = TRUE
           break
         }
@@ -62,6 +65,7 @@ write_featureset = function(name, df, filename = "featureset.parquet", path=NULL
     dir.create(path, recursive = TRUE)
     print(path)
   }
+  print("edrf",path)
   arrow::write_parquet(df, file.path(path, filename))
 }
 
