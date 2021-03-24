@@ -38,7 +38,6 @@ write_featureset = function(name, df, filename = "featureset.parquet", path=NULL
   if(is_df_null(df)){
     stop("Error: Dataframe is empty, can't write featureset")
   }
-  print("inside write")
   if(is.null(path) && file.exists("/etc/dkube/config.json")){
     print("loading config")
     dkube_config = jsonlite::fromJSON("/etc/dkube/config.json")
@@ -58,15 +57,14 @@ write_featureset = function(name, df, filename = "featureset.parquet", path=NULL
     dkube_path = Sys.getenv("DKUBE_USER_STORE")
     jobuuid = Sys.getenv("DKUBE_JOB_UUID")
     if(dkube_path == ""){
-      return()
+      return(FALSE)
     }
     featureset_folder = file.path("gen/outputs/", jobuuid, name)
     path = file.path(dkube_path, featureset_folder)
     dir.create(path, recursive = TRUE)
-    print(path)
   }
-  print(path)
   arrow::write_parquet(df, file.path(path, filename))
+  return(TRUE)
 }
 
 #' Dkube Featureset
@@ -148,7 +146,10 @@ commit_featureset = function(name=NULL, df=NULL, path=NULL, filepath="/tmp/metad
     stop("Error: Name and dataframe both cannot be empty")
   }
   filepath = write_metadata(df=df, filepath)
-  write_featureset(name=name, df=df, path=path)
+  st = write_featureset(name=name, df=df, path=path)
+  if (st == FALSE){
+    stop("Error, path cannot be generated")
+  }
   token <- Sys.getenv("DKUBE_USER_ACCESS_TOKEN")
   dkubeapi <- dkube$sdk$DkubeApi
   api <- dkubeapi(token = token)
