@@ -23,7 +23,7 @@ def get_frameworks() :
     configuration = dkube_api.Configuration()
     configuration.api_key_prefix['Authorization'] = 'Bearer'
     configuration.host = url_normalize(
-        '{}/dkube/v2/controller'.format(dkube_url))
+            '{}/dkube/v2/controller'.format(dkube_url))
     configuration.api_key['Authorization'] = token
     configuration.verify_ssl = False
     api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
@@ -31,4 +31,7 @@ def get_frameworks() :
     fw_opts = []
     fws =  response.to_dict()['data']
     for fw in fws ['training']['frameworks'] :
-                                                                                                                    1,5           Top
+        for v in fw['versions'] :
+            name =  fw['name'] + "_" + v['name']
+            fw_opts.append(name)
+    return fw_opts
