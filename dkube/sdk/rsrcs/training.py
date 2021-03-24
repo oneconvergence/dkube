@@ -116,7 +116,7 @@ class DkubeTraining(object):
 
         self.update_basic(user, name, description, tags)
         self.execute = True
-        self.FRAMEWORK_OPTS =  self.FRAMEWORK_OPTS + get_frameworks()
+        self.FRAMEWORK_OPTS.extend(get_frameworks())
 
     def update_basic(self, user, name, description, tags):
         """

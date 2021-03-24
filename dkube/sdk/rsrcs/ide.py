@@ -101,7 +101,7 @@ class DkubeIDE(object):
         self.job = JobModel(name=None, parameters=self.job_parameters)
 
         self.update_basic(user, name, description, tags)
-        self.FRAMEWORK_OPTS =  self.FRAMEWORK_OPTS + get_frameworks()
+        self.FRAMEWORK_OPTS.extend(get_frameworks())
 
     def update_basic(self, user, name, description, tags):
         """
