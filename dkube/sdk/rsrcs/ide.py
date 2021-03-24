@@ -54,29 +54,13 @@ class DkubeIDE(object):
 
     """
 
-    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0.0", "tensorflow_2.3.0",
-                      "tensorflow_r-1.14", "tensorflow_r-2.0.0",
-                      "pytorch_1.6", "sklearn_0.23.2"]
+    FRAMEWORK_OPTS = ["custom"]
 
     """
 	List of valid frameworks for the IDE images
         Framework is used to derive the image used for Model Serving
 
 	:bash:`custom` :- Custom framework
-
-	:bash:`tensorflow_1.14` :- TF v1.14
-
-	:bash:`tensorflow_2.0.0` :- TF v2.0.0
-
-	:bash:`tensorflow_2.3.0` :- TF v2.3.0
-
-	:bash:`tensorflow_r-1.14` :- TF v1.14 with R
-
-	:bash:`tensorflow_r-2.0.0` :- TF v2.0.0 with R
-
-	:bash:`pytorch_1.6` :- Pytroch v1.6
-
-	:bash:`sklearn_0.23.2` :- Scikit-learn v0.23.2
 
     """
 
@@ -117,6 +101,7 @@ class DkubeIDE(object):
         self.job = JobModel(name=None, parameters=self.job_parameters)
 
         self.update_basic(user, name, description, tags)
+        self.FRAMEWORK_OPTS =  self.FRAMEWORK_OPTS + get_frameworks()
 
     def update_basic(self, user, name, description, tags):
         """
