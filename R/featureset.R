@@ -65,7 +65,7 @@ write_featureset = function(name, df, filename = "featureset.parquet", path=NULL
     dir.create(path, recursive = TRUE)
     print(path)
   }
-  print("edrf",path)
+  print(path)
   arrow::write_parquet(df, file.path(path, filename))
 }
 
