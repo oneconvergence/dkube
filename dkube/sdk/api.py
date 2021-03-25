@@ -1931,7 +1931,6 @@ class DkubeApi(ApiBase, FilesBase):
                 model is declared complete if it is one of the :bash:`complete/failed/error` state
         """
         upl_resp = super().upload_model(user, name, filepath, extract=extract)
-        print(upl_resp)
         while wait_for_completion:
             status = super().get_repo('model', user, name, fields='status')
             state, reason = status['state'], status['reason']
@@ -1943,3 +1942,54 @@ class DkubeApi(ApiBase, FilesBase):
                 print(
                     "model {} - waiting for completion, current state {}".format(name, state))
                 time.sleep(self.wait_interval)
+
+    def download_dataset(self, path, user, name, version=None):
+        """This method is to download a version of dataset.
+        Downloaded content will be copied in the specified path.
+
+        *Inputs*
+
+            path
+                Target path where the dataset must be downloaded.
+
+            user
+                name of user who owns the dataset.
+
+            name
+                name of dataset.
+
+            version
+                version of the dataset.
+
+        """
+
+        if version == None:
+            version = self.get_dataset_latest_version(user, name)
+            version = version['uuid']
+
+        super().download_dataset(path, user, name, version)
+
+    def download_model(self, path, user, name, version=None):
+        """This method is to download a version of model.
+        Downloaded content will be copied in the specified path.
+
+        *Inputs*
+
+            path
+                Target path where the dataset must be downloaded.
+
+            user
+                name of user who owns the dataset.
+
+            name
+                name of dataset.
+
+            version
+                version of the dataset.
+
+        """
+        if version == None:
+            version = self.get_model_latest_version(user, name)
+            version = version['uuid']
+
+        super().download_model(path, user, name, version)
