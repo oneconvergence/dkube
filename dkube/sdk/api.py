@@ -240,6 +240,25 @@ class DkubeApi(ApiBase, FilesBase):
 
         assert type(
             run) == DkubeTraining, "Invalid type for run, value must be instance of rsrcs:DkubeTraining class"
+        valid_fw = False
+        fw_opts = ['custom']
+        if run.executor_dkube_framework.choice == 'custom' :
+            valid_fw = True
+        else :
+            fws := self.get_training_capabilities()
+            for fw in fws :
+                for v in fw['versions'] :
+                    if run.executor_dkube_framework.choice == fw['name'] and run.dkube_framework_details.version == v['name'] :
+                        valid_fw = True
+                        break
+                    else :
+                        name =  fw['name'] + "_" + v['name']
+                        fw_opts.append(name)
+                if valid_fw == True
+                    break
+
+        assert valid_fw == True, "Invalid choice for framework, select oneof(" + str(fw_opts) + ")"
+        
         super().update_tags(run.training_def)
         super().create_run(run)
         while wait_for_completion:

@@ -57,14 +57,6 @@ class DkubeTraining(object):
             Where first argument is the user of the Training Run. User should be a valid onboarded user in dkube.
 
     """
-    
-    FRAMEWORK_OPTS = ["custom"]
-    """
-	List of valid frameworks for the training images
-        Framework is used to derive the image used for Model Serving
-
-	:bash:`custom` :- Custom framework
-    """
     DISTRIBUTION_OPTS = ["manual", "auto"]
     """
 	Options for GPU jobs configured to run on multiple nodes
@@ -116,7 +108,6 @@ class DkubeTraining(object):
 
         self.update_basic(user, name, description, tags)
         self.execute = True
-        self.FRAMEWORK_OPTS.extend(get_frameworks())
 
     def update_basic(self, user, name, description, tags):
         """
@@ -143,7 +134,7 @@ class DkubeTraining(object):
         """
         self.run_def.group = group
 
-    def update_container(self, framework=FRAMEWORK_OPTS[0],
+    def update_container(self, framework="custom",
                          image_url="", login_uname="", login_pswd=""):
         """
             Method to update the framework and image to use for the training run.
@@ -165,10 +156,6 @@ class DkubeTraining(object):
         """
 
         framework = framework.lower()
-        framework_opts = DkubeTraining.FRAMEWORK_OPTS
-        assert framework in framework_opts, "Invalid choice for framework, select oneof(" + str(
-            framework_opts) + ")"
-
         if framework == "custom":
             framework_str = "custom"
             version_str = ""
