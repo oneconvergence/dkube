@@ -423,9 +423,9 @@ class DkubeApi(ApiBase, FilesBase):
 
         super().delete_run('preprocessing', user, name)
 
-    def update_test_inference(self, run: DkubeServing, wait_for_completion=True):
+    def update_inference(self, run: DkubeServing, wait_for_completion=True):
         """
-            Method to create a test inference on DKube.
+            Method to update a test inference/deployment in DKube.
             Raises Exception in case of errors.
 
 
@@ -448,28 +448,49 @@ class DkubeApi(ApiBase, FilesBase):
         inference = inference['job']['parameters']['inference']
 
         if run.predictor.image == None:
-            run.predictor.update_serving_image(None, inference['serving_image']['image']['path'],
-                                               inference['serving_image']['image']['username'], inference['serving_image']['image']['password'])
+            run.update_serving_image(None, inference['serving_image']['image']['path'],
+                                     inference['serving_image']['image']['username'],
+                                     inference['serving_image']['image']['password'])
+
+        if run.serving_def.model == None:
+            run.serving_def.model = inference['model']
 
         if run.serving_def.version == None:
-            # Update to latest version
-            v = self.get_model_latest_version(
-                run.serving_def.owner, run.serving_def.model)
-            run.serving_def.version = v['uuid']
+            run.serving_def.version = inference['version']
 
-        transformer = inference['transformer']
-        if transformer == True and run.transformer.image == None:
+        if inference['transformer'] == True and run.serving_def.transformer == False:
             run.update_transformer_image(inference['transformer_image']['image']['path'],
                                          inference['transformer_image']['image']['username'],
                                          inference['transformer_image']['image']['password'])
 
-        if transformer == True and run.serving_def.transformer_project == None:
             run.set_transformer(True, script=inference['transformer_code'])
             run.update_transformer_code(
                 inference['transformer_project'], inference['transformer_commit_id'])
+        elif inference['transformer'] == False and run.serving_def.transformer == True:
+            li = self.get_model_lineage(
+                run.serving_def.owner, run.serving_def.model, run.serving_def.version)
 
-        # Don't allow prod deploy using this API, if MODEL_CATALOG_ENABLED=true
-        if run.serving_def.deploy == True and super().is_model_catalog_enabled() == True:
+            if run.transformer.image == None:
+                ti = li['run']['parameters']['generated'][
+                    'training_image']['image']
+                run.update_transformer_image(
+                    ti['path'], ti['username'], ti['password'])
+
+            if run.serving_def.transformer_project == None:
+                code = li['run']['parameters']['training'][
+                    'datums']['workspace']['data']
+                name = code['name'].split(':')[1]
+                run.update_transformer_code(name, code['version'])
+
+        if run.serving_def.min_replicas == 0:
+            run.serving_def.min_replicas = inference['minreplicas']
+
+        if run.serving_def.max_concurrent_requests == 0:
+            run.serving_def.max_concurrent_requests = inference['maxconcurrentrequests']
+
+        if super().is_model_catalog_enabled() == True:
+            run.serving_def.deploy = inference['deploy']
+        else:
             run.serving_def.deploy = None
 
         super().update_inference(run)
