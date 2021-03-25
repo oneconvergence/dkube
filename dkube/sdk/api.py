@@ -245,7 +245,7 @@ class DkubeApi(ApiBase, FilesBase):
         if run.executor_dkube_framework.choice == 'custom' :
             valid_fw = True
         else :
-            fws := self.get_training_capabilities()
+            fws = self.get_training_capabilities()
             for fw in fws :
                 for v in fw['versions'] :
                     if run.executor_dkube_framework.choice == fw['name'] and run.dkube_framework_details.version == v['name'] :
@@ -254,7 +254,7 @@ class DkubeApi(ApiBase, FilesBase):
                     else :
                         name =  fw['name'] + "_" + v['name']
                         fw_opts.append(name)
-                if valid_fw == True
+                if valid_fw == True:
                     break
 
         assert valid_fw == True, "Invalid choice for framework, select oneof(" + str(fw_opts) + ")"
