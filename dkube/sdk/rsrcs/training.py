@@ -376,12 +376,6 @@ class DkubeTraining(object):
         """
         featureset_model = JobInputFeaturesetModel(name=name, version=version, mountpath=mountpath)
         self.input_featuresets.append(featureset_model)
-
-    def list_frameworks(self):
-        """
-            Method to list frameworks available for training run
-        """
-        return json.dumps(self.FRAMEWORK_OPTS)
     
     def disable_execution(self):
         """

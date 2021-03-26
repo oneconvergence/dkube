@@ -1440,6 +1440,15 @@ class DkubeApi(ApiBase, FilesBase):
         caps = self.get_datascience_capabilities()
         return caps['serving']['frameworks']
 
+    def list_frameworks(self):
+        fw_opts = ['custom']
+        fws = self.get_training_capabilities()
+        for fw in fws :
+            for v in fw['versions'] :
+                name =  fw['name'] + "_" + v['name']
+                fw_opts.append(name)
+        return json.dumps(fw_opts)
+
     def release_model(self, user, model, version=None, wait_for_completion=True):
         """
             Method to release a model to model catalog.
