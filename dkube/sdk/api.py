@@ -816,9 +816,13 @@ class DkubeApi(ApiBase, FilesBase):
         if name is not None:
             featurespec, valid = super().get_featurespec(name)
             assert(valid), "featureset not found"
-        if (dftype == "Py") and ((not featurespec) and (name is not None) and (df is not None)):
+            if not featurespec:
+                existing_spec = []
+            else:
+                existing_spec = featurespec
+        if (dftype == "Py") and ((len(existing_spec) != len(df.keys())) and (name is not None) and (df is not None)):
             if not metadata:
-                metadata = DKubeFeatureSetUtils().compute_features_metadata(df)
+                metadata = DKubeFeatureSetUtils().compute_features_metadata(df, existing_spec)
             assert(metadata), "The specified featureset is invalid"
             self.upload_featurespec(
                 featureset=name, filepath=None, metadata=metadata)
