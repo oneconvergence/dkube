@@ -57,31 +57,6 @@ class DkubeTraining(object):
             Where first argument is the user of the Training Run. User should be a valid onboarded user in dkube.
 
     """
-    
-    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0.0", "tensorflow_2.3.0",
-                      "tensorflow_r-1.14", "tensorflow_r-2.0.0",
-                      "pytorch_1.6", "sklearn_0.23.2"]
-    """
-	List of valid frameworks for the training images
-        Framework is used to derive the image used for Model Serving
-
-	:bash:`custom` :- Custom framework
-
-	:bash:`tensorflow_1.14` :- TF v1.14
-
-	:bash:`tensorflow_2.0.0` :- TF v2.0.0
-
-	:bash:`tensorflow_2.3.0` :- TF v2.3.0
-
-	:bash:`tensorflow_r-1.14` :- TF v1.14 with R
-
-	:bash:`tensorflow_r-2.0.0` :- TF v2.0.0 with R
-
-	:bash:`pytorch_1.6` :- Pytroch v1.6
-
-	:bash:`sklearn_0.23.2` :- Scikit-learn v0.23.2
-
-    """
     DISTRIBUTION_OPTS = ["manual", "auto"]
     """
 	Options for GPU jobs configured to run on multiple nodes
@@ -159,7 +134,7 @@ class DkubeTraining(object):
         """
         self.run_def.group = group
 
-    def update_container(self, framework=FRAMEWORK_OPTS[0],
+    def update_container(self, framework="custom",
                          image_url="", login_uname="", login_pswd=""):
         """
             Method to update the framework and image to use for the training run.
@@ -181,10 +156,6 @@ class DkubeTraining(object):
         """
 
         framework = framework.lower()
-        framework_opts = DkubeTraining.FRAMEWORK_OPTS
-        assert framework in framework_opts, "Invalid choice for framework, select oneof(" + str(
-            framework_opts) + ")"
-
         if framework == "custom":
             framework_str = "custom"
             version_str = ""
@@ -405,12 +376,6 @@ class DkubeTraining(object):
         """
         featureset_model = JobInputFeaturesetModel(name=name, version=version, mountpath=mountpath)
         self.input_featuresets.append(featureset_model)
-
-    def list_frameworks(self):
-        """
-            Method to list frameworks available for training run
-        """
-        return json.dumps(self.FRAMEWORK_OPTS)
     
     def disable_execution(self):
         """
