@@ -1702,6 +1702,9 @@ class DkubeApi(ApiBase, FilesBase):
 
                 user
                     Name of the user.
+                    
+                modelcatalog
+                    Model catalog name
 
                 model
                     Name of the model catalog
