@@ -1691,7 +1691,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().modelcatalog(user)
 
-    def get_modelcatalog_item(self, user, model, version):
+    def get_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
         """
             Method to get an item from modelcatalog
             Raises exception on any connection errors.
@@ -1710,16 +1710,30 @@ class DkubeApi(ApiBase, FilesBase):
                     Version of the model
 
         """
-        mc = self.modelcatalog(user)
+        if modelcatalog is None and model is None:
+            return "either model catalog name or model name should be provided"
+        if version is None:
+            return "Model Version must be provided"
+        if modelcatalog:
+            mc = self.modelcatalog(user)
+            for item in mc:
+                if item['name'] == modelcatalog:
+                    for iversion in item['versions']:
+                        if iversion['model']['version'] == version:
+                            return iversion
 
-        for item in mc:
-            if item['model']['name'] == model:
-                for iversion in item['versions']:
-                    if iversion['model']['version'] == version:
-                        return iversion
+            raise Exception(
+                '{}.{} not found in model catalog'.format(model, version))
+        else:
+            mc = self.modelcatalog(user)
+            for item in mc:
+                if item['model']['name'] == model:
+                    for iversion in item['versions']:
+                        if iversion['model']['version'] == version:
+                            return iversion
 
-        raise Exception(
-            '{}.{} not found in model catalog'.format(model, version))
+            raise Exception(
+                '{}.{} not found in model catalog'.format(model, version))
         
     def delete_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
         """
@@ -1755,8 +1769,10 @@ class DkubeApi(ApiBase, FilesBase):
             for item in mc:
                 if item['model']['name'] == model:
                     modelcatalog = item["name"]
-            response = self._api.delete_model_catalog_item(user, modelcatalog, version)
-            return response
+                    response = self._api.delete_model_catalog_item(user, modelcatalog, version)
+                    return response
+            raise Exception(
+                '{}.{} not found in model catalog'.format(model, version))
             
 
     def list_projects(self):
