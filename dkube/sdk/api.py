@@ -1704,7 +1704,7 @@ class DkubeApi(ApiBase, FilesBase):
                     Name of the user.
 
                 model
-                    Name of the model in the model catalog
+                    Name of the model catalog
 
                 version
                     Version of the model
@@ -1713,13 +1713,51 @@ class DkubeApi(ApiBase, FilesBase):
         mc = self.modelcatalog(user)
 
         for item in mc:
-            if item['name'] == model:
+            if item['model']['name'] == model:
                 for iversion in item['versions']:
                     if iversion['model']['version'] == version:
                         return iversion
 
         raise Exception(
             '{}.{} not found in model catalog'.format(model, version))
+        
+    def delete_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
+        """
+            Method to delete an item from modelcatalog
+            Raises exception on any connection errors.
+
+            *Available in DKube Release: 2.2*
+
+            *Inputs*
+
+                user
+                    Name of the user.
+                    
+                modelcatalog
+                    Model catalog name
+
+                model
+                    Name of the model catalog
+
+                version
+                    Version of the model
+
+        """
+        if modelcatalog is None and model is None:
+            return "either model catalog name or model name should be provided"
+        if version is None:
+            return "Model Version must be provided"
+        if modelcatalog:
+            response = self._api.delete_model_catalog_item(user, modelcatalog, version)
+            return response
+        else:
+            mc = self.modelcatalog(user)
+            for item in mc:
+                if item['model']['name'] == model:
+                    modelcatalog = item["name"]
+            response = self._api.delete_model_catalog_item(user, modelcatalog, version)
+            return response
+            
 
     def list_projects(self):
         """
