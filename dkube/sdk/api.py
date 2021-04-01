@@ -802,6 +802,7 @@ class DkubeApi(ApiBase, FilesBase):
         df = kwargs.get('df', None)
         metadata = kwargs.get('metadata', None)
         path = kwargs.get('path', None)
+        merge = kwargs.get('merge', "True")
         dftype = kwargs.get('dftype', "Py")
 
 
@@ -812,14 +813,15 @@ class DkubeApi(ApiBase, FilesBase):
             assert(name or path),  "name or path should be specified"
 
         featurespec = None
+        existing_spec = []
 
         if name is not None:
             featurespec, valid = super().get_featurespec(name)
             assert(valid), "featureset not found"
-            if not featurespec:
-                existing_spec = []
-            else:
+            if featurespec:
                 existing_spec = featurespec
+        if merge is False:
+            existing_spec = []
         if (dftype == "Py") and ((len(existing_spec) != len(df.keys())) and (name is not None) and (df is not None)):
             if not metadata:
                 metadata = DKubeFeatureSetUtils().compute_features_metadata(df, existing_spec)
