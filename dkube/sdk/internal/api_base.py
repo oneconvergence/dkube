@@ -267,9 +267,14 @@ class ApiBase(object):
             response = self._api.featureset_list(query=filter)
         return response.to_dict()['data']
 
-    def get_featureset(self, featureset):
+    def get_featureset(self, featureset, fields='*'):
         r = self._api.featureset_get(featureset)
-        return r.to_dict()
+        if fields == '*':
+            return r.to_dict()['data']
+        elif fields == 'status':
+            return r.to_dict()['data']['generated']['status']
+        else:
+            raise Exception('Unsupported fields parameter')
 
     def get_featurespec(self, featureset):
         r = self._api.featureset_get(featureset)

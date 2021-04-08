@@ -70,7 +70,7 @@ class DatumStatusModel(object):
         :param state: The state of this DatumStatusModel.  # noqa: E501
         :type: str
         """
-        allowed_values = ["DOWNLOADING", "READY", "FAILED", "STOPPING", "STOPPED", "UPLOADING", "CREATING", "QUEUED", "EXTRACTING"]  # noqa: E501
+        allowed_values = ["DOWNLOADING", "READY", "FAILED", "STOPPING", "STOPPED", "UPLOADING", "CREATING", "QUEUED", "EXTRACTING", "DELETING"]  # noqa: E501
         if state not in allowed_values:
             raise ValueError(
                 "Invalid value for `state` ({0}), must be one of {1}"  # noqa: E501

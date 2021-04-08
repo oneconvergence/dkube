@@ -222,14 +222,14 @@ class DkubeApi(ApiBase, FilesBase):
             status = {}
             try:
                 status = super().get_ide('notebook', user, name, fields='status')
-                state, reason = status['state'], status['reason']
+                state = status['state']
                 if state.lower() in ['deleting']:
                     print(
-                        "notebook {} - waiting for deletion, current state {}".format    (name, state))
+                        "notebook {} - waiting for deletion, current state {}".format(name, state))
                     time.sleep(self.wait_interval)
                 else:
                     print(
-                        "notebook {} - deletion failed, current state {}".format (name, state))
+                        "notebook {} - deletion failed, current state {}".format(name, state))
                     break
             except ApiException as ve:
                 print(
@@ -301,7 +301,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "run {} - waiting for completion, current state {}".format(run.name, state))
                 time.sleep(self.wait_interval)
 
-    def get_training_run(self, user, name):
+    def get_training_run(self, user, name, fields='*'):
         """
             Method to fetch the training run with given name for the given user.
             Raises exception in case of run is not found or any other connection errors.
@@ -318,7 +318,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().get_run('training', user, name)
+        return super().get_run('training', user, name, fields)
 
     def list_training_runs(self, user, shared=False, filters='*'):
         """
@@ -361,10 +361,10 @@ class DkubeApi(ApiBase, FilesBase):
             status = {}
             try:
                 status = super().get_run('training', user, name, fields='status')
-                state, reason = status['state'], status['reason']
+                state = status['state']
                 if state.lower() in ['deleting']:
                     print(
-                        "run {} - waiting for deletion, current state {}".format    (name, state))
+                        "run {} - waiting for deletion, current state {}".format(name, state))
                     time.sleep(self.wait_interval)
                 else:
                     print(
@@ -484,10 +484,10 @@ class DkubeApi(ApiBase, FilesBase):
             status = {}
             try:
                 status = super().get_run('preprocessing', user, name, fields='status')
-                state, reason = status['state'], status['reason']
+                state = status['state']
                 if state.lower() in ['deleting']:
                     print(
-                        "run {} - waiting for deletion, current state {}".format    (name, state))
+                        "run {} - waiting for deletion, current state {}".format(name, state))
                     time.sleep(self.wait_interval)
                 else:
                     print(
@@ -644,10 +644,10 @@ class DkubeApi(ApiBase, FilesBase):
             status = {}
             try:
                 status = super().get_run('inference', user, name, fields='status')
-                state, reason = status['state'], status['reason']
+                state = status['state']
                 if state.lower() in ['deleting']:
                     print(
-                        "inference {} - waiting for deletion, current state {}".format    (name, state))
+                        "inference {} - waiting for deletion, current state {}".format(name, state))
                     time.sleep(self.wait_interval)
                 else:
                     print(
@@ -733,7 +733,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_repos('program', user, shared)
 
-    def delete_code(self, user, name):
+    def delete_code(self, user, name, wait_for_completion=True):
         """
             Method to delete a code repo.
             Raises exception if token is of different user or if code with name doesnt exist or on any connection errors.
@@ -748,7 +748,25 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        super().delete_repo('program', user, name)
+        ret = super().delete_repo('program', user, name)
+        while wait_for_completion:
+            status = {}
+            try:
+                status = super().get_repo('program', user, name, fields='status')
+                state = status['state']
+                if state.lower() in ['deleting']:
+                    print(
+                        "code {} - waiting for deletion, current state {}".format(name, state))
+                    time.sleep(self.wait_interval)
+                else:
+                    print(
+                        "code {} - deletion failed, current state {}".format (name, state))
+                    break
+            except ApiException as ve:
+                print(
+                    "code {} - deleted".format(name))
+                break
+        return ret
 
 ################### Feature Store ############################
     def create_featureset(self, featureset: DkubeFeatureSet, wait_for_completion=True):
@@ -796,8 +814,9 @@ class DkubeApi(ApiBase, FilesBase):
 
         return response
 
+    """
     def delete_featuresets(self, featureset_list):
-        """
+        
             Method to delete a list of featuresets on DKube.
             Raises Exception in case of errors.
 
@@ -813,15 +832,16 @@ class DkubeApi(ApiBase, FilesBase):
 
                 A dictionary object  with response status with the list of deleted featureset names
 
-        """
+        
         assert (
             featureset_list
             and isinstance(featureset_list, list)
             and all(isinstance(featureset, str) for featureset in featureset_list)
         ), "Invalid parameter, value must be a list of featureset names"
         return super().delete_featureset(featureset_list)
+        """
 
-    def delete_featureset(self, name):
+    def delete_featureset(self, name, wait_for_completion):
         """
         Method to delete a a featureset.
 
@@ -842,7 +862,24 @@ class DkubeApi(ApiBase, FilesBase):
             name
             and isinstance(name, str)
         ), "Invalid parameter, value must be a featureset name"
-        return super().delete_featureset([name])
+        ret = super().delete_featureset([name])
+        while wait_for_completion:
+            status = {}
+            try:
+                status = super().get_repo('dataset', user, name, fields='status')
+                state = status['state']
+                if state.lower() in ['deleting']:
+                    print(
+                        "data {} - waiting for deletion, current state {}".format(name, state))
+                    time.sleep(self.wait_interval)
+                else:
+                    print(
+                        "dataset {} - deletion failed, current state {}".format (name, state))
+                    break
+            except ApiException as ve:
+                print(
+                    "dataset {} - deleted".format(name))
+                break
 
     def commit_featureset(self, **kwargs):
         """
@@ -1125,7 +1162,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_repos('dataset', user, shared)
 
-    def delete_dataset(self, user, name):
+    def delete_dataset(self, user, name, wait_for_completion=True):
         """
             Method to delete a dataset.
             Raises exception if token is of different user or if dataset with name doesnt exist or on any connection errors.
@@ -1140,7 +1177,25 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        super().delete_repo('dataset', user, name)
+        ret = super().delete_repo('dataset', user, name)
+        while wait_for_completion:
+            status = {}
+            try:
+                status = super().get_repo('dataset', user, name, fields='status')
+                state = status['state']
+                if state.lower() in ['deleting']:
+                    print(
+                        "dataset {} - waiting for deletion, current state {}".format(name, state))
+                    time.sleep(self.wait_interval)
+                else:
+                    print(
+                        "dataset {} - deletion failed, current state {}".format (name, state))
+                    break
+            except ApiException as ve:
+                print(
+                    "dataset {} - deleted".format(name))
+                break
+        return ret
 
     def create_model(self, model: DkubeModel, wait_for_completion=True):
         """
@@ -1216,7 +1271,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_repos('model', user, shared)
 
-    def delete_model(self, user, name):
+    def delete_model(self, user, name, wait_for_completion=True):
         """
             Method to delete a model.
             Raises exception if token is of different user or if model with name doesnt exist or on any connection errors.
@@ -1231,7 +1286,25 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        super().delete_repo('model', user, name)
+        ret = super().delete_repo('model', user, name)
+        while wait_for_completion:
+            status = {}
+            try:
+                status = super().get_repo('model', user, name, fields='status')
+                state = status['state']
+                if state.lower() in ['deleting']:
+                    print(
+                        "model {} - waiting for deletion, current state {}".format(name, state))
+                    time.sleep(self.wait_interval)
+                else:
+                    print(
+                        "model {} - deletion failed, current state {}".format (name, state))
+                    break
+            except ApiException as ve:
+                print(
+                    "model {} - deleted".format(name))
+                break
+        return ret
 
     def trigger_runs_bycode(self, code, user):
         """
@@ -1750,14 +1823,14 @@ class DkubeApi(ApiBase, FilesBase):
             status = {}
             try:
                 status = super().get_run('inference', user, name, fields='status')
-                state, reason = status['state'], status['reason']
+                state = status['state']
                 if state.lower() in ['deleting']:
                     print(
-                        "deployment {} - waiting for deletion, current state {}".format    (name, state))
+                        "deployment {} - waiting for deletion, current state {}".format(name, state))
                     time.sleep(self.wait_interval)
                 else:
                     print(
-                        "deployment {} - deletion failed, current state {}".format    (name, state))
+                        "deployment {} - deletion failed, current state {}".format(name, state))
                     break
             except ApiException as ve:
                 print(
