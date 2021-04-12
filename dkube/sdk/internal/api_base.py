@@ -97,8 +97,15 @@ class ApiBase(object):
         # inference runs
         if category == 'inference':
             all = 'false'
-        else:
-            all = 'true'
+        if category == 'inference':
+            all = 'false'
+        elif category == 'training':
+            all='false'
+        elif category == 'preprocessing':
+            all='false'
+       
+        #else:
+            #all = 'true'
         response = self._api.jobs_get_by_class(
             user, category, shared, run='true', all=all)
         return response.to_dict()['data']
