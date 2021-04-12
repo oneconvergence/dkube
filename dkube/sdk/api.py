@@ -1721,7 +1721,7 @@ class DkubeApi(ApiBase, FilesBase):
             "stage", "deploy"], "Invalid value for stage_or_deploy parameter."
 
         # Fetch the model from modelcatalog
-        mcitem = self.get_modelcatalog_item(user, model, version)
+        mcitem = self.get_modelcatalog_item(user, model=model, version=version)
 
         run = DkubeServing(user, name=name, description=description)
         run.update_serving_model(model, version=version)
