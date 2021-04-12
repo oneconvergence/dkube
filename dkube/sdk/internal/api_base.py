@@ -321,4 +321,48 @@ class ApiBase(object):
     def is_model_catalog_enabled(self):
         response = self._api.dkubeinfo()
         return response.to_dict()['data']['model_catalog_enabled']
-    
+
+    def download_dataset(self, path, user, name, version):
+        url = url + \
+            "/dkube/v2/ext/users/{}/datums/class/dataset/datum/{}/version/{}/export".format(
+                user, name, version)
+        url = url_normalize(url)
+
+        headers = {"Authorization": "Bearer {}".format(
+            token), "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36"}
+        resp = requests.get(url, headers=headers, verify=False)
+        zf = "/tmp/{}.zip".format(name)
+        with open(zf, 'wb') as f:
+            f.write(resp.content)
+
+        tempdir = tempfile.TemporaryDirectory()
+        os.makedirs(path, exist_ok=True)
+        with zipfile.ZipFile(zf, 'r') as zip_ref:
+            zip_ref.extractall(tempdir.name)
+
+        copy_tree("{}/{}/data".format(tempdir.name, version), path)
+        # use temp_dir, and when done:
+        tempdir.cleanup()
+
+    def download_model(self, path, user, name, version):
+        url = url + \
+            "/dkube/v2/ext/users/{}/datums/class/model/datum/{}/version/{}/export".format(
+                user, name, version)
+        url = url_normalize(url)
+
+        headers = {"Authorization": "Bearer {}".format(
+            token), "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36"}
+        resp = requests.get(url, headers=headers, verify=False)
+        zf = "/tmp/{}.zip".format(name)
+        with open(zf, 'wb') as f:
+            f.write(resp.content)
+
+        tempdir = tempfile.TemporaryDirectory()
+        os.makedirs(path, exist_ok=True)
+        with zipfile.ZipFile(zf, 'r') as zip_ref:
+            zip_ref.extractall(tempdir.name)
+
+        copy_tree("{}/{}/data".format(tempdir.name, version), path)
+        # use temp_dir, and when done:
+        tempdir.cleanup()
+        
