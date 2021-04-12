@@ -108,6 +108,7 @@ class DkubeTraining(object):
 
         self.update_basic(user, name, description, tags)
         self.execute = True
+	self.gpus_override = False
 
     def update_basic(self, user, name, description, tags):
         """
@@ -382,3 +383,7 @@ class DkubeTraining(object):
             Method to create Run with no execution to track external execution
         """
         self.execute = False
+   
+    def update_gpus_flag(self):
+	## USE THE CPU TO RUN THE JOB AS GPU NOT AVAILABLE
+	self.gpus_override = True
