@@ -70,11 +70,16 @@ class ApiBase(object):
     def delete_ide(self, category, user, name):
         self._api.jobs_list_delete_by_class(user, category, {'jobs': [name]})
 
+    def update_inference(self, run):
+        self._api.update_inference(run.user, run.job.name, run.serving_def)
+
     def create_run(self, run):
         if hasattr(run, 'execute'):
-            response = self._api.jobs_add_one(user=run.user, data=run.job, run='true', execute=run.execute)
+            response = self._api.jobs_add_one(
+                user=run.user, data=run.job, run='true', execute=run.execute)
         else:
-            response = self._api.jobs_add_one(user=run.user, data=run.job, run='true')
+            response = self._api.jobs_add_one(
+                user=run.user, data=run.job, run='true')
 
     def get_run(self, category, user, name, fields='*'):
         response = self._api.jobs_get_collection_one(user, category, name)
@@ -365,4 +370,3 @@ class ApiBase(object):
         copy_tree("{}/{}/data".format(tempdir.name, version), path)
         # use temp_dir, and when done:
         tempdir.cleanup()
-        

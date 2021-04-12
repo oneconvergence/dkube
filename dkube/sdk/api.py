@@ -240,6 +240,25 @@ class DkubeApi(ApiBase, FilesBase):
 
         assert type(
             run) == DkubeTraining, "Invalid type for run, value must be instance of rsrcs:DkubeTraining class"
+        valid_fw = False
+        fw_opts = ['custom']
+        if run.executor_dkube_framework.choice == 'custom' :
+            valid_fw = True
+        else :
+            fws = self.get_training_capabilities()
+            for fw in fws :
+                for v in fw['versions'] :
+                    if run.executor_dkube_framework.choice == fw['name'] and run.dkube_framework_details.version == v['name'] :
+                        valid_fw = True
+                        break
+                    else :
+                        name =  fw['name'] + "_" + v['name']
+                        fw_opts.append(name)
+                if valid_fw == True:
+                    break
+
+        assert valid_fw == True, "Invalid choice for framework, select oneof(" + str(fw_opts) + ")"
+        
         super().update_tags(run.training_def)
         super().create_run(run)
         while wait_for_completion:
@@ -423,6 +442,90 @@ class DkubeApi(ApiBase, FilesBase):
 
         super().delete_run('preprocessing', user, name)
 
+    def update_inference(self, run: DkubeServing, wait_for_completion=True):
+        """
+            Method to update a test inference/deployment in DKube.
+            Raises Exception in case of errors.
+
+
+            *Inputs*
+
+                run
+                    Instance of :bash:`dkube.sdk.rsrcs.serving` class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+                    Picks defaults for predictor, transformer configs from the existing inference deployment.
+                    If version is not specified then deployment is updated to latest version.
+
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for job to complete after submission.
+                    Job is declared complete if it is one of the :bash:`complete/failed/error` state
+
+        """
+
+        inference = super().get_run('inference', run.user, run.name)
+        inference = inference['job']['parameters']['inference']
+
+        if run.predictor.image == None:
+            run.update_serving_image(None, inference['serving_image']['image']['path'],
+                                     inference['serving_image']['image']['username'],
+                                     inference['serving_image']['image']['password'])
+
+        if run.serving_def.model == None:
+            run.serving_def.model = inference['model']
+
+        if run.serving_def.version == None:
+            run.serving_def.version = inference['version']
+
+        if inference['transformer'] == True and run.serving_def.transformer == False:
+            run.update_transformer_image(inference['transformer_image']['image']['path'],
+                                         inference['transformer_image']['image']['username'],
+                                         inference['transformer_image']['image']['password'])
+
+            run.set_transformer(True, script=inference['transformer_code'])
+            run.update_transformer_code(
+                inference['transformer_project'], inference['transformer_commit_id'])
+        elif inference['transformer'] == False and run.serving_def.transformer == True:
+            li = self.get_model_lineage(
+                run.serving_def.owner, run.serving_def.model, run.serving_def.version)
+
+            if run.transformer.image == None:
+                ti = li['run']['parameters']['generated'][
+                    'training_image']['image']
+                run.update_transformer_image(
+                    ti['path'], ti['username'], ti['password'])
+
+            if run.serving_def.transformer_project == None:
+                code = li['run']['parameters']['training'][
+                    'datums']['workspace']['data']
+                name = code['name'].split(':')[1]
+                run.update_transformer_code(name, code['version'])
+
+        if run.serving_def.min_replicas == 0:
+            run.serving_def.min_replicas = inference['minreplicas']
+
+        if run.serving_def.max_concurrent_requests == 0:
+            run.serving_def.max_concurrent_requests = inference['maxconcurrentrequests']
+
+        if super().is_model_catalog_enabled() == True:
+            run.serving_def.deploy = inference['deploy']
+        else:
+            run.serving_def.deploy = None
+
+        super().update_inference(run)
+
+        while wait_for_completion:
+            status = super().get_run('inference', run.user, run.name, fields='status')
+            state, reason = status['state'], status['reason']
+            if state.lower() in ['complete', 'failed', 'error', 'running', 'stopped']:
+                print(
+                    "run {} - completed with state {} and reason {}".format(run.name, state, reason))
+                break
+            else:
+                print(
+                    "run {} - waiting for completion, current state {}".format(run.name, state))
+                time.sleep(self.wait_interval)
+
     def create_test_inference(self, run: DkubeServing, wait_for_completion=True):
         """
             Method to create a test inference on DKube.
@@ -472,7 +575,8 @@ class DkubeApi(ApiBase, FilesBase):
                 li = None
 
             if li == None and run.predictor.image == None:
-                raise Exception("Lineage is nil, predictor image must be provided.")
+                raise Exception(
+                    "Lineage is nil, predictor image must be provided.")
 
             if li != None and run.predictor.image == None:
                 si = li['run']['parameters'][
@@ -499,7 +603,7 @@ class DkubeApi(ApiBase, FilesBase):
         while wait_for_completion:
             status = super().get_run('inference', run.user, run.name, fields='status')
             state, reason = status['state'], status['reason']
-            if state.lower() in ['complete', 'failed', 'error', 'running','stopped']:
+            if state.lower() in ['complete', 'failed', 'error', 'running', 'stopped']:
                 print(
                     "run {} - completed with state {} and reason {}".format(run.name, state, reason))
                 break
@@ -766,7 +870,7 @@ class DkubeApi(ApiBase, FilesBase):
                 b) featurespec will be downloaded for the specifed featureset and df is validated for conformance.
 
             If name is specified, it derives the path for committing the features. 
-            
+
             If path is also specified, it doesn't derive the path. It uses the specified path. However, path should a mount path into dkube store.
 
             If df is not specified, it assumes the df is already written to the featureset path. Features can be written to featureset mount path using DkubeFeatureSet.write_features
@@ -1429,6 +1533,15 @@ class DkubeApi(ApiBase, FilesBase):
         caps = self.get_datascience_capabilities()
         return caps['serving']['frameworks']
 
+    def list_frameworks(self):
+        fw_opts = ['custom']
+        fws = self.get_training_capabilities()
+        for fw in fws :
+            for v in fw['versions'] :
+                name =  fw['name'] + "_" + v['name']
+                fw_opts.append(name)
+        return json.dumps(fw_opts)
+
     def release_model(self, user, model, version=None, wait_for_completion=True):
         """
             Method to release a model to model catalog.
@@ -1896,7 +2009,7 @@ class DkubeApi(ApiBase, FilesBase):
 
             user
                 name of user under which model is to be created in dkube.
-            
+
             name
                 name of model to be created in dkube.
 
@@ -1911,7 +2024,6 @@ class DkubeApi(ApiBase, FilesBase):
                 model is declared complete if it is one of the :bash:`complete/failed/error` state
         """
         upl_resp = super().upload_model(user, name, filepath, extract=extract)
-        print(upl_resp)
         while wait_for_completion:
             status = super().get_repo('model', user, name, fields='status')
             state, reason = status['state'], status['reason']
@@ -1924,3 +2036,53 @@ class DkubeApi(ApiBase, FilesBase):
                     "model {} - waiting for completion, current state {}".format(name, state))
                 time.sleep(self.wait_interval)
 
+    def download_dataset(self, path, user, name, version=None):
+        """This method is to download a version of dataset.
+        Downloaded content will be copied in the specified path.
+
+        *Inputs*
+
+            path
+                Target path where the dataset must be downloaded.
+
+            user
+                name of user who owns the dataset.
+
+            name
+                name of dataset.
+
+            version
+                version of the dataset.
+
+        """
+
+        if version == None:
+            version = self.get_dataset_latest_version(user, name)
+            version = version['uuid']
+
+        super().download_dataset(path, user, name, version)
+
+    def download_model(self, path, user, name, version=None):
+        """This method is to download a version of model.
+        Downloaded content will be copied in the specified path.
+
+        *Inputs*
+
+            path
+                Target path where the dataset must be downloaded.
+
+            user
+                name of user who owns the dataset.
+
+            name
+                name of dataset.
+
+            version
+                version of the dataset.
+
+        """
+        if version == None:
+            version = self.get_model_latest_version(user, name)
+            version = version['uuid']
+
+        super().download_model(path, user, name, version)

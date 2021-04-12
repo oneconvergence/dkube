@@ -54,31 +54,6 @@ class DkubeIDE(object):
 
     """
 
-    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0.0", "tensorflow_2.3.0",
-                      "tensorflow_r-1.14", "tensorflow_r-2.0.0",
-                      "pytorch_1.6", "sklearn_0.23.2"]
-
-    """
-	List of valid frameworks for the IDE images
-        Framework is used to derive the image used for Model Serving
-
-	:bash:`custom` :- Custom framework
-
-	:bash:`tensorflow_1.14` :- TF v1.14
-
-	:bash:`tensorflow_2.0.0` :- TF v2.0.0
-
-	:bash:`tensorflow_2.3.0` :- TF v2.3.0
-
-	:bash:`tensorflow_r-1.14` :- TF v1.14 with R
-
-	:bash:`tensorflow_r-2.0.0` :- TF v2.0.0 with R
-
-	:bash:`pytorch_1.6` :- Pytroch v1.6
-
-	:bash:`sklearn_0.23.2` :- Scikit-learn v0.23.2
-
-    """
 
     def __init__(self, user, name=generate('notebook'), description='', tags=[]):
         self.repo = JobInputDatumModel  # class assignment, caller creates objects
@@ -143,7 +118,7 @@ class DkubeIDE(object):
         """
         self.run_def.group = group
 
-    def update_container(self, framework=FRAMEWORK_OPTS[0],
+    def update_container(self, framework="custom",
                          image_url="", login_uname="", login_pswd=""):
         """
             Method to update the framework and image to use for the IDE.
@@ -151,7 +126,6 @@ class DkubeIDE(object):
             *Inputs*
 
                 framework
-                    One of the frameworks from **FRAMEWORK_OPTS**
 
                 image_url
                     url for the image repository |br|
@@ -165,10 +139,6 @@ class DkubeIDE(object):
         """
 
         framework = framework.lower()
-        framework_opts = DkubeIDE.FRAMEWORK_OPTS
-        assert framework in framework_opts, "Invalid choice for framework, select oneof(" + str(
-            framework_opts) + ")"
-
         if framework == "custom":
             framework_str = "custom"
             version_str = ""
@@ -318,8 +288,3 @@ class DkubeIDE(object):
         """
         self.notebook_def.ngpus = ngpus
         
-    def list_frameworks(self):
-        """
-            Method to list frameworks available for IDE
-        """
-        return json.dumps(self.FRAMEWORK_OPTS)

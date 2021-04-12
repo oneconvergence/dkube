@@ -70,7 +70,7 @@ class DkubeServing(object):
         self.serving_def.device = "cpu"
         self.serving_def.transformer = False
 
-    def set_transformer(self, transformer: bool=False, script=None):
+    def set_transformer(self, transformer: bool = False, script=None):
         """
             Method to specify if a transformer is required for pre/post processing of Inference requests and the script to run from the Transformer Code Repo.
 
@@ -97,7 +97,10 @@ class DkubeServing(object):
                 commitid
                     commit id used to retrieve the transformer Code Repo
         """
-        self.serving_def.transformer_project = self.user + ':' + code
+        if ':' not in code:
+            self.serving_def.transformer_project = self.user + ':' + code
+        else:
+            self.serving_def.transformer_project = code
         self.serving_def.transformer_commit_id = commitid
 
     def update_transformer_image(self, image_url='', login_uname=None, login_pswd=None):
