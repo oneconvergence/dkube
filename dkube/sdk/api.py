@@ -906,6 +906,7 @@ class DkubeApi(ApiBase, FilesBase):
         df = kwargs.get('df', None)
         metadata = kwargs.get('metadata', None)
         path = kwargs.get('path', None)
+        merge = kwargs.get('merge', "True")
         dftype = kwargs.get('dftype', "Py")
 
 
@@ -916,13 +917,18 @@ class DkubeApi(ApiBase, FilesBase):
             assert(name or path),  "name or path should be specified"
 
         featurespec = None
+        existing_spec = []
 
         if name is not None:
             featurespec, valid = super().get_featurespec(name)
             assert(valid), "featureset not found"
-        if (dftype == "Py") and ((not featurespec) and (name is not None) and (df is not None)):
+            if featurespec:
+                existing_spec = featurespec
+        if merge is False:
+            existing_spec = []
+        if (dftype == "Py") and ((len(existing_spec) != len(df.keys())) and (name is not None) and (df is not None)):
             if not metadata:
-                metadata = DKubeFeatureSetUtils().compute_features_metadata(df)
+                metadata = DKubeFeatureSetUtils().compute_features_metadata(df, existing_spec)
             assert(metadata), "The specified featureset is invalid"
             self.upload_featurespec(
                 featureset=name, filepath=None, metadata=metadata)
@@ -1800,7 +1806,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().modelcatalog(user)
 
-    def get_modelcatalog_item(self, user, model, version):
+    def get_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
         """
             Method to get an item from modelcatalog
             Raises exception on any connection errors.
@@ -1811,24 +1817,81 @@ class DkubeApi(ApiBase, FilesBase):
 
                 user
                     Name of the user.
+                    
+                modelcatalog
+                    Model catalog name
 
                 model
-                    Name of the model in the model catalog
+                    Name of the model catalog
 
                 version
                     Version of the model
 
         """
-        mc = self.modelcatalog(user)
+        if modelcatalog is None and model is None:
+            return "either model catalog name or model name should be provided"
+        if version is None:
+            return "Model Version must be provided"
+        if modelcatalog:
+            mc = self.modelcatalog(user)
+            for item in mc:
+                if item['name'] == modelcatalog:
+                    for iversion in item['versions']:
+                        if iversion['model']['version'] == version:
+                            return iversion
 
-        for item in mc:
-            if item['name'] == model:
-                for iversion in item['versions']:
-                    if iversion['model']['version'] == version:
-                        return iversion
+            raise Exception(
+                '{}.{} not found in model catalog'.format(model, version))
+        else:
+            mc = self.modelcatalog(user)
+            for item in mc:
+                if item['model']['name'] == model:
+                    for iversion in item['versions']:
+                        if iversion['model']['version'] == version:
+                            return iversion
 
-        raise Exception(
-            '{}.{} not found in model catalog'.format(model, version))
+            raise Exception(
+                '{}.{} not found in model catalog'.format(model, version))
+        
+    def delete_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
+        """
+            Method to delete an item from modelcatalog
+            Raises exception on any connection errors.
+
+            *Available in DKube Release: 2.2*
+
+            *Inputs*
+
+                user
+                    Name of the user.
+                    
+                modelcatalog
+                    Model catalog name
+
+                model
+                    Name of the model catalog
+
+                version
+                    Version of the model
+
+        """
+        if modelcatalog is None and model is None:
+            return "either model catalog name or model name should be provided"
+        if version is None:
+            return "Model Version must be provided"
+        if modelcatalog:
+            response = self._api.delete_model_catalog_item(user, modelcatalog, version)
+            return response
+        else:
+            mc = self.modelcatalog(user)
+            for item in mc:
+                if item['model']['name'] == model:
+                    modelcatalog = item["name"]
+                    response = self._api.delete_model_catalog_item(user, modelcatalog, version)
+                    return response
+            raise Exception(
+                '{}.{} not found in model catalog'.format(model, version))
+            
 
     def list_projects(self):
         """

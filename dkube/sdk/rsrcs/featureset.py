@@ -149,20 +149,24 @@ class DKubeFeatureSetUtils:
 
         return True
 
-    def compute_features_metadata(self, df):
+    def compute_features_metadata(self, df, fspec):
         # Prepare featurespec - Name, Description, Schema for each feature
         keys = df.keys()
+        if (len(fspec) == len(keys)):
+            return fspec
+        added_names = []
+        for each_spec in fspec:
+            added_names.append(each_spec["name"])
         schema = df.dtypes.to_list()
         featureset_metadata = []
-        
         for i in range(len(keys)):
-            metadata = {}
-            metadata["name"] = str(keys[i])
-            metadata["description"] = None
-            metadata["schema"] = str(schema[i])
-            featureset_metadata.append(metadata)
-
-        return featureset_metadata
+            if str(keys[i]) not in added_names:
+                metadata = {}
+                metadata["name"] = str(keys[i])
+                metadata["description"] = None
+                metadata["schema"] = str(schema[i])
+                featureset_metadata.append(metadata)
+        return featureset_metadata + fspec
         # Convert featureset metadata (featurespec) to yaml
         # featureset_metadata = yaml.dump(featureset_metadata, default_flow_style=False)
 

@@ -258,7 +258,7 @@ class DkubeDataset(object):
         self.nfsaccess.path = path
         self.nfsaccess.server = server
 
-    def update_redshift_details(self, endpoint, password, database, region):
+    def update_redshift_details(self, endpoint, database, user=None, password=None):
         """
             Method to update details of redshift data source.
 
@@ -280,10 +280,12 @@ class DkubeDataset(object):
 
         self.datum.source = "redshift"
         self.redshift.endpoint = endpoint
-        self.redshift.username = self.user
+        if user:
+            self.redshift.username = user
+        else:
+            self.redshift.username = self.user
         self.redshift.password = password
         self.redshift.database = database
-        self.redshift.region = region
         self.insecure_ssl = True
 
     def update_k8svolume_details(self, name):
