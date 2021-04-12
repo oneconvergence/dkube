@@ -100,7 +100,7 @@ class DkubeTraining(object):
         self.hptuning = DSJobModelHptuning()
         
         self.training_def = DSJobModel(executor=self.executor_def, datums=self.input_datums,
-                                       rdma=False, hyperparams=self.hyperparameters, hptuning=self.hptuning, featuresets=self.featuresets)
+                                       rdma=False, hyperparams=self.hyperparameters, hptuning=self.hptuning, featuresets=self.featuresets,gpus_override=False)
         self.run_def = JobModelParametersRun(template=None, group='default')
         self.job_parameters = JobModelParameters(
             _class='training', training=self.training_def, run=self.run_def)
@@ -108,7 +108,6 @@ class DkubeTraining(object):
 
         self.update_basic(user, name, description, tags)
         self.execute = True
-	self.gpus_override = False
 
     def update_basic(self, user, name, description, tags):
         """
