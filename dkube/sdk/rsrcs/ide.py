@@ -85,7 +85,7 @@ class DkubeIDE(object):
             file=self.configfile, custom=self.customenv)
         self.hptuning = DSJobModelHptuning()
         self.notebook_def = DSJobModel(executor=self.executor_def, datums=self.input_datums,
-                                       rdma=False, hyperparams=self.hyperparameters, hptuning=self.hptuning)
+                                       rdma=False, hyperparams=self.hyperparameters, hptuning=self.hptuning,gpus_override=False)
         self.run_def = JobModelParametersRun(template=None, group='default')
         self.job_parameters = JobModelParameters(
             _class='notebook', notebook=self.notebook_def, run=self.run_def)
@@ -287,4 +287,7 @@ class DkubeIDE(object):
                     Number of required gpus
         """
         self.notebook_def.ngpus = ngpus
-        
+     
+    def update_flag(self):
+        ## USE THE CPU TO RUN THE JOB AS GPU NOT AVAILABLE
+        self.notebook_def.gpus_override = True
