@@ -814,11 +814,13 @@ class DkubeApi(ApiBase, FilesBase):
 
         return response
 
-    """
     def delete_featuresets(self, featureset_list):
+        """
         
             Method to delete a list of featuresets on DKube.
             Raises Exception in case of errors.
+            This doesn't wait for resources to get deleted. Use delete_featureset()
+            instead.
 
             *Available in DKube Release: 2.2*
 
@@ -831,6 +833,7 @@ class DkubeApi(ApiBase, FilesBase):
             *Outputs*
 
                 A dictionary object  with response status with the list of deleted featureset names
+        """
 
         
         assert (
@@ -839,7 +842,6 @@ class DkubeApi(ApiBase, FilesBase):
             and all(isinstance(featureset, str) for featureset in featureset_list)
         ), "Invalid parameter, value must be a list of featureset names"
         return super().delete_featureset(featureset_list)
-        """
 
     def delete_featureset(self, name, wait_for_completion):
         """
