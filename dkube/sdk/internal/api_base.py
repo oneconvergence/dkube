@@ -107,7 +107,7 @@ class ApiBase(object):
          all='true'
        '''
         
-        all = 'true'
+        all = 'false'
         response = self._api.jobs_get_by_class(
             user, category, shared, run='true', all=all)
         return response.to_dict()['data']
