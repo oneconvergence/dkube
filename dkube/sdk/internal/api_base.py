@@ -95,7 +95,7 @@ class ApiBase(object):
         # MAK - [HACK - TODO] - Correct from backend.
         # all=true is always returning training+preprocessing and ignoring
         # inference runs
-        if category == 'inference':
+        '''if category == 'inference':
             all = 'false'
         if category == 'inference':
             all = 'false'
@@ -103,9 +103,11 @@ class ApiBase(object):
             all='false'
         elif category == 'preprocessing':
             all='false'
-       
-        #else:
-            #all = 'true'
+        else:
+         all='true'
+       '''
+        
+        all = 'true'
         response = self._api.jobs_get_by_class(
             user, category, shared, run='true', all=all)
         return response.to_dict()['data']
