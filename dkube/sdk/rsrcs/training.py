@@ -384,7 +384,9 @@ class DkubeTraining(object):
         self.execute = False
 	
     def update_gpus_flag(self):
-	## USE THE CPU TO RUN THE JOB AS GPU NOT AVAILABLE
-	self.training_def.gpus_override = True
+        """
+           USE THE CPU TO RUN THE JOB AS GPU NOT AVAILABLE
+        """
+        self.training_def.gpus_override = True
 		
 	
