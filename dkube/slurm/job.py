@@ -1,14 +1,12 @@
-import os
 import json
-import kfp
-
+import os
 from typing import NamedTuple
+
+import kfp
+from dkube.sdk.internal.dkube_api.models.job_model import JobModel
 
 from ._kfpl import componentize
 from .job_properties import JobProperties
-
-from dkube.sdk.internal.dkube_api.models.job_model import JobModel
-
 
 __all__ = [
     'launch_slurmjob',
@@ -26,21 +24,21 @@ def launch_slurmjob(cluster: str, props: type(JobProperties),
             ('run_details', str)
         ]):
 
-    import pprint
     import ast
-    import time
+    import json
     import os
-    import json
-    import kfp
-    import json
-    import yaml
-    from pyfiglet import Figlet
-    from url_normalize import url_normalize
+    import pprint
+    import time
     from collections import namedtuple
     from json import JSONDecodeError
-    from dkube.sdk.internal.dkube_api.models.job_model import JobModel
+
+    import kfp
+    import yaml
     from dkube.sdk.internal.api_base import ApiBase
+    from dkube.sdk.internal.dkube_api.models.job_model import JobModel
     from dkube.slurm.job_properties import JobProperties
+    from pyfiglet import Figlet
+    from url_normalize import url_normalize
 
     if isinstance(run, JobModel) == True:
         run = run.to_dict()
@@ -75,7 +73,7 @@ def launch_slurmjob(cluster: str, props: type(JobProperties),
     if os.getenv('pipeline', 'false').lower() == 'true':
         wfid, runid = os.getenv("wfid"), os.getenv("runid")
         run['name'] = runid
-        run['parameters']['training']['tags'].extend(
+        run['parameters'][kind]['tags'].extend(
             ['owner=pipeline', 'workflowid=' + wfid, 'runid=' + runid])
         if run['parameters']['generated'] is None:
             run['parameters']['generated'] = dict()
