@@ -286,7 +286,8 @@ class DkubeDataset(object):
             self.redshift.username = self.user
         self.redshift.password = password
         self.redshift.database = database
-        self.insecure_ssl = True
+        self.redshift.insecure_ssl = True
+        self.datum.remote = True
 
     def update_k8svolume_details(self, name):
         """
