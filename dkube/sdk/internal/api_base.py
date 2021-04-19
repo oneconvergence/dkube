@@ -95,9 +95,12 @@ class ApiBase(object):
         # MAK - [HACK - TODO] - Correct from backend.
         # all=true is always returning training+preprocessing and ignoring
         # inference runs
-     
+        if category == 'inference':
+            all = 'false'
+        else:
+            all = 'true'
         response = self._api.jobs_get_by_class(
-            user, category, shared, run='true', all='false')
+            user, category, shared, run='true', all=all)
         return response.to_dict()['data']
 
     def delete_run(self, category, user, name):
