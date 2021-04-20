@@ -102,7 +102,7 @@ class DkubeDataset(object):
         self.datum = DatumModel(name=None, tags=None, _class='dataset',
                                 dvs=None, source='dvs', url=None, remote=False, gitaccess=self.gitaccess,
                                 s3access=self.s3access, nfsaccess=self.nfsaccess, gcsaccess=self.gcsaccess,
-                                hostpath=self.hostpath)
+                                hostpath=self.hostpath, redshift=self.redshift)
 
         self.update_basic(user, name, tags)
 
@@ -286,7 +286,8 @@ class DkubeDataset(object):
             self.redshift.username = self.user
         self.redshift.password = password
         self.redshift.database = database
-        self.insecure_ssl = True
+        self.redshift.insecure_ssl = True
+        self.datum.remote = True
 
     def update_k8svolume_details(self, name):
         """
