@@ -1726,7 +1726,7 @@ class DkubeApi(ApiBase, FilesBase):
         mcitem = self.get_modelcatalog_item(user, model=model, version=version)
 
         run = DkubeServing(user, name=name, description=description)
-        run.update_serving_model(model, version=version)
+        run.update_serving_model(mcitem.name, version=version)
         run.update_serving_image(image_url=mcitem['serving']['images'][
                                  'serving']['image']['path'])
         run.update_autoscaling_config(min_replicas, max_concurrent_requests)
