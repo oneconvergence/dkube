@@ -10,7 +10,8 @@ from .job_properties import JobProperties
 
 __all__ = [
     'launch_slurmjob',
-    'dkube_slurmjob_op'
+    'dkube_slurmjob_op',
+    'dkube_slurmjob_preprocessing_op'
 ]
 
 
@@ -150,3 +151,19 @@ dkube_slurmjob_op = componentize(launch_slurmjob,
                                      'dkube.garbagecollect.policy':
                                      'all'
                                  })
+
+dkube_slurmjob_preprocessing_op = componentize(launch_slurmjob,
+                                               "dkube_slurmjob_launcher",
+                                               "Launcher for slurmjob using DKube APIs.",
+                                               "ocdr/dkube_launcher:slurm",
+                                               {
+                                                   'platform': 'Dkube'
+                                               },
+                                               {
+                                                   'platform': 'Dkube',
+                                                   'stage': 'preprocess',
+                                                   'logger': 'dkubepl',
+                                                   'dkube.garbagecollect': 'true',
+                                                   'dkube.garbagecollect.policy':
+                                                   'all'
+                                               })
