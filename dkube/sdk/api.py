@@ -202,7 +202,24 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_ides('notebook', user, shared)
 
-    def delete_ide(self, user, name):
+    def wait_for_delete_completion(self, uuid, class, name):
+        while wait_for_completion:
+            status = {}
+            try:
+                data = super().job_get_by_uuid(uuid)
+                state = data['job']['parameters']['generated']['status']['substate']
+                if state.lower() in ['deleting']:
+                    print(
+                        "{} {} - waiting for deletion, current state {}".format(class, name, state))
+                    time.sleep(self.wait_interval)
+                else if state.lower() == 'deleted' :
+                    break
+            except ApiException as ve:
+                print(
+                    "{} {} - state check failed".format(class, name))
+                break
+
+    def delete_ide(self, user, name, wait_for_completion=True):
         """
             Method tio delete an IDE.
             Raises exception if token is of different user or if training run with name doesnt exist or on any connection errors.
@@ -216,8 +233,12 @@ class DkubeApi(ApiBase, FilesBase):
                     Name of the IDE which needs to be deleted.
 
         """
-
-        super().delete_ide('notebook', user, name)
+        data = super().get_ide('notebook', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['status']
+        ret = super().delete_ide('notebook', user, name)
+        if wait_for_completion:
+            wait_for_delete_completion(uuid, 'notebook', name)
+        return ret
 
     def create_training_run(self, run: DkubeTraining, wait_for_completion=True):
         """
@@ -283,7 +304,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "run {} - waiting for completion, current state {}".format(run.name, state))
                 time.sleep(self.wait_interval)
 
-    def get_training_run(self, user, name):
+    def get_training_run(self, user, name, fields='*'):
         """
             Method to fetch the training run with given name for the given user.
             Raises exception in case of run is not found or any other connection errors.
@@ -300,7 +321,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().get_run('training', user, name)
+        return super().get_run('training', user, name, fields)
 
     def list_training_runs(self, user, shared=False, filters='*'):
         """
@@ -323,7 +344,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_runs('training', user, shared)
 
-    def delete_training_run(self, user, name):
+    def delete_training_run(self, user, name, wait_for_completion=True):
         """
             Method to delete a run.
             Raises exception if token is of different user or if training run with name doesnt exist or on any connection errors.
@@ -337,8 +358,12 @@ class DkubeApi(ApiBase, FilesBase):
                     Name of the run which needs to be deleted.
 
         """
-
-        super().delete_run('training', user, name)
+        data = super().get_run('training', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['status']
+        ret = super().delete_run('training', user, name)
+        if wait_for_completion:
+            wait_for_delete_completion(uuid, 'training', name)
+        return ret
 
     def create_preprocessing_run(self, run: DkubePreprocessing, wait_for_completion=True):
         """
@@ -425,7 +450,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_runs('preprocessing', user, shared)
 
-    def delete_preprocessing_run(self, user, name):
+    def delete_preprocessing_run(self, user, name, wait_for_completion=True):
         """
             Method to delete a run.
             Raises exception if token is of different user or if preprocessing run with name doesnt exist or on any connection errors.
@@ -439,8 +464,12 @@ class DkubeApi(ApiBase, FilesBase):
                     Name of the run which needs to be deleted.
 
         """
-
-        super().delete_run('preprocessing', user, name)
+        data = super().get_run('preprocessing', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['status']
+        ret = super().delete_run('preprocessing', user, name)
+        if wait_for_completion:
+            wait_for_delete_completion(uuid, 'preprocessing', name)
+        return ret
 
     def update_inference(self, run: DkubeServing, wait_for_completion=True):
         """
@@ -652,7 +681,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_runs('inference', user, shared)
 
-    def delete_test_inference(self, user, name):
+    def delete_test_inference(self, user, name, wait_for_completion=True):
         """
             Method to delete a test inference.
             Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.
@@ -666,8 +695,12 @@ class DkubeApi(ApiBase, FilesBase):
                     Name of the run which needs to be deleted.
 
         """
-
-        super().delete_run('inference', user, name)
+        data = super().get_run('inference', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['status']
+        ret = super().delete_run('inference', user, name)
+        if wait_for_completion:
+            wait_for_delete_completion(uuid, 'inference', name)
+        return ret
 
     def create_code(self, code: DkubeCode, wait_for_completion=True):
         """
@@ -1748,7 +1781,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "run {} - waiting for completion, current state {}".format(run.name, state))
                 time.sleep(self.wait_interval)
 
-    def delete_model_deployment(self, user, name):
+    def delete_model_deployment(self, user, name, wait_for_completion=True):
         """
             Method to delete a model deployment.
             Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.
@@ -1762,8 +1795,12 @@ class DkubeApi(ApiBase, FilesBase):
                     Name of the run which needs to be deleted.
 
         """
-
-        super().delete_run('inference', user, name)
+        data = super().get_run('inference', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['status']
+        ret = super().delete_run('inference', user, name)
+        if wait_for_completion:
+            wait_for_delete_completion(uuid, 'inference', name)
+        return ret
 
     def list_model_deployments(self, user, shared=False, filters='*'):
         """
