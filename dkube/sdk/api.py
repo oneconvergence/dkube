@@ -204,7 +204,6 @@ class DkubeApi(ApiBase, FilesBase):
 
     def wait_for_delete_completion(self, uuid, jobclass, name):
         while True:
-            status = {}
             try:
                 data = super().job_get_by_uuid(uuid)
                 state = data['parameters']['generated']['status']['sub_state']
@@ -214,7 +213,7 @@ class DkubeApi(ApiBase, FilesBase):
                     time.sleep(self.wait_interval)
                 elif state.lower() == 'deleted' :
                     print(
-                        "{} {} - deleted".format(jobclass, name))
+                        "{} {} - DELETED".format(jobclass, name))
                     break
             except ApiException as ve:
                 print(
