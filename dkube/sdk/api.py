@@ -202,21 +202,23 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_ides('notebook', user, shared)
 
-    def wait_for_delete_completion(self, uuid, class, name):
-        while wait_for_completion:
+    def wait_for_delete_completion(self, uuid, jobclass, name):
+        while True:
             status = {}
             try:
                 data = super().job_get_by_uuid(uuid)
-                state = data['job']['parameters']['generated']['status']['substate']
+                state = data['parameters']['generated']['status']['sub_state']
                 if state.lower() in ['deleting']:
                     print(
-                        "{} {} - waiting for deletion, current state {}".format(class, name, state))
+                        "{} {} - waiting for deletion, current state {}".format(jobclass, name, state))
                     time.sleep(self.wait_interval)
-                else if state.lower() == 'deleted' :
+                elif state.lower() == 'deleted' :
+                    print(
+                        "{} {} - deleted".format(jobclass, name))
                     break
             except ApiException as ve:
                 print(
-                    "{} {} - state check failed".format(class, name))
+                    "{} {} - state check failed".format(jobclass, name))
                 break
 
     def delete_ide(self, user, name, wait_for_completion=True):
@@ -234,10 +236,10 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         data = super().get_ide('notebook', user, name, fields='*')
-        uuid = data['job']['parameters']['generated']['status']
+        uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_ide('notebook', user, name)
         if wait_for_completion:
-            wait_for_delete_completion(uuid, 'notebook', name)
+            self.wait_for_delete_completion(uuid, 'notebook', name)
         return ret
 
     def create_training_run(self, run: DkubeTraining, wait_for_completion=True):
@@ -279,7 +281,7 @@ class DkubeApi(ApiBase, FilesBase):
                     break
 
         assert valid_fw == True, "Invalid choice for framework, select oneof(" + str(fw_opts) + ")"
-        
+
         super().update_tags(run.training_def)
         super().create_run(run)
         while wait_for_completion:
@@ -359,10 +361,10 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         data = super().get_run('training', user, name, fields='*')
-        uuid = data['job']['parameters']['generated']['status']
+        uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_run('training', user, name)
         if wait_for_completion:
-            wait_for_delete_completion(uuid, 'training', name)
+            self.wait_for_delete_completion(uuid, 'training', name)
         return ret
 
     def create_preprocessing_run(self, run: DkubePreprocessing, wait_for_completion=True):
@@ -465,10 +467,10 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         data = super().get_run('preprocessing', user, name, fields='*')
-        uuid = data['job']['parameters']['generated']['status']
+        uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_run('preprocessing', user, name)
         if wait_for_completion:
-            wait_for_delete_completion(uuid, 'preprocessing', name)
+            self.wait_for_delete_completion(uuid, 'preprocessing', name)
         return ret
 
     def update_inference(self, run: DkubeServing, wait_for_completion=True):
@@ -696,10 +698,10 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         data = super().get_run('inference', user, name, fields='*')
-        uuid = data['job']['parameters']['generated']['status']
+        uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_run('inference', user, name)
         if wait_for_completion:
-            wait_for_delete_completion(uuid, 'inference', name)
+            self.wait_for_delete_completion(uuid, 'inference', name)
         return ret
 
     def create_code(self, code: DkubeCode, wait_for_completion=True):
@@ -812,7 +814,7 @@ class DkubeApi(ApiBase, FilesBase):
 
             *Outputs*
 
-                A dictionary object with response status 
+                A dictionary object with response status
 
         """
         assert type(
@@ -873,7 +875,7 @@ class DkubeApi(ApiBase, FilesBase):
         *Inputs*
 
             name
-                featureset name to be deleted. 
+                featureset name to be deleted.
                 example: "mnist-fs"
 
         *Outputs*
@@ -891,7 +893,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
             Method to commit sticky featuresets.
 
-            featureset should be in ready state. It will be in created state if no featurespec is uploaded. 
+            featureset should be in ready state. It will be in created state if no featurespec is uploaded.
             If the featureset is in created state, the following will happen.
 
                 a) If metadata is passed, it will be uploaded as featurespec
@@ -902,7 +904,7 @@ class DkubeApi(ApiBase, FilesBase):
                 a) metadata if passed any will be ignored
                 b) featurespec will be downloaded for the specifed featureset and df is validated for conformance.
 
-            If name is specified, it derives the path for committing the features. 
+            If name is specified, it derives the path for committing the features.
 
             If path is also specified, it doesn't derive the path. It uses the specified path. However, path should a mount path into dkube store.
 
@@ -994,7 +996,7 @@ class DkubeApi(ApiBase, FilesBase):
 
                 path
                     path where featureset is mounted.
-                    path='/opt/dkube/fset' or None 
+                    path='/opt/dkube/fset' or None
 
             *Outputs*
 
@@ -1045,7 +1047,7 @@ class DkubeApi(ApiBase, FilesBase):
                     Filepath for the feature specification metadata yaml file
 
                 metadata
-                    feature specification in yaml object. 
+                    feature specification in yaml object.
 
                 One of filepath or metadata should be specified.
 
@@ -1062,7 +1064,7 @@ class DkubeApi(ApiBase, FilesBase):
 
     def get_featureset(self, featureset=None):
         """
-            Method to retrieve details of a featureset 
+            Method to retrieve details of a featureset
 
             *Available in DKube Release: 2.2*
 
@@ -1590,7 +1592,7 @@ class DkubeApi(ApiBase, FilesBase):
                     Name with model.
 
                 version
-                    Version of the model to be released. 
+                    Version of the model to be released.
                     If not passed then latest version is released automatically.
 
                 user
@@ -1796,10 +1798,10 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         data = super().get_run('inference', user, name, fields='*')
-        uuid = data['job']['parameters']['generated']['status']
+        uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_run('inference', user, name)
         if wait_for_completion:
-            wait_for_delete_completion(uuid, 'inference', name)
+            self.wait_for_delete_completion(uuid, 'inference', name)
         return ret
 
     def list_model_deployments(self, user, shared=False, filters='*'):
@@ -1856,7 +1858,7 @@ class DkubeApi(ApiBase, FilesBase):
 
                 user
                     Name of the user.
-                    
+
                 modelcatalog
                     Model catalog name
 
@@ -1891,7 +1893,7 @@ class DkubeApi(ApiBase, FilesBase):
 
             raise Exception(
                 '{}.{} not found in model catalog'.format(model, version))
-        
+
     def delete_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
         """
             Method to delete an item from modelcatalog
@@ -1903,7 +1905,7 @@ class DkubeApi(ApiBase, FilesBase):
 
                 user
                     Name of the user.
-                    
+
                 modelcatalog
                     Model catalog name
 
@@ -1930,13 +1932,13 @@ class DkubeApi(ApiBase, FilesBase):
                     return response
             raise Exception(
                 '{}.{} not found in model catalog'.format(model, version))
-            
+
 
     def list_projects(self):
         """
             Return list of DKube projects.
 
-            *Available in DKube Release: 2.2*    
+            *Available in DKube Release: 2.2*
         """
         response = self._api.get_all_projects().to_dict()
         assert response['response']['code'] == 200, response['response']['message']
@@ -1959,7 +1961,7 @@ class DkubeApi(ApiBase, FilesBase):
         return response['data']
 
     def update_project(self, project_id, project: DkubeProject):
-        """Update project details. 
+        """Update project details.
 
         *Available in DKube Release: 2.2*
         Note: details and evail_details fields are base64 encoded.
