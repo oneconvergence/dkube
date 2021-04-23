@@ -1731,12 +1731,12 @@ class DkubeApi(ApiBase, FilesBase):
         elif modelcatalog:
           mcitem = self.get_modelcatalog_item(user, modelcatalog=modelcatalog, version=version)         
         run = DkubeServing(user, name=name, description=description)
-        if modelcatalog:
+        if model:
           catalog_model=next(item for item in self.modelcatalog(user) if (item["model"]["name"] == model and item["model"]["version"]== version))
           catalog_model=catalog_model['name']
           run.update_serving_model(catalog_model, version=version)
         else:
-          run.update_serving_model(model, version=version)
+          run.update_serving_model(modelcatalog, version=version)
          
         run.update_serving_image(image_url=mcitem['serving']['images'][
                                  'serving']['image']['path'])
