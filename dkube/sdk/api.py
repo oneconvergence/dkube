@@ -2088,3 +2088,12 @@ class DkubeApi(ApiBase, FilesBase):
             version = version['uuid']
 
         super().download_model(path, user, name, version)
+
+    def list_inference_endpoints(self):
+        """
+            Method to list all the inferences in the dkube cluster.
+            Raises exception on any connection errors.
+        """
+
+        return super().list_inference_endpoints()
+
