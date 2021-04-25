@@ -2160,3 +2160,11 @@ class DkubeApi(ApiBase, FilesBase):
                     "ignoring 404 - fetching deleted jobs failed, older release of dkube")
             else:
                 raise ae
+
+    def list_inference_endpoints(self):
+        """
+            Method to list all the inferences in the dkube cluster.
+            Raises exception on any connection errors.
+        """
+
+        return super().list_inference_endpoints()

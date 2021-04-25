@@ -375,3 +375,7 @@ class ApiBase(object):
         copy_tree("{}/{}/data".format(tempdir.name, version), path)
         # use temp_dir, and when done:
         tempdir.cleanup()
+
+    def list_inference_endpoints(self):
+        response = self._api.get_inference_endpoints()
+        return response.to_dict()['data']
