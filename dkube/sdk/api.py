@@ -1673,7 +1673,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "publish {}/{} - waiting for completion, current state {}".format(model, version, stage))
                 time.sleep(self.wait_interval)
 
-    def create_model_deployment(self, user, name, model, version,
+    def create_model_deployment(self, user, name, model=None, modelcatalog=None, version=None,
                                 description=None,
                                 stage_or_deploy="stage",
                                 min_replicas=0,
@@ -1696,6 +1696,9 @@ class DkubeApi(ApiBase, FilesBase):
 
                 model
                     Name of the model to be deployed
+                    
+                modelcatalog
+                     model catalog name
 
                 version
                     Version of the model to be deployed
@@ -1723,10 +1726,18 @@ class DkubeApi(ApiBase, FilesBase):
             "stage", "deploy"], "Invalid value for stage_or_deploy parameter."
 
         # Fetch the model from modelcatalog
-        mcitem = self.get_modelcatalog_item(user, model=model, version=version)
-
+        if model:
+          mcitem = self.get_modelcatalog_item(user, model=model, version=version)
+        elif modelcatalog:
+          mcitem = self.get_modelcatalog_item(user, modelcatalog=modelcatalog, version=version)         
         run = DkubeServing(user, name=name, description=description)
-        run.update_serving_model(model, version=version)
+        if model:
+          catalog_model=next(item for item in self.modelcatalog(user) if (item["model"]["name"] == model and item["versions"][0]["model"]["version"]== version))
+          catalog_model=catalog_model['name']
+          run.update_serving_model(catalog_model, version=version)
+        else:
+          run.update_serving_model(modelcatalog, version=version)
+         
         run.update_serving_image(image_url=mcitem['serving']['images'][
                                  'serving']['image']['path'])
         run.update_autoscaling_config(min_replicas, max_concurrent_requests)
