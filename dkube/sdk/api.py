@@ -1722,7 +1722,6 @@ class DkubeApi(ApiBase, FilesBase):
         assert stage_or_deploy in [
             "stage", "deploy"], "Invalid value for stage_or_deploy parameter."
 
-        # Fetch the modelrepo from modelcatalog
         mcitem = self.get_modelcatalog_item(user, modelcatalog=model, version=version)         
         run = DkubeServing(user, name=name, description=description)
         run.update_serving_model(model, version=version)
