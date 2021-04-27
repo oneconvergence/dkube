@@ -1726,14 +1726,19 @@ class DkubeApi(ApiBase, FilesBase):
             "stage", "deploy"], "Invalid value for stage_or_deploy parameter."
 
         # Fetch the modelrepo from modelcatalog
+        catalog_model = None
         if modelrepo: 
           mcitem = self.get_modelcatalog_item(user, model=modelrepo, version=version)
         elif model:
           mcitem = self.get_modelcatalog_item(user, modelcatalog=model, version=version)         
         run = DkubeServing(user, name=name, description=description)
         if modelrepo:
-          catalog_model=next(item for item in self.modelcatalog(user) if (item["model"]["name"] == modelrepo and item["versions"][0]["model"]["version"]== version))
-          catalog_model=catalog_model['name']
+          mc = api.modelcatalog(user)
+          for each_mc in mc:
+              versions = each_mc['versions']
+              for each_version in versions:
+                  if (each_version['model']['name'] == modelrepo) and (each_version['model']['version'] == version):
+                      catalog_model = each_mc['name']
           run.update_serving_model(catalog_model, version=version)
         else:
           run.update_serving_model(model, version=version)
