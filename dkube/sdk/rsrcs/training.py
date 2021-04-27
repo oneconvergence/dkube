@@ -93,12 +93,13 @@ class DkubeTraining(object):
             workspace=self.input_project, datasets=self.input_datasets, outputs=self.output_models)
         self.input_featuresets = []
         self.output_featuresets = []
-        self.featuresets = JobFeaturesetModel(inputs=self.input_featuresets, outputs=self.output_featuresets)
+        self.featuresets = JobFeaturesetModel(
+            inputs=self.input_featuresets, outputs=self.output_featuresets)
         self.configfile = ConfigFileModel()
         self.customenv = {}
         self.hyperparameters = DSJobModelHyperparams(file=self.configfile)
         self.hptuning = DSJobModelHptuning()
-        
+
         self.training_def = DSJobModel(executor=self.executor_def, datums=self.input_datums,
                                        rdma=False, hyperparams=self.hyperparameters, hptuning=self.hptuning, featuresets=self.featuresets)
         self.run_def = JobModelParametersRun(template=None, group='default')
@@ -358,6 +359,8 @@ class DkubeTraining(object):
         self.training_def.nworkers = nworkers
         if opt == "auto":
             self.training_def.gpus_override = True
+        elif opt == "manual":
+            self.training_def.gpus_override = False
 
     def add_input_featureset(self, name, version=None, mountpath=None):
         """
@@ -374,9 +377,10 @@ class DkubeTraining(object):
                 mountpath
                     Path at which the Featureset contents are made available in the training run pod
         """
-        featureset_model = JobInputFeaturesetModel(name=name, version=version, mountpath=mountpath)
+        featureset_model = JobInputFeaturesetModel(
+            name=name, version=version, mountpath=mountpath)
         self.input_featuresets.append(featureset_model)
-    
+
     def disable_execution(self):
         """
             Method to create Run with no execution to track external execution

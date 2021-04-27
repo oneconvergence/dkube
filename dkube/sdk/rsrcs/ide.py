@@ -54,7 +54,6 @@ class DkubeIDE(object):
 
     """
 
-
     def __init__(self, user, name=generate('notebook'), description='', tags=[]):
         self.repo = JobInputDatumModel  # class assignment, caller creates objects
 
@@ -287,4 +286,4 @@ class DkubeIDE(object):
                     Number of required gpus
         """
         self.notebook_def.ngpus = ngpus
-        
+        self.notebook_def.gpus_override = False
