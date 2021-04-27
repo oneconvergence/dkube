@@ -1695,7 +1695,7 @@ class DkubeApi(ApiBase, FilesBase):
                     User readable description of the deployment
 
                 model
-                    Name of the model to be deployed, Model need to be published
+                    Name of the model to be deployed
 
                 version
                     Version of the model to be deployed
