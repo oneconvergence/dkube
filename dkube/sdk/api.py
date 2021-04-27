@@ -1,4 +1,4 @@
-     """
+"""
 
 .. module:: DKubeAPI
    :synopsis: Helper class which provides high level methods for user to integrate at workflow level.
@@ -1726,7 +1726,7 @@ class DkubeApi(ApiBase, FilesBase):
             "stage", "deploy"], "Invalid value for stage_or_deploy parameter."
 
         # Fetch the modelrepo from modelcatalog
-        if modelrepo:
+        if modelrepo: 
           mcitem = self.get_modelcatalog_item(user, model=modelrepo, version=version)
         elif model:
           mcitem = self.get_modelcatalog_item(user, modelcatalog=model, version=version)         
@@ -1758,7 +1758,7 @@ class DkubeApi(ApiBase, FilesBase):
                 print(
                     "run {} - waiting for completion, current state {}".format(run.name, state))
                 time.sleep(self.wait_interval)
-
+    
     def delete_model_deployment(self, user, name):
         """
             Method to delete a model deployment.
