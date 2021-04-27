@@ -1733,7 +1733,7 @@ class DkubeApi(ApiBase, FilesBase):
           mcitem = self.get_modelcatalog_item(user, modelcatalog=model, version=version)         
         run = DkubeServing(user, name=name, description=description)
         if modelrepo:
-          mc = api.modelcatalog(user)
+          mc = self.modelcatalog(user)
           for each_mc in mc:
               versions = each_mc['versions']
               for each_version in versions:
