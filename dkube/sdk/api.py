@@ -1707,7 +1707,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "publish {}/{} - waiting for completion, current state {}".format(model, version, stage))
                 time.sleep(self.wait_interval)
 
-    def create_model_deployment(self, user, name, model, version,
+    def create_model_deployment(self, user, name, model,version,
                                 description=None,
                                 stage_or_deploy="stage",
                                 min_replicas=0,
@@ -1756,9 +1756,7 @@ class DkubeApi(ApiBase, FilesBase):
         assert stage_or_deploy in [
             "stage", "deploy"], "Invalid value for stage_or_deploy parameter."
 
-        # Fetch the model from modelcatalog
-        mcitem = self.get_modelcatalog_item(user, model=model, version=version)
-
+        mcitem = self.get_modelcatalog_item(user, modelcatalog=model, version=version)         
         run = DkubeServing(user, name=name, description=description)
         run.update_serving_model(model, version=version)
         run.update_serving_image(image_url=mcitem['serving']['images'][
