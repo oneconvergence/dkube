@@ -202,24 +202,6 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_ides('notebook', user, shared)
 
-    def wait_for_delete_completion(self, uuid, jobclass, name):
-        while True:
-            try:
-                data = super().job_get_by_uuid(uuid)
-                state = data['parameters']['generated']['status']['sub_state']
-                if state.lower() in ['deleting']:
-                    print(
-                        "{} {} - waiting for deletion, current state {}".format(jobclass, name, state))
-                    time.sleep(self.wait_interval)
-                elif state.lower() == 'deleted' :
-                    print(
-                        "{} {} - DELETED".format(jobclass, name))
-                    break
-            except ApiException as ve:
-                print(
-                    "{} {} - state check failed".format(jobclass, name))
-                break
-
     def delete_ide(self, user, name, wait_for_completion=True):
         """
             Method tio delete an IDE.
@@ -238,7 +220,7 @@ class DkubeApi(ApiBase, FilesBase):
         uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_ide('notebook', user, name)
         if wait_for_completion:
-            self.wait_for_delete_completion(uuid, 'notebook', name)
+            self._wait_for_delete_completion(uuid, 'notebook', name)
         return ret
 
     def create_training_run(self, run: DkubeTraining, wait_for_completion=True):
@@ -363,7 +345,7 @@ class DkubeApi(ApiBase, FilesBase):
         uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_run('training', user, name)
         if wait_for_completion:
-            self.wait_for_delete_completion(uuid, 'training', name)
+            self._wait_for_delete_completion(uuid, 'training', name)
         return ret
 
     def create_preprocessing_run(self, run: DkubePreprocessing, wait_for_completion=True):
@@ -469,7 +451,7 @@ class DkubeApi(ApiBase, FilesBase):
         uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_run('preprocessing', user, name)
         if wait_for_completion:
-            self.wait_for_delete_completion(uuid, 'preprocessing', name)
+            self._wait_for_delete_completion(uuid, 'preprocessing', name)
         return ret
 
     def update_inference(self, run: DkubeServing, wait_for_completion=True):
@@ -700,7 +682,7 @@ class DkubeApi(ApiBase, FilesBase):
         uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_run('inference', user, name)
         if wait_for_completion:
-            self.wait_for_delete_completion(uuid, 'inference', name)
+            self._wait_for_delete_completion(uuid, 'inference', name)
         return ret
 
     def create_code(self, code: DkubeCode, wait_for_completion=True):
@@ -1800,7 +1782,7 @@ class DkubeApi(ApiBase, FilesBase):
         uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_run('inference', user, name)
         if wait_for_completion:
-            self.wait_for_delete_completion(uuid, 'inference', name)
+            self._wait_for_delete_completion(uuid, 'inference', name)
         return ret
 
     def list_model_deployments(self, user, shared=False, filters='*'):
@@ -2126,3 +2108,21 @@ class DkubeApi(ApiBase, FilesBase):
             version = version['uuid']
 
         super().download_model(path, user, name, version)
+
+    def _wait_for_delete_completion(self, uuid, jobclass, name):
+        while True:
+            try:
+                data = super().job_get_by_uuid(uuid)
+                state = data['parameters']['generated']['status']['sub_state']
+                if state.lower() == 'deleting':
+                    print(
+                        "{} {} - waiting for deletion, current state {}".format(jobclass, name, state))
+                    time.sleep(self.wait_interval)
+                elif state.lower() == 'deleted' :
+                    print(
+                        "{} {} - DELETED".format(jobclass, name))
+                    break
+            except ApiException as ve:
+                print(
+                    "{} {} - state check failed".format(jobclass, name))
+                break
