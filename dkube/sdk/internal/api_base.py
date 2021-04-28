@@ -91,11 +91,15 @@ class ApiBase(object):
         else:
             raise Exception('Unsupported fields parameter')
 
+    def get_run_byuuid(self, uuid):
+        response = self._api.jobs_get_one_by_uuid(uuid)
+        return response.to_dict()['data']
+
     def list_runs(self, category, user, shared=False, filters='*'):
         # MAK - [HACK - TODO] - Correct from backend.
         # all=true is always returning training+preprocessing and ignoring
         # inference runs
-     
+
         response = self._api.jobs_get_by_class(
             user, category, shared, run='true', all='false')
         return response.to_dict()['data']
@@ -367,8 +371,3 @@ class ApiBase(object):
         copy_tree("{}/{}/data".format(tempdir.name, version), path)
         # use temp_dir, and when done:
         tempdir.cleanup()
-
-    def job_get_by_uuid(self, uuid):
-        response = self._api.jobs_get_one_by_uuid(
-            uuid)
-        return response.to_dict()['data']

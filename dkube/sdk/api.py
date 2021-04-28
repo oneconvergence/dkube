@@ -204,8 +204,8 @@ class DkubeApi(ApiBase, FilesBase):
 
     def delete_ide(self, user, name, wait_for_completion=True):
         """
-            Method tio delete an IDE.
-            Raises exception if token is of different user or if training run with name doesnt exist or on any connection errors.
+            Method to delete an IDE.
+            Raises exception if token is of different user or if IDE with name doesnt exist or on any connection errors.
 
             *Inputs*
 
@@ -215,12 +215,15 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the IDE which needs to be deleted.
 
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for ide to get deleted.
+
         """
         data = super().get_ide('notebook', user, name, fields='*')
         uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_ide('notebook', user, name)
         if wait_for_completion:
-            self._wait_for_delete_completion(uuid, 'notebook', name)
+            self._wait_for_rundelete_completion(uuid, 'notebook', name)
         return ret
 
     def create_training_run(self, run: DkubeTraining, wait_for_completion=True):
@@ -246,22 +249,23 @@ class DkubeApi(ApiBase, FilesBase):
             run) == DkubeTraining, "Invalid type for run, value must be instance of rsrcs:DkubeTraining class"
         valid_fw = False
         fw_opts = ['custom']
-        if run.executor_dkube_framework.choice == 'custom' :
+        if run.executor_dkube_framework.choice == 'custom':
             valid_fw = True
-        else :
+        else:
             fws = self.get_training_capabilities()
-            for fw in fws :
-                for v in fw['versions'] :
-                    if run.executor_dkube_framework.choice == fw['name'] and run.dkube_framework_details.version == v['name'] :
+            for fw in fws:
+                for v in fw['versions']:
+                    if run.executor_dkube_framework.choice == fw['name'] and run.dkube_framework_details.version == v['name']:
                         valid_fw = True
                         break
-                    else :
-                        name =  fw['name'] + "_" + v['name']
+                    else:
+                        name = fw['name'] + "_" + v['name']
                         fw_opts.append(name)
                 if valid_fw == True:
                     break
 
-        assert valid_fw == True, "Invalid choice for framework, select oneof(" + str(fw_opts) + ")"
+        assert valid_fw == True, "Invalid choice for framework, select oneof(" + str(
+            fw_opts) + ")"
 
         super().update_tags(run.training_def)
         super().create_run(run)
@@ -340,12 +344,15 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the run which needs to be deleted.
 
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for training run to get deleted.
+
         """
         data = super().get_run('training', user, name, fields='*')
         uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_run('training', user, name)
         if wait_for_completion:
-            self._wait_for_delete_completion(uuid, 'training', name)
+            self._wait_for_rundelete_completion(uuid, 'training', name)
         return ret
 
     def create_preprocessing_run(self, run: DkubePreprocessing, wait_for_completion=True):
@@ -446,12 +453,15 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the run which needs to be deleted.
 
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for preprocess run to get deleted.
+
         """
         data = super().get_run('preprocessing', user, name, fields='*')
         uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_run('preprocessing', user, name)
         if wait_for_completion:
-            self._wait_for_delete_completion(uuid, 'preprocessing', name)
+            self._wait_for_rundelete_completion(uuid, 'preprocessing', name)
         return ret
 
     def update_inference(self, run: DkubeServing, wait_for_completion=True):
@@ -677,12 +687,15 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the run which needs to be deleted.
 
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for inference to get deleted.
+
         """
         data = super().get_run('inference', user, name, fields='*')
         uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_run('inference', user, name)
         if wait_for_completion:
-            self._wait_for_delete_completion(uuid, 'inference', name)
+            self._wait_for_rundelete_completion(uuid, 'inference', name)
         return ret
 
     def create_code(self, code: DkubeCode, wait_for_completion=True):
@@ -924,7 +937,6 @@ class DkubeApi(ApiBase, FilesBase):
         path = kwargs.get('path', None)
         merge = kwargs.get('merge', "True")
         dftype = kwargs.get('dftype', "Py")
-
 
         if not df is None:
             assert(not df.empty), "df should not be empty"
@@ -1554,9 +1566,9 @@ class DkubeApi(ApiBase, FilesBase):
     def list_frameworks(self):
         fw_opts = ['custom']
         fws = self.get_training_capabilities()
-        for fw in fws :
-            for v in fw['versions'] :
-                name =  fw['name'] + "_" + v['name']
+        for fw in fws:
+            for v in fw['versions']:
+                name = fw['name'] + "_" + v['name']
                 fw_opts.append(name)
         return json.dumps(fw_opts)
 
@@ -1689,7 +1701,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "publish {}/{} - waiting for completion, current state {}".format(model, version, stage))
                 time.sleep(self.wait_interval)
 
-    def create_model_deployment(self, user, name, model,version,
+    def create_model_deployment(self, user, name, model, version,
                                 description=None,
                                 stage_or_deploy="stage",
                                 min_replicas=0,
@@ -1738,7 +1750,8 @@ class DkubeApi(ApiBase, FilesBase):
         assert stage_or_deploy in [
             "stage", "deploy"], "Invalid value for stage_or_deploy parameter."
 
-        mcitem = self.get_modelcatalog_item(user, modelcatalog=model, version=version)         
+        mcitem = self.get_modelcatalog_item(
+            user, modelcatalog=model, version=version)
         run = DkubeServing(user, name=name, description=description)
         run.update_serving_model(model, version=version)
         run.update_serving_image(image_url=mcitem['serving']['images'][
@@ -1775,12 +1788,15 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the run which needs to be deleted.
 
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for deployment to get deleted.
+
         """
         data = super().get_run('inference', user, name, fields='*')
         uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_run('inference', user, name)
         if wait_for_completion:
-            self._wait_for_delete_completion(uuid, 'inference', name)
+            self._wait_for_rundelete_completion(uuid, 'inference', name)
         return ret
 
     def list_model_deployments(self, user, shared=False, filters='*'):
@@ -1900,18 +1916,19 @@ class DkubeApi(ApiBase, FilesBase):
         if version is None:
             return "Model Version must be provided"
         if modelcatalog:
-            response = self._api.delete_model_catalog_item(user, modelcatalog, version)
+            response = self._api.delete_model_catalog_item(
+                user, modelcatalog, version)
             return response
         else:
             mc = self.modelcatalog(user)
             for item in mc:
                 if item['model']['name'] == model:
                     modelcatalog = item["name"]
-                    response = self._api.delete_model_catalog_item(user, modelcatalog, version)
+                    response = self._api.delete_model_catalog_item(
+                        user, modelcatalog, version)
                     return response
             raise Exception(
                 '{}.{} not found in model catalog'.format(model, version))
-
 
     def list_projects(self):
         """
@@ -2107,20 +2124,15 @@ class DkubeApi(ApiBase, FilesBase):
 
         super().download_model(path, user, name, version)
 
-    def _wait_for_delete_completion(self, uuid, jobclass, name):
+    def _wait_for_rundelete_completion(self, uuid, _class, name):
         while True:
-            try:
-                data = super().job_get_by_uuid(uuid)
-                state = data['parameters']['generated']['status']['sub_state']
-                if state.lower() == 'deleting':
-                    print(
-                        "{} {} - waiting for deletion, current state {}".format(jobclass, name, state))
-                    time.sleep(self.wait_interval)
-                elif state.lower() == 'deleted':
-                    print(
-                        "{} {} - DELETED".format(jobclass, name))
-                    break
-            except ApiException as ve:
+            data = super().get_run_byuuid(uuid)
+            state = data['parameters']['generated']['status']['sub_state']
+            if state.lower() == 'deleting':
                 print(
-                    "{} {} - state check failed".format(jobclass, name))
+                    "{} {} - waiting for deletion, current state {}".format(_class, name, state))
+                time.sleep(self.wait_interval)
+            elif state.lower() == 'deleted':
+                print(
+                    "{} {} - deleted successfully".format(_class, name))
                 break
