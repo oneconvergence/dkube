@@ -291,7 +291,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "run {} - waiting for completion, current state {}".format(run.name, state))
                 time.sleep(self.wait_interval)
 
-    def get_training_run(self, user, name, fields='*'):
+    def get_training_run(self, user, name):
         """
             Method to fetch the training run with given name for the given user.
             Raises exception in case of run is not found or any other connection errors.
@@ -308,7 +308,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().get_run('training', user, name, fields)
+        return super().get_run('training', user, name)
 
     def list_training_runs(self, user, shared=False, filters='*'):
         """
