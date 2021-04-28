@@ -367,6 +367,7 @@ class ApiBase(object):
         copy_tree("{}/{}/data".format(tempdir.name, version), path)
         # use temp_dir, and when done:
         tempdir.cleanup()
+
     def job_get_by_uuid(self, uuid):
         response = self._api.jobs_get_one_by_uuid(
             uuid)

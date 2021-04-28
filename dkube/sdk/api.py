@@ -2116,7 +2116,7 @@ class DkubeApi(ApiBase, FilesBase):
                     print(
                         "{} {} - waiting for deletion, current state {}".format(jobclass, name, state))
                     time.sleep(self.wait_interval)
-                elif state.lower() == 'deleted' :
+                elif state.lower() == 'deleted':
                     print(
                         "{} {} - DELETED".format(jobclass, name))
                     break
