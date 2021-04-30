@@ -21,6 +21,7 @@ from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
 from dkube.sdk.rsrcs.project import DkubeProject
+from dkube.sdk.internal.dkube_api.rest import ApiException
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -202,7 +203,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_ides('notebook', user, shared)
 
-    def delete_ide(self, user, name, wait_for_completion=False):
+    def delete_ide(self, user, name, wait_for_completion=True):
         """
             Method to delete an IDE.
             Raises exception if token is of different user or if IDE with name doesnt exist or on any connection errors.
@@ -217,7 +218,6 @@ class DkubeApi(ApiBase, FilesBase):
 
                 wait_for_completion
                     When set to :bash:`True` this method will wait for ide to get deleted.
-                    By default set to `False` to make this API backward compatible with releases older than 2.2.7.x
 
         """
         data = super().get_ide('notebook', user, name, fields='*')
@@ -332,7 +332,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_runs('training', user, shared)
 
-    def delete_training_run(self, user, name, wait_for_completion=False):
+    def delete_training_run(self, user, name, wait_for_completion=True):
         """
             Method to delete a run.
             Raises exception if token is of different user or if training run with name doesnt exist or on any connection errors.
@@ -347,7 +347,6 @@ class DkubeApi(ApiBase, FilesBase):
 
                 wait_for_completion
                     When set to :bash:`True` this method will wait for training run to get deleted.
-                    By default set to `False` to make this API backward compatible with releases older than 2.2.7.x
 
         """
         data = super().get_run('training', user, name, fields='*')
@@ -442,7 +441,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_runs('preprocessing', user, shared)
 
-    def delete_preprocessing_run(self, user, name, wait_for_completion=False):
+    def delete_preprocessing_run(self, user, name, wait_for_completion=True):
         """
             Method to delete a run.
             Raises exception if token is of different user or if preprocessing run with name doesnt exist or on any connection errors.
@@ -457,7 +456,6 @@ class DkubeApi(ApiBase, FilesBase):
 
                 wait_for_completion
                     When set to :bash:`True` this method will wait for preprocess run to get deleted.
-                    By default set to `False` to make this API backward compatible with releases older than 2.2.7.x
 
         """
         data = super().get_run('preprocessing', user, name, fields='*')
@@ -677,7 +675,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_runs('inference', user, shared)
 
-    def delete_test_inference(self, user, name, wait_for_completion=False):
+    def delete_test_inference(self, user, name, wait_for_completion=True):
         """
             Method to delete a test inference.
             Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.
@@ -692,7 +690,6 @@ class DkubeApi(ApiBase, FilesBase):
 
                 wait_for_completion
                     When set to :bash:`True` this method will wait for inference to get deleted.
-                    By default set to `False` to make this API backward compatible with releases older than 2.2.7.x
 
         """
         data = super().get_run('inference', user, name, fields='*')
@@ -1779,7 +1776,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "run {} - waiting for completion, current state {}".format(run.name, state))
                 time.sleep(self.wait_interval)
 
-    def delete_model_deployment(self, user, name, wait_for_completion=False):
+    def delete_model_deployment(self, user, name, wait_for_completion=True):
         """
             Method to delete a model deployment.
             Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.
@@ -1794,7 +1791,6 @@ class DkubeApi(ApiBase, FilesBase):
 
                 wait_for_completion
                     When set to :bash:`True` this method will wait for deployment to get deleted.
-                    By default set to `False` to make this API backward compatible with releases older than 2.2.7.x
 
         """
         data = super().get_run('inference', user, name, fields='*')
@@ -2130,14 +2126,22 @@ class DkubeApi(ApiBase, FilesBase):
         super().download_model(path, user, name, version)
 
     def _wait_for_rundelete_completion(self, uuid, _class, name):
-        while True:
-            data = super().get_run_byuuid(uuid)
-            state = data['parameters']['generated']['status']['sub_state']
-            if state.lower() == 'deleting':
+        try:
+            while True:
+                data = super().get_run_byuuid(uuid)
+                state = data['parameters']['generated']['status']['sub_state']
+                if state.lower() == 'deleting':
+                    print(
+                        "{} {} - waiting for deletion, current state {}".format(_class, name, state))
+                    time.sleep(self.wait_interval)
+                elif state.lower() == 'deleted':
+                    print(
+                        "{} {} - deleted successfully".format(_class, name))
+                    break
+        except ApiException as ae:
+            if ae.status == 404:
+                # Older release - ignore the error
                 print(
-                    "{} {} - waiting for deletion, current state {}".format(_class, name, state))
-                time.sleep(self.wait_interval)
-            elif state.lower() == 'deleted':
-                print(
-                    "{} {} - deleted successfully".format(_class, name))
-                break
+                    "ignoring 404 - fetching deleted jobs failed, older release of dkube")
+            else:
+                raise ae
