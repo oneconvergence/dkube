@@ -21,6 +21,7 @@ from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
 from dkube.sdk.rsrcs.project import DkubeProject
+from dkube.sdk.internal.dkube_api.rest import ApiException
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -202,10 +203,10 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_ides('notebook', user, shared)
 
-    def delete_ide(self, user, name):
+    def delete_ide(self, user, name, wait_for_completion=True):
         """
-            Method tio delete an IDE.
-            Raises exception if token is of different user or if training run with name doesnt exist or on any connection errors.
+            Method to delete an IDE.
+            Raises exception if token is of different user or if IDE with name doesnt exist or on any connection errors.
 
             *Inputs*
 
@@ -215,9 +216,16 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the IDE which needs to be deleted.
 
-        """
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for ide to get deleted.
 
-        super().delete_ide('notebook', user, name)
+        """
+        data = super().get_ide('notebook', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['uuid']
+        ret = super().delete_ide('notebook', user, name)
+        if wait_for_completion:
+            self._wait_for_rundelete_completion(uuid, 'notebook', name)
+        return ret
 
     def create_training_run(self, run: DkubeTraining, wait_for_completion=True):
         """
@@ -242,23 +250,24 @@ class DkubeApi(ApiBase, FilesBase):
             run) == DkubeTraining, "Invalid type for run, value must be instance of rsrcs:DkubeTraining class"
         valid_fw = False
         fw_opts = ['custom']
-        if run.executor_dkube_framework.choice == 'custom' :
+        if run.executor_dkube_framework.choice == 'custom':
             valid_fw = True
-        else :
+        else:
             fws = self.get_training_capabilities()
-            for fw in fws :
-                for v in fw['versions'] :
-                    if run.executor_dkube_framework.choice == fw['name'] and run.dkube_framework_details.version == v['name'] :
+            for fw in fws:
+                for v in fw['versions']:
+                    if run.executor_dkube_framework.choice == fw['name'] and run.dkube_framework_details.version == v['name']:
                         valid_fw = True
                         break
-                    else :
-                        name =  fw['name'] + "_" + v['name']
+                    else:
+                        name = fw['name'] + "_" + v['name']
                         fw_opts.append(name)
                 if valid_fw == True:
                     break
 
-        assert valid_fw == True, "Invalid choice for framework, select oneof(" + str(fw_opts) + ")"
-        
+        assert valid_fw == True, "Invalid choice for framework, select oneof(" + str(
+            fw_opts) + ")"
+
         super().update_tags(run.training_def)
         super().create_run(run)
         while wait_for_completion:
@@ -323,7 +332,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_runs('training', user, shared)
 
-    def delete_training_run(self, user, name):
+    def delete_training_run(self, user, name, wait_for_completion=True):
         """
             Method to delete a run.
             Raises exception if token is of different user or if training run with name doesnt exist or on any connection errors.
@@ -336,9 +345,16 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the run which needs to be deleted.
 
-        """
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for training run to get deleted.
 
-        super().delete_run('training', user, name)
+        """
+        data = super().get_run('training', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['uuid']
+        ret = super().delete_run('training', user, name)
+        if wait_for_completion:
+            self._wait_for_rundelete_completion(uuid, 'training', name)
+        return ret
 
     def create_preprocessing_run(self, run: DkubePreprocessing, wait_for_completion=True):
         """
@@ -425,7 +441,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_runs('preprocessing', user, shared)
 
-    def delete_preprocessing_run(self, user, name):
+    def delete_preprocessing_run(self, user, name, wait_for_completion=True):
         """
             Method to delete a run.
             Raises exception if token is of different user or if preprocessing run with name doesnt exist or on any connection errors.
@@ -438,9 +454,16 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the run which needs to be deleted.
 
-        """
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for preprocess run to get deleted.
 
-        super().delete_run('preprocessing', user, name)
+        """
+        data = super().get_run('preprocessing', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['uuid']
+        ret = super().delete_run('preprocessing', user, name)
+        if wait_for_completion:
+            self._wait_for_rundelete_completion(uuid, 'preprocessing', name)
+        return ret
 
     def update_inference(self, run: DkubeServing, wait_for_completion=True):
         """
@@ -652,7 +675,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_runs('inference', user, shared)
 
-    def delete_test_inference(self, user, name):
+    def delete_test_inference(self, user, name, wait_for_completion=True):
         """
             Method to delete a test inference.
             Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.
@@ -665,9 +688,16 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the run which needs to be deleted.
 
-        """
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for inference to get deleted.
 
-        super().delete_run('inference', user, name)
+        """
+        data = super().get_run('inference', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['uuid']
+        ret = super().delete_run('inference', user, name)
+        if wait_for_completion:
+            self._wait_for_rundelete_completion(uuid, 'inference', name)
+        return ret
 
     def create_code(self, code: DkubeCode, wait_for_completion=True):
         """
@@ -779,7 +809,7 @@ class DkubeApi(ApiBase, FilesBase):
 
             *Outputs*
 
-                A dictionary object with response status 
+                A dictionary object with response status
 
         """
         assert type(
@@ -840,7 +870,7 @@ class DkubeApi(ApiBase, FilesBase):
         *Inputs*
 
             name
-                featureset name to be deleted. 
+                featureset name to be deleted.
                 example: "mnist-fs"
 
         *Outputs*
@@ -858,7 +888,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
             Method to commit sticky featuresets.
 
-            featureset should be in ready state. It will be in created state if no featurespec is uploaded. 
+            featureset should be in ready state. It will be in created state if no featurespec is uploaded.
             If the featureset is in created state, the following will happen.
 
                 a) If metadata is passed, it will be uploaded as featurespec
@@ -869,7 +899,7 @@ class DkubeApi(ApiBase, FilesBase):
                 a) metadata if passed any will be ignored
                 b) featurespec will be downloaded for the specifed featureset and df is validated for conformance.
 
-            If name is specified, it derives the path for committing the features. 
+            If name is specified, it derives the path for committing the features.
 
             If path is also specified, it doesn't derive the path. It uses the specified path. However, path should a mount path into dkube store.
 
@@ -908,7 +938,6 @@ class DkubeApi(ApiBase, FilesBase):
         path = kwargs.get('path', None)
         merge = kwargs.get('merge', "True")
         dftype = kwargs.get('dftype', "Py")
-
 
         if not df is None:
             assert(not df.empty), "df should not be empty"
@@ -961,7 +990,7 @@ class DkubeApi(ApiBase, FilesBase):
 
                 path
                     path where featureset is mounted.
-                    path='/opt/dkube/fset' or None 
+                    path='/opt/dkube/fset' or None
 
             *Outputs*
 
@@ -1012,7 +1041,7 @@ class DkubeApi(ApiBase, FilesBase):
                     Filepath for the feature specification metadata yaml file
 
                 metadata
-                    feature specification in yaml object. 
+                    feature specification in yaml object.
 
                 One of filepath or metadata should be specified.
 
@@ -1029,7 +1058,7 @@ class DkubeApi(ApiBase, FilesBase):
 
     def get_featureset(self, featureset=None):
         """
-            Method to retrieve details of a featureset 
+            Method to retrieve details of a featureset
 
             *Available in DKube Release: 2.2*
 
@@ -1538,9 +1567,9 @@ class DkubeApi(ApiBase, FilesBase):
     def list_frameworks(self):
         fw_opts = ['custom']
         fws = self.get_training_capabilities()
-        for fw in fws :
-            for v in fw['versions'] :
-                name =  fw['name'] + "_" + v['name']
+        for fw in fws:
+            for v in fw['versions']:
+                name = fw['name'] + "_" + v['name']
                 fw_opts.append(name)
         return json.dumps(fw_opts)
 
@@ -1557,7 +1586,7 @@ class DkubeApi(ApiBase, FilesBase):
                     Name with model.
 
                 version
-                    Version of the model to be released. 
+                    Version of the model to be released.
                     If not passed then latest version is released automatically.
 
                 user
@@ -1673,7 +1702,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "publish {}/{} - waiting for completion, current state {}".format(model, version, stage))
                 time.sleep(self.wait_interval)
 
-    def create_model_deployment(self, user, name, model,version,
+    def create_model_deployment(self, user, name, model, version,
                                 description=None,
                                 stage_or_deploy="stage",
                                 min_replicas=0,
@@ -1722,7 +1751,8 @@ class DkubeApi(ApiBase, FilesBase):
         assert stage_or_deploy in [
             "stage", "deploy"], "Invalid value for stage_or_deploy parameter."
 
-        mcitem = self.get_modelcatalog_item(user, modelcatalog=model, version=version)         
+        mcitem = self.get_modelcatalog_item(
+            user, modelcatalog=model, version=version)
         run = DkubeServing(user, name=name, description=description)
         run.update_serving_model(model, version=version)
         run.update_serving_image(image_url=mcitem['serving']['images'][
@@ -1745,8 +1775,8 @@ class DkubeApi(ApiBase, FilesBase):
                 print(
                     "run {} - waiting for completion, current state {}".format(run.name, state))
                 time.sleep(self.wait_interval)
-    
-    def delete_model_deployment(self, user, name):
+
+    def delete_model_deployment(self, user, name, wait_for_completion=True):
         """
             Method to delete a model deployment.
             Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.
@@ -1759,9 +1789,16 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the run which needs to be deleted.
 
-        """
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for deployment to get deleted.
 
-        super().delete_run('inference', user, name)
+        """
+        data = super().get_run('inference', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['uuid']
+        ret = super().delete_run('inference', user, name)
+        if wait_for_completion:
+            self._wait_for_rundelete_completion(uuid, 'inference', name)
+        return ret
 
     def list_model_deployments(self, user, shared=False, filters='*'):
         """
@@ -1817,7 +1854,7 @@ class DkubeApi(ApiBase, FilesBase):
 
                 user
                     Name of the user.
-                    
+
                 modelcatalog
                     Model catalog name
 
@@ -1852,7 +1889,7 @@ class DkubeApi(ApiBase, FilesBase):
 
             raise Exception(
                 '{}.{} not found in model catalog'.format(model, version))
-        
+
     def delete_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
         """
             Method to delete an item from modelcatalog
@@ -1864,7 +1901,7 @@ class DkubeApi(ApiBase, FilesBase):
 
                 user
                     Name of the user.
-                    
+
                 modelcatalog
                     Model catalog name
 
@@ -1880,24 +1917,25 @@ class DkubeApi(ApiBase, FilesBase):
         if version is None:
             return "Model Version must be provided"
         if modelcatalog:
-            response = self._api.delete_model_catalog_item(user, modelcatalog, version)
+            response = self._api.delete_model_catalog_item(
+                user, modelcatalog, version)
             return response
         else:
             mc = self.modelcatalog(user)
             for item in mc:
                 if item['model']['name'] == model:
                     modelcatalog = item["name"]
-                    response = self._api.delete_model_catalog_item(user, modelcatalog, version)
+                    response = self._api.delete_model_catalog_item(
+                        user, modelcatalog, version)
                     return response
             raise Exception(
                 '{}.{} not found in model catalog'.format(model, version))
-            
 
     def list_projects(self):
         """
             Return list of DKube projects.
 
-            *Available in DKube Release: 2.2*    
+            *Available in DKube Release: 2.2*
         """
         response = self._api.get_all_projects().to_dict()
         assert response['response']['code'] == 200, response['response']['message']
@@ -1920,7 +1958,7 @@ class DkubeApi(ApiBase, FilesBase):
         return response['data']
 
     def update_project(self, project_id, project: DkubeProject):
-        """Update project details. 
+        """Update project details.
 
         *Available in DKube Release: 2.2*
         Note: details and evail_details fields are base64 encoded.
@@ -2086,3 +2124,24 @@ class DkubeApi(ApiBase, FilesBase):
             version = version['uuid']
 
         super().download_model(path, user, name, version)
+
+    def _wait_for_rundelete_completion(self, uuid, _class, name):
+        try:
+            while True:
+                data = super().get_run_byuuid(uuid)
+                state = data['parameters']['generated']['status']['sub_state']
+                if state.lower() == 'deleting':
+                    print(
+                        "{} {} - waiting for deletion, current state {}".format(_class, name, state))
+                    time.sleep(self.wait_interval)
+                elif state.lower() == 'deleted':
+                    print(
+                        "{} {} - deleted successfully".format(_class, name))
+                    break
+        except ApiException as ae:
+            if ae.status == 404:
+                # Older release - ignore the error
+                print(
+                    "ignoring 404 - fetching deleted jobs failed, older release of dkube")
+            else:
+                raise ae
