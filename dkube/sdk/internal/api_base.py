@@ -377,5 +377,7 @@ class ApiBase(object):
         tempdir.cleanup()
 
     def list_inference_endpoints(self):
-        response = self._api.get_inference_endpoints()
+        api = dkube_api.DkubeOperatorExclusiveApi(
+            dkube_api.ApiClient(configuration))
+        response = api.get_all_deployments()
         return response.to_dict()['data']
