@@ -71,6 +71,7 @@ class DkubePreprocessing(object):
         self.featuresets = JobFeaturesetModel(inputs=self.input_featuresets, outputs=self.output_featuresets)
         self.customkv = CustomKVModel()
         self.configfile = ConfigFileModel()
+        self.customenv = {}
         self.config = JobConfigModel(envs=None, file=self.configfile)
         self.pp_def = PreprocessingJobModel(
             kind='preprocessing', executor=self.executor_def, datums=self.input_datums, config=self.config, featuresets=self.featuresets)
@@ -266,3 +267,34 @@ class DkubePreprocessing(object):
 
     def disable_execution(self):
         self.execute = False
+
+    def add_envvar(self, key, value):
+        """
+            Method to add env variable for the training run
+
+            *Inputs*
+
+                key
+                    Name of env variable
+
+                value
+                    Value of env variable
+        """
+        self.customenv[key] = value
+        return self.add_envvars(self.customenv)
+
+    def add_envvars(self, vars={}):
+        """
+            Method to add env variables for the training run
+
+            *Inputs*
+
+                vars
+                    Dictionary of env variable name and value
+        """
+        envs = []
+        for k, v in vars.items():
+            envs.append({"key": k, "value": v})
+
+        self.hyperparameters.customkv = envs
+        return self
