@@ -37,7 +37,6 @@ class PreprocessingJobModel(object):
         'featuresets': 'JobFeaturesetModel',
         'tags': 'list[str]',
         'config': 'JobConfigModel',
-        'hyperparams': 'PreprocessingJobModelHyperparams',
         'cluster': 'JobClusterModel',
         'ngpus': 'int',
         'gpus_override': 'bool'

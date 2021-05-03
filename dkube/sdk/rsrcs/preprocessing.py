@@ -74,10 +74,10 @@ class DkubePreprocessing(object):
         self.customkv = CustomKVModel()
         self.configfile = ConfigFileModel()
         self.customenv = {}
-        self.hyperparameters = PreprocessingJobModelHyperparams(file=self.configfile)
+        # self.hyperparameters = PreprocessingJobModelHyperparams(file=self.configfile)
         self.config = JobConfigModel(envs=None, file=self.configfile)
         self.pp_def = PreprocessingJobModel(
-            kind='preprocessing', executor=self.executor_def, datums=self.input_datums, hyperparams=self.hyperparameters, config=self.config, featuresets=self.featuresets)
+            kind='preprocessing', executor=self.executor_def, datums=self.input_datums,  config=self.config, featuresets=self.featuresets)
         self.run_def = JobModelParametersRun(template=None, group='default')
         self.job_parameters = JobModelParameters(
             _class='preprocessing', preprocessing=self.pp_def, run=self.run_def)
@@ -299,5 +299,5 @@ class DkubePreprocessing(object):
         for k, v in vars.items():
             envs.append({"key": k, "value": v})
 
-        self.hyperparameters.customkv = envs
+        self.config = envs
         return self

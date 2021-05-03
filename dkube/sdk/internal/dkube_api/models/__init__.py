@@ -539,8 +539,8 @@ from dkube.sdk.internal.dkube_api.models.preprocessing_job_model import \
     PreprocessingJobModel
 from dkube.sdk.internal.dkube_api.models.preprocessing_job_model_executor import \
     PreprocessingJobModelExecutor
-from dkube.sdk.internal.dkube_api.models.preprocessing_job_model_hyperparams import \
-    PreprocessingJobModelHyperparams
+# from dkube.sdk.internal.dkube_api.models.preprocessing_job_model_hyperparams import \
+#     PreprocessingJobModelHyperparams
 from dkube.sdk.internal.dkube_api.models.project_list_model import \
     ProjectListModel
 from dkube.sdk.internal.dkube_api.models.project_model import ProjectModel
