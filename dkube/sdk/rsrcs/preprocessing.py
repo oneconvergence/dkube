@@ -301,3 +301,18 @@ class DkubePreprocessing(object):
 
         self.customkv = envs
         return self
+
+    def update_config_file(self, name, body=None):
+        """
+            Method to update config file for training run
+
+            *Inputs*
+
+                name
+                    Name of config file
+
+                body
+                    Config data which is made available as file with the specified name to the training pod under /mnt/dkube/config
+        """
+        self.configfile.name = name
+        self.configfile.body = body
