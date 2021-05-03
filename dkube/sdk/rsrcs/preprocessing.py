@@ -12,6 +12,8 @@ from dkube.sdk.internal.dkube_api.models.custom_container_model import \
 from dkube.sdk.internal.dkube_api.models.custom_container_model_image import \
     CustomContainerModelImage
 from dkube.sdk.internal.dkube_api.models.custom_kv_model import CustomKVModel
+from dkube.sdk.internal.dkube_api.models.ds_job_model_hyperparams import \
+    DSJobModelHyperparams
 from dkube.sdk.internal.dkube_api.models.job_config_model import JobConfigModel
 from dkube.sdk.internal.dkube_api.models.job_datum_model import JobDatumModel
 from dkube.sdk.internal.dkube_api.models.job_datum_model_workspace import \
@@ -72,6 +74,7 @@ class DkubePreprocessing(object):
         self.customkv = CustomKVModel()
         self.configfile = ConfigFileModel()
         self.customenv = {}
+        self.hyperparameters = DSJobModelHyperparams(file=self.configfile)
         self.config = JobConfigModel(envs=None, file=self.configfile)
         self.pp_def = PreprocessingJobModel(
             kind='preprocessing', executor=self.executor_def, datums=self.input_datums, config=self.config, featuresets=self.featuresets)

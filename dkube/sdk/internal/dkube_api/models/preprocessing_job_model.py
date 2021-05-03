@@ -37,6 +37,7 @@ class PreprocessingJobModel(object):
         'featuresets': 'JobFeaturesetModel',
         'tags': 'list[str]',
         'config': 'JobConfigModel',
+        'hyperparams': 'PreprocessingJobModelHyperparams',
         'cluster': 'JobClusterModel',
         'ngpus': 'int',
         'gpus_override': 'bool'
@@ -47,6 +48,7 @@ class PreprocessingJobModel(object):
         'executor': 'executor',
         'datums': 'datums',
         'featuresets': 'featuresets',
+        'hyperparams': 'hyperparams',
         'tags': 'tags',
         'config': 'config',
         'cluster': 'cluster',
@@ -54,13 +56,14 @@ class PreprocessingJobModel(object):
         'gpus_override': 'gpus_override'
     }
 
-    def __init__(self, kind=None, executor=None, datums=None, featuresets=None, tags=None, config=None, cluster=None, ngpus=None, gpus_override=True):  # noqa: E501
+    def __init__(self, kind=None, executor=None, datums=None, featuresets=None, hyperparams = None,  tags=None, config=None, cluster=None, ngpus=None, gpus_override=True):  # noqa: E501
         """PreprocessingJobModel - a model defined in Swagger"""  # noqa: E501
 
         self._kind = None
         self._executor = None
         self._datums = None
         self._featuresets = None
+        self._hyperparams = None
         self._tags = None
         self._config = None
         self._cluster = None
@@ -76,6 +79,8 @@ class PreprocessingJobModel(object):
             self.datums = datums
         if featuresets is not None:
             self.featuresets = featuresets
+        if hyperparams is not None:
+            self.hyperparams = hyperparams
         if tags is not None:
             self.tags = tags
         if config is not None:
@@ -176,6 +181,27 @@ class PreprocessingJobModel(object):
         """
 
         self._featuresets = featuresets
+
+    @property
+    def hyperparams(self):
+        """Gets the hyperparams of this PreprocessingJobModel.  # noqa: E501
+
+
+        :return: The hyperparams of this PreprocessingJobModel.  # noqa: E501
+        :rtype: PreprocessingJobModelHyperparams
+        """
+        return self._hyperparams
+
+    @hyperparams.setter
+    def hyperparams(self, hyperparams):
+        """Sets the hyperparams of this PreprocessingJobModel.
+
+
+        :param hyperparams: The hyperparams of this PreprocessingJobModel.  # noqa: E501
+        :type: PreprocessingJobModelHyperparams
+        """
+
+        self._hyperparams = hyperparams
 
     @property
     def tags(self):
