@@ -299,5 +299,5 @@ class DkubePreprocessing(object):
         for k, v in vars.items():
             envs.append({"key": k, "value": v})
 
-        self.config = envs
+        self.customkv = envs
         return self
