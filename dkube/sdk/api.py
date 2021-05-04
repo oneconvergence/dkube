@@ -13,6 +13,7 @@ import os
 import time
 
 import pandas as pd
+from packaging import version as pversion
 import urllib3
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.internal.dkube_api.models.conditions import \
@@ -2126,10 +2127,22 @@ class DkubeApi(ApiBase, FilesBase):
         super().download_model(path, user, name, version)
 
     def _wait_for_rundelete_completion(self, uuid, _class, name):
-        try:
+
+        dkubever = super().dkubeinfo()['version']
+        # MAK - ideally the target version should be 2.2.7.0 and it should
+        # be sufficient to check for older release(s), but there is an internal patch to enable
+        # automation suite which returns release version as 2.2.1.13
+        if pversion.parse(dkubever) < pversion.parse("2.2.1.13"):
+            # Older release - waiting for deletion to complete not supported
+            return
+
+        try:  # MAK - try block can be removed, once 2.2.7.0 is released
             while True:
                 data = super().get_run_byuuid(uuid)
                 state = data['parameters']['generated']['status']['sub_state']
+                if state == None:  # MAK - check can be removed once 2.2.7.0 is released
+                    # Older release - ignore the error
+                    break
                 if state.lower() == 'deleting':
                     print(
                         "{} {} - waiting for deletion, current state {}".format(_class, name, state))
