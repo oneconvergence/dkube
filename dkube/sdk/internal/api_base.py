@@ -32,6 +32,10 @@ class ApiBase(object):
         self.common_tags = list_of_strs(common_tags)
         self.wait_interval = 10
 
+    def dkubeinfo(self):
+        response = self._api.dkubeinfo()
+        return response.to_dict()['data']
+
     def update_tags(self, resource):
         if len(self.common_tags):
             if resource.tags:
