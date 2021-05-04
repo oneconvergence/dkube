@@ -86,6 +86,8 @@ class DkubeApi(ApiBase, FilesBase):
         ApiBase.__init__(self, self.url, self.token, common_tags)
         FilesBase.__init__(self, self.files_url, self.token)
 
+        self.dkubeinfo = super().dkubeinfo()
+
     def set_active_project(self, project_id):
         """
         Set active project. Any resources created using this API instance will belong to the given project.
@@ -2128,7 +2130,7 @@ class DkubeApi(ApiBase, FilesBase):
 
     def _wait_for_rundelete_completion(self, uuid, _class, name):
 
-        dkubever = super().dkubeinfo()['version']
+        dkubever = self.dkubeinfo['version']
         # MAK - ideally the target version should be 2.2.7.0 and it should
         # be sufficient to check for older release(s), but there is an internal patch to enable
         # automation suite which returns release version as 2.2.1.13
