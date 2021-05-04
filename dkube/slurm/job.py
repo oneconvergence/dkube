@@ -70,6 +70,30 @@ def launch_slurmjob(cluster: str, props: type(JobProperties),
     print("...................")
 
     run['parameters']['class'] = kind
+
+    # check if datums are in right format user:datum
+    if 'datums' in run['parameters'][kind]:
+        datums = run['parameters'][kind]['datums']
+        datasets = datums.get('datasets', [])
+        if datasets != None:
+            for idx, item in enumerate(datasets):
+                if ':' not in item['name']:
+                    datasets[idx]['name'] = user + ':' + item['name']
+        models = datums.get('models', [])
+        if models != None:
+            for idx, item in enumerate(models):
+                if ':' not in item['name']:
+                    models[idx]['name'] = user + ':' + item['name']
+        outputs = datums.get('outputs', [])
+        if outputs != None:
+            for idx, item in enumerate(outputs):
+                if ':' not in item['name']:
+                    outputs[idx]['name'] = user + ':' + item['name']
+        code = datums.get('workspace', None)
+        if code != None:
+            if ':' not in code['data']['name']:
+                code['data']['name'] = user + ':' + code['data']['name']
+
     # check if am running as pipeline component
     if os.getenv('pipeline', 'false').lower() == 'true':
         wfid, runid = os.getenv("wfid"), os.getenv("runid")
@@ -108,6 +132,7 @@ def launch_slurmjob(cluster: str, props: type(JobProperties),
         status = run['parameters']['generated']['status']
         state, reason = status['state'], status['reason']
         if state.lower() in ['complete', 'failed', 'error']:
+            recorded = state
             print(
                 "run {} - completed with state {} and reason {}".format(name, state, reason))
             break
@@ -117,6 +142,9 @@ def launch_slurmjob(cluster: str, props: type(JobProperties),
                     "run {} - waiting for completion, current state {}".format(name, state))
         recorded = state
         time.sleep(10)
+
+    if recorded.lower() in ['failed', 'error']:
+        exit(1)
 
     rundetails = json.dumps(run)
 
