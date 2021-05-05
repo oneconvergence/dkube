@@ -47,6 +47,7 @@ class DkubePreprocessing(object):
             Where first argument is the user of the Preprocessing Run. User should be a valid onboarded user in dkube.
 
     """
+
     def __init__(self, user, name=generate('data'), description='', tags=[]):
 
         self.repo = JobInputDatumModel  # class assignment, caller creates objects
@@ -68,10 +69,13 @@ class DkubePreprocessing(object):
             workspace=self.input_project, datasets=self.input_datasets, models=self.input_models, outputs=self.output_datasets)
         self.input_featuresets = []
         self.output_featuresets = []
-        self.featuresets = JobFeaturesetModel(inputs=self.input_featuresets, outputs=self.output_featuresets)
+        self.featuresets = JobFeaturesetModel(
+            inputs=self.input_featuresets, outputs=self.output_featuresets)
         self.customkv = CustomKVModel()
         self.configfile = ConfigFileModel()
-        self.config = JobConfigModel(envs=None, file=self.configfile)
+        self.customenv = {}
+        self.envs = []
+        self.config = JobConfigModel(envs=self.envs, file=self.configfile)
         self.pp_def = PreprocessingJobModel(
             kind='preprocessing', executor=self.executor_def, datums=self.input_datums, config=self.config, featuresets=self.featuresets)
         self.run_def = JobModelParametersRun(template=None, group='default')
@@ -243,9 +247,10 @@ class DkubePreprocessing(object):
                     Path at which the Featureset contents are made available in the Preprocessing run pod
 
         """
-        featureset_model = JobInputFeaturesetModel(name=name, version=version, mountpath=mountpath)
+        featureset_model = JobInputFeaturesetModel(
+            name=name, version=version, mountpath=mountpath)
         self.input_featuresets.append(featureset_model)
-    
+
     def add_output_featureset(self, name, version=None, mountpath=None):
         """
             Method to update Featureset output for Preprocessing run
@@ -261,8 +266,43 @@ class DkubePreprocessing(object):
                 mountpath
                     Path to write Featureset files in the Preprocessing run. A new version is created in the Featureset with files written to this path.
         """
-        featureset_model = JobInputFeaturesetModel(name=name, version=version, mountpath=mountpath)
+        featureset_model = JobInputFeaturesetModel(
+            name=name, version=version, mountpath=mountpath)
         self.output_featuresets.append(featureset_model)
 
     def disable_execution(self):
         self.execute = False
+
+    def update_config_file(self, name, body=None):
+        """
+            Method to update config file for training run
+            *Inputs*
+                name
+                    Name of config file
+                body
+                    Config data which is made available as file with the specified name to the training pod under /mnt/dkube/config
+        """
+        self.configfile.name = name
+        self.configfile.body = body
+
+    def add_envvar(self, key, value):
+        """
+            Method to add env variable for the training run
+            *Inputs*
+                key
+                    Name of env variable
+                value
+                    Value of env variable
+        """
+        self.customenv[key] = value
+        return self.add_envvars(self.customenv)
+
+    def add_envvars(self, vars={}):
+        """
+            Method to add env variables for the training run
+            *Inputs*
+                vars
+                    Dictionary of env variable name and value
+        """
+        for k, v in vars.items():
+            self.envs.append({"key": k, "value": v})
