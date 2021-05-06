@@ -375,3 +375,9 @@ class ApiBase(object):
         copy_tree("{}/{}/data".format(tempdir.name, version), path)
         # use temp_dir, and when done:
         tempdir.cleanup()
+
+    def list_inference_endpoints(self):
+        api = dkube_api.DkubeOperatorExclusiveApi(
+            dkube_api.ApiClient(configuration))
+        response = api.get_all_deployments()
+        return response.to_dict()['data']
