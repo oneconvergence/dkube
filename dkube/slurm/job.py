@@ -77,7 +77,7 @@ def launch_slurmjob(cluster: str, props: type(JobProperties),
         datasets = datums.get('datasets', [])
         if datasets != None:
             for idx, item in enumerate(datasets):
-                if item['name' != None and ':' not in item['name']:
+                if item['name'] != None and ':' not in item['name']:
                     datasets[idx]['name'] = user + ':' + item['name']
         models = datums.get('models', [])
         if models != None:
