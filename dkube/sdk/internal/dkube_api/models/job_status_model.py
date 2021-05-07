@@ -96,7 +96,7 @@ class JobStatusModel(object):
         :param state: The state of this JobStatusModel.  # noqa: E501
         :type: str
         """
-        allowed_values = ["QUEUED", "STARTING", "TRAINING", "RUNNING", "COMPLETE", "STOPPED", "STOPPING", "DELETING", "ERROR", "IMAGEBUILDINPROGRESS", "UPDATING", "CREATED"]  # noqa: E501
+        allowed_values = ["QUEUED", "STARTING", "TRAINING", "RUNNING", "COMPLETE", "STOPPED", "STOPPING", "DELETING", "ERROR", "IMAGEBUILDINPROGRESS", "UPDATING", "CREATED", "PENDING", "VERSIONING"]  # noqa: E501
         if state not in allowed_values:
             raise ValueError(
                 "Invalid value for `state` ({0}), must be one of {1}"  # noqa: E501
