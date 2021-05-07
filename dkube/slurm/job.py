@@ -77,20 +77,20 @@ def launch_slurmjob(cluster: str, props: type(JobProperties),
         datasets = datums.get('datasets', [])
         if datasets != None:
             for idx, item in enumerate(datasets):
-                if ':' not in item['name']:
+                if item['name' != None and ':' not in item['name']:
                     datasets[idx]['name'] = user + ':' + item['name']
         models = datums.get('models', [])
         if models != None:
             for idx, item in enumerate(models):
-                if ':' not in item['name']:
+                if item['name'] != None and ':' not in item['name']:
                     models[idx]['name'] = user + ':' + item['name']
         outputs = datums.get('outputs', [])
         if outputs != None:
             for idx, item in enumerate(outputs):
-                if ':' not in item['name']:
+                if item['name'] != None and ':' not in item['name']:
                     outputs[idx]['name'] = user + ':' + item['name']
         code = datums.get('workspace', None)
-        if code != None:
+        if code != None and code['data'] != None and code['data']['name'] != None:
             if ':' not in code['data']['name']:
                 code['data']['name'] = user + ':' + code['data']['name']
 
@@ -151,20 +151,22 @@ def launch_slurmjob(cluster: str, props: type(JobProperties),
     uuid = run['parameters']['generated']['uuid']
     lineage = api.get_run_lineage(kind, user, uuid)
     outputs = lineage['outputs']
-    artifacts = [
+
+    isremote = lambda output: 'version' in output and output['version'] != None
+    artifacts=[
         {'datum': output['version']['datum_name'], 'class': output['version']['datum_type'],
          'version': output['version']['uuid'], 'index': output['version']['index']
          }
-        for output in outputs
+        for output in filter(isremote, outputs)
     ]
 
-    artifacts = json.dumps(artifacts)
+    artifacts=json.dumps(artifacts)
 
-    output = namedtuple('Outputs', ['artifacts', 'run_details'])
+    output=namedtuple('Outputs', ['artifacts', 'run_details'])
     return output(artifacts, rundetails)
 
 
-dkube_slurmjob_op = componentize(launch_slurmjob,
+dkube_slurmjob_op=componentize(launch_slurmjob,
                                  "dkube_slurmjob_launcher",
                                  "Launcher for slurmjob using DKube APIs.",
                                  "ocdr/dkube_launcher:slurm",
@@ -180,7 +182,7 @@ dkube_slurmjob_op = componentize(launch_slurmjob,
                                      'all'
                                  })
 
-dkube_slurmjob_preprocessing_op = componentize(launch_slurmjob,
+dkube_slurmjob_preprocessing_op=componentize(launch_slurmjob,
                                                "dkube_slurmjob_launcher",
                                                "Launcher for slurmjob using DKube APIs.",
                                                "ocdr/dkube_launcher:slurm",
