@@ -93,7 +93,7 @@ class DkubeDataset(object):
             access_key_id=None, access_key=None, bucket=None, prefix=None, endpoint=None)
 
         self.gitcreds = GitAccessCredentials(
-            username=None, password=None, apikey=None, sshkey=None, private=True)
+            username=None, password=None, apikey=None, sshkey=None, private=False)
         self.gitaccess = GitAccessInfo(
             path=None, url=None, branch=None, credentials=self.gitcreds)
         self.hostpath = DatumModelHostpath(
