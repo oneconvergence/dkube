@@ -87,7 +87,7 @@ class DkubeModel(object):
             access_key_id=None, access_key=None, bucket=None, prefix=None, endpoint=None)
 
         self.gitcreds = GitAccessCredentials(
-            username=None, password=None, apikey=None, sshkey=None, private=True)
+            username=None, password=None, apikey=None, sshkey=None, private=False)
         self.gitaccess = GitAccessInfo(
             path=None, url=None, branch=None, credentials=self.gitcreds)
 
@@ -115,7 +115,7 @@ class DkubeModel(object):
 
         self.datum.source = source
 
-    def update_git_details(self, url, branch=None, authopt=GIT_ACCESS_OPTS[0], authval=None):
+    def update_git_details(self, url, branch=None, authopt=None, authval=None):
         """
 i            Method to update the details of git source.
 
@@ -148,6 +148,9 @@ i            Method to update the details of git source.
         self.gitaccess.branch = branch
 
         self.gitcreds.username = self.user
+
+        if authopt != None and authval != None:
+            self.gitcreds.private = True
 
         if authopt == 'apikey':
             self.gitcreds.apikey = authval

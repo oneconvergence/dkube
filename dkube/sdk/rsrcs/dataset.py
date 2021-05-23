@@ -123,7 +123,7 @@ class DkubeDataset(object):
         """
         self.datum.source = source
 
-    def update_git_details(self, url, branch=None, authopt=GIT_ACCESS_OPTS[0], authval=None):
+    def update_git_details(self, url, branch=None, authopt=None, authval=None):
         """
             Method to update the details of git datasource.
 
@@ -156,6 +156,9 @@ class DkubeDataset(object):
         self.gitaccess.branch = branch
 
         self.gitcreds.username = self.user
+
+        if authopt != None and authval != None:
+            self.gitcreds.private = True
 
         if authopt == 'apikey':
             self.gitcreds.apikey = authval

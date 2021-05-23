@@ -59,7 +59,7 @@ class DkubeCode(object):
         self.datum.name = name
         self.datum.tags = tags
 
-    def update_git_details(self, url, branch=None, authopt=GIT_ACCESS_OPTS[0], authval=None):
+    def update_git_details(self, url, branch=None, authopt=None, authval=None):
 
         """
             Method to update the details of git datasource.
@@ -93,12 +93,12 @@ class DkubeCode(object):
 
         self.gitcreds.username = self.user
 
-        if authopt == 'apikey':
+        if authopt != None and authval != None:
             self.gitcreds.private = True
+
+        if authopt == 'apikey':
             self.gitcreds.apikey = authval
         elif authopt == 'password':
-            self.gitcreds.private = True
             self.gitcreds.password = authval
         elif authopt == 'sshkey':
-            self.gitcreds.private = True
             self.gitcreds.sshkey = authval
