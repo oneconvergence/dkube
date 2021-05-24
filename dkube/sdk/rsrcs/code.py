@@ -27,7 +27,7 @@ class DkubeCode(object):
 
     """
 
-    GIT_ACCESS_OPTS = ["apikey", "sshkey", "password"]
+    GIT_ACCESS_OPTS = ["none", "apikey", "sshkey", "password"]
 
     """
     List of authentication options supported for git data source.

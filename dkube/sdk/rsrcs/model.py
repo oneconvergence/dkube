@@ -60,7 +60,7 @@ class DkubeModel(object):
     :bash:`workstation` :- To upload data that is present on the local workstation. :bash:`Uploaded`
     """
 
-    GIT_ACCESS_OPTS = ["apikey", "sshkey", "password"]
+    GIT_ACCESS_OPTS = ["none", "apikey", "sshkey", "password"]
 
     """
     List of authentication options supported for git data source.
@@ -87,7 +87,7 @@ class DkubeModel(object):
             access_key_id=None, access_key=None, bucket=None, prefix=None, endpoint=None)
 
         self.gitcreds = GitAccessCredentials(
-            username=None, password=None, apikey=None, sshkey=None, private=True)
+            username=None, password=None, apikey=None, sshkey=None, private=False)
         self.gitaccess = GitAccessInfo(
             path=None, url=None, branch=None, credentials=self.gitcreds)
 
@@ -151,10 +151,13 @@ i            Method to update the details of git source.
 
         if authopt == 'apikey':
             self.gitcreds.apikey = authval
+            self.gitcreds.private = True
         elif authopt == 'password':
             self.gitcreds.password = authval
+            self.gitcreds.private = True
         elif authopt == 'sshkey':
             self.gitcreds.sshkey = authval
+            self.gitcreds.private = True
 
     def update_awss3_details(self, bucket, prefix, key, secret):
         """
