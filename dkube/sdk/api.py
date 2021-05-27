@@ -352,6 +352,7 @@ class DkubeApi(ApiBase, FilesBase):
                     When set to :bash:`True` this method will wait for training run to get deleted.
 
         """
+        name = name.split(":")[0]
         data = super().get_run('training', user, name, fields='*')
         uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_run('training', user, name)
@@ -461,6 +462,7 @@ class DkubeApi(ApiBase, FilesBase):
                     When set to :bash:`True` this method will wait for preprocess run to get deleted.
 
         """
+        name = name.split(":")[0]
         data = super().get_run('preprocessing', user, name, fields='*')
         uuid = data['job']['parameters']['generated']['uuid']
         ret = super().delete_run('preprocessing', user, name)
