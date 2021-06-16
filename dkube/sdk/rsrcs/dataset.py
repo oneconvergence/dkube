@@ -104,7 +104,7 @@ class DkubeDataset(object):
                                 s3access=self.s3access, nfsaccess=self.nfsaccess, gcsaccess=self.gcsaccess,
                                 hostpath=self.hostpath, redshift=self.redshift)
         if remote_data == True:
-	    self.datum.remote= True
+            self.datum.remote=True
         self.update_basic(user, name, tags)
 
     def update_basic(self, user, name, tags):
