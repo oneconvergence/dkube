@@ -77,7 +77,7 @@ class DkubeDataset(object):
 
     """
 
-    def __init__(self, user, name=generate("dataset"), tags=None):
+    def __init__(self, user, name=generate("dataset"), remote=False, tags=None):
         self.k8svolume = DatumModelK8svolume(name=None)
 
         self.redshift = RedshiftAccessInfo(
@@ -100,10 +100,10 @@ class DkubeDataset(object):
             path=None)
 
         self.datum = DatumModel(name=None, tags=None, _class='dataset',
-                                dvs=None, source='dvs', url=None, remote=False, gitaccess=self.gitaccess,
+                                dvs=None, source='dvs', url=None, remote=remote, gitaccess=self.gitaccess,
                                 s3access=self.s3access, nfsaccess=self.nfsaccess, gcsaccess=self.gcsaccess,
                                 hostpath=self.hostpath, redshift=self.redshift)
-
+	
         self.update_basic(user, name, tags)
 
     def update_basic(self, user, name, tags):

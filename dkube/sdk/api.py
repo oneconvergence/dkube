@@ -1099,7 +1099,7 @@ class DkubeApi(ApiBase, FilesBase):
 
 ###############################################################
 
-    def create_dataset(self, dataset: DkubeDataset, wait_for_completion=True):
+    def create_dataset(self, dataset: DkubeDataset,wait_for_completion=True):
         """
             Method to create a dataset on DKube.
             Raises Exception in case of errors.
@@ -1117,7 +1117,6 @@ class DkubeApi(ApiBase, FilesBase):
                     dataset is declared complete if it is one of the :bash:`complete/failed/error` state
 
         """
-
         assert type(
             dataset) == DkubeDataset, "Invalid type for run, value must be instance of rsrcs:DkubeDataset class"
         super().create_repo(dataset)
