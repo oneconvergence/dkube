@@ -100,11 +100,10 @@ class DkubeDataset(object):
             path=None)
 
         self.datum = DatumModel(name=None, tags=None, _class='dataset',
-                                dvs=None, source='dvs', url=None, remote=False, gitaccess=self.gitaccess,
+                                dvs=None, source='dvs', url=None, remote=remote, gitaccess=self.gitaccess,
                                 s3access=self.s3access, nfsaccess=self.nfsaccess, gcsaccess=self.gcsaccess,
                                 hostpath=self.hostpath, redshift=self.redshift)
-        if remote == True:
-            self.datum.remote=True
+	
         self.update_basic(user, name, tags)
 
     def update_basic(self, user, name, tags):
