@@ -130,9 +130,9 @@ class ApiBase(object):
         response = self._api.datums_get_by_class(user, category, shared)
         return response.to_dict()['data']
 
-    def delete_repo(self, category, user, name):
+    def delete_repo(self, category, user, name, force=False):
         response = self._api.datums_delete_by_class(
-            user, category, {'datums': [name]})
+            user, category, {'datums': [name]}, force=force)
 
     def get_run_lineage(self, category, user, runid):
         response = self._api.get_one_run_lineage(user, category, runid)

@@ -776,7 +776,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_repos('program', user, shared)
 
-    def delete_code(self, user, name):
+    def delete_code(self, user, name, force=False):
         """
             Method to delete a code repo.
             Raises exception if token is of different user or if code with name doesnt exist or on any connection errors.
@@ -791,7 +791,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        super().delete_repo('program', user, name)
+        super().delete_repo('program', user, name, force=force)
 
 ################### Feature Store ############################
     def create_featureset(self, featureset: DkubeFeatureSet, wait_for_completion=True):
@@ -1174,7 +1174,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_repos('dataset', user, shared)
 
-    def delete_dataset(self, user, name):
+    def delete_dataset(self, user, name, force=False):
         """
             Method to delete a dataset.
             Raises exception if token is of different user or if dataset with name doesnt exist or on any connection errors.
@@ -1189,7 +1189,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        super().delete_repo('dataset', user, name)
+        super().delete_repo('dataset', user, name, force=force)
 
     def create_model(self, model: DkubeModel, wait_for_completion=True):
         """
@@ -1265,7 +1265,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().list_repos('model', user, shared)
 
-    def delete_model(self, user, name):
+    def delete_model(self, user, name, force=False):
         """
             Method to delete a model.
             Raises exception if token is of different user or if model with name doesnt exist or on any connection errors.
@@ -1280,7 +1280,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        super().delete_repo('model', user, name)
+        super().delete_repo('model', user, name, force=force)
 
     def trigger_runs_bycode(self, code, user):
         """
