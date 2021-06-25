@@ -32,21 +32,21 @@ implementation:
                           user, token, run,
                           url = 'https://dkube-proxy.dkube'):
 
-          import pprint
           import ast
-          import time
+          import json
           import os
-          import json
-          import kfp
-          import json
-          import yaml
-          from pyfiglet import Figlet
-          from url_normalize import url_normalize
+          import pprint
+          import time
           from collections import namedtuple
           from json import JSONDecodeError
-          from dkube.sdk.internal.dkube_api.models.job_model import JobModel
+
+          import kfp
+          import yaml
           from dkube.sdk.internal.api_base import ApiBase
+          from dkube.sdk.internal.dkube_api.models.job_model import JobModel
           from dkube.slurm.job_properties import JobProperties
+          from pyfiglet import Figlet
+          from url_normalize import url_normalize
 
           if isinstance(run, JobModel) == True:
               run = run.to_dict()
@@ -77,11 +77,35 @@ implementation:
           print("...................")
 
           run['parameters']['class'] = kind
+
+          # check if datums are in right format user:datum
+          if 'datums' in run['parameters'][kind]:
+              datums = run['parameters'][kind]['datums']
+              datasets = datums.get('datasets', [])
+              if datasets != None:
+                  for idx, item in enumerate(datasets):
+                      if item['name'] != None and ':' not in item['name']:
+                          datasets[idx]['name'] = user + ':' + item['name']
+              models = datums.get('models', [])
+              if models != None:
+                  for idx, item in enumerate(models):
+                      if item['name'] != None and ':' not in item['name']:
+                          models[idx]['name'] = user + ':' + item['name']
+              outputs = datums.get('outputs', [])
+              if outputs != None:
+                  for idx, item in enumerate(outputs):
+                      if item['name'] != None and ':' not in item['name']:
+                          outputs[idx]['name'] = user + ':' + item['name']
+              code = datums.get('workspace', None)
+              if code != None and code['data'] != None and code['data']['name'] != None:
+                  if ':' not in code['data']['name']:
+                      code['data']['name'] = user + ':' + code['data']['name']
+
           # check if am running as pipeline component
           if os.getenv('pipeline', 'false').lower() == 'true':
               wfid, runid = os.getenv("wfid"), os.getenv("runid")
               run['name'] = runid
-              run['parameters']['training']['tags'].extend(
+              run['parameters'][kind]['tags'].extend(
                   ['owner=pipeline', 'workflowid=' + wfid, 'runid=' + runid])
               if run['parameters']['generated'] is None:
                   run['parameters']['generated'] = dict()
@@ -115,6 +139,7 @@ implementation:
               status = run['parameters']['generated']['status']
               state, reason = status['state'], status['reason']
               if state.lower() in ['complete', 'failed', 'error']:
+                  recorded = state
                   print(
                       "run {} - completed with state {} and reason {}".format(name, state, reason))
                   break
@@ -125,21 +150,26 @@ implementation:
               recorded = state
               time.sleep(10)
 
+          if recorded.lower() in ['failed', 'error']:
+              exit(1)
+
           rundetails = json.dumps(run)
 
           uuid = run['parameters']['generated']['uuid']
           lineage = api.get_run_lineage(kind, user, uuid)
           outputs = lineage['outputs']
-          artifacts = [
+
+          isremote = lambda output: 'version' in output and output['version'] != None
+          artifacts=[
               {'datum': output['version']['datum_name'], 'class': output['version']['datum_type'],
                'version': output['version']['uuid'], 'index': output['version']['index']
-              }
-              for output in outputs
+               }
+              for output in filter(isremote, outputs)
           ]
 
-          artifacts = json.dumps(artifacts)
+          artifacts=json.dumps(artifacts)
 
-          output = namedtuple('Outputs', ['artifacts', 'run_details'])
+          output=namedtuple('Outputs', ['artifacts', 'run_details'])
           return output(artifacts, rundetails)
 
       def _serialize_str(str_value: str) -> str:
