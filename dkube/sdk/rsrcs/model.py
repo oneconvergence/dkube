@@ -94,7 +94,7 @@ class DkubeModel(object):
         self.datum = DatumModel(name=None, tags=None, _class='model',
                                 dvs=None, source='dvs', url=None, remote=False, gitaccess=self.gitaccess,
                                 s3access=self.s3access, nfsaccess=self.nfsaccess, gcsaccess=self.gcsaccess)
-
+        self.extract = False
         self.update_basic(user, name, tags)
 
     def update_basic(self, user, name, tags):
@@ -265,3 +265,21 @@ i            Method to update the details of git source.
 
         self.datum.source = "k8svolume"
         self.k8svolume.name = name
+        
+    def update_puburl_details(self, url, extract):
+
+        """
+            Method to update details of pub_url model source.
+
+            *Inputs*
+
+                url
+                    pub_url of the model
+                    
+                extract 
+                    if set to True, model will be extracted
+        """
+
+        self.datum.source = "pub_url"
+        self.datum.url = url
+        self.extract = extract
