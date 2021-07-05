@@ -113,10 +113,7 @@ class ApiBase(object):
 
     def create_repo(self, repo):
         self.update_tags(repo.datum)
-        ext=''
-        if repo.extract == True:
-            ext='true'
-        response = self._api.datums_add_one(user=repo.user, data=repo.datum,extract=ext)
+        response = self._api.datums_add_one(user=repo.user, data=repo.datum,extract=str(repo.extract).lower())
         print(response.to_dict())
 
     def get_repo(self, category, user, name, fields='*'):
