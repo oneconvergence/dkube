@@ -103,7 +103,7 @@ class DkubeDataset(object):
                                 dvs=None, source='dvs', url=None, remote=remote, gitaccess=self.gitaccess,
                                 s3access=self.s3access, nfsaccess=self.nfsaccess, gcsaccess=self.gcsaccess,
                                 hostpath=self.hostpath, redshift=self.redshift)
-	
+	self.extract = False
         self.update_basic(user, name, tags)
 
     def update_basic(self, user, name, tags):
@@ -315,3 +315,22 @@ class DkubeDataset(object):
         self.datum.source = "hostpath"
         self.datum.remote = True
         self.hostpath.path = path
+	
+	
+    def update_puburl_details(self, url, extract):
+
+        """
+            Method to update details of pub_url data source.
+
+            *Inputs*
+
+                url
+                    pub_url of the data
+                    
+                extract 
+                    if set to True, data will be extracted
+        """
+
+        self.datum.source = "pub_url"
+        self.datum.url = url
+        self.extract = extract    
