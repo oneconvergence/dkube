@@ -49,6 +49,7 @@ class DkubeCode(object):
                                 dvs=None, source='git', url=None, remote=False, gitaccess=self.gitaccess)
 
         self.update_basic(user, name, tags)
+	self.extract = False
 
     def update_basic(self, user, name, tags):
         tags = list_of_strs(tags)
