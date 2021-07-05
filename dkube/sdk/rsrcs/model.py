@@ -37,7 +37,15 @@ class DkubeModel(object):
 
     """
 
-    MODEL_SOURCES = ["dvs", "git", "aws_s3", "s3", "gcs", "nfs", "k8svolume", "workstation"]
+    MODEL_SOURCES = [
+        "dvs",
+        "git",
+        "aws_s3",
+        "s3",
+        "gcs",
+        "nfs",
+        "k8svolume",
+        "workstation"]
 
     """
     List of valid model sources in DKube.
@@ -69,10 +77,9 @@ class DkubeModel(object):
 
     :bash:`sshkey` :- Git SSH key based authentication.
 
-    :bash:`password` :- Standard username/password based. 
+    :bash:`password` :- Standard username/password based.
 
     """
-
 
     def __init__(self, user, name=generate("dataset"), tags=None):
         self.k8svolume = DatumModelK8svolume(name=None)
@@ -84,17 +91,34 @@ class DkubeModel(object):
             bucket=None, prefix=None, secret=self.gcssecret)
 
         self.s3access = S3AccessCredentials(
-            access_key_id=None, access_key=None, bucket=None, prefix=None, endpoint=None)
+            access_key_id=None,
+            access_key=None,
+            bucket=None,
+            prefix=None,
+            endpoint=None)
 
         self.gitcreds = GitAccessCredentials(
-            username=None, password=None, apikey=None, sshkey=None, private=True)
+            username=None,
+            password=None,
+            apikey=None,
+            sshkey=None,
+            private=True)
         self.gitaccess = GitAccessInfo(
             path=None, url=None, branch=None, credentials=self.gitcreds)
 
-        self.datum = DatumModel(name=None, tags=None, _class='model',
-                                dvs=None, source='dvs', url=None, remote=False, gitaccess=self.gitaccess,
-                                s3access=self.s3access, nfsaccess=self.nfsaccess, gcsaccess=self.gcsaccess)
-
+        self.datum = DatumModel(
+            name=None,
+            tags=None,
+            _class='model',
+            dvs=None,
+            source='dvs',
+            url=None,
+            remote=False,
+            gitaccess=self.gitaccess,
+            s3access=self.s3access,
+            nfsaccess=self.nfsaccess,
+            gcsaccess=self.gcsaccess)
+        self.extract = False
         self.update_basic(user, name, tags)
 
     def update_basic(self, user, name, tags):
@@ -115,7 +139,12 @@ class DkubeModel(object):
 
         self.datum.source = source
 
-    def update_git_details(self, url, branch=None, authopt=GIT_ACCESS_OPTS[0], authval=None):
+    def update_git_details(
+            self,
+            url,
+            branch=None,
+            authopt=GIT_ACCESS_OPTS[0],
+            authval=None):
         """
 i            Method to update the details of git source.
 
@@ -208,7 +237,6 @@ i            Method to update the details of git source.
         self.s3access.access_key = secret
 
     def update_gcs_details(self, bucket, prefix, key, secret):
-
         """
             Method to update details of google cloud storage.
 
@@ -234,7 +262,6 @@ i            Method to update the details of git source.
         self.gcssecret.content = secret
 
     def update_nfs_details(self, server, path="/"):
-
         """
             Method to update details of nfs data source.
 
@@ -253,7 +280,6 @@ i            Method to update the details of git source.
         self.nfsaccess.server = server
 
     def update_k8svolume_details(self, name):
-
         """
             Method to update details of k8s volume data source.
 
@@ -265,3 +291,20 @@ i            Method to update the details of git source.
 
         self.datum.source = "k8svolume"
         self.k8svolume.name = name
+
+    def update_puburl_details(self, url, extract):
+        """
+            Method to update details of pub_url model source.
+
+            *Inputs*
+
+                url
+                    pub_url of the model
+
+                extract
+                    if set to True, model will be extracted
+        """
+
+        self.datum.source = "pub_url"
+        self.datum.url = url
+        self.extract = extract

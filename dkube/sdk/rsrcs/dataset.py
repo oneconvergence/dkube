@@ -60,7 +60,7 @@ class DkubeDataset(object):
 	:bash:`redshift` :- Redshift as data source. :bash:`Remote`
 
 	:bash:`k8svolume` :- Kubernetes volume as data source. :bash:`Remote`
-	
+
         :bash:`hostpath` :- If data is in a path in host machine. :bash:`Remote`
 
     """
@@ -73,15 +73,26 @@ class DkubeDataset(object):
 
 	:bash:`sshkey` :- Git SSH key based authentication.
 
-	:bash:`password` :- Standard username/password based. 
+	:bash:`password` :- Standard username/password based.
 
     """
 
-    def __init__(self, user, name=generate("dataset"), remote=False, tags=None):
+    def __init__(
+            self,
+            user,
+            name=generate("dataset"),
+            remote=False,
+            tags=None):
         self.k8svolume = DatumModelK8svolume(name=None)
 
         self.redshift = RedshiftAccessInfo(
-            endpoint=None, username=None, password=None, database=None, region=None, cacert=None, insecure_ssl=None)
+            endpoint=None,
+            username=None,
+            password=None,
+            database=None,
+            region=None,
+            cacert=None,
+            insecure_ssl=None)
 
         self.nfsaccess = NFSAccessInfo(server=None, path=None)
 
@@ -90,20 +101,38 @@ class DkubeDataset(object):
             bucket=None, prefix=None, secret=self.gcssecret)
 
         self.s3access = S3AccessCredentials(
-            access_key_id=None, access_key=None, bucket=None, prefix=None, endpoint=None)
+            access_key_id=None,
+            access_key=None,
+            bucket=None,
+            prefix=None,
+            endpoint=None)
 
         self.gitcreds = GitAccessCredentials(
-            username=None, password=None, apikey=None, sshkey=None, private=True)
+            username=None,
+            password=None,
+            apikey=None,
+            sshkey=None,
+            private=True)
         self.gitaccess = GitAccessInfo(
             path=None, url=None, branch=None, credentials=self.gitcreds)
         self.hostpath = DatumModelHostpath(
             path=None)
 
-        self.datum = DatumModel(name=None, tags=None, _class='dataset',
-                                dvs=None, source='dvs', url=None, remote=remote, gitaccess=self.gitaccess,
-                                s3access=self.s3access, nfsaccess=self.nfsaccess, gcsaccess=self.gcsaccess,
-                                hostpath=self.hostpath, redshift=self.redshift)
-	
+        self.datum = DatumModel(
+            name=None,
+            tags=None,
+            _class='dataset',
+            dvs=None,
+            source='dvs',
+            url=None,
+            remote=remote,
+            gitaccess=self.gitaccess,
+            s3access=self.s3access,
+            nfsaccess=self.nfsaccess,
+            gcsaccess=self.gcsaccess,
+            hostpath=self.hostpath,
+            redshift=self.redshift)
+        self.extract = False
         self.update_basic(user, name, tags)
 
     def update_basic(self, user, name, tags):
@@ -123,7 +152,12 @@ class DkubeDataset(object):
         """
         self.datum.source = source
 
-    def update_git_details(self, url, branch=None, authopt=GIT_ACCESS_OPTS[0], authval=None):
+    def update_git_details(
+            self,
+            url,
+            branch=None,
+            authopt=GIT_ACCESS_OPTS[0],
+            authval=None):
         """
             Method to update the details of git datasource.
 
@@ -258,7 +292,12 @@ class DkubeDataset(object):
         self.nfsaccess.path = path
         self.nfsaccess.server = server
 
-    def update_redshift_details(self, endpoint, database, user=None, password=None):
+    def update_redshift_details(
+            self,
+            endpoint,
+            database,
+            user=None,
+            password=None):
         """
             Method to update details of redshift data source.
 
@@ -301,7 +340,7 @@ class DkubeDataset(object):
 
         self.datum.source = "k8svolume"
         self.k8svolume.name = name
-    
+
     def update_hostpath_details(self, path):
         """
             Method to update details of hostpath.
@@ -315,3 +354,20 @@ class DkubeDataset(object):
         self.datum.source = "hostpath"
         self.datum.remote = True
         self.hostpath.path = path
+
+    def update_puburl_details(self, url, extract):
+        """
+            Method to update details of pub_url data source.
+
+            *Inputs*
+
+                url
+                    pub_url of the data
+
+                extract
+                    if set to True, data will be extracted
+        """
+
+        self.datum.source = "pub_url"
+        self.datum.url = url
+        self.extract = extract
