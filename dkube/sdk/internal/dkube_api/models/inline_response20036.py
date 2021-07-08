@@ -32,7 +32,7 @@ class InlineResponse20036(object):
     """
     swagger_types = {
         'response': 'ApiResponse',
-        'data': 'list[UserProfile]'
+        'data': 'InferenceMonitoringOutModel'
     }
 
     attribute_map = {
@@ -79,7 +79,7 @@ class InlineResponse20036(object):
 
 
         :return: The data of this InlineResponse20036.  # noqa: E501
-        :rtype: list[UserProfile]
+        :rtype: InferenceMonitoringOutModel
         """
         return self._data
 
@@ -89,7 +89,7 @@ class InlineResponse20036(object):
 
 
         :param data: The data of this InlineResponse20036.  # noqa: E501
-        :type: list[UserProfile]
+        :type: InferenceMonitoringOutModel
         """
 
         self._data = data
