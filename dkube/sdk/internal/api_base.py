@@ -328,6 +328,10 @@ class ApiBase(object):
         response = api.get_model_catalog(user)
         return response.to_dict()['data']
 
+    def modelcatalog_model(self, user, model):
+        response = self._api.get_one_modelcatalog_model(user, model)
+        return response.to_dict()['data']
+
     def is_model_catalog_enabled(self):
         response = self._api.dkubeinfo()
         return response.to_dict()['data']['model_catalog_enabled']

@@ -1845,6 +1845,22 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().modelcatalog(user)
 
+    def modelcatalog_model(self, user, model):
+        """
+            Method to fetch the model catalog based on name from DKube.
+            The user must have permission to fetch the model .
+        
+            *Available in DKube Release: 2.3.0.0*
+
+            *Inputs*
+
+                user
+                    Name of the user
+                model
+                    Name of the model.
+        """
+        return super().modelcatalog_model(user, model)
+
     def get_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
         """
             Method to get an item from modelcatalog
@@ -1867,30 +1883,39 @@ class DkubeApi(ApiBase, FilesBase):
                     Version of the model
 
         """
+        dkubever = self.dkubeinfo['version']
+        # ModelCatalog API is changed in 2.2.1.13 dkube version
         if modelcatalog is None and model is None:
             return "either model catalog name or model name should be provided"
-        if version is None:
-            return "Model Version must be provided"
-        if modelcatalog:
-            mc = self.modelcatalog(user)
-            for item in mc:
-                if item['name'] == modelcatalog:
-                    for iversion in item['versions']:
-                        if iversion['model']['version'] == version:
-                            return iversion
+        if pversion.parse(dkubever) < pversion.parse("2.2.1.13"):            
+            if version is None:
+                return "Model Version must be provided"
+            if modelcatalog:
+                mc = self.modelcatalog(user)
+                for item in mc:
+                    if item['name'] == modelcatalog:
+                        for iversion in item['versions']:
+                            if iversion['model']['version'] == version:
+                                return iversion
 
-            raise Exception(
-                '{}.{} not found in model catalog'.format(model, version))
+                raise Exception(
+                    '{}.{} not found in model catalog'.format(model, version))
+            else:
+                mc = self.modelcatalog(user)
+                for item in mc:
+                    if item['model']['name'] == model:
+                        for iversion in item['versions']:
+                            if iversion['model']['version'] == version:
+                                return iversion
+
+                raise Exception(
+                    '{}.{} not found in model catalog'.format(model, version))
         else:
-            mc = self.modelcatalog(user)
-            for item in mc:
-                if item['model']['name'] == model:
-                    for iversion in item['versions']:
-                        if iversion['model']['version'] == version:
-                            return iversion
+            if modelcatalog:
+                return self.modelcatalog_model(user,modelcatalog)
+            else:
+                return self.modelcatalog_model(user,model)
 
-            raise Exception(
-                '{}.{} not found in model catalog'.format(model, version))
 
     def delete_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
         """
