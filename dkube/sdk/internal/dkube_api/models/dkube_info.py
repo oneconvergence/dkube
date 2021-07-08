@@ -39,7 +39,7 @@ class DkubeInfo(object):
         'auth': 'AuthModel',
         'rdma': 'bool',
         'frameworks': 'list[str]',
-        'model_catalog_enabled': 'bool',
+        'features': 'list[str]',
         'tensorflow': 'DLSupportTensorflow'
     }
 
@@ -52,11 +52,11 @@ class DkubeInfo(object):
         'auth': 'auth',
         'rdma': 'rdma',
         'frameworks': 'frameworks',
-        'model_catalog_enabled': 'model_catalog_enabled',
+        'features': 'features',
         'tensorflow': 'tensorflow'
     }
 
-    def __init__(self, version=None, platform=None, cicd=None, license=None, release=None, auth=None, rdma=False, frameworks=None, model_catalog_enabled=True, tensorflow=None):  # noqa: E501
+    def __init__(self, version=None, platform=None, cicd=None, license=None, release=None, auth=None, rdma=False, frameworks=None, features=None, tensorflow=None):  # noqa: E501
         """DkubeInfo - a model defined in Swagger"""  # noqa: E501
 
         self._version = None
@@ -67,7 +67,7 @@ class DkubeInfo(object):
         self._auth = None
         self._rdma = None
         self._frameworks = None
-        self._model_catalog_enabled = None
+        self._features = None
         self._tensorflow = None
         self.discriminator = None
 
@@ -87,8 +87,8 @@ class DkubeInfo(object):
             self.rdma = rdma
         if frameworks is not None:
             self.frameworks = frameworks
-        if model_catalog_enabled is not None:
-            self.model_catalog_enabled = model_catalog_enabled
+        if features is not None:
+            self.features = features
         if tensorflow is not None:
             self.tensorflow = tensorflow
 
@@ -268,25 +268,25 @@ class DkubeInfo(object):
         self._frameworks = frameworks
 
     @property
-    def model_catalog_enabled(self):
-        """Gets the model_catalog_enabled of this DkubeInfo.  # noqa: E501
+    def features(self):
+        """Gets the features of this DkubeInfo.  # noqa: E501
 
 
-        :return: The model_catalog_enabled of this DkubeInfo.  # noqa: E501
-        :rtype: bool
+        :return: The features of this DkubeInfo.  # noqa: E501
+        :rtype: list[str]
         """
-        return self._model_catalog_enabled
+        return self._features
 
-    @model_catalog_enabled.setter
-    def model_catalog_enabled(self, model_catalog_enabled):
-        """Sets the model_catalog_enabled of this DkubeInfo.
+    @features.setter
+    def features(self, features):
+        """Sets the features of this DkubeInfo.
 
 
-        :param model_catalog_enabled: The model_catalog_enabled of this DkubeInfo.  # noqa: E501
-        :type: bool
+        :param features: The features of this DkubeInfo.  # noqa: E501
+        :type: list[str]
         """
 
-        self._model_catalog_enabled = model_catalog_enabled
+        self._features = features
 
     @property
     def tensorflow(self):

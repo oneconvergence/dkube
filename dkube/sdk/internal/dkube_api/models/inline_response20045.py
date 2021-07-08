@@ -32,7 +32,7 @@ class InlineResponse20045(object):
     """
     swagger_types = {
         'response': 'ApiResponse',
-        'data': 'list[PoolCollection]'
+        'data': 'list[GroupCollection]'
     }
 
     attribute_map = {
@@ -79,7 +79,7 @@ class InlineResponse20045(object):
 
 
         :return: The data of this InlineResponse20045.  # noqa: E501
-        :rtype: list[PoolCollection]
+        :rtype: list[GroupCollection]
         """
         return self._data
 
@@ -89,7 +89,7 @@ class InlineResponse20045(object):
 
 
         :param data: The data of this InlineResponse20045.  # noqa: E501
-        :type: list[PoolCollection]
+        :type: list[GroupCollection]
         """
 
         self._data = data

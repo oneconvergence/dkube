@@ -32,25 +32,45 @@ class InlineResponse20035Data(object):
     """
     swagger_types = {
         'owner': 'str',
-        'jobs': 'list[JobModel]'
+        'name': 'str',
+        'status': 'str',
+        'endpoint': 'str',
+        'stage': 'object',
+        'time_stamps': 'TimeStamps'
     }
 
     attribute_map = {
         'owner': 'owner',
-        'jobs': 'jobs'
+        'name': 'name',
+        'status': 'status',
+        'endpoint': 'endpoint',
+        'stage': 'stage',
+        'time_stamps': 'timeStamps'
     }
 
-    def __init__(self, owner=None, jobs=None):  # noqa: E501
+    def __init__(self, owner=None, name=None, status=None, endpoint=None, stage=None, time_stamps=None):  # noqa: E501
         """InlineResponse20035Data - a model defined in Swagger"""  # noqa: E501
 
         self._owner = None
-        self._jobs = None
+        self._name = None
+        self._status = None
+        self._endpoint = None
+        self._stage = None
+        self._time_stamps = None
         self.discriminator = None
 
         if owner is not None:
             self.owner = owner
-        if jobs is not None:
-            self.jobs = jobs
+        if name is not None:
+            self.name = name
+        if status is not None:
+            self.status = status
+        if endpoint is not None:
+            self.endpoint = endpoint
+        if stage is not None:
+            self.stage = stage
+        if time_stamps is not None:
+            self.time_stamps = time_stamps
 
     @property
     def owner(self):
@@ -74,25 +94,109 @@ class InlineResponse20035Data(object):
         self._owner = owner
 
     @property
-    def jobs(self):
-        """Gets the jobs of this InlineResponse20035Data.  # noqa: E501
+    def name(self):
+        """Gets the name of this InlineResponse20035Data.  # noqa: E501
 
 
-        :return: The jobs of this InlineResponse20035Data.  # noqa: E501
-        :rtype: list[JobModel]
+        :return: The name of this InlineResponse20035Data.  # noqa: E501
+        :rtype: str
         """
-        return self._jobs
+        return self._name
 
-    @jobs.setter
-    def jobs(self, jobs):
-        """Sets the jobs of this InlineResponse20035Data.
+    @name.setter
+    def name(self, name):
+        """Sets the name of this InlineResponse20035Data.
 
 
-        :param jobs: The jobs of this InlineResponse20035Data.  # noqa: E501
-        :type: list[JobModel]
+        :param name: The name of this InlineResponse20035Data.  # noqa: E501
+        :type: str
         """
 
-        self._jobs = jobs
+        self._name = name
+
+    @property
+    def status(self):
+        """Gets the status of this InlineResponse20035Data.  # noqa: E501
+
+
+        :return: The status of this InlineResponse20035Data.  # noqa: E501
+        :rtype: str
+        """
+        return self._status
+
+    @status.setter
+    def status(self, status):
+        """Sets the status of this InlineResponse20035Data.
+
+
+        :param status: The status of this InlineResponse20035Data.  # noqa: E501
+        :type: str
+        """
+
+        self._status = status
+
+    @property
+    def endpoint(self):
+        """Gets the endpoint of this InlineResponse20035Data.  # noqa: E501
+
+
+        :return: The endpoint of this InlineResponse20035Data.  # noqa: E501
+        :rtype: str
+        """
+        return self._endpoint
+
+    @endpoint.setter
+    def endpoint(self, endpoint):
+        """Sets the endpoint of this InlineResponse20035Data.
+
+
+        :param endpoint: The endpoint of this InlineResponse20035Data.  # noqa: E501
+        :type: str
+        """
+
+        self._endpoint = endpoint
+
+    @property
+    def stage(self):
+        """Gets the stage of this InlineResponse20035Data.  # noqa: E501
+
+
+        :return: The stage of this InlineResponse20035Data.  # noqa: E501
+        :rtype: object
+        """
+        return self._stage
+
+    @stage.setter
+    def stage(self, stage):
+        """Sets the stage of this InlineResponse20035Data.
+
+
+        :param stage: The stage of this InlineResponse20035Data.  # noqa: E501
+        :type: object
+        """
+
+        self._stage = stage
+
+    @property
+    def time_stamps(self):
+        """Gets the time_stamps of this InlineResponse20035Data.  # noqa: E501
+
+
+        :return: The time_stamps of this InlineResponse20035Data.  # noqa: E501
+        :rtype: TimeStamps
+        """
+        return self._time_stamps
+
+    @time_stamps.setter
+    def time_stamps(self, time_stamps):
+        """Sets the time_stamps of this InlineResponse20035Data.
+
+
+        :param time_stamps: The time_stamps of this InlineResponse20035Data.  # noqa: E501
+        :type: TimeStamps
+        """
+
+        self._time_stamps = time_stamps
 
     def to_dict(self):
         """Returns the model properties as a dict"""
