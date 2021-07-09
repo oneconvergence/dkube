@@ -1887,9 +1887,9 @@ class DkubeApi(ApiBase, FilesBase):
         # ModelCatalog API is changed in 2.2.1.13 dkube version
         if modelcatalog is None and model is None:
             return "either model catalog name or model name should be provided"
+        if version is None:
+            return "Model Version must be provided"
         if pversion.parse(dkubever) < pversion.parse("2.2.1.13"):            
-            if version is None:
-                return "Model Version must be provided"
             if modelcatalog:
                 mc = self.modelcatalog(user)
                 for item in mc:
@@ -1911,10 +1911,15 @@ class DkubeApi(ApiBase, FilesBase):
                 raise Exception(
                     '{}.{} not found in model catalog'.format(model, version))
         else:
-            if modelcatalog:
-                return self.modelcatalog_model(user,modelcatalog)
-            else:
-                return self.modelcatalog_model(user,model)
+            if modelcatalog is not None:
+                model = modelcatalog
+            mc = self.modelcatalog_model(user,model)
+            for iversion in mc['versions']:
+                if iversion['model']['version'] == version:
+                    return iversion
+
+            raise Exception(
+                '{}.{} not found in model catalog'.format(model, version))
 
 
     def delete_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
