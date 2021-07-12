@@ -1884,12 +1884,12 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         dkubever = self.dkubeinfo['version']
-        # ModelCatalog API is changed in 2.2.1.13 dkube version
+        # ModelCatalog API is changed in 2.3.0.0 dkube version
         if modelcatalog is None and model is None:
             return "either model catalog name or model name should be provided"
         if version is None:
             return "Model Version must be provided"
-        if pversion.parse(dkubever) < pversion.parse("2.2.1.13"):            
+        if pversion.parse(dkubever) < pversion.parse("2.3.0.0"):            
             if modelcatalog:
                 mc = self.modelcatalog(user)
                 for item in mc:
