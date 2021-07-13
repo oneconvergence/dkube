@@ -1889,38 +1889,61 @@ class DkubeApi(ApiBase, FilesBase):
             return "either model catalog name or model name should be provided"
         if version is None:
             return "Model Version must be provided"
-        if pversion.parse(dkubever) < pversion.parse("2.3.0.0"):            
-            if modelcatalog:
-                mc = self.modelcatalog(user)
-                for item in mc:
-                    if item['name'] == modelcatalog:
-                        for iversion in item['versions']:
-                            if iversion['model']['version'] == version:
-                                return iversion
+        if pversion.parse(dkubever) >= pversion.parse("2.3.0.0"):
+            return "This API is deprecated. Use the new API : get_modelcatalog(user, model, version(optional))"            
+        if modelcatalog:
+            mc = self.modelcatalog(user)
+            for item in mc:
+                if item['name'] == modelcatalog:
+                    for iversion in item['versions']:
+                        if iversion['model']['version'] == version:
+                            return iversion
 
-                raise Exception(
-                    '{}.{} not found in model catalog'.format(model, version))
-            else:
-                mc = self.modelcatalog(user)
-                for item in mc:
-                    if item['model']['name'] == model:
-                        for iversion in item['versions']:
-                            if iversion['model']['version'] == version:
-                                return iversion
-
-                raise Exception(
-                    '{}.{} not found in model catalog'.format(model, version))
+            raise Exception(
+                '{}.{} not found in model catalog'.format(model, version))
         else:
-            if modelcatalog is not None:
-                model = modelcatalog
-            mc = self.modelcatalog_model(user,model)
-            for iversion in mc['versions']:
-                if iversion['model']['version'] == version:
-                    return iversion
+            mc = self.modelcatalog(user)
+            for item in mc:
+                if item['model']['name'] == model:
+                    for iversion in item['versions']:
+                        if iversion['model']['version'] == version:
+                            return iversion
 
             raise Exception(
                 '{}.{} not found in model catalog'.format(model, version))
 
+
+    def get_modelcatalog(self, user, model, version=None):
+        """
+            Method to get list from modelcatalog
+            If the version is provided then, it will return the data of single version
+            Raises exception on any connection errors.
+
+            *Available in DKube Release: 2.3.0.0*
+
+            *Inputs*
+
+                user
+                    Name of the user
+
+                model
+                    Name of the model
+
+                version
+                    Version of the model.
+
+        """
+        if  model is None:
+            return "either model catalog name or model name should be provided"
+        mc = self.modelcatalog_model(user,model)
+        if version is None:
+            return mc
+        for iversion in mc['versions']:
+            if iversion['model']['version'] == version:
+                return iversion
+
+        raise Exception(
+            '{}.{} not found in model catalog'.format(model, version))
 
     def delete_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
         """
