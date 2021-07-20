@@ -27,7 +27,8 @@ def downloadOutput(sdk, user, datasetName, output):
     os.system(f"ls -lR {output_dir}")
 
     output = json.loads(output)
-
+    open("/output", "w").write("No output from user code")
+    open("/metadata.json", "w").write("{}")
     for k, v in output.items():
         filename = v.split("/")[-1]
         if k == "output":

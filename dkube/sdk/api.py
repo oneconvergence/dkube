@@ -13,16 +13,16 @@ import os
 import time
 
 import pandas as pd
-from packaging import version as pversion
 import urllib3
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.internal.dkube_api.models.conditions import \
     Conditions as TriggerCondition
+from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
 from dkube.sdk.rsrcs.project import DkubeProject
-from dkube.sdk.internal.dkube_api.rest import ApiException
+from packaging import version as pversion
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -2167,3 +2167,26 @@ class DkubeApi(ApiBase, FilesBase):
         """
 
         return super().list_inference_endpoints()
+
+    def list_cicd_images(self, repo = None):
+        """
+            Method to list all the CICD images + Any images manually added in DKube.
+
+        *Inputs*
+
+            repo
+                Git repo URL. If provided, only returns images generated for that repo
+        """
+        response = self._api.get_all_cicd_images().to_dict()
+        assert response['response']['code'] == 200, response['response']['message']
+        if repo is None:
+            return response['data']
+        elif repo.endswith(".git"):
+            repo = repo[:-4]
+            
+        images = []
+        
+        for entry in response['data']:
+            if "repo" in entry["image"] and entry["image"]["repo"] == repo:
+                images.append(entry)
+        return images
