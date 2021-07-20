@@ -332,7 +332,7 @@ class ApiBase(object):
         response = self._api.get_one_modelcatalog_model(user, model)
         return response.to_dict()['data']
 
-    def publishd_models(self, user):
+    def published_models(self, user):
         response = self._api.get_all_published_models(user)
         return response.to_dict()['data']
 

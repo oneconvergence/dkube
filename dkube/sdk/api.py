@@ -1986,7 +1986,7 @@ class DkubeApi(ApiBase, FilesBase):
             raise Exception(
                 '{}.{} not found in model catalog'.format(model, version))
 
-    def publishd_models(self, user):
+    def published_models(self, user):
         """
             Method to fetch all the published models of a user from DKube.
             The user must have permission to fetch the model .
@@ -1998,7 +1998,7 @@ class DkubeApi(ApiBase, FilesBase):
                 user
                     Name of the user.
         """
-        return super().publishd_models(user)
+        return super().published_models(user)
 
 
     def list_projects(self):
