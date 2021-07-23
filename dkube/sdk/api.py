@@ -1244,7 +1244,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_repo('model', user, name)
 
-    def list_models(self, user, shared=False, filters='*'):
+    def list_models(self, user, shared=False, published=False, filters='*'):
         """
             Method to list all the models of a user.
             Raises exception on any connection errors.
@@ -1261,8 +1261,13 @@ class DkubeApi(ApiBase, FilesBase):
 
                     User will able to filter models based on state or the source
 
-        """
+                published
+                    If Published is true, it will return all published models
 
+
+        """
+        if published == True:
+            return super().published_models(user)
         return super().list_repos('model', user, shared)
 
     def delete_model(self, user, name, force=False):
@@ -1890,27 +1895,36 @@ class DkubeApi(ApiBase, FilesBase):
         if version is None:
             return "Model Version must be provided"
         if pversion.parse(dkubever) >= pversion.parse("2.3.0.0"):
-            return "This API is deprecated. Use the new API : get_modelcatalog(user, model, version(optional))"            
-        if modelcatalog:
-            mc = self.modelcatalog(user)
-            for item in mc:
-                if item['name'] == modelcatalog:
-                    for iversion in item['versions']:
-                        if iversion['model']['version'] == version:
-                            return iversion
+            if modelcatalog is not None:
+                model = modelcatalog
+            mc = self.modelcatalog_model(user,model)
+            for iversion in mc['versions']:
+                if iversion['model']['version'] == version:
+                    return iversion
 
             raise Exception(
                 '{}.{} not found in model catalog'.format(model, version))
         else:
-            mc = self.modelcatalog(user)
-            for item in mc:
-                if item['model']['name'] == model:
-                    for iversion in item['versions']:
-                        if iversion['model']['version'] == version:
-                            return iversion
+            if modelcatalog:
+                mc = self.modelcatalog(user)
+                for item in mc:
+                    if item['name'] == modelcatalog:
+                        for iversion in item['versions']:
+                            if iversion['model']['version'] == version:
+                                return iversion
 
-            raise Exception(
-                '{}.{} not found in model catalog'.format(model, version))
+                raise Exception(
+                    '{}.{} not found in model catalog'.format(model, version))
+            else:
+                mc = self.modelcatalog(user)
+                for item in mc:
+                    if item['model']['name'] == model:
+                        for iversion in item['versions']:
+                            if iversion['model']['version'] == version:
+                                return iversion
+
+                raise Exception(
+                    '{}.{} not found in model catalog'.format(model, version))
 
 
     def get_modelcatalog(self, user, model, version=None):
@@ -1985,21 +1999,6 @@ class DkubeApi(ApiBase, FilesBase):
                     return response
             raise Exception(
                 '{}.{} not found in model catalog'.format(model, version))
-
-    def published_models(self, user):
-        """
-            Method to fetch all the published models of a user from DKube.
-            The user must have permission to fetch the model .
-        
-            *Available in DKube Release: 2.3.0.0*
-
-            *Inputs*
-
-                user
-                    Name of the user.
-        """
-        return super().published_models(user)
-
 
     def list_projects(self):
         """
