@@ -113,7 +113,8 @@ class ApiBase(object):
 
     def create_repo(self, repo):
         self.update_tags(repo.datum)
-        response = self._api.datums_add_one(user=repo.user, data=repo.datum,extract=str(repo.extract).lower())
+        response = self._api.datums_add_one(
+            user=repo.user, data=repo.datum, extract=str(repo.extract).lower())
         print(response.to_dict())
 
     def get_repo(self, category, user, name, fields='*'):
@@ -328,11 +329,11 @@ class ApiBase(object):
         response = api.get_model_catalog(user)
         return response.to_dict()['data']
 
-    def modelcatalog_model(self, user, model):
+    def get_model_catalog(self, user, model):
         response = self._api.get_one_modelcatalog_model(user, model)
         return response.to_dict()['data']
 
-    def published_models(self, user):
+    def list_published_models(self, user):
         response = self._api.get_all_published_models(user)
         return response.to_dict()['data']
 

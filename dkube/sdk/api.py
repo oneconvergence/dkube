@@ -1099,7 +1099,7 @@ class DkubeApi(ApiBase, FilesBase):
 
 ###############################################################
 
-    def create_dataset(self, dataset: DkubeDataset,wait_for_completion=True):
+    def create_dataset(self, dataset: DkubeDataset, wait_for_completion=True):
         """
             Method to create a dataset on DKube.
             Raises Exception in case of errors.
@@ -1244,7 +1244,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_repo('model', user, name)
 
-    def list_models(self, user, shared=False, published=False, filters='*'):
+    def list_models(self, user, shared=False, filters='*'):
         """
             Method to list all the models of a user.
             Raises exception on any connection errors.
@@ -1261,14 +1261,20 @@ class DkubeApi(ApiBase, FilesBase):
 
                     User will able to filter models based on state or the source
 
-                published
-                    If Published is true, it will return all published models
-
-
         """
-        if published == True:
-            return super().published_models(user)
         return super().list_repos('model', user, shared)
+
+    def list_published_models(self, user):
+        """
+            Method to fetch all the published models of a user from DKube.
+            The user must have permission to fetch the model .
+
+            *Available in DKube Release: 2.3.0.0*
+            *Inputs*
+                user
+                    Name of the user.
+        """
+        return super().list_published_models(user)
 
     def delete_model(self, user, name, force=False):
         """
@@ -1850,11 +1856,11 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().modelcatalog(user)
 
-    def modelcatalog_model(self, user, model):
+    def get_model_catalog(self, user, model):
         """
             Method to fetch the model catalog based on name from DKube.
             The user must have permission to fetch the model .
-        
+
             *Available in DKube Release: 2.3.0.0*
 
             *Inputs*
@@ -1864,7 +1870,7 @@ class DkubeApi(ApiBase, FilesBase):
                 model
                     Name of the model.
         """
-        return super().modelcatalog_model(user, model)
+        return super().get_model_catalog(user, model)
 
     def get_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
         """
@@ -1897,7 +1903,7 @@ class DkubeApi(ApiBase, FilesBase):
         if pversion.parse(dkubever) >= pversion.parse("2.3.0.0"):
             if modelcatalog is not None:
                 model = modelcatalog
-            mc = self.modelcatalog_model(user,model)
+            mc = self.get_model_catalog(user, model)
             for iversion in mc['versions']:
                 if iversion['model']['version'] == version:
                     return iversion
@@ -1925,39 +1931,6 @@ class DkubeApi(ApiBase, FilesBase):
 
                 raise Exception(
                     '{}.{} not found in model catalog'.format(model, version))
-
-
-    def get_modelcatalog(self, user, model, version=None):
-        """
-            Method to get list from modelcatalog
-            If the version is provided then, it will return the data of single version
-            Raises exception on any connection errors.
-
-            *Available in DKube Release: 2.3.0.0*
-
-            *Inputs*
-
-                user
-                    Name of the user
-
-                model
-                    Name of the model
-
-                version
-                    Version of the model.
-
-        """
-        if  model is None:
-            return "either model catalog name or model name should be provided"
-        mc = self.modelcatalog_model(user,model)
-        if version is None:
-            return mc
-        for iversion in mc['versions']:
-            if iversion['model']['version'] == version:
-                return iversion
-
-        raise Exception(
-            '{}.{} not found in model catalog'.format(model, version))
 
     def delete_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
         """
