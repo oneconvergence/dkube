@@ -2181,8 +2181,6 @@ class DkubeApi(ApiBase, FilesBase):
         assert response['response']['code'] == 200, response['response']['message']
         if repo is None:
             return response['data']
-        elif repo.endswith(".git"):
-            repo = repo[:-4]
             
         images = []
         
