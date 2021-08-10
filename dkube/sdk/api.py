@@ -1225,7 +1225,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "model {} - waiting for completion, current state {}".format(model.name, state))
                 time.sleep(self.wait_interval)
 
-    def get_model(self, user, name):
+    def get_model(self, user, name, publish_details=False):
         """
             Method to fetch the model with given name for the given user.
             Raises exception in case of model is not found or any other connection errors.
@@ -1243,12 +1243,16 @@ class DkubeApi(ApiBase, FilesBase):
         """
         
         dkubever = self.dkubeinfo['version']
-        if pversion.parse(dkubever) < pversion.parse("2.3.0.0"):
+        if (pversion.parse(dkubever) < pversion.parse("2.3.0.0")) or publish_details == False:
             return super().get_repo('model', user, name)
         else:
             modelObj = super().get_repo('model', user, name)
-            publish = super().get_model_catalog(user, name)
-            modelObj["publish_details"] = publish
+            versions = modelObj.versions
+            for v in versions:
+                v['version']['model']['stage'] == 'PUBLISHED'
+                publish = super().get_model_catalog(user, name)
+                modelObj["publish_details"] = publish
+                return modelObj
             return modelObj
 
     def list_models(self, user, shared=False, published=False, filters='*'):
