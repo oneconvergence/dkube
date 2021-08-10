@@ -327,6 +327,14 @@ class ApiBase(object):
             dkube_api.ApiClient(configuration))
         response = api.get_model_catalog(user)
         return response.to_dict()['data']
+        
+    def get_model_catalog(self, user, model):
+        response = self._api.get_one_modelcatalog_model(user, model)
+        return response.to_dict()['data']
+
+    def list_published_models(self, user):
+        response = self._api.get_all_published_models(user)
+        return response.to_dict()['data']
 
     def is_model_catalog_enabled(self):
         response = self._api.dkubeinfo()

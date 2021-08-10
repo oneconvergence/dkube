@@ -32,7 +32,7 @@ class InlineResponse20032(object):
     """
     swagger_types = {
         'response': 'ApiResponse',
-        'data': 'JobModel'
+        'data': 'InlineResponse20032Data'
     }
 
     attribute_map = {
@@ -79,7 +79,7 @@ class InlineResponse20032(object):
 
 
         :return: The data of this InlineResponse20032.  # noqa: E501
-        :rtype: JobModel
+        :rtype: InlineResponse20032Data
         """
         return self._data
 
@@ -89,7 +89,7 @@ class InlineResponse20032(object):
 
 
         :param data: The data of this InlineResponse20032.  # noqa: E501
-        :type: JobModel
+        :type: InlineResponse20032Data
         """
 
         self._data = data

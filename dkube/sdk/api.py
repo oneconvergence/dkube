@@ -1225,7 +1225,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "model {} - waiting for completion, current state {}".format(model.name, state))
                 time.sleep(self.wait_interval)
 
-    def get_model(self, user, name):
+    def get_model(self, user, name, publish_details=False):
         """
             Method to fetch the model with given name for the given user.
             Raises exception in case of model is not found or any other connection errors.
@@ -1241,10 +1241,21 @@ class DkubeApi(ApiBase, FilesBase):
                     Name of the model to be fetched
 
         """
+        
+        dkubever = self.dkubeinfo['version']
+        if (pversion.parse(dkubever) < pversion.parse("2.3.0.0")) or publish_details == False:
+            return super().get_repo('model', user, name)
+        else:
+            modelObj = super().get_repo('model', user, name)
+            versions = modelObj['versions']
+            for v in versions:
+                if v['version']['model']['stage'] == 'PUBLISHED':
+                    publish = super().get_model_catalog(user, name)
+                    modelObj["publish_details"] = publish
+                    return modelObj
+            return modelObj
 
-        return super().get_repo('model', user, name)
-
-    def list_models(self, user, shared=False, filters='*'):
+    def list_models(self, user, shared=False, published=False, filters='*'):
         """
             Method to list all the models of a user.
             Raises exception on any connection errors.
@@ -1260,9 +1271,13 @@ class DkubeApi(ApiBase, FilesBase):
                     Only :bash:`*` is supported now.
 
                     User will able to filter models based on state or the source
+                published
+                    If Published is true, it will return all published models
 
         """
 
+        if published == True:
+            return super().list_published_models(user)
         return super().list_repos('model', user, shared)
 
     def delete_model(self, user, name, force=False):
