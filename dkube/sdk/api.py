@@ -1244,7 +1244,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_repo('model', user, name)
 
-    def list_models(self, user, shared=False, filters='*'):
+    def list_models(self, user, shared=False, published=False, filters='*'):
         """
             Method to list all the models of a user.
             Raises exception on any connection errors.
@@ -1260,9 +1260,13 @@ class DkubeApi(ApiBase, FilesBase):
                     Only :bash:`*` is supported now.
 
                     User will able to filter models based on state or the source
+                published
+                    If Published is true, it will return all published models
 
         """
 
+        if published == True:
+            return super().list_published_models(user)
         return super().list_repos('model', user, shared)
 
     def delete_model(self, user, name, force=False):
