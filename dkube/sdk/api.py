@@ -1241,16 +1241,15 @@ class DkubeApi(ApiBase, FilesBase):
                     Name of the model to be fetched
 
         """
-
-        modelObj = super().get_repo('model', user, name)
-        publish = {}
-        try:
+        
+        dkubever = self.dkubeinfo['version']
+        if pversion.parse(dkubever) < pversion.parse("2.3.0.0"):
+            return super().get_repo('model', user, name)
+        else:
+            modelObj = super().get_repo('model', user, name)
             publish = super().get_model_catalog(user, name)
-        except:
-            publish = None
-        if publish != None:
             modelObj["publish_details"] = publish
-        return modelObj
+            return modelObj
 
     def list_models(self, user, shared=False, published=False, filters='*'):
         """
