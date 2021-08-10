@@ -1242,7 +1242,15 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().get_repo('model', user, name)
+        modelObj = super().get_repo('model', user, name)
+        publish = {}
+        try:
+            publish = super().get_model_catalog(user, name)
+        except:
+            publish = None
+        if publish != None:
+            modelObj["publish_details"] = publish
+        return modelObj
 
     def list_models(self, user, shared=False, published=False, filters='*'):
         """
