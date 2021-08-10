@@ -1247,12 +1247,12 @@ class DkubeApi(ApiBase, FilesBase):
             return super().get_repo('model', user, name)
         else:
             modelObj = super().get_repo('model', user, name)
-            versions = modelObj.versions
+            versions = modelObj['versions']
             for v in versions:
-                v['version']['model']['stage'] == 'PUBLISHED'
-                publish = super().get_model_catalog(user, name)
-                modelObj["publish_details"] = publish
-                return modelObj
+                if v['version']['model']['stage'] == 'PUBLISHED':
+                    publish = super().get_model_catalog(user, name)
+                    modelObj["publish_details"] = publish
+                    return modelObj
             return modelObj
 
     def list_models(self, user, shared=False, published=False, filters='*'):
