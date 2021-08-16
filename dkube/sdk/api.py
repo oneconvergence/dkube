@@ -1768,13 +1768,21 @@ class DkubeApi(ApiBase, FilesBase):
         assert stage_or_deploy in [
             "stage", "deploy"], "Invalid value for stage_or_deploy parameter."
 
-        mcitem = self.get_modelcatalog_item(
-            user, modelcatalog=model, version=version)
         run = DkubeServing(user, name=name, description=description)
         run.update_serving_model(model, version=version)
-        run.update_serving_image(image_url=mcitem['serving']['images'][
-                                 'serving']['image']['path'])
         run.update_autoscaling_config(min_replicas, max_concurrent_requests)
+
+        dkubever = self.dkubeinfo['version']
+        if (pversion.parse(dkubever) < pversion.parse("2.3.0.0")):
+            mcitem = self.get_modelcatalog_item(user, modelcatalog=model, version=version)
+            run.update_serving_image(image_url=mcitem['serving']['images']['serving']['image']['path'])
+        else:
+            mcitem = super().get_model_catalog(user, model)
+            versions = mcitem['versions']
+            for v in versions:
+                if v['version'] == version:
+                    serving_image = v['serving']['images']['serving']['image']['path']
+            run.update_serving_image(image_url=serving_image)
 
         if stage_or_deploy == "stage":
             super().stage_model(run)
