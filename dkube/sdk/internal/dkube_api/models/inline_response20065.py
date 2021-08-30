@@ -31,8 +31,8 @@ class InlineResponse20065(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'response': 'ModelmonitorApiResponse',
-        'data': 'list[ModelmonitorDef]'
+        'response': 'ApiResponse',
+        'data': 'SmtpArtifact'
     }
 
     attribute_map = {
@@ -58,7 +58,7 @@ class InlineResponse20065(object):
 
 
         :return: The response of this InlineResponse20065.  # noqa: E501
-        :rtype: ModelmonitorApiResponse
+        :rtype: ApiResponse
         """
         return self._response
 
@@ -68,7 +68,7 @@ class InlineResponse20065(object):
 
 
         :param response: The response of this InlineResponse20065.  # noqa: E501
-        :type: ModelmonitorApiResponse
+        :type: ApiResponse
         """
 
         self._response = response
@@ -79,7 +79,7 @@ class InlineResponse20065(object):
 
 
         :return: The data of this InlineResponse20065.  # noqa: E501
-        :rtype: list[ModelmonitorDef]
+        :rtype: SmtpArtifact
         """
         return self._data
 
@@ -89,7 +89,7 @@ class InlineResponse20065(object):
 
 
         :param data: The data of this InlineResponse20065.  # noqa: E501
-        :type: list[ModelmonitorDef]
+        :type: SmtpArtifact
         """
 
         self._data = data

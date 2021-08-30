@@ -20,36 +20,20 @@ from dkube.sdk.internal.dkube_api.models.modelmonitor_def import ModelmonitorDef
 class DkubeModelMonitor(object):
     def __init__(self, user, name=generate("mm"), tags=None):
 
-        self.status = ModelmonitorStatusDef(
-            state=None,
-            sub_state=None,
-            message=None,
-            code=None,
-            success=False)
         self.features = ModelmonitorSchemaFeature(selected=None, label=None, _class=None, type=None)
         self.schema = ModelmonitorFeaturesSpecDef(features=self.features)
-        self.pipeline_component = ModelmonitorComponentDef(
-            run_id=None, status_info=None, status=None, type=None)
 
-        self.datasets = ModelmonitorDatasetDef(id=None, _class=None, transformer_script=None, name=None, sql_query=None,
-                                               s3_subpath=None, version=None, data_format=None, groundtruth_col=None,
-                                               predict_col=None, created_at=None, updated_at=None)
+        self.datasets = []
 
         self.conditions = ModelmonitorAlertCondDef(
-            id=None, feature=None, op=None, threshold=0.0)
+            id=None, feature=None, op=None, threshold=None)
 
-        self.alerts = ModelmonitorAlertDef(
-            id=None,
-            _class='FeatureDrift',
-            email=None,
-            name=None,
-            conditions=self.conditions)
+        self.alerts = []
 
         self.modelmonitor = ModelmonitorDef(
             id=None,
-            status=self.status,
-            schema=self.schema,
-            pipeline_component=self.pipeline_component,
+            schema=None,
+            pipeline_component=None,
             owner=None,
             emails=None,
             name=None,
@@ -60,10 +44,10 @@ class DkubeModelMonitor(object):
             endpoint_url=None,
             model_type=None,
             model_framework=None,
-            drift_detection_run_frequency_hrs=1,
+            drift_detection_run_frequency_hrs=None,
             drift_detection_algorithm=None,
             performance_metrics_template=None,
-            datasets=self.datasets,
+            datasets=list(self.datasets),
             alerts=self.alerts)
 
         self.update_basic(user, name, description, tags)
@@ -76,4 +60,52 @@ class DkubeModelMonitor(object):
 
         self.user = user
         self.name = name
-        self.description = description
+        self.modelmonitor.name = name
+        self.modelmonitor.owner = user
+        self.modelmonitor.description = description
+        self.modelmonitor.tags = tags
+        
+        ## Defaults
+        self.modelmonitor.drift_detection_run_frequency_hrs = 1
+        self.modelmonitor.drift_detection_algorithm = 'Kolmogorov-Smirnov Divergence'
+        
+        return self
+    
+    def add_dataset(self,name,data_class=None,version=None):
+        mm_dataset = ModelmonitorDatasetDef(id=None, _class=data_class, transformer_script=None, name=name, sql_query=None,
+                                               s3_subpath=None, version=version, data_format=None, groundtruth_col=None,
+                                               predict_col=None, created_at=None, updated_at=None)
+        
+        self.modelmonitor.datasets.append(mm_dataset)
+        
+    def add_alert(self,name,alert_class):
+        mm_alert = ModelmonitorAlertDef(id=None,_class=alert_class,email=None,name=name,conditions=self.conditions)
+        
+        self.modelmonitor.alerts.append(mm_alert)
+    
+    def update_datasets(self,name,data_class,transformer_script=None,sql_query=None,groundtruth_col=None,predict_col=None):
+        self.datasets.name = name
+        self.datasets._class = data_class
+        self.datasets.transformer_script = transformer_script
+        self.datasets.sql_query = sql_query
+        self.datasets.groundtruth_col = groundtruth_col
+        self.datasets.predict_col = predict_col
+        
+    
+    def update_alerts(self,name,alert_class,conditions=None):
+        self.alerts.name = name
+        self.alerts._class = alert_class
+        self.alerts.conditions = conditions
+        
+
+            
+    def add_modelmonitor(self,name,model_name,model_type,model_category,model_framework,version,run_freq,drift_algo,emails):
+        self.modelmonitor.name = name
+        self.modelmonitor.model= model_name
+        self.modelmonitor.model_type = model_type
+        self.modelmonitor.model_category = model_category
+        self.modelmonitor.model_framework = model_framework
+        self.modelmoniotr.version = version
+        self.modelmonitor.drift_detection_run_frequency_hrs = run_freq
+        self.modelmonitor.drift_detecttion_algorithm = drift_algo
+        self.modelmonitor.emails = emails

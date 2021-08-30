@@ -44,6 +44,7 @@ class ModelmonitorDef(object):
         'version': 'str',
         'endpoint_url': 'str',
         'model_type': 'list[str]',
+        'model_category': 'list[str]',
         'model_framework': 'str',
         'drift_detection_run_frequency_hrs': 'int',
         'drift_detection_algorithm': 'str',
@@ -68,6 +69,7 @@ class ModelmonitorDef(object):
         'version': 'version',
         'endpoint_url': 'endpoint_url',
         'model_type': 'model_type',
+        'model_category': 'model_category',
         'model_framework': 'model_framework',
         'drift_detection_run_frequency_hrs': 'drift_detection_run_frequency_hrs',
         'drift_detection_algorithm': 'drift_detection_algorithm',
@@ -78,7 +80,7 @@ class ModelmonitorDef(object):
         'alerts': 'alerts'
     }
 
-    def __init__(self, id=None, status=None, schema=None, pipeline_component=None, owner=None, emails=None, name=None, description=None, tags=None, model=None, version=None, endpoint_url=None, model_type=None, model_framework=None, drift_detection_run_frequency_hrs=None, drift_detection_algorithm='Kolmogorov-Smirnov Divergence', performance_metrics_template=None, datasets=None, created_at=None, updated_at=None, alerts=None):  # noqa: E501
+    def __init__(self, id=None, status=None, schema=None, pipeline_component=None, owner=None, emails=None, name=None, description=None, tags=None, model=None, version=None, endpoint_url=None, model_type=None, model_category=None, model_framework=None, drift_detection_run_frequency_hrs=None, drift_detection_algorithm='Kolmogorov-Smirnov Divergence', performance_metrics_template=None, datasets=None, created_at=None, updated_at=None, alerts=None):  # noqa: E501
         """ModelmonitorDef - a model defined in Swagger"""  # noqa: E501
 
         self._id = None
@@ -94,6 +96,7 @@ class ModelmonitorDef(object):
         self._version = None
         self._endpoint_url = None
         self._model_type = None
+        self._model_category = None
         self._model_framework = None
         self._drift_detection_run_frequency_hrs = None
         self._drift_detection_algorithm = None
@@ -130,6 +133,8 @@ class ModelmonitorDef(object):
             self.endpoint_url = endpoint_url
         if model_type is not None:
             self.model_type = model_type
+        if model_category is not None:
+            self.model_category = model_category
         if model_framework is not None:
             self.model_framework = model_framework
         if drift_detection_run_frequency_hrs is not None:
@@ -445,7 +450,7 @@ class ModelmonitorDef(object):
         :param model_type: The model_type of this ModelmonitorDef.  # noqa: E501
         :type: list[str]
         """
-        allowed_values = ["AutoEncoder", "TimeSeries", "Other"]  # noqa: E501
+        allowed_values = ["Regression", "Classification"]  # noqa: E501
         if not set(model_type).issubset(set(allowed_values)):
             raise ValueError(
                 "Invalid values for `model_type` [{0}], must be a subset of [{1}]"  # noqa: E501
@@ -454,6 +459,36 @@ class ModelmonitorDef(object):
             )
 
         self._model_type = model_type
+
+    @property
+    def model_category(self):
+        """Gets the model_category of this ModelmonitorDef.  # noqa: E501
+
+        Model category - AutoEncoder, TimeSeries, or Other  # noqa: E501
+
+        :return: The model_category of this ModelmonitorDef.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._model_category
+
+    @model_category.setter
+    def model_category(self, model_category):
+        """Sets the model_category of this ModelmonitorDef.
+
+        Model category - AutoEncoder, TimeSeries, or Other  # noqa: E501
+
+        :param model_category: The model_category of this ModelmonitorDef.  # noqa: E501
+        :type: list[str]
+        """
+        allowed_values = ["AutoEncoder", "TimeSeries", "Other"]  # noqa: E501
+        if not set(model_category).issubset(set(allowed_values)):
+            raise ValueError(
+                "Invalid values for `model_category` [{0}], must be a subset of [{1}]"  # noqa: E501
+                .format(", ".join(map(str, set(model_category) - set(allowed_values))),  # noqa: E501
+                        ", ".join(map(str, allowed_values)))
+            )
+
+        self._model_category = model_category
 
     @property
     def model_framework(self):

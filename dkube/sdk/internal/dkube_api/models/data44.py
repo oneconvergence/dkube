@@ -36,7 +36,11 @@ class Data44(object):
         'tags': 'list[str]',
         'endpoint_url': 'str',
         'description': 'str',
-        'schema': 'ModelmonitorFeaturesSpecDef'
+        'schema': 'ModelmonitorFeaturesSpecDef',
+        'model_type': 'list[str]',
+        'model_category': 'list[str]',
+        'model_framework': 'str',
+        'drift_detection_run_frequency_hrs': 'int'
     }
 
     attribute_map = {
@@ -45,10 +49,14 @@ class Data44(object):
         'tags': 'tags',
         'endpoint_url': 'endpoint_url',
         'description': 'description',
-        'schema': 'schema'
+        'schema': 'schema',
+        'model_type': 'model_type',
+        'model_category': 'model_category',
+        'model_framework': 'model_framework',
+        'drift_detection_run_frequency_hrs': 'drift_detection_run_frequency_hrs'
     }
 
-    def __init__(self, version=None, emails=None, tags=None, endpoint_url=None, description=None, schema=None):  # noqa: E501
+    def __init__(self, version=None, emails=None, tags=None, endpoint_url=None, description=None, schema=None, model_type=None, model_category=None, model_framework=None, drift_detection_run_frequency_hrs=None):  # noqa: E501
         """Data44 - a model defined in Swagger"""  # noqa: E501
 
         self._version = None
@@ -57,6 +65,10 @@ class Data44(object):
         self._endpoint_url = None
         self._description = None
         self._schema = None
+        self._model_type = None
+        self._model_category = None
+        self._model_framework = None
+        self._drift_detection_run_frequency_hrs = None
         self.discriminator = None
 
         if version is not None:
@@ -71,6 +83,14 @@ class Data44(object):
             self.description = description
         if schema is not None:
             self.schema = schema
+        if model_type is not None:
+            self.model_type = model_type
+        if model_category is not None:
+            self.model_category = model_category
+        if model_framework is not None:
+            self.model_framework = model_framework
+        if drift_detection_run_frequency_hrs is not None:
+            self.drift_detection_run_frequency_hrs = drift_detection_run_frequency_hrs
 
     @property
     def version(self):
@@ -211,6 +231,122 @@ class Data44(object):
         """
 
         self._schema = schema
+
+    @property
+    def model_type(self):
+        """Gets the model_type of this Data44.  # noqa: E501
+
+        Model prediction type - regression or classification  # noqa: E501
+
+        :return: The model_type of this Data44.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._model_type
+
+    @model_type.setter
+    def model_type(self, model_type):
+        """Sets the model_type of this Data44.
+
+        Model prediction type - regression or classification  # noqa: E501
+
+        :param model_type: The model_type of this Data44.  # noqa: E501
+        :type: list[str]
+        """
+        allowed_values = ["Regression", "Classification"]  # noqa: E501
+        if not set(model_type).issubset(set(allowed_values)):
+            raise ValueError(
+                "Invalid values for `model_type` [{0}], must be a subset of [{1}]"  # noqa: E501
+                .format(", ".join(map(str, set(model_type) - set(allowed_values))),  # noqa: E501
+                        ", ".join(map(str, allowed_values)))
+            )
+
+        self._model_type = model_type
+
+    @property
+    def model_category(self):
+        """Gets the model_category of this Data44.  # noqa: E501
+
+        Model category - AutoEncoder, TimeSeries, or Other  # noqa: E501
+
+        :return: The model_category of this Data44.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._model_category
+
+    @model_category.setter
+    def model_category(self, model_category):
+        """Sets the model_category of this Data44.
+
+        Model category - AutoEncoder, TimeSeries, or Other  # noqa: E501
+
+        :param model_category: The model_category of this Data44.  # noqa: E501
+        :type: list[str]
+        """
+        allowed_values = ["AutoEncoder", "TimeSeries", "Other"]  # noqa: E501
+        if not set(model_category).issubset(set(allowed_values)):
+            raise ValueError(
+                "Invalid values for `model_category` [{0}], must be a subset of [{1}]"  # noqa: E501
+                .format(", ".join(map(str, set(model_category) - set(allowed_values))),  # noqa: E501
+                        ", ".join(map(str, allowed_values)))
+            )
+
+        self._model_category = model_category
+
+    @property
+    def model_framework(self):
+        """Gets the model_framework of this Data44.  # noqa: E501
+
+        Model Framework - TensorFlow-1x or TensorFlow-2x or PyTorch or SkLearn or Other  # noqa: E501
+
+        :return: The model_framework of this Data44.  # noqa: E501
+        :rtype: str
+        """
+        return self._model_framework
+
+    @model_framework.setter
+    def model_framework(self, model_framework):
+        """Sets the model_framework of this Data44.
+
+        Model Framework - TensorFlow-1x or TensorFlow-2x or PyTorch or SkLearn or Other  # noqa: E501
+
+        :param model_framework: The model_framework of this Data44.  # noqa: E501
+        :type: str
+        """
+        allowed_values = ["Tensorflow-1x", "Tensorflow-2x", "PyTorch", "SkLearn", "Other"]  # noqa: E501
+        if model_framework not in allowed_values:
+            raise ValueError(
+                "Invalid value for `model_framework` ({0}), must be one of {1}"  # noqa: E501
+                .format(model_framework, allowed_values)
+            )
+
+        self._model_framework = model_framework
+
+    @property
+    def drift_detection_run_frequency_hrs(self):
+        """Gets the drift_detection_run_frequency_hrs of this Data44.  # noqa: E501
+
+        monitor frequency in hours  # noqa: E501
+
+        :return: The drift_detection_run_frequency_hrs of this Data44.  # noqa: E501
+        :rtype: int
+        """
+        return self._drift_detection_run_frequency_hrs
+
+    @drift_detection_run_frequency_hrs.setter
+    def drift_detection_run_frequency_hrs(self, drift_detection_run_frequency_hrs):
+        """Sets the drift_detection_run_frequency_hrs of this Data44.
+
+        monitor frequency in hours  # noqa: E501
+
+        :param drift_detection_run_frequency_hrs: The drift_detection_run_frequency_hrs of this Data44.  # noqa: E501
+        :type: int
+        """
+        if drift_detection_run_frequency_hrs is not None and drift_detection_run_frequency_hrs > 168:  # noqa: E501
+            raise ValueError("Invalid value for `drift_detection_run_frequency_hrs`, must be a value less than or equal to `168`")  # noqa: E501
+        if drift_detection_run_frequency_hrs is not None and drift_detection_run_frequency_hrs < 1:  # noqa: E501
+            raise ValueError("Invalid value for `drift_detection_run_frequency_hrs`, must be a value greater than or equal to `1`")  # noqa: E501
+
+        self._drift_detection_run_frequency_hrs = drift_detection_run_frequency_hrs
 
     def to_dict(self):
         """Returns the model properties as a dict"""

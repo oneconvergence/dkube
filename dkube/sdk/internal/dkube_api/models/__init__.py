@@ -266,6 +266,7 @@ from dkube.sdk.internal.dkube_api.models.inline_response2007 import InlineRespon
 from dkube.sdk.internal.dkube_api.models.inline_response20070 import InlineResponse20070
 from dkube.sdk.internal.dkube_api.models.inline_response20071 import InlineResponse20071
 from dkube.sdk.internal.dkube_api.models.inline_response20072 import InlineResponse20072
+from dkube.sdk.internal.dkube_api.models.inline_response20073 import InlineResponse20073
 from dkube.sdk.internal.dkube_api.models.inline_response2008 import InlineResponse2008
 from dkube.sdk.internal.dkube_api.models.inline_response2009 import InlineResponse2009
 from dkube.sdk.internal.dkube_api.models.inline_response2009_data import InlineResponse2009Data
@@ -394,6 +395,7 @@ from dkube.sdk.internal.dkube_api.models.run_template_model_parameters_priority 
 from dkube.sdk.internal.dkube_api.models.s3_access_credentials import S3AccessCredentials
 from dkube.sdk.internal.dkube_api.models.sql_access_info import SQLAccessInfo
 from dkube.sdk.internal.dkube_api.models.serving_result_model import ServingResultModel
+from dkube.sdk.internal.dkube_api.models.smtp_artifact import SmtpArtifact
 from dkube.sdk.internal.dkube_api.models.submission_model import SubmissionModel
 from dkube.sdk.internal.dkube_api.models.tensor import Tensor
 from dkube.sdk.internal.dkube_api.models.tensorboard_model import TensorboardModel
