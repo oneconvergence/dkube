@@ -218,6 +218,7 @@ class DkubeDataset(object):
         """
 
         self.datum.source = "aws_s3"
+        self.datum.url = "/" + bucket + "/" + prefix
         self.s3access.bucket = bucket
         self.s3access.prefix = prefix
         self.s3access.access_key_id = key
