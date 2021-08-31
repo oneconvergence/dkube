@@ -105,7 +105,7 @@ class DkubeModelMonitor(object):
         self.modelmonitor.model_type = model_type
         self.modelmonitor.model_category = model_category
         self.modelmonitor.model_framework = model_framework
-        self.modelmoniotr.version = version
+        self.modelmonitor.version = version
         self.modelmonitor.drift_detection_run_frequency_hrs = run_freq
         self.modelmonitor.drift_detecttion_algorithm = drift_algo
         self.modelmonitor.emails = emails
