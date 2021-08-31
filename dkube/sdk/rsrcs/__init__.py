@@ -11,4 +11,4 @@ from .modelmonitor import DkubeModelMonitor
 
 __all__ = ['DkubeIDE', 'DkubeTraining', 'DkubePreprocessing',
            'DkubeServing', 'DkubeCode', 'DkubeDataset', 'DkubeModel',
-           'DkubeFeatureSet', 'DkubeResourcePVC','DkubeModelMonitor]
+           'DkubeFeatureSet', 'DkubeResourcePVC','DkubeModelMonitor']
