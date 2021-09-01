@@ -72,7 +72,7 @@ class DkubeModelMonitor(object):
         return self
     
     def add_dataset(self,name,data_class,version=None):
-        mm_dataset = ModelmonitorDatasetDef(id=None, _class=data_class, transformer_script=None, name=name, sql_query=None,
+        mm_dataset = ModelmonitorDatasetDef(id=None, class=data_class, transformer_script=None, name=name, sql_query=None,
                                                s3_subpath=None, version=version, data_format=None, groundtruth_col=None,
                                                predict_col=None, created_at=None, updated_at=None)
         
