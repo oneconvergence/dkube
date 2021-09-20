@@ -2211,3 +2211,135 @@ class DkubeApi(ApiBase, FilesBase):
             if "repo" in entry["image"] and entry["image"]["repo"] == repo:
                 images.append(entry)
         return images
+
+    ### Model monitor apis ##########
+    
+    def create_modelmonitor(self,modelmonitor:DkubeModelMonitor,wait_for_completion=True):
+        assert type(modelmonitor) == DkubeModelMonitor, "Invalid type for model monitor, value must be instance of rsrcs:DkubeModelMonitor class"
+        response = super().create_model_monitor(modelmonitor)
+        while wait_for_completion:
+            ls = self.list_modelmonitor()
+            for i in ls:
+                if i["name"] == modelmonitor.modelmonitor.name:
+                    status = i["status"]
+            state = status['state']
+            if state.lower() in ['init','active','error']:
+                print(
+                    "ModelMonitor {} - completed with state {} and reason {}".format(modelmonitor.name, state, response['message']))
+                break
+            else:
+                print(
+                    "ModelMonitor {} - waiting for completion, current state {}".format(modelmonitor.name, state))
+                time.sleep(self.wait_interval)
+   
+    def list_modelmonitor(self):
+        return super().list_modelmonitor()
+
+    def get_modelmonitor_id(self,name):
+        response = super().list_modelmonitor()
+        for mm in response:
+            if mm['name'] == name:
+                return mm['id']
+        return None
+    
+    def get_modelmonitor_alertid(self,name):
+        response = super().get_modelmonitor_alerts(name)
+        #assert response['response']['code'] == 200, response['response']['message']
+        for alert in response:
+            if alert['name'] == name:
+                return alert['id']
+        return None
+    
+    def get_modelmonitor_configuration(self,name):
+        mm_id = self.get_modelmonitor_id(name)
+        return super().get_modelmonitor_configuration(mm_id)
+
+    def get_modelmonitor_dataset(self,name):
+        mm_id = self.get_modelmonitor_id(name)
+        return super().get_modelmonitor_dataset(mm_id)
+
+    def get_modelmonitor_alerts(self,name):
+        mm_id = self.get_modelmonitor_id(name)
+        return super().get_modelmonitor_alerts(mm_id)
+
+    def delete_modelmonitors(self,delete_list):
+        mm_list = []
+        for mm in delete_list:
+            mm_id = self.get_modelmonitor_id(mm)
+            mm_list.append(mm_id)
+        return super().delete_modelmonitor(mm_list)
+
+    def get_modelmonitor_dataid(self,name,data_name):
+        response = self.get_modelmonitor_dataset(name)
+        #print(response)
+        for data in response:
+            if data["name"] == data_name:
+                return data['id']
+
+    def delete_modelmonitor_dataset(self,name,dataset_names):
+        mm_id = self.get_modelmonitor_id(name)
+        delete_dataset_ids = []
+        for data in dataset_names:
+            data_id = self.get_modelmonitor_dataid(name,data)
+            delete_dataset_ids.append(data_id)
+        return super().delete_modelmonitor_dataset(mm_id,delete_dataset_ids)
+    
+    def get_modelmonitor_features(self,name):
+        mm_id = self.get_modelmonitor_id(name)
+        return super().get_modelmonitor_features(mm_id)
+
+    def get_modelmonitor_template(self):
+        return super().get_modelmonitor_template()
+
+    def delete_modelmonitor_alert(self,name,alert_name):
+        mm_id = self.get_modelmonitor_id(name)
+        delete_alertsid_list = []
+        for data in alert_name:
+            alert_id = self.get_modelmonitor_alertid(data)
+            delete_alertsid_list.append(alert_id)
+        return super().delete_modelmonitor_alert(mm_id,delete_alertsid_list)
+    
+    def modelmonitor_addalert(self,name,alert_name,alert_class,feature,threshold,email=None):
+        mm_id = self.get_modelmonitor_id(name)
+        data = [
+                 {
+                  "class": alert_class,
+                  "email": email,
+                  "name": alert_name,
+                  "conditions": [
+                     {
+                     "feature": feature,
+                     "op": ">",
+                     "threshold": threshold
+                     }
+                  ]
+                 }
+        ]
+        response = super().modelmonitor_addalert(mm_id,{"data":data})
+        return response['response']['message']
+
+    def modelmonitor_adddataset(self,name,data_name,data_class,version=None,transformer_script=None,sql_query=None,s3_subpath=None,data_format='csv',gt_col=None,predict_col=None):
+        mm_id = self.get_modelmonitor_id(name)
+        data = {
+                "class": data_class,
+                "transformer_script": transformer_script,
+                "name": data_name,
+                "sql_query": sql_query,
+                "s3_subpath": s3_subpath,
+                "version": version,
+                "data_format": data_format,
+                "groundtruth_col": gt_col,
+                "predict_col": predict_col
+              }
+        response = super().modelmonitor_adddataset(mm_id,{"data":data})
+        assert response['response']['code'] == 200, response['response']['message']
+        return response['response']['message']
+
+
+    def archive_modelmonitor(self,name,archive):
+        mm_id = self.get_modelmonitor_id(name)
+        return super().modelmonitor_archive(mm_id,archive)
+
+    def changestate_modelmonitor(self,name,state):
+        mm_id = self.get_modelmonitor_id(name)
+        return super().modelmonitor_state(mm_id,state)
