@@ -49,7 +49,7 @@ class DkubeModelMonitor(object):
             drift_detection_run_frequency_hrs=None,
             drift_detection_algorithm=None,
             performance_metrics_template=None,
-            datasets=list(self.datasets),
+            datasets=self.datasets,
             alerts=self.alerts)
 
         self.update_basic(user, name, description, tags)
@@ -87,18 +87,18 @@ class DkubeModelMonitor(object):
         self.modelmonitor.alerts.append(mm_alert)
     
     def update_datasets(self,name,data_class,transformer_script=None,sql_query=None,groundtruth_col=None,predict_col=None):
-        self.datasets.name = name
-        self.datasets._class = data_class
-        self.datasets.transformer_script = transformer_script
-        self.datasets.sql_query = sql_query
-        self.datasets.groundtruth_col = groundtruth_col
-        self.datasets.predict_col = predict_col
+        self.modelmonitor.datasets.name = name
+        self.modelmonitor.datasets._class = data_class
+        self.modelmonitor.datasets.transformer_script = transformer_script
+        self.modelmonitor.datasets.sql_query = sql_query
+        self.modelmonitor.datasets.groundtruth_col = groundtruth_col
+        self.modelmonitor.datasets.predict_col = predict_col
         
     
     def update_alerts(self,name,alert_class,conditions=None):
-        self.alerts.name = name
-        self.alerts._class = alert_class
-        self.alerts.conditions = conditions
+        self.modelmonitor.alerts.name = name
+        self.modelmonitor.alerts._class = alert_class
+        self.modelmonitor.alerts.conditions = conditions
         
           
     def add_modelmonitor(self,name,model_name,model_type,model_category,model_framework,version,run_freq,drift_algo,emails):
