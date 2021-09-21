@@ -13,7 +13,7 @@ endef
 export PRINT_HELP_PYSCRIPT
 
 
-VERSION=2.2
+VERSION=2.3
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
@@ -49,7 +49,7 @@ dist: clean ## builds source and wheel package
 	python setup.py bdist_wheel
 	ls -l dist
 
-launcher:
+image:
 	docker build -t ocdr/dkube_pylauncher:$(VERSION) .;
 	docker push ocdr/dkube_pylauncher:$(VERSION)
 

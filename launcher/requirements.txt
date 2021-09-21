@@ -2,3 +2,7 @@ pyfiglet
 boto3
 json2html
 flatten_json==0.1.7
+click==7.1.2
+PyYAML==5.4.1
+kfp==1.6.3
+packaging==21.0

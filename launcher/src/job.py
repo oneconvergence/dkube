@@ -166,6 +166,6 @@ def job(
             time.sleep(10)
 
     if output != "{}":
-        sdk.delete_dataset(user, datasetName)
+        sdk.delete_dataset(user, datasetName, force=True)
     # generate the outputs, next stage can pick from here
     run_outputs(api, user, "preprocessing", name)
