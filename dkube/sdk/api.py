@@ -21,6 +21,7 @@ from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
+from dkube.sdk.rsrcs.modelmonitor import DkubeModelMonitorDataset,DkubeModelMonitorAlert
 from dkube.sdk.rsrcs.project import DkubeProject
 from packaging import version as pversion
 
@@ -2211,3 +2212,192 @@ class DkubeApi(ApiBase, FilesBase):
             if "repo" in entry["image"] and entry["image"]["repo"] == repo:
                 images.append(entry)
         return images
+
+    ### Model monitor apis ##########
+    
+    def modelmonitor_create(self,modelmonitor:DkubeModelMonitor,wait_for_completion=True):
+        assert type(modelmonitor) == DkubeModelMonitor, "Invalid type for model monitor, value must be instance of rsrcs:DkubeModelMonitor class"
+        response = super().create_model_monitor(modelmonitor)
+        while wait_for_completion:
+            mm_config = super().get_modelmonitor_configuration(response['uuid'])
+            state = mm_config['status']['state']
+            if state.lower() in ['ready','error']:
+                print(
+                    "ModelMonitor {} - completed with state {} and reason {}".format(modelmonitor.name, state, response['message']))
+                break
+            else:
+                print(
+                    "ModelMonitor {} - waiting for completion, current state {}".format(modelmonitor.name, state))
+                time.sleep(self.wait_interval)
+   
+    def modelmonitor_list(self):
+        return super().list_modelmonitor()
+
+    def modelmonitor_get_id(self,name):
+        response = super().list_modelmonitor()
+        for mm in response:
+            if mm['name'] == name:
+                return mm['id']
+        return None
+    
+    def modelmonitor_get_alertid(self,name,alert_name):
+        mm_id = self.modelmonitor_get_id(name)
+        response = super().get_modelmonitor_alerts(mm_id)
+        for alert in response['data']:
+            if alert['name'] == alert_name:
+                return alert['id']
+        return None
+    
+    def modelmonitor_get(self,name='',id=''):
+        if id == '':
+            id = self.modelmonitor_get_id(name)
+        return super().get_modelmonitor_configuration(id)
+
+    def modelmonitor_get_datasets(self,name='',id='',data_class='TrainData'):
+        if id == '':
+            id = self.modelmonitor_get_id(name)
+        datasets = super().get_modelmonitor_dataset(id)
+        for data in datasets:
+            if(data['_class'] == data_class):
+                return data
+
+    def modelmonitor_get_alerts(self,name='',id=''):
+        if id == '':
+            id = self.modelmonitor_get_id(name)
+        return super().get_modelmonitor_alerts(id)
+
+    def modelmonitors_delete(self,names=[],delete_ids=[]):
+        mm_list = []
+        for mm in delete_list:
+            mm_id = self.modelmonitor_get_id(mm)
+            mm_list.append(mm_id)
+        return super().delete_modelmonitor(mm_list)
+
+    def modelmonitor_get_datasetid(self,user,name='',id='',data_name=''):
+        if id == '':
+            id = self.modelmonitor_get_id(name)
+        response = super().get_modelmonitor_dataset(id)
+        data_name = data_name +":"+user
+        for data in response:
+            if data["name"] == data_name:
+                return data['id']
+
+    def modelmonitor_delete_datasets(self,user='',name='',id='',dataset_names=[]):
+        if id == '':
+            id = self.modelmonitor_get_id(name)
+        delete_dataset_ids = []
+        for data in dataset_names:
+            data_id = self.modelmonitor_get_datasetid(user,name,data_name=data)
+            delete_dataset_ids.append(data_id)
+        return super().delete_modelmonitor_dataset(id,delete_dataset_ids)
+
+
+    def modelmonitor_get_metricstemplate(self):
+        return super().get_modelmonitor_template()
+
+    def delete_modelmonitor_alert(self,name,alert_name):
+        mm_id = self.modelmonitor_get_id(name)
+        delete_alertsid_list = []
+        for data in alert_name:
+            alert_id = self.get_modelmonitor_alertid(data)
+            delete_alertsid_list.append(alert_id)
+        return super().delete_modelmonitor_alert(mm_id,delete_alertsid_list)
+    
+    def modelmonitor_addalert(self,alert_data:DkubeModelMonitorAlert,name='',id=''):
+        if id == '':
+            id = self.modelmonitor_get_id(name)
+        alert = alert_data.to_JSON()
+        alert_dict = json.loads(alert)
+        alert_dict['class'] = alert_dict.pop('_class')
+        alert_conds,alert_list,mm_list = [],[],[]
+        alert_conds.append({'id': None,'feature':alert_dict['feature'],'op':alert_dict['op'],'threshold':alert_dict['threshold']})
+        alert_dict['conditions'] = alert_conds
+        rem_list = ['feature','op','threshold']
+        [alert_dict.pop(key) for key in rem_list]
+        alert_list.append(alert_dict)
+        response = super().modelmonitor_addalert(id,{"data":alert_list})
+        return response['response']
+
+    def modelmonitor_adddataset(self,data:DkubeModelMonitorDataset,name='',id=''):
+        if id == '':
+            id = self.modelmonitor_get_id(name)
+        dataset = data.to_JSON()
+        data_dict = json.loads(dataset)
+        data_dict['class'] = data_dict.pop('_class')
+        response = super().modelmonitor_adddataset(id,{"data":data_dict})
+        return response['response']
+
+
+    def modelmonitor_archive(self,name='',id='',archive=False):
+        if id == '':
+            id = self.modelmonitor_get_id(name)
+        return super().modelmonitor_archive(id,archive)
+
+    def modelmonitor_start(self,name='',id=''):
+        if id == '':
+            id = self.modelmonitor_get_id(name)
+            mm_state = self.modelmonitor_get(name)['status']['state']
+        else:
+            mm_state = self.modelmonitor_get(id)['status']['state']
+        return super().modelmonitor_state(id,"start")
+
+    def modelmonitor_stop(self,name='',id=''):
+        if id == '':
+            id = self.modelmonitor_get_id(name)
+        return super().modelmonitor_state(id,"stop")
+    
+
+    def modelmonitor_update_dataset(self,user,data:DkubeModelMonitorDataset,data_name,name='',id=''):
+        if id == '':
+            id = self.modelmonitor_get_id(name)
+            data_id = self.modelmonitor_get_datasetid(user,name,data_name=data_name)
+        else:
+            data_id = self.modelmonitor_get_datasetid(user,id,data_name=data_name)
+        dataset = data.to_JSON()
+        data_dict = json.loads(dataset)
+        data_dict['class'] = data_dict.pop('_class')
+        del data_dict['user']
+        return super().update_modelmonitor_dataset(id,data_id,data_dict)
+
+    def modelmonitor_update_alert(self,alert:DkubeModelMonitorAlert,alert_name,name='',id=''):
+        if id == '':
+            id = self.modelmonitor_get_id(name)
+            alert_id = self.modelmonitor_get_alertid(name,alert_name=alert_name)
+        else:
+            alert_id = self.modelmonitor_get_alertid(id,alert_name=alert_name)
+        alert_data = alert.to_JSON()
+        alert_dict = json.loads(alert_data)
+        alert_dict['class'] = alert_dict.pop('_class')
+        alert_conds = []
+        alert_conds.append({'id': None,'feature':alert_dict['feature'],'op':alert_dict['op'],'threshold':alert_dict['threshold']})
+        alert_dict['conditions'] = alert_conds
+        rem_list = ['feature','op','threshold']
+        [alert_dict.pop(key) for key in rem_list]
+        print(alert_dict)
+        return super().update_modelmonitor_alert(id,alert_id,alert_dict)
+
+
+    def remove_underscore_dict(self,d):
+        new = {}
+        for k, v in d.items():
+            if isinstance(v, dict):
+                v = self.remove_underscore_dict(v)
+            new[k.replace('_', '',1)] = v
+        return new
+
+    def modelmonitor_update_config(self,user,config:DkubeModelMonitor,name='',mmid=''):
+        if mmid == '':
+            mmid = self.modelmonitor_get_id(name)
+        config_dict=config.__dict__["modelmonitor"]
+        print(config_dict)
+        rem_list = ['datasets','alerts','performance_metrics_template','updated_at','id','drift_detection_algorithm','created_at','pipeline_component','status','owner','name']
+        print(type(config_dict))
+        [config_dict.pop(key) for key in rem_list]
+        return super().update_modelmonitor_config(mmid,config_dict)
+
+    
+        
+        
+        
+        
+

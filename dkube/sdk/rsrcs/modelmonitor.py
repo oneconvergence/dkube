@@ -20,11 +20,12 @@ from dkube.sdk.internal.dkube_api.models.modelmonitor_def import ModelmonitorDef
 
 
 class DkubeModelMonitor(object):
-    def __init__(self, user, name=generate("mm"),description = '',tags=None):
+    def __init__(self, user, name=generate("mm"),model_name="",description = '',tags=None):
 
-        self.features = []
-        self.features.append(ModelmonitorSchemaFeature(selected=None, label=None, _class=None, type=None))
-        self.schema = ModelmonitorFeaturesSpecDef(features=self.features)
+       # self.features = []
+        #self.features.append(ModelmonitorSchemaFeature(selected=None, label=None, _class='Categorical', type='InputFeature'))
+        #self.schema = ModelmonitorFeaturesSpecDef(features=self.features)
+        self.schema = {}
         self.default_thresholds = []
         self.train_metrics = None
 
@@ -34,7 +35,7 @@ class DkubeModelMonitor(object):
 
         self.modelmonitor = ModelmonitorDef(
             id=None,
-            schema=self.schema,
+            schema=None,
             pipeline_component=None,
             owner=None,
             emails=None,
@@ -53,10 +54,11 @@ class DkubeModelMonitor(object):
             datasets=self.datasets,
             alerts=self.alerts)
 
-        self.update_basic(user,name, description, tags)
-        self.add_default_thresholds()
+        self.update_basic(user,name,model_name, description, tags)
+        #self.add_default_thresholds()
+        #self.update_schema()
 
-    def update_basic(self, user,name,description, tags):
+    def update_basic(self, user,name,model_name,description, tags):
         """
             Method to update the attributes specified at creation. Description and tags can be updated. tags is a list of string values.
         """
@@ -67,10 +69,11 @@ class DkubeModelMonitor(object):
         self.modelmonitor.name = name
         self.modelmonitor.owner = user
         self.modelmonitor.description = description
+        self.modelmonitor.model = model_name+":"+self.user
         self.modelmonitor.tags = tags
         ## Defaults
         self.modelmonitor.drift_detection_run_frequency_hrs = 1
-        self.modelmonitor.drift_detection_algorithm = 'Kolmogorov-Smirnov Divergence'
+        self.modelmonitor.drift_detection_algorithm = 'Kolmogorov-Smirnov & Chi Squared'
         
         return self
     
@@ -89,18 +92,16 @@ class DkubeModelMonitor(object):
         
         self.modelmonitor.alerts.append(mm_alert)
         
-    def add_default_thresholds(self,thtype=None,threshold=None,percent_threshold=None):
+    def add_default_thresholds(self,thtype='performance_threshold',threshold=0,percent_threshold=0):
+        
         self.modelmonitor.default_thresholds.append(ModelmonitorDefaultThresholdDef(id=None,type=thtype,threshold=threshold,percent_threshold=percent_threshold))
-    def update_schema(self,selected=None,schema_class=None,label=None,schema_type=None):
-
-        self.modelmonitor.schema.features.selected = selected
-        self.modelmonitor.schema.features._class = schema_class
-        self.modelmonitor.schema.features.label = label
-        self.modelmonitor.schema.features.type = schema_type
+    def update_schema(self,label,selected=None,schema_class='Categorical',schema_type='InputFeature'):
+        self.features=[]
+        self.features.append(ModelmonitorSchemaFeature(selected=selected, label=label, _class=schema_class, type=schema_type))
+        self.modelmonitor.schema = ModelmonitorFeaturesSpecDef(features=self.features)
         
             
-    def update_modelmonitor_details(self,model=None,model_type='Regression',model_category='TimeSeries',model_framework='Tensorflow-1x',version=None,run_freq=1,drift_algo='Kolmogorov-Smirnov Divergence',emails=None,train_metrics=None):
-        self.modelmonitor.model = model
+    def update_modelmonitor_details(self,model_type='Regression',model_category='TimeSeries',model_framework='Tensorflow-1x',version=None,run_freq=1,drift_algo='Kolmogorov-Smirnov & Chi Squared',emails=None,train_metrics=None):
         self.modelmonitor.model_type = model_type
         self.modelmonitor.model_category = model_category
         self.modelmonitor.model_framework = model_framework
@@ -167,4 +168,5 @@ class DkubeModelMonitorAlert(object):
         self.threshold = threshold
         
         
+
 
