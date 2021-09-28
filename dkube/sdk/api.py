@@ -2388,11 +2388,13 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_update_config(self,user,config:DkubeModelMonitor,name='',mmid=''):
         if mmid == '':
             mmid = self.modelmonitor_get_id(name)
-        config_dict=config.__dict__["modelmonitor"]
-        print(config_dict)
-        rem_list = ['datasets','alerts','performance_metrics_template','updated_at','id','drift_detection_algorithm','created_at','pipeline_component','status','owner','name']
-        print(type(config_dict))
+        config_dict=config.__dict__["modelmonitor"].__dict__
+        config_dict = {k.replace('_', '',1):v for k,v in config_dict.items()}
+        rem_list = ['datasets','model','alerts','performance_metrics_template','updated_at','id','drift_detection_algorithm','created_at','pipeline_component','status','owner','name','discriminator']
         [config_dict.pop(key) for key in rem_list]
+        for k in list(config_dict.keys()):
+            if(config_dict[k]==None or config_dict[k]==[]):
+                del config_dict[k]
         return super().update_modelmonitor_config(mmid,config_dict)
 
     
