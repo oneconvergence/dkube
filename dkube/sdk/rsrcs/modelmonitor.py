@@ -22,9 +22,6 @@ from dkube.sdk.internal.dkube_api.models.modelmonitor_def import ModelmonitorDef
 class DkubeModelMonitor(object):
     def __init__(self, user, name=generate("mm"),model_name="",description = '',tags=None):
 
-       # self.features = []
-        #self.features.append(ModelmonitorSchemaFeature(selected=None, label=None, _class='Categorical', type='InputFeature'))
-        #self.schema = ModelmonitorFeaturesSpecDef(features=self.features)
         self.schema = {}
         self.default_thresholds = []
         self.train_metrics = None
@@ -47,6 +44,7 @@ class DkubeModelMonitor(object):
             endpoint_url=None,
             model_type=None,
             model_framework=None,
+            model_category=None,
             drift_detection_run_frequency_hrs=None,
             drift_detection_algorithm=None,
             performance_metrics_template=None,
@@ -55,8 +53,6 @@ class DkubeModelMonitor(object):
             alerts=self.alerts)
 
         self.update_basic(user,name,model_name, description, tags)
-        #self.add_default_thresholds()
-        #self.update_schema()
 
     def update_basic(self, user,name,model_name,description, tags):
         """
@@ -71,12 +67,63 @@ class DkubeModelMonitor(object):
         self.modelmonitor.description = description
         self.modelmonitor.model = model_name+":"+self.user
         self.modelmonitor.tags = tags
-        ## Defaults
-        self.modelmonitor.drift_detection_run_frequency_hrs = 1
-        self.modelmonitor.drift_detection_algorithm = 'Kolmogorov-Smirnov & Chi Squared'
         
         return self
+        
+            
+    def update_modelmonitor(self,model_type=None,model_category=None,model_framework=None,version=None,run_freq=None,drift_algo=None,emails=None,train_metrics=None):
+        if model_type == None:
+            self.modelmonitor.model_type ='Regression'
+        else:
+            self.modelmonitor.model_type = model_type
+        if model_category == None:
+            self.modelmonitor.model_category = 'TimeSeries'
+        else:
+            self.modelmonitor.model_category = model_category
+        if model_framework == None:
+            self.modelmonitor.model_framework = 'Tensorflow-1x'
+        else:
+            self.modelmonitor.model_framework = model_framework
+        if drift_algo == None:
+            self.modelmonitor.drift_detection_algorithm = 'Kolmogorov-Smirnov & Chi Squared'
+        else:
+            self.modelmonitor.drift_detection_algorithm = drift_algo
+        if run_freq == None:
+            self.modelmonitor.drift_detection_run_frequency_hrs = 1
+        else:
+            self.modelmonitor.drift_detection_run_frequency_hrs = run_freq
+        
+        self.modelmonitor.version = version
+        self.modelmonitor.emails = emails
+        self.modelmonitor.train_metrics = train_metrics
+
+    def update_model_type(self,model_type=None):
+        self.modelmonitor.model_type = model_type
+
+    def update_model_category(self,category=None):
+        self.modelmonitor.model_category = category
     
+    def update_model_framework(self,framework=None):
+        self.modelmonitor.model_framework = framework
+    
+    def update_drift_detection_algorithm(self,algorithm=None):
+        self.modelmonitor.drift_detection_algorithm = algorithm
+            
+    def update_run_frequency(self,frequency=None):
+        self.modelmonitor.drift_detection_run_frequency_hrs = frequency
+
+    
+    def update_transformer_script(self,data_name,script):
+        for index,data in enumerate(self.modelmonitor.datasets):
+            if (data.name == data_name+":"+self.user):
+                self.modelmonitor.datasets[index].transformer_script = script
+                
+    def update_schema(self,label,selected=True,schema_class='Categorical',schema_type='InputFeature'):
+        self.features=[]
+        self.features.append(ModelmonitorSchemaFeature(selected=selected, label=label, _class=schema_class, type=schema_type))
+        self.modelmonitor.schema = ModelmonitorFeaturesSpecDef(features=self.features)
+        
+        
     def add_dataset(self,name,data_class,version=None,data_format='csv',s3_subpath=None,gt_col=None,predict_col=None,sql_query=None):
         name = name + ":"+ self.user
         mm_dataset = ModelmonitorDatasetDef(id=None, _class=data_class, transformer_script=None, name=name, sql_query=sql_query,
@@ -93,30 +140,7 @@ class DkubeModelMonitor(object):
         self.modelmonitor.alerts.append(mm_alert)
         
     def add_default_thresholds(self,thtype='performance_threshold',threshold=0,percent_threshold=0):
-        
         self.modelmonitor.default_thresholds.append(ModelmonitorDefaultThresholdDef(id=None,type=thtype,threshold=threshold,percent_threshold=percent_threshold))
-    def update_schema(self,label,selected=None,schema_class='Categorical',schema_type='InputFeature'):
-        self.features=[]
-        self.features.append(ModelmonitorSchemaFeature(selected=selected, label=label, _class=schema_class, type=schema_type))
-        self.modelmonitor.schema = ModelmonitorFeaturesSpecDef(features=self.features)
-        
-            
-    def update_modelmonitor_details(self,model_type='Regression',model_category='TimeSeries',model_framework='Tensorflow-1x',version=None,run_freq=1,drift_algo='Kolmogorov-Smirnov & Chi Squared',emails=None,train_metrics=None):
-        self.modelmonitor.model_type = model_type
-        self.modelmonitor.model_category = model_category
-        self.modelmonitor.model_framework = model_framework
-        self.modelmonitor.version = version
-        self.modelmonitor.drift_detection_run_frequency_hrs = run_freq
-        self.modelmonitor.drift_detection_algorithm = drift_algo
-        self.modelmonitor.emails = emails
-        self.modelmonitor.train_metrics = train_metrics
-        #self.modelmonitor.default_thresholds = default_thresholds
-        #self.modelmonitor.schema = schema
-    
-    def update_transformer_script(self,data_name,script):
-        for index,data in enumerate(self.modelmonitor.datasets):
-            if (data.name == data_name+":"+self.user):
-                self.modelmonitor.datasets[index].transformer_script = script
         
     def to_JSON(self):
         return json.dumps(self,default=lambda o: o.__dict__)
@@ -167,6 +191,6 @@ class DkubeModelMonitorAlert(object):
         self.op = op
         self.threshold = threshold
         
-        
-
-
+       
+    
+    
