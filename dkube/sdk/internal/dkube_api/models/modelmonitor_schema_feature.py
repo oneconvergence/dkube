@@ -31,7 +31,7 @@ class ModelmonitorSchemaFeature(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'selected': 'str',
+        'selected': 'bool',
         '_class': 'str',
         'label': 'str',
         'type': 'str'
@@ -68,7 +68,7 @@ class ModelmonitorSchemaFeature(object):
 
 
         :return: The selected of this ModelmonitorSchemaFeature.  # noqa: E501
-        :rtype: str
+        :rtype: bool
         """
         return self._selected
 
@@ -78,7 +78,7 @@ class ModelmonitorSchemaFeature(object):
 
 
         :param selected: The selected of this ModelmonitorSchemaFeature.  # noqa: E501
-        :type: str
+        :type: bool
         """
 
         self._selected = selected

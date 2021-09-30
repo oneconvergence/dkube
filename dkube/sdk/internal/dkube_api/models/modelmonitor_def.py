@@ -84,7 +84,7 @@ class ModelmonitorDef(object):
         'alerts': 'alerts'
     }
 
-    def __init__(self, id=None, status=None, schema=None, pipeline_component=None, owner=None, emails=None, name=None, description=None, tags=None, train_metrics=None, model=None, version=None, endpoint_url=None, model_type=None, model_category=None, model_framework=None, drift_detection_run_frequency_hrs=None, drift_detection_algorithm='Kolmogorov-Smirnov & Chi Squared', performance_metrics_template=None, default_thresholds=None, datasets=None, created_at=None, updated_at=None, alerts=None):  # noqa: E501
+    def __init__(self, id=None, status=None, schema=None, pipeline_component=None, owner=None, emails=None, name=None, description=None, tags=None, train_metrics=None, model=None, version=None, endpoint_url=None, model_type=None, model_category=None, model_framework=None, drift_detection_run_frequency_hrs=None, drift_detection_algorithm='Auto', performance_metrics_template=None, default_thresholds=None, datasets=None, created_at=None, updated_at=None, alerts=None):  # noqa: E501
         """ModelmonitorDef - a model defined in Swagger"""  # noqa: E501
 
         self._id = None
@@ -595,7 +595,7 @@ class ModelmonitorDef(object):
         :param drift_detection_algorithm: The drift_detection_algorithm of this ModelmonitorDef.  # noqa: E501
         :type: str
         """
-        allowed_values = ["Kolmogorov-Smirnov", "Chi Squared", "Kolmogorov-Smirnov & Chi Squared"]  # noqa: E501
+        allowed_values = ["Auto", "Kolmogorov-Smirnov", "Chi Squared", "Kolmogorov-Smirnov & Chi Squared"]  # noqa: E501
         if drift_detection_algorithm not in allowed_values:
             raise ValueError(
                 "Invalid value for `drift_detection_algorithm` ({0}), must be one of {1}"  # noqa: E501

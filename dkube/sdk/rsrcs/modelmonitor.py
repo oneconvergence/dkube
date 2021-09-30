@@ -118,11 +118,6 @@ class DkubeModelMonitor(object):
             if (data.name == data_name+":"+self.user):
                 self.modelmonitor.datasets[index].transformer_script = script
                 
-    def update_schema(self,label,selected=True,schema_class='Categorical',schema_type='InputFeature'):
-        self.features=[]
-        self.features.append(ModelmonitorSchemaFeature(selected=selected, label=label, _class=schema_class, type=schema_type))
-        self.modelmonitor.schema = ModelmonitorFeaturesSpecDef(features=self.features)
-        
         
     def add_dataset(self,name,data_class,version=None,data_format='csv',s3_subpath=None,gt_col=None,predict_col=None,sql_query=None):
         name = name + ":"+ self.user

@@ -2377,17 +2377,9 @@ class DkubeApi(ApiBase, FilesBase):
         return super().update_modelmonitor_alert(id,alert_id,alert_dict)
 
 
-    def remove_underscore_dict(self,d):
-        new = {}
-        for k, v in d.items():
-            if isinstance(v, dict):
-                v = self.remove_underscore_dict(v)
-            new[k.replace('_', '',1)] = v
-        return new
-
-    def modelmonitor_update_config(self,user,config:DkubeModelMonitor,name='',mmid=''):
-        if mmid == '':
-            mmid = self.modelmonitor_get_id(name)
+    def modelmonitor_update_config(self,user,config:DkubeModelMonitor,name='',id=''):
+        if id == '':
+            id = self.modelmonitor_get_id(name)
         config_dict=config.__dict__["modelmonitor"].__dict__
         config_dict = {k.replace('_', '',1):v for k,v in config_dict.items()}
         rem_list = ['datasets','model','alerts','performance_metrics_template','updated_at','id','drift_detection_algorithm','created_at','pipeline_component','status','owner','name','discriminator']
@@ -2395,9 +2387,22 @@ class DkubeApi(ApiBase, FilesBase):
         for k in list(config_dict.keys()):
             if(config_dict[k]==None or config_dict[k]==[]):
                 del config_dict[k]
-        return super().update_modelmonitor_config(mmid,config_dict)
+        return super().update_modelmonitor_config(id,config_dict)
 
-    
+    def modelmonitor_update_schema(self,user,label,name='',id='',selected=True,schema_class='Categorical',schema_type='InputFeature'):
+        if id =='':
+            id = self.modelmonitor_get_id(name)
+        config = self.modelmonitor_get(id=mmid)
+        #print(config)
+        for feature in config["schema"]["features"]:
+            if feature["label"] == label:
+                feature["_class"] = schema_class
+                feature["type"] = schema_type
+                feature["selected"] = selected
+        mm  = DkubeModelMonitor(user,description='mm')
+        mm.__dict__["modelmonitor"].__dict__['_schema'] = config["schema"]
+        #print(mm.modelmonitor)
+        return self.modelmonitor_update_config(user,mm,id=id) 
         
         
         
