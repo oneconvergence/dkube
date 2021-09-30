@@ -2268,10 +2268,14 @@ class DkubeApi(ApiBase, FilesBase):
 
     def modelmonitors_delete(self,names=[],delete_ids=[]):
         mm_list = []
-        for mm in delete_list:
-            mm_id = self.modelmonitor_get_id(mm)
-            mm_list.append(mm_id)
-        return super().delete_modelmonitor(mm_list)
+        if delete_ids == []:
+            for mm in names:
+                mm_id = self.modelmonitor_get_id(mm)
+                mm_list.append(mm_id)
+        if mm_list == []:
+            return super().delete_modelmonitors(delete_ids)
+        else:
+            return super().delete_modelmonitors(mm_list)
 
     def modelmonitor_get_datasetid(self,user,name='',id='',data_name=''):
         if id == '':
@@ -2392,19 +2396,18 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_update_schema(self,user,label,name='',id='',selected=True,schema_class='Categorical',schema_type='InputFeature'):
         if id =='':
             id = self.modelmonitor_get_id(name)
-        config = self.modelmonitor_get(id=mmid)
-        #print(config)
+        config = self.modelmonitor_get(id=id)
         for feature in config["schema"]["features"]:
             if feature["label"] == label:
                 feature["_class"] = schema_class
                 feature["type"] = schema_type
                 feature["selected"] = selected
+        for d in config["schema"]["features"]:
+            d['class'] = d.pop('_class')
         mm  = DkubeModelMonitor(user,description='mm')
         mm.__dict__["modelmonitor"].__dict__['_schema'] = config["schema"]
-        #print(mm.modelmonitor)
         return self.modelmonitor_update_config(user,mm,id=id) 
         
         
         
-        
-
+  
