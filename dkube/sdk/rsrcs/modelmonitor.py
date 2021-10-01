@@ -5,6 +5,7 @@ import time
 import json
 from pprint import pprint
 from .util import *
+from enum import Enum
 
 from dkube.sdk.internal import dkube_api
 
@@ -19,8 +20,88 @@ from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_def import Modelmoni
 from dkube.sdk.internal.dkube_api.models.modelmonitor_def import ModelmonitorDef
 
 
-class DkubeModelMonitor(object):
-    def __init__(self, user, name=generate("mm"),model_name="",description = '',tags=None):
+
+class DatasetClass(Enum):
+    TrainData    = "TrainData"
+    PredictData  = "PredictData"
+    LabelledData = "LabelledData"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+class DatasetFormat(Enum):
+    csv = "csv"
+    cloudevents = "cloudevents"
+    sagemakerlogs = "sagemakerlogs"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+class ModelFrameworks(Enum):
+    Tensorflow1x = "Tensorflow-1x"
+    Tensorflow2x =  "Tensorflow-2x"
+    PyTorch = "PyTorch"
+    SkLearn = "SkLearn"
+    Other = "Other"
+    
+    def __repr__(self):
+        return self.value
+    
+    def __str__(self):
+        return self.value
+
+class AlertClass(Enum):
+    FeatureDrift    = "FeatureDrift"
+    PerformanceDecay = "PerformanceDecay"
+    PredictionDrift  =  "PredictionDrift"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+    
+class ModelType(Enum):
+    Regression = "Regression"
+    Classification = "Classification"
+    
+    def __repr__(self):
+        return self.value
+    
+    def __str__(self):
+        return self.value
+    
+class ModelCategory(Enum):
+    AutoEncoder = "AutoEncoder"
+    TimeSeries  = "TimeSeries"
+    Other       = "Other"
+    
+    def __repr__(self):
+        return self.value
+    
+    def __str__(self):
+        return self.value
+    
+class DriftAlgo(Enum):
+    KS = "Kolmogorov-Smirnov"
+    ChiSquared = "Chi Squared"
+    KSChiSquared = "Kolmogorov-Smirnov & Chi Squared "
+    
+    def __repr__(self):
+        return self.value
+    
+    def __str__(self):
+        return self.value
+
+
+class DkubeModelmonitor(object):
+    def __init__(self,name=generate("mm"),model_name="",description = '',tags=None):
 
         self.schema = {}
         self.default_thresholds = []
@@ -52,26 +133,24 @@ class DkubeModelMonitor(object):
             datasets=self.datasets,
             alerts=self.alerts)
 
-        self.update_basic(user,name,model_name, description, tags)
+        self.update_basic(name,model_name, description, tags)
 
-    def update_basic(self, user,name,model_name,description, tags):
+    def update_basic(self, name,model_name,description, tags):
         """
             Method to update the attributes specified at creation. Description and tags can be updated. tags is a list of string values.
         """
         tags = list_of_strs(tags)
 
-        self.user = user
         self.name = name
         self.modelmonitor.name = name
-        self.modelmonitor.owner = user
         self.modelmonitor.description = description
-        self.modelmonitor.model = model_name+":"+self.user
+        self.modelmonitor.model = model_name
         self.modelmonitor.tags = tags
         
         return self
         
             
-    def update_modelmonitor(self,model_type=None,model_category=None,model_framework=None,version=None,run_freq=None,drift_algo=None,emails=None,train_metrics=None):
+    def update_modelmonitor(self,model_type:ModelType=None,model_category:ModelCategory=None,model_framework:ModelFrameworks=None,version=None,run_freq=None,drift_algo:DriftAlgo=None,emails=None,train_metrics=None):
         if model_type == None:
             self.modelmonitor.model_type ='Regression'
         else:
@@ -115,21 +194,21 @@ class DkubeModelMonitor(object):
     
     def update_transformer_script(self,data_name,script):
         for index,data in enumerate(self.modelmonitor.datasets):
-            if (data.name == data_name+":"+self.user):
+            if (data.name == data_name):
                 self.modelmonitor.datasets[index].transformer_script = script
                 
-        
-    def add_dataset(self,name,data_class,version=None,data_format='csv',s3_subpath=None,gt_col=None,predict_col=None,sql_query=None):
-        name = name + ":"+ self.user
+
+    def add_dataset(self,name,data_class:DatasetClass=None,data_format:DatasetFormat='csv',version=None,s3_subpath=None,gt_col=None,predict_col=None,sql_query=None):
         mm_dataset = ModelmonitorDatasetDef(id=None, _class=data_class, transformer_script=None, name=name, sql_query=sql_query,
                                                s3_subpath=s3_subpath, version=version, data_format=data_format, groundtruth_col=gt_col,
                                                predict_col=predict_col, created_at=None, updated_at=None)
         
         self.modelmonitor.datasets.append(mm_dataset)
+
         
-    def add_alert(self,name,alert_class,feature=None,op='>',threshold=None):
+    def add_alert(self,name,alert_class,feature=None,threshold=None):
         self.conditions = []
-        self.conditions.append(ModelmonitorAlertCondDef(feature=feature, op=op, threshold=threshold))
+        self.conditions.append(ModelmonitorAlertCondDef(feature=feature, op='>', threshold=threshold))
         mm_alert = ModelmonitorAlertDef(_class=alert_class,email=None,name=name,conditions=self.conditions)
         
         self.modelmonitor.alerts.append(mm_alert)
@@ -139,11 +218,11 @@ class DkubeModelMonitor(object):
         
     def to_JSON(self):
         return json.dumps(self,default=lambda o: o.__dict__)
+    
 
 
-class DkubeModelMonitorDataset(object):
-    def __init__(self, user, name=generate("mm-data")):
-        self.user = user
+class DkubeModelmonitordataset(object):
+    def __init__(self, name=generate("mm-data")):
         self._class = None
         self.transformer_script = None
         self.name = name
@@ -158,34 +237,36 @@ class DkubeModelMonitorDataset(object):
     def to_JSON(self):
         return json.dumps(self,default=lambda o: o.__dict__)
 
-    def update_dataset(self,data_class=None,transformer_script=None,sql_query=None,groundtruth_col=None,predict_col=None,data_format='csv'):
-        self.name = self.name+":"+self.user
+
+    def update_dataset(self,data_class:DatasetClass=None,data_format:DatasetFormat='csv',transformer_script=None,sql_query=None,groundtruth_col=None,predict_col=None):
         self._class = data_class
         self.transformer_script = transformer_script
         self.sql_query = sql_query
         self.groundtruth_col = groundtruth_col
         self.predict_col = predict_col
         self.data_format = data_format
+                
 
-class DkubeModelMonitorAlert(object):
-    def __init__(self,name=generate("mm-alert")):
+class DkubeModelmonitoralert(object):
+    def __init__(self,name="mm-alert"):
+        self.id = None
         self._class = None
         self.name = name
         self.email = None
-        self.feature = None
-        self.op = '>'
-        self.threshold = None 
-
+        self.conditions = []
+        
     def to_JSON(self):
         return json.dumps(self,default=lambda o: o.__dict__)
 
-    def update_alert(self,alert_class=None,feature=None,op=None,threshold=None):
+
+    def update_alert(self,email=None,alert_class:AlertClass="FeatureDrift",feature=None,metric=None,threshold=None,percent_threshold=None):
+        self.id = None
         self.name = self.name
         self._class = alert_class
-        self.feature = feature
-        self.op = op
-        self.threshold = threshold
+        self.email = email
+        self.conditions.append({"id":None,"feature":feature,"metric":metric,"op":">","threshold":threshold,"percent_threshold":percent_threshold})
+      
         
-       
+
     
     
