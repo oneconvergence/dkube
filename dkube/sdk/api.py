@@ -21,7 +21,7 @@ from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
-from dkube.sdk.rsrcs.modelmonitor import DkubeModelMonitorDataset,DkubeModelMonitorAlert
+from dkube.sdk.rsrcs.modelmonitor import DkubeModelmonitordataset,DkubeModelmonitoralert,DatasetClass
 from dkube.sdk.rsrcs.project import DkubeProject
 from packaging import version as pversion
 
@@ -2215,13 +2215,28 @@ class DkubeApi(ApiBase, FilesBase):
 
     ### Model monitor apis ##########
     
-    def modelmonitor_create(self,modelmonitor:DkubeModelMonitor,wait_for_completion=True):
-        assert type(modelmonitor) == DkubeModelMonitor, "Invalid type for model monitor, value must be instance of rsrcs:DkubeModelMonitor class"
+    def modelmonitor_create(self,modelmonitor:DkubeModelmonitor,wait_for_completion=True):
+        """
+            Method to create Model Monitor on Dkube
+
+        *Inputs*
+
+            modelmonitor
+                    Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitor class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+
+            wait_for_completion
+                    When set to :bash:`True` this method will wait for modelmonitor resource to get into one of the complete state.
+                    modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state
+
+        """
+        assert type(modelmonitor) == DkubeModelmonitor, "Invalid type for model monitor, value must be instance of rsrcs:DkubeModelmonitor class"
         response = super().create_model_monitor(modelmonitor)
         while wait_for_completion:
             mm_config = super().get_modelmonitor_configuration(response['uuid'])
             state = mm_config['status']['state']
-            if state.lower() in ['ready','error']:
+            if state.lower() in ['init','ready','error']:
                 print(
                     "ModelMonitor {} - completed with state {} and reason {}".format(modelmonitor.name, state, response['message']))
                 break
@@ -2231,16 +2246,38 @@ class DkubeApi(ApiBase, FilesBase):
                 time.sleep(self.wait_interval)
    
     def modelmonitor_list(self):
+        """
+            Method to list all the modelmonitors.
+        """
         return super().list_modelmonitor()
 
-    def modelmonitor_get_id(self,name):
+    def modelmonitor_get_id(self,name=None):
+        """
+            Method to get the id  of a model monitor.
+
+            *Inputs*
+
+                name
+                    Name of the modelmonitor
+        """
         response = super().list_modelmonitor()
         for mm in response:
             if mm['name'] == name:
                 return mm['id']
         return None
     
-    def modelmonitor_get_alertid(self,name,alert_name):
+    def modelmonitor_get_alertid(self,name=None,alert_name=None):
+        """
+            Method to get the alert id  of a modelmonitor.
+
+            *Inputs*
+
+                name
+                    Name of the modelmonitor
+                alert_name
+                    Name of the alert
+                
+        """
         mm_id = self.modelmonitor_get_id(name)
         response = super().get_modelmonitor_alerts(mm_id)
         for alert in response['data']:
@@ -2248,25 +2285,70 @@ class DkubeApi(ApiBase, FilesBase):
                 return alert['id']
         return None
     
-    def modelmonitor_get(self,name='',id=''):
-        if id == '':
+    def modelmonitor_get(self,name=None,id=None):
+        """
+            Method to get the modelmonitor.
+
+            *Inputs*
+
+                name or id
+                    name of the modelmonitor or id of modelmonitor
+                
+        """
+
+        if id == None:
             id = self.modelmonitor_get_id(name)
         return super().get_modelmonitor_configuration(id)
 
-    def modelmonitor_get_datasets(self,name='',id='',data_class='TrainData'):
-        if id == '':
+    def modelmonitor_get_datasets(self,name=None,id=None,data_class:DatasetClass=None):
+        """
+            Method to get the datasets of the modelmonitor.
+
+            *Inputs*
+
+                name or id
+                    name of the modelmonitor or id of modelmonitor
+
+
+                data_class
+                    data class of the dataset in the modelmonitor must be one of ["TrainData","PredictData","LabelledData"]
+                    by default set to None and then it will return all the datasets of that modelmonitor
+                
+        """
+        if id == None:
             id = self.modelmonitor_get_id(name)
         datasets = super().get_modelmonitor_dataset(id)
-        for data in datasets:
-            if(data['_class'] == data_class):
-                return data
+        if data_class == None:
+            return datasets
+        else:
+            for data in datasets:
+                if(data['_class'] == data_class):
+                    return data
 
-    def modelmonitor_get_alerts(self,name='',id=''):
-        if id == '':
+    def modelmonitor_get_alerts(self,name=None,id=None):
+        """
+            Method to get the alerts of the modelmonitor.
+
+            *Inputs*
+
+                name or id
+                    name of the modelmonitor or id of modelmonitor
+                
+        """
+        if id == None:
             id = self.modelmonitor_get_id(name)
         return super().get_modelmonitor_alerts(id)
 
     def modelmonitors_delete(self,names=[],delete_ids=[]):
+        """
+            Method to delete the multiple modelmonitors.
+
+            *Inputs*
+
+                names or delete_ids
+                    names of the modelmonitor or ids of modelmonitor, should be a list eg: names=["mm1","mm2"] or delete_ids=["cd123","345fg"]
+                
+        """
         mm_list = []
         if delete_ids == []:
             for mm in names:
@@ -2276,113 +2358,235 @@ class DkubeApi(ApiBase, FilesBase):
             return super().delete_modelmonitors(delete_ids)
         else:
             return super().delete_modelmonitors(mm_list)
+        
+    def modelmonitor_delete(self,name=None,id=None):
+        """
+            Method to delete the single modelmonitor.
 
-    def modelmonitor_get_datasetid(self,user,name='',id='',data_name=''):
-        if id == '':
+            *Inputs*
+
+                name or id
+                    name of the modelmonitor or id of modelmonitor
+                
+        """
+        if id == None:
             id = self.modelmonitor_get_id(name)
+        
+        return super().delete_modelmonitors(id)
+            
+
+    def modelmonitor_get_datasetid(self,name=None,id=None,data_class:DatasetClass=None):
+        """
+            Method to get the id of the dataset in the modelmonitor.
+
+            *Inputs*
+
+                name or id
+                    name of the modelmonitor or id of modelmonitor
+                data_class
+                    class of the modelmonitor dataset, must be one of ["TrainData","PredictData","LabelledData]              
+                
+        """
+    
+        if id == None:
+            id = self.modelmonitor_get_id(name)
+            
         response = super().get_modelmonitor_dataset(id)
-        data_name = data_name +":"+user
+      
         for data in response:
-            if data["name"] == data_name:
+            if data["_class"] == data_class:
                 return data['id']
 
-    def modelmonitor_delete_datasets(self,user='',name='',id='',dataset_names=[]):
-        if id == '':
-            id = self.modelmonitor_get_id(name)
-        delete_dataset_ids = []
-        for data in dataset_names:
-            data_id = self.modelmonitor_get_datasetid(user,name,data_name=data)
-            delete_dataset_ids.append(data_id)
-        return super().delete_modelmonitor_dataset(id,delete_dataset_ids)
 
 
     def modelmonitor_get_metricstemplate(self):
+        """
+            Method to get the metrics supported for the modelmonitor.
+        """
         return super().get_modelmonitor_template()
 
-    def delete_modelmonitor_alert(self,name,alert_name):
-        mm_id = self.modelmonitor_get_id(name)
+    def modelmonitor_delete_alert(self,name=None,id=None,alert_name=None):
+        """
+            Method to delete the alerts in the modelmonitor
+
+            *Inputs*
+
+                name or id
+                    name of the modelmonitor or id of modelmonitor
+                alert_name
+                    class of the modelmonitor dataset, must be one of ["TrainData","PredictData","LabelledData]              
+        """
+        if id == None:
+            id = self.modelmonitor_get_id(name)
         delete_alertsid_list = []
         for data in alert_name:
             alert_id = self.get_modelmonitor_alertid(data)
             delete_alertsid_list.append(alert_id)
-        return super().delete_modelmonitor_alert(mm_id,delete_alertsid_list)
+        return super().delete_modelmonitor_alert(id,delete_alertsid_list)
     
-    def modelmonitor_addalert(self,alert_data:DkubeModelMonitorAlert,name='',id=''):
-        if id == '':
-            id = self.modelmonitor_get_id(name)
-        alert = alert_data.to_JSON()
-        alert_dict = json.loads(alert)
-        alert_dict['class'] = alert_dict.pop('_class')
-        alert_conds,alert_list,mm_list = [],[],[]
-        alert_conds.append({'id': None,'feature':alert_dict['feature'],'op':alert_dict['op'],'threshold':alert_dict['threshold']})
-        alert_dict['conditions'] = alert_conds
-        rem_list = ['feature','op','threshold']
-        [alert_dict.pop(key) for key in rem_list]
-        alert_list.append(alert_dict)
-        response = super().modelmonitor_addalert(id,{"data":alert_list})
-        return response['response']
+    def modelmonitor_add_alert(self,alert_data:DkubeModelmonitoralert=None,name=None,id=None):
+        """
+            Method to add the alerts in the modelmonitor
 
-    def modelmonitor_adddataset(self,data:DkubeModelMonitorDataset,name='',id=''):
-        if id == '':
+            *Inputs*
+                alert_data
+                    Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitoralert` class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+                
+                name or id
+                    name of the modelmonitor or id of modelmonitor             
+        """
+        if id == None:
             id = self.modelmonitor_get_id(name)
-        dataset = data.to_JSON()
-        data_dict = json.loads(dataset)
+        alert_dict = json.loads(alert_data.to_JSON())
+        alert_dict['class'] = alert_dict.pop('_class')
+        response = super().modelmonitor_addalert(id,{"data":[alert_dict]})
+        return response
+
+    def modelmonitor_add_dataset(self,data:DkubeModelmonitordataset=None,name=None,id=None):
+        """
+            Method to add the dataset in the modelmonitor
+
+            *Inputs*
+                data
+                    Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitordataset` class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+                
+                name or id
+                    name of the modelmonitor or id of modelmonitor             
+        """
+        if id == None:
+            id = self.modelmonitor_get_id(name)
+        data_dict = json.loads(data.to_JSON())
         data_dict['class'] = data_dict.pop('_class')
+        print(data_dict)
         response = super().modelmonitor_adddataset(id,{"data":data_dict})
         return response['response']
 
 
-    def modelmonitor_archive(self,name='',id='',archive=False):
-        if id == '':
-            id = self.modelmonitor_get_id(name)
-        return super().modelmonitor_archive(id,archive)
+    def modelmonitor_archive(self,name=None,id=None):
+        """
+            Method to archive the modelmonitor
 
-    def modelmonitor_start(self,name='',id=''):
-        if id == '':
+            *Inputs*
+                name or id
+                    name of the modelmonitor or id of modelmonitor             
+        """
+        if id == None:
+            id = self.modelmonitor_get_id(name)
+        return super().modelmonitor_archive(id,archive=True)
+
+    def modelmonitor_unarchive(self,name=None,id=None):
+        """
+            Method to unarchive the modelmonitor
+
+            *Inputs*
+                name or id
+                    name of the modelmonitor or id of modelmonitor             
+        """
+        if id == None:
+            id = self.modelmonitor_get_id(name)
+        return super().modelmonitor_archive(id,archive=False)
+    
+    def modelmonitor_start(self,name=None,id=None):
+        """
+            Method to start the modelmonitor
+
+            *Inputs*
+                name or id
+                    name of the modelmonitor or id of modelmonitor             
+        """
+        if id == None:
             id = self.modelmonitor_get_id(name)
             mm_state = self.modelmonitor_get(name)['status']['state']
         else:
             mm_state = self.modelmonitor_get(id)['status']['state']
         return super().modelmonitor_state(id,"start")
 
-    def modelmonitor_stop(self,name='',id=''):
-        if id == '':
+    def modelmonitor_stop(self,name=None,id=None):
+        """
+            Method to stop the modelmonitor
+
+            *Inputs*
+                name or id
+                    name of the modelmonitor or id of modelmonitor             
+        """
+        if id == None:
             id = self.modelmonitor_get_id(name)
         return super().modelmonitor_state(id,"stop")
     
 
-    def modelmonitor_update_dataset(self,user,data:DkubeModelMonitorDataset,data_name,name='',id=''):
-        if id == '':
+    def modelmonitor_update_dataset(self,data:DkubeModelmonitordataset=None,data_class:DatasetClass=None,name=None,id=None):
+        """
+            Method to update the modelmonitor dataset
+
+            *Inputs*
+                
+                data
+                    Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitordataset` class.
+                    Please see the :bash:`Resources` section for details on this class.
+                
+                data_class
+                    Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DatasetClass` class.
+                    Enum = ["TrainData","PredictData","LabelledData"]
+                    Please see the :bash:`Resources` section for details on this class.
+
+                name or id
+                    name of the modelmonitor or id of modelmonitor             
+        """
+        if id == None:
             id = self.modelmonitor_get_id(name)
-            data_id = self.modelmonitor_get_datasetid(user,name,data_name=data_name)
+            data_id = self.modelmonitor_get_datasetid(name,data_class=data_class)
         else:
-            data_id = self.modelmonitor_get_datasetid(user,id,data_name=data_name)
-        dataset = data.to_JSON()
-        data_dict = json.loads(dataset)
+            data_id = self.modelmonitor_get_datasetid(id,data_class=data_class)
+        data_dict = json.loads(data.to_JSON())
         data_dict['class'] = data_dict.pop('_class')
-        del data_dict['user']
         return super().update_modelmonitor_dataset(id,data_id,data_dict)
 
-    def modelmonitor_update_alert(self,alert:DkubeModelMonitorAlert,alert_name,name='',id=''):
-        if id == '':
+    def modelmonitor_update_alert(self,alert:DkubeModelmonitoralert=None,alert_name=None,name=None,id=None):
+        """
+            Method to update the modelmonitor alert
+
+            *Inputs*
+                
+                data
+                    Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitoralert` class.
+                    Please see the :bash:`Resources` section for details on this class.
+                
+                alert_name
+                    name of the alert you want to update in the modelmonitor
+
+                name or id
+                    name of the modelmonitor or id of modelmonitor             
+        """
+        if id == None:
             id = self.modelmonitor_get_id(name)
             alert_id = self.modelmonitor_get_alertid(name,alert_name=alert_name)
         else:
             alert_id = self.modelmonitor_get_alertid(id,alert_name=alert_name)
-        alert_data = alert.to_JSON()
-        alert_dict = json.loads(alert_data)
-        alert_dict['class'] = alert_dict.pop('_class')
-        alert_conds = []
-        alert_conds.append({'id': None,'feature':alert_dict['feature'],'op':alert_dict['op'],'threshold':alert_dict['threshold']})
-        alert_dict['conditions'] = alert_conds
-        rem_list = ['feature','op','threshold']
-        [alert_dict.pop(key) for key in rem_list]
+        
+        alert_dict = json.loads(alert.to_JSON())
         print(alert_dict)
+        alert_dict['class'] = alert_dict.pop('_class')
         return super().update_modelmonitor_alert(id,alert_id,alert_dict)
 
 
-    def modelmonitor_update_config(self,user,config:DkubeModelMonitor,name='',id=''):
-        if id == '':
+    def modelmonitor_update(self,config:DkubeModelmonitor=None,name=None,id=None):
+        """
+            Method to update the modelmonitor
+
+            *Inputs*
+                
+                config
+                    Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitor` class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+                name or id
+                    name of the modelmonitor or id of modelmonitor             
+        """
+        if id == None:
             id = self.modelmonitor_get_id(name)
         config_dict=config.__dict__["modelmonitor"].__dict__
         config_dict = {k.replace('_', '',1):v for k,v in config_dict.items()}
@@ -2393,8 +2597,26 @@ class DkubeApi(ApiBase, FilesBase):
                 del config_dict[k]
         return super().update_modelmonitor_config(id,config_dict)
 
-    def modelmonitor_update_schema(self,user,label,name='',id='',selected=True,schema_class='Categorical',schema_type='InputFeature'):
-        if id =='':
+    def modelmonitor_update_schema(self,label=None,name=None,id=None,selected=True,schema_class='Categorical',schema_type='InputFeature'):
+        """
+            Method to update the schema in the modelmonitor
+
+            *Inputs*
+                
+                label
+                    feature in the schema to be updated
+                name or id
+                    name of the modelmonitor or id of modelmonitor
+                selected
+                    boolean (True or False), by default True
+                schema_class
+                    class of the schema (Categorical,Continuous) 
+                schema_type
+                    type of schema (Input Feature, PredictionOutput, Rowid, Timestamp)
+                                     
+        """
+        
+        if id == None:
             id = self.modelmonitor_get_id(name)
         config = self.modelmonitor_get(id=id)
         for feature in config["schema"]["features"]:
@@ -2404,10 +2626,11 @@ class DkubeApi(ApiBase, FilesBase):
                 feature["selected"] = selected
         for d in config["schema"]["features"]:
             d['class'] = d.pop('_class')
-        mm  = DkubeModelMonitor(user,description='mm')
+        mm  = DkubeModelmonitor(model_name=config["model"],description=config["description"])
         mm.__dict__["modelmonitor"].__dict__['_schema'] = config["schema"]
-        return self.modelmonitor_update_config(user,mm,id=id) 
+        return self.modelmonitor_update(mm,id=id) 
         
         
         
-  
+        
+
