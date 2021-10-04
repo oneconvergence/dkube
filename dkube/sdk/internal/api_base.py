@@ -399,9 +399,13 @@ class ApiBase(object):
         response = self._mmapi.modelmonitor_get(modelmonitor)
         return response
 
-    def list_modelmonitor(self):
-        response = self._mmapi.modelmonitor_list()
+    def list_modelmonitor(self,params):
+        response = self._mmapi.modelmonitor_list(**params)
         return response.to_dict()['data']
+    
+    def get_modelmonitor_id(self,name):
+        response = self._mmapi.modelmonitor_get_id(name)
+        return response
 
     def get_modelmonitor_configuration(self,modelmonitor_id):
         response = self._mmapi.modelmonitor_get(modelmonitor_id)
@@ -415,10 +419,6 @@ class ApiBase(object):
         response = self._mmapi.modelmonitor_alerts_list(modelmonitor_id)
         return response.to_dict()
     
-    def get_modelmonitor_features(self,modelmonitor):
-        response = self._mmapi.modelmonitor_get_features(modelmonitor)
-        print(response)
-        return response.to_dict()['data']
     
     def get_modelmonitor_template(self):
         response = self._mmapi.modelmonitor_get_metrics_template()

@@ -32,7 +32,7 @@ class InlineResponse20071(object):
     """
     swagger_types = {
         'response': 'ModelmonitorApiResponse',
-        'data': 'ModelmonitorDatasetDef'
+        'data': 'list[ModelmonitorDatasetDef]'
     }
 
     attribute_map = {
@@ -79,7 +79,7 @@ class InlineResponse20071(object):
 
 
         :return: The data of this InlineResponse20071.  # noqa: E501
-        :rtype: ModelmonitorDatasetDef
+        :rtype: list[ModelmonitorDatasetDef]
         """
         return self._data
 
@@ -89,7 +89,7 @@ class InlineResponse20071(object):
 
 
         :param data: The data of this InlineResponse20071.  # noqa: E501
-        :type: ModelmonitorDatasetDef
+        :type: list[ModelmonitorDatasetDef]
         """
 
         self._data = data

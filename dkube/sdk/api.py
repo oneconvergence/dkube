@@ -2244,12 +2244,21 @@ class DkubeApi(ApiBase, FilesBase):
                 print(
                     "ModelMonitor {} - waiting for completion, current state {}".format(modelmonitor.name, state))
                 time.sleep(self.wait_interval)
-   
-    def modelmonitor_list(self):
+
+    def modelmonitor_list(self,**kwargs):
         """
-            Method to list all the modelmonitors.
+            Method to list the modelmonitors.
+            *Inputs*
+
+                **kwargs
+                    tags: string
+                    page : integer
+                    archived : boolean
+                    when archived=True, list the archived modelmonitors
+            
         """
-        return super().list_modelmonitor()
+        query_params={'tags':kwargs.get('tags',''),'page':kwargs.get('page',-1),'archived':kwargs.get('archived',False)}
+        return super().list_modelmonitor(query_params)
 
     def modelmonitor_get_id(self,name=None):
         """
@@ -2260,10 +2269,10 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the modelmonitor
         """
-        response = super().list_modelmonitor()
-        for mm in response:
-            if mm['name'] == name:
-                return mm['id']
+        response = super.get_modelmonitor_id(name)
+        for mm_name in response['data']:
+            if mm_name == name:
+                return response['data'][mm_name]
         return None
     
     def modelmonitor_get_alertid(self,name=None,alert_name=None):
@@ -2439,10 +2448,13 @@ class DkubeApi(ApiBase, FilesBase):
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
-        alert_dict = json.loads(alert_data.to_JSON())
-        alert_dict['class'] = alert_dict.pop('_class')
-        response = super().modelmonitor_addalert(id,{"data":[alert_dict]})
-        return response
+        if self.modelmonitor_get_datasets(id=id,data_class='TrainData') and self.modelmonitor_get_datasets(id=id,data_class='PredictData'):
+            alert_dict = json.loads(alert_data.to_JSON())
+            alert_dict['class'] = alert_dict.pop('_class')
+            response = super().modelmonitor_addalert(id,{"data":[alert_dict]})
+            return response
+        else:
+            print("Add train and predict data before adding alerts")
 
     def modelmonitor_add_dataset(self,data:DkubeModelmonitordataset=None,name=None,id=None):
         """
@@ -2459,11 +2471,17 @@ class DkubeApi(ApiBase, FilesBase):
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
-        data_dict = json.loads(data.to_JSON())
-        data_dict['class'] = data_dict.pop('_class')
-        print(data_dict)
-        response = super().modelmonitor_adddataset(id,{"data":data_dict})
-        return response['response']
+        while True:
+            mm_config = super().get_modelmonitor_configuration(id)
+            state = mm_config['status']['state']
+            if state.lower() in ['init','ready','error']:
+                data_dict = json.loads(data.to_JSON())
+                data_dict['class'] = data_dict.pop('_class')
+                response = super().modelmonitor_adddataset(id,{"data":data_dict})
+                return response['response']
+            else:
+               print("Model Monitor creation not completed yet, current state {}".format(state))
+               time.sleep(self.wait_interval)
 
 
     def modelmonitor_archive(self,name=None,id=None):
@@ -2633,4 +2651,5 @@ class DkubeApi(ApiBase, FilesBase):
         
         
         
+
 

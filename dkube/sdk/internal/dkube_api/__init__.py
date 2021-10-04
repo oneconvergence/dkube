@@ -279,6 +279,7 @@ from dkube.sdk.internal.dkube_api.models.inline_response20071 import InlineRespo
 from dkube.sdk.internal.dkube_api.models.inline_response20072 import InlineResponse20072
 from dkube.sdk.internal.dkube_api.models.inline_response20073 import InlineResponse20073
 from dkube.sdk.internal.dkube_api.models.inline_response20074 import InlineResponse20074
+from dkube.sdk.internal.dkube_api.models.inline_response20075 import InlineResponse20075
 from dkube.sdk.internal.dkube_api.models.inline_response2008 import InlineResponse2008
 from dkube.sdk.internal.dkube_api.models.inline_response2009 import InlineResponse2009
 from dkube.sdk.internal.dkube_api.models.inline_response2009_data import InlineResponse2009Data
@@ -362,6 +363,7 @@ from dkube.sdk.internal.dkube_api.models.modelmonitor_default_threshold_def impo
 from dkube.sdk.internal.dkube_api.models.modelmonitor_features_spec_def import ModelmonitorFeaturesSpecDef
 from dkube.sdk.internal.dkube_api.models.modelmonitor_metric_def import ModelmonitorMetricDef
 from dkube.sdk.internal.dkube_api.models.modelmonitor_metrics_template_def import ModelmonitorMetricsTemplateDef
+from dkube.sdk.internal.dkube_api.models.modelmonitor_name_id_map_def import ModelmonitorNameIdMapDef
 from dkube.sdk.internal.dkube_api.models.modelmonitor_schema_feature import ModelmonitorSchemaFeature
 from dkube.sdk.internal.dkube_api.models.modelmonitor_status_def import ModelmonitorStatusDef
 from dkube.sdk.internal.dkube_api.models.modelmonitor_update_dataset_def import ModelmonitorUpdateDatasetDef

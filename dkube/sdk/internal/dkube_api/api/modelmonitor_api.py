@@ -44,7 +44,7 @@ class ModelmonitorApi(object):
         :param async_req bool
         :param str modelmonitor: ID of modelmonitor (required)
         :param Data49 data: (required)
-        :return: InlineResponse20069
+        :return: InlineResponse20070
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -66,7 +66,7 @@ class ModelmonitorApi(object):
         :param async_req bool
         :param str modelmonitor: ID of modelmonitor (required)
         :param Data49 data: (required)
-        :return: InlineResponse20069
+        :return: InlineResponse20070
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -130,7 +130,7 @@ class ModelmonitorApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20069',  # noqa: E501
+            response_type='InlineResponse20070',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -149,7 +149,7 @@ class ModelmonitorApi(object):
         :param async_req bool
         :param str modelmonitor: ID of modelmonitor (required)
         :param Data46 data: (required)
-        :return: InlineResponse20071
+        :return: InlineResponse20072
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -171,7 +171,7 @@ class ModelmonitorApi(object):
         :param async_req bool
         :param str modelmonitor: ID of modelmonitor (required)
         :param Data46 data: (required)
-        :return: InlineResponse20071
+        :return: InlineResponse20072
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -235,7 +235,7 @@ class ModelmonitorApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20071',  # noqa: E501
+            response_type='InlineResponse20072',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -352,7 +352,7 @@ class ModelmonitorApi(object):
         :param str modelmonitor: ID of modelmonitor (required)
         :param str tags:
         :param int page:
-        :return: InlineResponse20072
+        :return: InlineResponse20073
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -375,7 +375,7 @@ class ModelmonitorApi(object):
         :param str modelmonitor: ID of modelmonitor (required)
         :param str tags:
         :param int page:
-        :return: InlineResponse20072
+        :return: InlineResponse20073
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -437,7 +437,7 @@ class ModelmonitorApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20072',  # noqa: E501
+            response_type='InlineResponse20073',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -456,7 +456,7 @@ class ModelmonitorApi(object):
         :param async_req bool
         :param str modelmonitor: ID of modelmonitor (required)
         :param bool archive: Boolean status that depicts whether modelmonitor should be archived or unarchived (required)
-        :return: InlineResponse20069
+        :return: InlineResponse20070
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -478,7 +478,7 @@ class ModelmonitorApi(object):
         :param async_req bool
         :param str modelmonitor: ID of modelmonitor (required)
         :param bool archive: Boolean status that depicts whether modelmonitor should be archived or unarchived (required)
-        :return: InlineResponse20069
+        :return: InlineResponse20070
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -542,7 +542,7 @@ class ModelmonitorApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20069',  # noqa: E501
+            response_type='InlineResponse20070',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -561,7 +561,7 @@ class ModelmonitorApi(object):
         :param async_req bool
         :param str modelmonitor: ID of modelmonitor (required)
         :param Data45 data: (required)
-        :return: InlineResponse20069
+        :return: InlineResponse20070
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -583,7 +583,7 @@ class ModelmonitorApi(object):
         :param async_req bool
         :param str modelmonitor: ID of modelmonitor (required)
         :param Data45 data: (required)
-        :return: InlineResponse20069
+        :return: InlineResponse20070
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -647,7 +647,7 @@ class ModelmonitorApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20069',  # noqa: E501
+            response_type='InlineResponse20070',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -667,7 +667,7 @@ class ModelmonitorApi(object):
         :param str modelmonitor: ID of modelmonitor (required)
         :param str tags:
         :param int page:
-        :return: InlineResponse20070
+        :return: InlineResponse20071
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -690,7 +690,7 @@ class ModelmonitorApi(object):
         :param str modelmonitor: ID of modelmonitor (required)
         :param str tags:
         :param int page:
-        :return: InlineResponse20070
+        :return: InlineResponse20071
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -752,7 +752,7 @@ class ModelmonitorApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20070',  # noqa: E501
+            response_type='InlineResponse20071',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -1081,7 +1081,7 @@ class ModelmonitorApi(object):
 
         :param async_req bool
         :param str modelmonitor: ID of modelmonitor (required)
-        :return: InlineResponse20068
+        :return: InlineResponse20069
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1102,7 +1102,7 @@ class ModelmonitorApi(object):
 
         :param async_req bool
         :param str modelmonitor: ID of modelmonitor (required)
-        :return: InlineResponse20068
+        :return: InlineResponse20069
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1160,7 +1160,7 @@ class ModelmonitorApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20068',  # noqa: E501
+            response_type='InlineResponse20069',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -1178,7 +1178,7 @@ class ModelmonitorApi(object):
 
         :param async_req bool
         :param str modelmonitor: (required)
-        :return: InlineResponse20073
+        :return: InlineResponse20074
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1199,7 +1199,7 @@ class ModelmonitorApi(object):
 
         :param async_req bool
         :param str modelmonitor: (required)
-        :return: InlineResponse20073
+        :return: InlineResponse20074
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1257,7 +1257,7 @@ class ModelmonitorApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20073',  # noqa: E501
+            response_type='InlineResponse20074',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -1274,7 +1274,7 @@ class ModelmonitorApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20074
+        :return: InlineResponse20075
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1294,7 +1294,7 @@ class ModelmonitorApi(object):
         >>> result = thread.get()
 
         :param async_req bool
-        :return: InlineResponse20074
+        :return: InlineResponse20075
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1346,7 +1346,104 @@ class ModelmonitorApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20074',  # noqa: E501
+            response_type='InlineResponse20075',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def modelmonitor_ids(self, modelmonitors, **kwargs):  # noqa: E501
+        """API to Get modelmonitor IDS  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.modelmonitor_ids(modelmonitors, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str modelmonitors: Comma separated name of modelmonitors (required)
+        :return: InlineResponse20068
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.modelmonitor_ids_with_http_info(modelmonitors, **kwargs)  # noqa: E501
+        else:
+            (data) = self.modelmonitor_ids_with_http_info(modelmonitors, **kwargs)  # noqa: E501
+            return data
+
+    def modelmonitor_ids_with_http_info(self, modelmonitors, **kwargs):  # noqa: E501
+        """API to Get modelmonitor IDS  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.modelmonitor_ids_with_http_info(modelmonitors, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str modelmonitors: Comma separated name of modelmonitors (required)
+        :return: InlineResponse20068
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['modelmonitors']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method modelmonitor_ids" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'modelmonitors' is set
+        if ('modelmonitors' not in params or
+                params['modelmonitors'] is None):
+            raise ValueError("Missing the required parameter `modelmonitors` when calling `modelmonitor_ids`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+
+        query_params = []
+        if 'modelmonitors' in params:
+            query_params.append(('modelmonitors', params['modelmonitors']))  # noqa: E501
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/keyauth.api.v1+json', 'application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['d3apikey']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/modelmonitor/ids', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='InlineResponse20068',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -1466,7 +1563,7 @@ class ModelmonitorApi(object):
         :param async_req bool
         :param str modelmonitor: ID of modelmonitor (required)
         :param str state: (required)
-        :return: InlineResponse20069
+        :return: InlineResponse20070
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1488,7 +1585,7 @@ class ModelmonitorApi(object):
         :param async_req bool
         :param str modelmonitor: ID of modelmonitor (required)
         :param str state: (required)
-        :return: InlineResponse20069
+        :return: InlineResponse20070
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1552,7 +1649,7 @@ class ModelmonitorApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20069',  # noqa: E501
+            response_type='InlineResponse20070',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -1677,7 +1774,7 @@ class ModelmonitorApi(object):
         :param str modelmonitor: ID of modelmonitor (required)
         :param str alert: ID of Alert (required)
         :param Data48 data: (required)
-        :return: InlineResponse20069
+        :return: InlineResponse20070
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1700,7 +1797,7 @@ class ModelmonitorApi(object):
         :param str modelmonitor: ID of modelmonitor (required)
         :param str alert: ID of Alert (required)
         :param Data48 data: (required)
-        :return: InlineResponse20069
+        :return: InlineResponse20070
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1770,7 +1867,7 @@ class ModelmonitorApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20069',  # noqa: E501
+            response_type='InlineResponse20070',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
@@ -1790,7 +1887,7 @@ class ModelmonitorApi(object):
         :param str modelmonitor: ID of modelmonitor (required)
         :param str dataset: ID of Dataset (required)
         :param ModelmonitorUpdateDatasetDef data: (required)
-        :return: InlineResponse20069
+        :return: InlineResponse20070
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1813,7 +1910,7 @@ class ModelmonitorApi(object):
         :param str modelmonitor: ID of modelmonitor (required)
         :param str dataset: ID of Dataset (required)
         :param ModelmonitorUpdateDatasetDef data: (required)
-        :return: InlineResponse20069
+        :return: InlineResponse20070
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -1883,7 +1980,7 @@ class ModelmonitorApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='InlineResponse20069',  # noqa: E501
+            response_type='InlineResponse20070',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
