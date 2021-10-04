@@ -2269,8 +2269,9 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the modelmonitor
         """
-        response = super.get_modelmonitor_id(name)
-        for mm_name in response['data']:
+        response = super().get_modelmonitor_id(name).to_dict()
+        
+        for mm_name in response["data"]:
             if mm_name == name:
                 return response['data'][mm_name]
         return None
@@ -2456,7 +2457,7 @@ class DkubeApi(ApiBase, FilesBase):
         else:
             print("Add train and predict data before adding alerts")
 
-    def modelmonitor_add_dataset(self,data:DkubeModelmonitordataset=None,name=None,id=None):
+    def modelmonitor_add_dataset(self,data:DkubeModelmonitordataset=None,name=None,id=None,wait_for_completion=True):
         """
             Method to add the dataset in the modelmonitor
 
@@ -2468,10 +2469,13 @@ class DkubeApi(ApiBase, FilesBase):
                 
                 name or id
                     name of the modelmonitor or id of modelmonitor             
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for modelmonitor resource to get into one of the complete state and then add the datasets.
+                    modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
-        while True:
+        if wait_for_completion and (self.modelmonitor_get_datasets(id=id,data_class='TrainData')==[]):
             mm_config = super().get_modelmonitor_configuration(id)
             state = mm_config['status']['state']
             if state.lower() in ['init','ready','error']:
@@ -2482,7 +2486,11 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                print("Model Monitor creation not completed yet, current state {}".format(state))
                time.sleep(self.wait_interval)
-
+        else:
+            data_dict = json.loads(data.to_JSON())
+            data_dict['class'] = data_dict.pop('_class')
+            response = super().modelmonitor_adddataset(id,{"data":data_dict})
+            return response['response']
 
     def modelmonitor_archive(self,name=None,id=None):
         """
@@ -2508,20 +2516,26 @@ class DkubeApi(ApiBase, FilesBase):
             id = self.modelmonitor_get_id(name)
         return super().modelmonitor_archive(id,archive=False)
     
-    def modelmonitor_start(self,name=None,id=None):
+    def modelmonitor_start(self,name=None,id=None,wait_for_completion=True):
         """
             Method to start the modelmonitor
 
             *Inputs*
                 name or id
-                    name of the modelmonitor or id of modelmonitor             
+                    name of the modelmonitor or id of modelmonitor        
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for modelmonitor resource to get into one of the complete state.
+                    modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state , when it reaches ready state, it starts the modelmonitor
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
-            mm_state = self.modelmonitor_get(name)['status']['state']
-        else:
-            mm_state = self.modelmonitor_get(id)['status']['state']
-        return super().modelmonitor_state(id,"start")
+        while wait_for_completion:
+            mm_state = self.modelmonitor_get(id=id)['status']['state']
+            if mm_state.lower() == "ready":
+                return super().modelmonitor_state(id,"start")
+            else:
+                print("Model Monitor not in ready state yet, add the train and predict data first")
+                time.sleep(self.wait_interval)
 
     def modelmonitor_stop(self,name=None,id=None):
         """
@@ -2536,7 +2550,7 @@ class DkubeApi(ApiBase, FilesBase):
         return super().modelmonitor_state(id,"stop")
     
 
-    def modelmonitor_update_dataset(self,data:DkubeModelmonitordataset=None,data_class:DatasetClass=None,name=None,id=None):
+    def modelmonitor_update_dataset(self,data:DkubeModelmonitordataset=None,data_class:DatasetClass=None,name=None,id=None,wait_for_completion=True):
         """
             Method to update the modelmonitor dataset
 
@@ -2553,15 +2567,26 @@ class DkubeApi(ApiBase, FilesBase):
 
                 name or id
                     name of the modelmonitor or id of modelmonitor             
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for modelmonitor resource to get into one of the complete state and then update the datasets
+                    modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state , if it is in active state, modelmonitor update to datasets not allowed
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
             data_id = self.modelmonitor_get_datasetid(name,data_class=data_class)
         else:
             data_id = self.modelmonitor_get_datasetid(id,data_class=data_class)
-        data_dict = json.loads(data.to_JSON())
-        data_dict['class'] = data_dict.pop('_class')
-        return super().update_modelmonitor_dataset(id,data_id,data_dict)
+        while wait_for_completion:
+            mm_state = self.modelmonitor_get(id)['status']['state']
+            if mm_state.lower() in ['init','error','ready']:
+                data_dict = json.loads(data.to_JSON())
+                data_dict['class'] = data_dict.pop('_class')
+                return super().update_modelmonitor_dataset(id,data_id,data_dict)
+            if mm_state.lower() == "active":
+                    print("no update to active monitor is allowed")
+            else:
+                print("Model monitor creation not completed yet")
+                time.sleep(self.wait_interval)
 
     def modelmonitor_update_alert(self,alert:DkubeModelmonitoralert=None,alert_name=None,name=None,id=None):
         """
@@ -2651,5 +2676,6 @@ class DkubeApi(ApiBase, FilesBase):
         
         
         
+
 
 

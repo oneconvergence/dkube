@@ -404,7 +404,7 @@ class ApiBase(object):
         return response.to_dict()['data']
     
     def get_modelmonitor_id(self,name):
-        response = self._mmapi.modelmonitor_get_id(name)
+        response = self._mmapi.modelmonitor_ids(name)
         return response
 
     def get_modelmonitor_configuration(self,modelmonitor_id):
@@ -463,4 +463,5 @@ class ApiBase(object):
     def update_modelmonitor_config(self,modelmonitor,data):
         response = self._mmapi.modelmonitor_update(modelmonitor,data)
         return response.to_dict()
+
 
