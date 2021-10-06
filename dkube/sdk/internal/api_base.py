@@ -417,12 +417,11 @@ class ApiBase(object):
 
     def get_modelmonitor_alerts(self,modelmonitor_id):
         response = self._mmapi.modelmonitor_alerts_list(modelmonitor_id)
-        return response.to_dict()
-    
+        return response.to_dict()['data']
     
     def get_modelmonitor_template(self):
         response = self._mmapi.modelmonitor_get_metrics_template()
-        return response.to_dict()
+        return response.to_dict()['data']
 
     def delete_modelmonitors(self,delete_list):
         response = self._mmapi.modelmonitor_delete({'data': delete_list})
@@ -463,5 +462,6 @@ class ApiBase(object):
     def update_modelmonitor_config(self,modelmonitor,data):
         response = self._mmapi.modelmonitor_update(modelmonitor,data)
         return response.to_dict()
+
 
 

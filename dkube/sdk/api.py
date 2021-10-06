@@ -2228,8 +2228,10 @@ class DkubeApi(ApiBase, FilesBase):
 
             wait_for_completion
                     When set to :bash:`True` this method will wait for modelmonitor resource to get into one of the complete state.
-                    modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state
-
+                    modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state    
+        
+        Outputs*
+                a dictionary object with response status
         """
         assert type(modelmonitor) == DkubeModelmonitor, "Invalid type for model monitor, value must be instance of rsrcs:DkubeModelmonitor class"
         response = super().create_model_monitor(modelmonitor)
@@ -2244,6 +2246,7 @@ class DkubeApi(ApiBase, FilesBase):
                 print(
                     "ModelMonitor {} - waiting for completion, current state {}".format(modelmonitor.name, state))
                 time.sleep(self.wait_interval)
+        return response
 
     def modelmonitor_list(self,**kwargs):
         """
@@ -2256,8 +2259,19 @@ class DkubeApi(ApiBase, FilesBase):
                     archived : boolean
                     when archived=True, list the archived modelmonitors
             
+            *Outputs*
+                A list containing the modelmonitors       
         """
-        query_params={'tags':kwargs.get('tags',''),'page':kwargs.get('page',-1),'archived':kwargs.get('archived',False)}
+        tags = kwargs.get('tags')
+        page = kwargs.get('page')
+        archived = kwargs.get('archived',False)
+        query_params = {}
+        if tags:
+            query_params['tags'] = tags
+        if page:
+            query_params['page'] = page
+        if archived:
+            query_params['archived'] = archived
         return super().list_modelmonitor(query_params)
 
     def modelmonitor_get_id(self,name=None):
@@ -2268,13 +2282,15 @@ class DkubeApi(ApiBase, FilesBase):
 
                 name
                     Name of the modelmonitor
+
+            *Outputs*
+                An uuid of the modelmonitor 
         """
-        response = super().get_modelmonitor_id(name).to_dict()
-        
-        for mm_name in response["data"]:
-            if mm_name == name:
-                return response['data'][mm_name]
-        return None
+        response = super().get_modelmonitor_id(name).to_dict()["data"]
+        if response!=None:
+            return response.get(name)
+        else:
+            return None
     
     def modelmonitor_get_alertid(self,name=None,alert_name=None):
         """
@@ -2286,11 +2302,14 @@ class DkubeApi(ApiBase, FilesBase):
                     Name of the modelmonitor
                 alert_name
                     Name of the alert
+
+            Outputs*
+                an id of the alert
                 
         """
         mm_id = self.modelmonitor_get_id(name)
         response = super().get_modelmonitor_alerts(mm_id)
-        for alert in response['data']:
+        for alert in response:
             if alert['name'] == alert_name:
                 return alert['id']
         return None
@@ -2303,7 +2322,8 @@ class DkubeApi(ApiBase, FilesBase):
 
                 name or id
                     name of the modelmonitor or id of modelmonitor
-                
+            *Outputs*
+                A dictionary containing the configuration of the modelmonitor       
         """
 
         if id == None:
@@ -2322,8 +2342,14 @@ class DkubeApi(ApiBase, FilesBase):
 
                 data_class
                     data class of the dataset in the modelmonitor must be one of ["TrainData","PredictData","LabelledData"]
-                    by default set to None and then it will return all the datasets of that modelmonitor
+                    by default set to None
+            
+            *Outputs*
+                if data_class is None:
+                    A list of dictionaries containing all the datasets information.
                 
+                if data_class is 'PredictData' or 'LabelledData':
+                    An individual data dictionary for that data class.
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
@@ -2343,7 +2369,9 @@ class DkubeApi(ApiBase, FilesBase):
 
                 name or id
                     name of the modelmonitor or id of modelmonitor
-                
+            
+            *Outputs*
+                a list of dictionaries containing individual alerts information
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
@@ -2357,7 +2385,9 @@ class DkubeApi(ApiBase, FilesBase):
 
                 names or delete_ids
                     names of the modelmonitor or ids of modelmonitor, should be a list eg: names=["mm1","mm2"] or delete_ids=["cd123","345fg"]
-                
+            
+            *Outputs*
+                A list of dictionaries containing all the alerts
         """
         mm_list = []
         if delete_ids == []:
@@ -2377,41 +2407,22 @@ class DkubeApi(ApiBase, FilesBase):
 
                 name or id
                     name of the modelmonitor or id of modelmonitor
-                
+            *Outputs*
+                a dictionary object with response status
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
         
-        return super().delete_modelmonitors(id)
-            
-
-    def modelmonitor_get_datasetid(self,name=None,id=None,data_class:DatasetClass=None):
-        """
-            Method to get the id of the dataset in the modelmonitor.
-
-            *Inputs*
-
-                name or id
-                    name of the modelmonitor or id of modelmonitor
-                data_class
-                    class of the modelmonitor dataset, must be one of ["TrainData","PredictData","LabelledData]              
-                
-        """
-    
-        if id == None:
-            id = self.modelmonitor_get_id(name)
-            
-        response = super().get_modelmonitor_dataset(id)
-      
-        for data in response:
-            if data["_class"] == data_class:
-                return data['id']
-
+        return super().delete_modelmonitors([id])
 
 
     def modelmonitor_get_metricstemplate(self):
         """
             Method to get the metrics supported for the modelmonitor.
+        
+        Outputs*
+                a list of dictionaries containing metrics template for Regression and Classification
+        
         """
         return super().get_modelmonitor_template()
 
@@ -2445,7 +2456,11 @@ class DkubeApi(ApiBase, FilesBase):
 
                 
                 name or id
-                    name of the modelmonitor or id of modelmonitor             
+                    name of the modelmonitor or id of modelmonitor      
+
+            Outputs*
+                a dictionary object with response status
+               
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
@@ -2472,25 +2487,26 @@ class DkubeApi(ApiBase, FilesBase):
                 wait_for_completion
                     When set to :bash:`True` this method will wait for modelmonitor resource to get into one of the complete state and then add the datasets.
                     modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state
+            
+            Outputs*
+                a dictionary object with response status
+        
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
-        if wait_for_completion and (self.modelmonitor_get_datasets(id=id,data_class='TrainData')==[]):
+        while wait_for_completion and (self.modelmonitor_get_datasets(id=id,data_class='TrainData')==[]):
             mm_config = super().get_modelmonitor_configuration(id)
             state = mm_config['status']['state']
             if state.lower() in ['init','ready','error']:
-                data_dict = json.loads(data.to_JSON())
-                data_dict['class'] = data_dict.pop('_class')
-                response = super().modelmonitor_adddataset(id,{"data":data_dict})
-                return response['response']
+                break
             else:
                print("Model Monitor creation not completed yet, current state {}".format(state))
                time.sleep(self.wait_interval)
-        else:
-            data_dict = json.loads(data.to_JSON())
-            data_dict['class'] = data_dict.pop('_class')
-            response = super().modelmonitor_adddataset(id,{"data":data_dict})
-            return response['response']
+        
+        data_dict = json.loads(data.to_JSON())
+        data_dict['class'] = data_dict.pop('_class')
+        response = super().modelmonitor_adddataset(id,{"data":data_dict})
+        return response['response']
 
     def modelmonitor_archive(self,name=None,id=None):
         """
@@ -2498,7 +2514,10 @@ class DkubeApi(ApiBase, FilesBase):
 
             *Inputs*
                 name or id
-                    name of the modelmonitor or id of modelmonitor             
+                    name of the modelmonitor or id of modelmonitor  
+
+            Outputs*
+                a dictionary object with response status           
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
@@ -2510,7 +2529,10 @@ class DkubeApi(ApiBase, FilesBase):
 
             *Inputs*
                 name or id
-                    name of the modelmonitor or id of modelmonitor             
+                    name of the modelmonitor or id of modelmonitor    
+
+            Outputs*
+                a dictionary object with response status         
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
@@ -2526,16 +2548,20 @@ class DkubeApi(ApiBase, FilesBase):
                 wait_for_completion
                     When set to :bash:`True` this method will wait for modelmonitor resource to get into one of the complete state.
                     modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state , when it reaches ready state, it starts the modelmonitor
+            
+            Outputs*
+                a dictionary object with response status
+        
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
         while wait_for_completion:
             mm_state = self.modelmonitor_get(id=id)['status']['state']
-            if mm_state.lower() == "ready":
-                return super().modelmonitor_state(id,"start")
-            else:
-                print("Model Monitor not in ready state yet, add the train and predict data first")
+            if mm_state.lower() in ["init","active","error"]:
+                print("ModelMonitor {} - is in {} state".format(id, mm_state))
                 time.sleep(self.wait_interval)
+            else:
+                return super().modelmonitor_state(id,"start")
 
     def modelmonitor_stop(self,name=None,id=None):
         """
@@ -2544,13 +2570,17 @@ class DkubeApi(ApiBase, FilesBase):
             *Inputs*
                 name or id
                     name of the modelmonitor or id of modelmonitor             
+            
+            Outputs*
+                a dictionary object with response status
+        
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
         return super().modelmonitor_state(id,"stop")
     
 
-    def modelmonitor_update_dataset(self,data:DkubeModelmonitordataset=None,data_class:DatasetClass=None,name=None,id=None,wait_for_completion=True):
+    def modelmonitor_update_dataset(self,data_class:DatasetClass,data:DkubeModelmonitordataset=None,name=None,id=None,wait_for_completion=True):
         """
             Method to update the modelmonitor dataset
 
@@ -2570,22 +2600,32 @@ class DkubeApi(ApiBase, FilesBase):
                 wait_for_completion
                     When set to :bash:`True` this method will wait for modelmonitor resource to get into one of the complete state and then update the datasets
                     modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state , if it is in active state, modelmonitor update to datasets not allowed
+            
+            
+            Outputs*
+                a dictionary object with response status
+        
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
-            data_id = self.modelmonitor_get_datasetid(name,data_class=data_class)
+            data_id = self.modelmonitor_get_datasets(name,data_class=data_class)['id']
         else:
-            data_id = self.modelmonitor_get_datasetid(id,data_class=data_class)
+            data_id = self.modelmonitor_get_datasets(id,data_class=data_class)['id']
         while wait_for_completion:
-            mm_state = self.modelmonitor_get(id)['status']['state']
+            mm_state = self.modelmonitor_get(id=id)['status']['state']
             if mm_state.lower() in ['init','error','ready']:
                 data_dict = json.loads(data.to_JSON())
-                data_dict['class'] = data_dict.pop('_class')
+                for k in list(data_dict.keys()):
+                    if(data_dict[k]==None and k!='_class'):
+                        del data_dict[k]
+                data_dict['class']=data_dict['_class']
+                if data_dict['class'] == None:
+                    data_dict['class'] = data_class
                 return super().update_modelmonitor_dataset(id,data_id,data_dict)
-            if mm_state.lower() == "active":
+            elif mm_state.lower() == "active":
                     print("no update to active monitor is allowed")
             else:
-                print("Model monitor creation not completed yet")
+                print("ModelMonitor {} - is in {} state".format(id, mm_state))
                 time.sleep(self.wait_interval)
 
     def modelmonitor_update_alert(self,alert:DkubeModelmonitoralert=None,alert_name=None,name=None,id=None):
@@ -2603,6 +2643,10 @@ class DkubeApi(ApiBase, FilesBase):
 
                 name or id
                     name of the modelmonitor or id of modelmonitor             
+            
+            Outputs*
+                a dictionary object with response status
+        
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
@@ -2611,7 +2655,6 @@ class DkubeApi(ApiBase, FilesBase):
             alert_id = self.modelmonitor_get_alertid(id,alert_name=alert_name)
         
         alert_dict = json.loads(alert.to_JSON())
-        print(alert_dict)
         alert_dict['class'] = alert_dict.pop('_class')
         return super().update_modelmonitor_alert(id,alert_id,alert_dict)
 
@@ -2624,10 +2667,14 @@ class DkubeApi(ApiBase, FilesBase):
                 
                 config
                     Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitor` class.
-                    Please see the :bash:`Resources` section for details on this class.
+                    Please see the :bash:`Resources` section for details on this class to check
+                    what can be updated.
 
                 name or id
-                    name of the modelmonitor or id of modelmonitor             
+                    name of the modelmonitor or id of modelmonitor 
+
+            Outputs*
+                a dictionary object with response status            
         """
         if id == None:
             id = self.modelmonitor_get_id(name)
@@ -2656,7 +2703,9 @@ class DkubeApi(ApiBase, FilesBase):
                     class of the schema (Categorical,Continuous) 
                 schema_type
                     type of schema (Input Feature, PredictionOutput, Rowid, Timestamp)
-                                     
+
+            Outputs*
+                a dictionary object with response status                         
         """
         
         if id == None:
@@ -2676,6 +2725,7 @@ class DkubeApi(ApiBase, FilesBase):
         
         
         
+
 
 
 
