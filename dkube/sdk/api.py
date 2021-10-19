@@ -2394,6 +2394,7 @@ class DkubeApi(ApiBase, FilesBase):
     ):
         """
             Method to create Model Monitor on Dkube
+            *Available in DKube Release: 3.0*
 
         *Inputs*
 
@@ -2435,6 +2436,8 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_list(self, **kwargs):
         """
         Method to list the modelmonitors.
+        *Available in DKube Release: 3.0*
+
         *Inputs*
 
             **kwargs
@@ -2461,6 +2464,7 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_get_id(self, name=None):
         """
         Method to get the id  of a model monitor.
+        *Available in DKube Release: 3.0*
 
         *Inputs*
 
@@ -2479,6 +2483,7 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_get_alertid(self, id=None, alert_name=None):
         """
         Method to get the alert id  of a modelmonitor.
+        *Available in DKube Release: 3.0*
 
         *Inputs*
 
@@ -2500,6 +2505,7 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_get(self, id=None):
         """
         Method to get the modelmonitor.
+        *Available in DKube Release: 3.0*
 
         *Inputs*
 
@@ -2514,6 +2520,7 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_get_datasets(self, id=None, data_class: DatasetClass = None):
         """
         Method to get the datasets of the modelmonitor.
+        *Available in DKube Release: 3.0*
 
         *Inputs*
 
@@ -2544,6 +2551,7 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_get_alerts(self, id=None):
         """
         Method to get the alerts of the modelmonitor.
+        *Available in DKube Release: 3.0*
 
         *Inputs*
 
@@ -2558,6 +2566,7 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitors_delete(self, ids=[]):
         """
         Method to delete the multiple modelmonitors.
+        *Available in DKube Release: 3.0*
 
         *Inputs*
 
@@ -2572,6 +2581,7 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_delete(self, id=None):
         """
         Method to delete the single modelmonitor.
+        *Available in DKube Release: 3.0*
 
         *Inputs*
 
@@ -2584,7 +2594,8 @@ class DkubeApi(ApiBase, FilesBase):
 
     def modelmonitor_get_metricstemplate(self):
         """
-            Method to get the metrics supported for the modelmonitor.
+        Method to get the metrics supported for the modelmonitor.
+        *Available in DKube Release: 3.0*
 
         Outputs*
                 a list of dictionaries containing metrics template for Regression and Classification
@@ -2595,6 +2606,7 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_delete_alert(self, id=None, alert_id=None):
         """
         Method to delete the alerts in the modelmonitor
+        *Available in DKube Release: 3.0*
 
         *Inputs*
 
@@ -2612,6 +2624,7 @@ class DkubeApi(ApiBase, FilesBase):
     ):
         """
         Method to add the alerts in the modelmonitor
+        *Available in DKube Release: 3.0*
 
         *Inputs*
             id
@@ -2642,6 +2655,7 @@ class DkubeApi(ApiBase, FilesBase):
     ):
         """
         Method to add the dataset in the modelmonitor
+        *Available in DKube Release: 3.0*
 
         *Inputs*
            id
@@ -2680,6 +2694,7 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_archive(self, id=None):
         """
         Method to archive the modelmonitor
+        *Available in DKube Release: 3.0*
 
         *Inputs*
             id
@@ -2693,6 +2708,7 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_unarchive(self, id=None):
         """
         Method to unarchive the modelmonitor
+        *Available in DKube Release: 3.0*
 
         *Inputs*
             id
@@ -2706,6 +2722,7 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_start(self, id=None, wait_for_completion=True):
         """
         Method to start the modelmonitor
+        *Available in DKube Release: 3.0*
 
         *Inputs*
             id
@@ -2731,6 +2748,7 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_stop(self, id=None):
         """
         Method to stop the modelmonitor
+        *Available in DKube Release: 3.0*
 
         *Inputs*
             id
@@ -2751,6 +2769,7 @@ class DkubeApi(ApiBase, FilesBase):
     ):
         """
         Method to update the modelmonitor dataset
+        *Available in DKube Release: 3.0*
 
         *Inputs*
             id
@@ -2797,6 +2816,7 @@ class DkubeApi(ApiBase, FilesBase):
     ):
         """
         Method to update the modelmonitor alert
+        *Available in DKube Release: 3.0*
 
         *Inputs*
 
@@ -2823,6 +2843,7 @@ class DkubeApi(ApiBase, FilesBase):
     ):
         """
         Method to update the modelmonitor
+        *Available in DKube Release: 3.0*
 
         *Inputs*
 
@@ -2881,6 +2902,7 @@ class DkubeApi(ApiBase, FilesBase):
     ):
         """
         Method to update the schema in the modelmonitor
+        *Available in DKube Release: 3.0*
 
         *Inputs*
 
