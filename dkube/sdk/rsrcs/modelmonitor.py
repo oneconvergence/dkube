@@ -39,6 +39,9 @@ from .util import *
 class DatasetClass(Enum):
     """
     This Enum class defines the dataset class that are suported for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.0*
+
     """
 
     TrainData = "TrainData"
@@ -55,6 +58,9 @@ class DatasetClass(Enum):
 class DatasetFormat(Enum):
     """
     This Enum class defines the dataset formats that are suported for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.0*
+
     """
 
     csv = "csv"
@@ -71,6 +77,9 @@ class DatasetFormat(Enum):
 class ModelFrameworks(Enum):
     """
     This Enum class defines the frameworks that are suported for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.0*
+
     """
 
     Tensorflow1x = "Tensorflow-1x"
@@ -89,6 +98,9 @@ class ModelFrameworks(Enum):
 class AlertClass(Enum):
     """
     This Enum class defines the alert class that are suported for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.0*
+
     """
 
     FeatureDrift = "FeatureDrift"
@@ -105,6 +117,9 @@ class AlertClass(Enum):
 class ModelType(Enum):
     """
     This Enum class defines the model type that are suported for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.0*
+
     """
 
     Regression = "Regression"
@@ -120,6 +135,9 @@ class ModelType(Enum):
 class ModelCategory(Enum):
     """
     This Enum class defines the category of the model that are suported for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.0*
+
     """
 
     AutoEncoder = "AutoEncoder"
@@ -136,6 +154,9 @@ class ModelCategory(Enum):
 class DriftAlgo(Enum):
     """
     This Enum class defines the drift detection algorithms that are suported for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.0*
+
     """
 
     KS = "Kolmogorov-Smirnov"
@@ -157,6 +178,8 @@ class DkubeModelmonitor(object):
         Where first argument is the name of the modelmonitor
         second argument is the name of the model that you want to monitor i.e. nameofmodel:user
         user should be a valid onboarded user in dkube.
+
+    *Available in DKube Release: 3.0*
 
     """
 
@@ -271,30 +294,57 @@ class DkubeModelmonitor(object):
             self.update_emails(emails)
 
     def update_model_type(self, model_type=None):
+        """
+        Method to update the type of the model, check the Enum Class ModelType for the posible values
+        """
         self.modelmonitor.model_type = model_type
 
     def update_model_category(self, category=None):
+        """
+        Method to update the category of the model, check the Enum Class ModelCategory for the possible values
+        """
         self.modelmonitor.model_category = category
 
     def update_model_framework(self, framework=None):
+        """
+        Method to update the framework, check the Enum Class ModelFramework for the possible values
+        """
         self.modelmonitor.model_framework = framework
 
     def update_drift_detection_algorithm(self, algorithm=None):
+        """
+        Method to update the drift detection Algorithm, check the Enum Class DriftAlgo for the possible values
+        """
         self.modelmonitor.drift_detection_algorithm = algorithm
 
     def update_run_frequency(self, frequency=None):
+        """
+        Method to update the frequency
+        """
         self.modelmonitor.drift_detection_run_frequency_hrs = frequency
 
     def update_train_merics(self, train_metrics=None):
+        """
+        Method to update the train metrics
+        """
         self.modelmonitor.train_metrics = train_metrics
 
     def update_model_version(self, version=None):
+        """
+        Method to update the model version
+        """
         self.modelmonitor.version = version
 
     def update_emails(self, emails=None):
+        """
+        Method to update the emails
+        """
         self.modelmonitor.emails = emails
 
     def update_transformer_script(self, data_name, script):
+        """
+        Method to update the transformer script
+        """
         for index, data in enumerate(self.modelmonitor.datasets):
             if data.name == data_name:
                 self.modelmonitor.datasets[index].transformer_script = script
@@ -310,6 +360,17 @@ class DkubeModelmonitor(object):
         predict_col=None,
         sql_query=None,
     ):
+        """
+        This function is for adding the dataset in the model monitor.
+            name : name of the dataset,
+            data class : see the Enum DatasetClass,
+            format of the dataset: see the Enum class DatasetFormat,
+            version : version of the dataset,
+            s3_subpath : s3_subpath of the dataset,
+            gt_col: groundtruth column of Labelled Dataset,
+            predict_col : predict column of Predict dataset,
+            sql query in case of sql dataset.
+        """
         mm_dataset = ModelmonitorDatasetDef(
             id=None,
             _class=data_class,
@@ -328,6 +389,14 @@ class DkubeModelmonitor(object):
         self.modelmonitor.datasets.append(mm_dataset)
 
     def add_alert(self, name, alert_class, feature=None, threshold=None):
+        """
+        This function is for adding the alert in the model monitor after adding train and predict datasets.
+            name : name of the alert,
+            alert_class : see the Enum AlertClass,
+            feature: name of the feature for which alert needs to be added
+            threshold : threshold for the feature
+        """
+        
         self.conditions = []
         self.conditions.append(
             ModelmonitorAlertCondDef(feature=feature, op=">", threshold=threshold)
@@ -348,6 +417,9 @@ class DkubeModelmonitordataset(object):
         from dkube.sdk import *
         mm = DkubeModelmonitordataset(name="mm-data:ocdkube")
         Where first argument is the name of the modelmonitor dataset.
+
+    *Available in DKube Release: 3.0*
+    
     """
 
     def __init__(self, name=generate("mm-data")):
@@ -417,30 +489,57 @@ class DkubeModelmonitordataset(object):
             self.update_dataset_version(version)
 
     def update_data_name(self, data_name=None):
+        """
+        Method to update the dataset name in the model monitor
+        """
         self.name = data_name
 
     def update_data_class(self, data_class=None):
+        """
+        Method to update the class of the dataset
+        """
         self._class = data_class
 
     def update_transformer_script(self, script=None):
+        """
+        Method to update transformer script
+        """
         self.transformer_script = script
 
     def update_sql_query(self, sql_query=None):
+        """
+        Method to update sql query in case of sql dataset
+        """
         self.sql_query = sql_query
 
     def update_groundtruth_col(self, groundtruth_col=None):
+        """
+        Method to update the groundtruth column for Labelled Dataset
+        """
         self.groundtruth_col = groundtruth_col
 
     def update_predict_col(self, predict_col=None):
+        """
+        Method to update the predict column for the Predict Dataset
+        """
         self.predict_col = predict_col
 
     def update_data_format(self, data_format=None):
+        """
+        Method to update the format of the dataset, check the Enum DatasetFormat class
+        """
         self.data_format = data_format
 
     def update_s3_subpath(self, path=None):
+        """
+        Method to update s3 subpath of the dataset
+        """
         self.s3_subpath = path
 
     def update_dataset_version(self, version=None):
+        """
+        Method to update the dataset version
+        """
         self.version = version
 
 
@@ -450,6 +549,9 @@ class DkubeModelmonitoralert(object):
         from dkube.sdk import *
         mm = DkubeModelmonitoralert(name="mm-alert")
         Where first argument is the name of the alert in the modelmonitor .
+
+    *Available in DKube Release: 3.0*
+
     """
 
     def __init__(self, name="mm-alert"):
@@ -471,6 +573,16 @@ class DkubeModelmonitoralert(object):
         threshold=None,
         percent_threshold=None,
     ):
+        """
+        This function updates the alert in the model monitor. The following updates are supported.
+            email,
+            alert_class,
+            feature,
+            metric,
+            threshold,
+            percent_threshold
+        """
+
         self.id = None
         self.name = self.name
         self._class = alert_class
