@@ -162,6 +162,7 @@ class DriftAlgo(Enum):
     KS = "Kolmogorov-Smirnov"
     ChiSquared = "Chi Squared"
     KSChiSquared = "Kolmogorov-Smirnov & Chi Squared "
+    Auto = "Auto"
 
     def __repr__(self):
         return self.value
