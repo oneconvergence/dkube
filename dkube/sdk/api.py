@@ -2942,4 +2942,4 @@ class DkubeApi(ApiBase, FilesBase):
             model_name=config["model"], description=config["description"]
         )
         mm.__dict__["modelmonitor"].__dict__["_schema"] = config["schema"]
-        return self.modelmonitor_update(mm, id=id)
+        return self.modelmonitor_update(id,mm)
