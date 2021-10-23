@@ -2926,20 +2926,25 @@ class DkubeApi(ApiBase, FilesBase):
             return None
         found = False
         config = self.modelmonitor_get(id=id)
-        for feature in config["schema"]["features"]:
+        try:
+         for feature in config["schema"]["features"]:
             if feature["label"] == label:
-                feature["_class"] = schema_class
-                feature["type"] = schema_type
-                feature["selected"] = selected
-                found = True
-        if not found:
+               feature["_class"] = schema_class
+               feature["type"] = schema_type
+               feature["selected"] = selected
+               found = True
+         if not found:
             print("specified label is not in the derived schema")
             return None
 
-        for d in config["schema"]["features"]:
+         for d in config["schema"]["features"]:
             d["class"] = d.pop("_class")
-        mm = DkubeModelmonitor(
+         mm = DkubeModelmonitor(
             model_name=config["model"], description=config["description"]
-        )
-        mm.__dict__["modelmonitor"].__dict__["_schema"] = config["schema"]
-        return self.modelmonitor_update(id,mm)
+         )
+         mm.__dict__["modelmonitor"].__dict__["_schema"] = config["schema"]
+         return self.modelmonitor_update(id,mm)
+        except TypeError:
+            print("Schema is Null")
+            return 
+            
