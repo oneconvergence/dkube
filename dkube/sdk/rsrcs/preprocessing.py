@@ -145,9 +145,8 @@ class DkubePreprocessing(object):
     def update_envvars(self, envs={}):
         """
             Method to update env variables for the Preprocessing run
-
+            
             *Inputs*
-
                 envs
                     Dictionary of env variable name and value
         """
@@ -295,7 +294,7 @@ class DkubePreprocessing(object):
 
                 key
                     Name of env variable
-
+                
                 value
                     Value of env variable
         """
@@ -305,7 +304,9 @@ class DkubePreprocessing(object):
     def add_envvars(self, vars={}):
         """
             Method to add env variables for the training run
+
             *Inputs*
+            
                 vars
                     Dictionary of env variable name and value
         """
