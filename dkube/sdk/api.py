@@ -15,18 +15,14 @@ import time
 import pandas as pd
 import urllib3
 from dkube.sdk.internal.api_base import *
-from dkube.sdk.internal.dkube_api.models.conditions import (
-    Conditions as TriggerCondition,
-)
+from dkube.sdk.internal.dkube_api.models.conditions import \
+    Conditions as TriggerCondition
 from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
-from dkube.sdk.rsrcs.modelmonitor import (
-    DatasetClass,
-    DkubeModelmonitoralert,
-    DkubeModelmonitordataset,
-)
+from dkube.sdk.rsrcs.modelmonitor import (DatasetClass, DkubeModelmonitoralert,
+                                          DkubeModelmonitordataset)
 from dkube.sdk.rsrcs.project import DkubeProject
 from packaging import version as pversion
 
@@ -2393,8 +2389,8 @@ class DkubeApi(ApiBase, FilesBase):
         self, modelmonitor: DkubeModelmonitor, wait_for_completion=True
     ):
         """
-            Method to create Model Monitor on Dkube
-            *Available in DKube Release: 3.0*
+        Method to create Model Monitor on Dkube
+        *Available in DKube Release: 3.0*
 
         *Inputs*
 
@@ -2402,12 +2398,11 @@ class DkubeApi(ApiBase, FilesBase):
                     Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitor class.
                     Please see the :bash:`Resources` section for details on this class.
 
-
             wait_for_completion
                     When set to :bash:`True` this method will wait for modelmonitor resource to get into one of the complete state.
                     modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state
 
-        Outputs*
+        *Outputs*
                 a dictionary object with response status
         """
         assert (
@@ -2440,11 +2435,14 @@ class DkubeApi(ApiBase, FilesBase):
 
         *Inputs*
 
-            **kwargs
-                tags: string
-                page : integer
-                archived : boolean
-                when archived=True, list the archived modelmonitors
+            tags
+                string
+                
+            page
+                integer
+
+            archived
+                boolean, when archived=True, list the archived modelmonitors
 
         *Outputs*
             A list containing the modelmonitors
@@ -2492,7 +2490,7 @@ class DkubeApi(ApiBase, FilesBase):
             alert_name
                 Name of the alert
 
-        Outputs*
+        *Outputs*
             an id of the alert
 
         """
@@ -2511,6 +2509,7 @@ class DkubeApi(ApiBase, FilesBase):
 
             id
                 Modelmonitor Id
+
         *Outputs*
             A dictionary containing the configuration of the modelmonitor
         """
@@ -2527,12 +2526,12 @@ class DkubeApi(ApiBase, FilesBase):
             id
                 Modelmonitor Id
 
-
             data_class
                 data class of the dataset in the modelmonitor must be one of ["TrainData","PredictData","LabelledData"]
                 by default set to None
 
         *Outputs*
+
             if data_class is None:
                 A list of dictionaries containing all the datasets information.
 
@@ -2559,7 +2558,9 @@ class DkubeApi(ApiBase, FilesBase):
                 Modelmonitor Id
 
         *Outputs*
+
             a list of dictionaries containing individual alerts information
+
         """
         return super().get_modelmonitor_alerts(id)
 
@@ -2574,7 +2575,9 @@ class DkubeApi(ApiBase, FilesBase):
                 List of modelmonitor Ids to be deleted. Example: ["cd123","345fg"]
 
         *Outputs*
+
             A dictionary object with response status
+
         """
         return super().delete_modelmonitors(ids)
 
@@ -2587,8 +2590,11 @@ class DkubeApi(ApiBase, FilesBase):
 
             id
                 Modelmonitor Id
+
         *Outputs*
+
             A dictionary object with response status
+
         """
         return super().delete_modelmonitors([id])
 
