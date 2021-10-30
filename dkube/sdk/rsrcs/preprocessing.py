@@ -145,10 +145,9 @@ class DkubePreprocessing(object):
     def update_envvars(self, envs={}):
         """
             Method to update env variables for the Preprocessing run
-
+            
             *Inputs*
-
-                vars
+                envs
                     Dictionary of env variable name and value
         """
         self.customkv = [envs]
@@ -277,8 +276,10 @@ class DkubePreprocessing(object):
         """
             Method to update config file for training run
             *Inputs*
+
                 name
                     Name of config file
+
                 body
                     Config data which is made available as file with the specified name to the training pod under /mnt/dkube/config
         """
@@ -288,9 +289,12 @@ class DkubePreprocessing(object):
     def add_envvar(self, key, value):
         """
             Method to add env variable for the training run
+
             *Inputs*
+
                 key
                     Name of env variable
+                
                 value
                     Value of env variable
         """
@@ -300,7 +304,9 @@ class DkubePreprocessing(object):
     def add_envvars(self, vars={}):
         """
             Method to add env variables for the training run
+
             *Inputs*
+            
                 vars
                     Dictionary of env variable name and value
         """

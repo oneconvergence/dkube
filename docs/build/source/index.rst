@@ -58,6 +58,8 @@ DKube Resources
 .. automodule:: dkube.sdk.rsrcs.serving
     :members:
 
+.. automodule:: dkube.sdk.rsrcs.modelmonitor
+    :members:
 
 
 
