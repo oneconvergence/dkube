@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('../../..'))
 # -- Project information -----------------------------------------------------
 
 project = 'DKubeSDK'
-copyright = '2020, OneConvergence'
+copyright = '2021, OneConvergence'
 author = 'OneConvergence'
 
 # The short X.Y version
