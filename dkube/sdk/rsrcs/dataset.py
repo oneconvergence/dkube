@@ -10,6 +10,7 @@ from dkube.sdk.internal.dkube_api.models.datum_model_hostpath import \
     DatumModelHostpath
 from dkube.sdk.internal.dkube_api.models.datum_model_k8svolume import \
     DatumModelK8svolume
+from dkube.sdk.internal.dkube_api.models.sql_access_info import SQLAccessInfo
 from dkube.sdk.internal.dkube_api.models.gcs_access_info import GCSAccessInfo
 from dkube.sdk.internal.dkube_api.models.git_access_credentials import \
     GitAccessCredentials
@@ -40,7 +41,7 @@ class DkubeDataset(object):
     """
 
     DATASET_SOURCES = ["dvs", "git", "aws_s3",
-                       "s3", "gcs", "nfs", "redshift", "k8svolume"]
+                       "s3", "gcs", "nfs", "redshift", "k8svolume","sql"]
     """
 	List of valid datasources in DKube.
 	Some datasources are downloaded while some are remotely referenced.
@@ -62,6 +63,8 @@ class DkubeDataset(object):
 	:bash:`k8svolume` :- Kubernetes volume as data source. :bash:`Remote`
 
         :bash:`hostpath` :- If data is in a path in host machine. :bash:`Remote`
+	
+	:bash:`sql` :- sql dataset source :bash:`Remote`
 
     """
 
@@ -84,6 +87,17 @@ class DkubeDataset(object):
             remote=False,
             tags=None):
         self.k8svolume = DatumModelK8svolume(name=None)
+
+        self.sql = SQLAccessInfo(
+            host=None,
+            port=None,
+            username=None,
+            password=None,
+            database=None,
+            odbc_connection_string=None,
+            jdbc_connection_string=None,
+            cacert=None,
+            provider=None)
 
         self.redshift = RedshiftAccessInfo(
             endpoint=None,
@@ -127,6 +141,7 @@ class DkubeDataset(object):
             url=None,
             remote=remote,
             gitaccess=self.gitaccess,
+	    sql=self.sql,
             s3access=self.s3access,
             nfsaccess=self.nfsaccess,
             gcsaccess=self.gcsaccess,
@@ -372,3 +387,46 @@ class DkubeDataset(object):
         self.datum.source = "pub_url"
         self.datum.url = url
         self.extract = extract
+	
+    def update_sql_details(self,provider,host='',port=None,username=None,password=None,database='',odbc_connection_string=None,jdbc_connection_string=None):
+        """
+            Method to update details of sql data source.
+
+            *Inputs*
+
+                provider
+                    possible values are 'oracle','mysql' and 'mssql' (string)
+                
+                host
+                    host address (string)
+
+                port
+                    port number (integer)
+
+                username
+                    username for accessing the database (string)
+
+                password
+                    password for accessing the database (string)
+
+                database
+                    name of the sql database (string)
+
+                odbc_connection_string
+                    odbc connection string 
+
+                jdbc_connection_string
+                    jdbc connection string
+        """
+
+        self.datum.source = "sql"
+        self.datum.url = "sql:"+ host + ":" + str(port) + ":" + database
+        self.sql.provider = provider
+        self.sql.host = host
+        self.sql.port = port
+        self.sql.username = username
+        self.sql.password = password
+        self.sql.database = database
+        self.sql.odbc_connection_string = odbc_connection_string
+        self.sql.jdbc_connection_string = jdbc_connection_string
+                                                                     
