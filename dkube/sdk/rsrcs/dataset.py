@@ -141,6 +141,7 @@ class DkubeDataset(object):
             url=None,
             remote=remote,
             gitaccess=self.gitaccess,
+	    sql=self.sql,
             s3access=self.s3access,
             nfsaccess=self.nfsaccess,
             gcsaccess=self.gcsaccess,
