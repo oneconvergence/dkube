@@ -193,7 +193,6 @@ class DkubeModelmonitor(object):
                 id=None, type="performance_threshold", threshold=0, percent_threshold=0
             )
         )
-        self.train_metrics = None
 
         self.datasets = []
 
@@ -217,6 +216,7 @@ class DkubeModelmonitor(object):
             drift_detection_run_frequency_hrs=None,
             drift_detection_algorithm=None,
             performance_metrics_template=None,
+            train_metrics=None,
             default_thresholds=self.default_thresholds,
             datasets=self.datasets,
             alerts=self.alerts,
@@ -324,7 +324,7 @@ class DkubeModelmonitor(object):
         """
         self.modelmonitor.drift_detection_run_frequency_hrs = frequency
 
-    def update_train_merics(self, train_metrics=None):
+    def update_train_metrics(self, train_metrics=None):
         """
         Method to update the train metrics
         """
