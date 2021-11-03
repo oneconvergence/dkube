@@ -2383,7 +2383,26 @@ class DkubeApi(ApiBase, FilesBase):
                 images.append(entry)
         return images
 
-    ### Model monitor apis ##########
+    def get_smtp_artifact(self):
+        """
+        Method to get the smtp artifact
+        
+        *Available in DKube Release: 3.0*
+        """
+        return super().get_smtp_artifact()
+
+    def update_smtp_artifact(self,full_name=None,sender_email=None,smtp_password=None,smtp_port=None,smtp_server=None,smtp_tls_port=None,enabled=True):
+        """
+        Method to update the smtp artifact"
+        
+        * Available in Dkube Release: 3.0*
+        """        
+        data={"full_name":full_name,"sender_email":sender_email,"smtp_password":smtp_password,"smtp_port":smtp_port,"smtp_server":smtp_server,"smtp_tls_port":smtp_tls_port,"enabled":enabled}
+        return super().update_smtp_artifact(data)
+
+
+
+   ### Model monitor apis ##########
 
     def modelmonitor_create(
         self, modelmonitor: DkubeModelmonitor, wait_for_completion=True
