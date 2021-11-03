@@ -388,6 +388,18 @@ class ApiBase(object):
             dkube_api.ApiClient(configuration))
         response = api.get_all_deployments()
         return response.to_dict()['data']
+    
+    def get_smtp_artifact(self):
+        api = dkube_api.DkubeOperatorExclusiveApi(
+            dkube_api.ApiClient(configuration))
+        response = api.smtp_artifact_get()
+        return response.to_dict()['data']
+
+    def update_smtp_artifact(self,data):
+        api = dkube_api.DkubeOperatorExclusiveApi(
+            dkube_api.ApiClient(configuration))
+        response = api.upsert_smtp_artifact(data)
+        return response.to_dict()
 
    #### MODEL MONITOR APIS ###
 
