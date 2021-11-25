@@ -365,7 +365,7 @@ class DkubeModelmonitordataset(object):
     def __init__(self, name=generate("mm-data")):
         self._class = None
         self.transformer_script = None
-        selfi.name = name
+        self.name = name
         self.sql_query = None
         self.s3_subpath = None
         self.version = None
