@@ -2882,6 +2882,13 @@ class DkubeApi(ApiBase, FilesBase):
         alert_dict["class"] = alert_dict.pop("_class")
         return super().update_modelmonitor_alert(id, alert_id, alert_dict)
 
+    def remove_none(self,obj):
+        if isinstance(obj, dict):
+            return type(obj)((self.remove_none(k), self.remove_none(v))
+              for k, v in obj.items() if k is not None and v is not None)
+        else:
+            return obj
+
     def modelmonitor_update(
         self, id=None, config: DkubeModelmonitor = None, wait_for_completion=True
     ):
@@ -2907,13 +2914,9 @@ class DkubeApi(ApiBase, FilesBase):
         config_dict = config.__dict__["modelmonitor"].__dict__
         config_dict = {k.replace("_", "", 1): v for k, v in config_dict.items()}
         rem_list = [
-            "datasets",
-            "model",
-            "alerts",
             "performance_metrics_template",
             "updated_at",
             "id",
-            "drift_detection_algorithm",
             "created_at",
             "pipeline_component",
             "status",
@@ -2924,7 +2927,37 @@ class DkubeApi(ApiBase, FilesBase):
         [config_dict.pop(key) for key in rem_list]
         for k in list(config_dict.keys()):
             if config_dict[k] == None or config_dict[k] == []:
-                del config_dict[k]
+                 del config_dict[k] 
+       
+        if 'alerts' in config_dict.keys():
+            all_alerts = super().get_modelmonitor_alerts(id)
+            for i in all_alerts:
+                for j in config_dict["alerts"]:
+                    if i["name"] == j["name"]:
+                        j["id"] = i["id"]
+                for k in range(len(j["conditions"])):
+                    if j["conditions"][k]["feature"] == i["conditions"][k]["feature"]:
+                        j["conditions"][k]["id"] = i["conditions"][k]["id"]
+            
+                if i["name"]==j["name"]:
+                    for c in i["conditions"]:
+                        if c["threshold"] != j["conditions"][0]["threshold"]:
+                            c["threshold"] = j["conditions"][0]["threshold"]
+                            if i not in config_dict["alerts"]:
+                                config_dict["alerts"].append(i)
+        
+            for i in config_dict["alerts"]:
+                i["class"] = i["_class"]
+                del i["_class"]
+        
+        if 'datasets' in config_dict.keys():
+            for i in config_dict["datasets"]:
+                i["class"] = i["_class"]
+                del i["_class"]
+                for k in list(i.keys()):
+                    for l in range(len(config_dict["datasets"])):
+                            if config_dict["datasets"][l][k]==None:
+                                del config_dict["datasets"][l][k]
 
         response = super().update_modelmonitor_config(id, config_dict)
 
@@ -2994,3 +3027,4 @@ class DkubeApi(ApiBase, FilesBase):
             print("Schema is Null")
             return 
             
+
