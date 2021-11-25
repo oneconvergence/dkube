@@ -2718,7 +2718,7 @@ class DkubeApi(ApiBase, FilesBase):
         while wait_for_completion:
             mm_config = super().get_modelmonitor_configuration(id)
             state = mm_config["status"]["state"]
-            if state.lower() in ["init", "ready", "error"]:
+            if state.lower() in ["init", "ready", "error","pending"]:
                 break
             else:
                 print(
@@ -2847,7 +2847,7 @@ class DkubeApi(ApiBase, FilesBase):
         response = super().update_modelmonitor_dataset(id, data_id, data_dict)
         while wait_for_completion:
             mm_state = self.modelmonitor_get(id=id)["status"]["state"]
-            if mm_state.lower() in ["init", "error", "ready"]:
+            if mm_state.lower() in ["init", "error", "ready","pending"]:
                 break
             else:
                 print("ModelMonitor {} - is in {} state".format(id, mm_state))
@@ -2882,13 +2882,6 @@ class DkubeApi(ApiBase, FilesBase):
         alert_dict["class"] = alert_dict.pop("_class")
         return super().update_modelmonitor_alert(id, alert_id, alert_dict)
 
-    def remove_none(self,obj):
-        if isinstance(obj, dict):
-            return type(obj)((self.remove_none(k), self.remove_none(v))
-              for k, v in obj.items() if k is not None and v is not None)
-        else:
-            return obj
-
     def modelmonitor_update(
         self, id=None, config: DkubeModelmonitor = None, wait_for_completion=True
     ):
@@ -2917,6 +2910,8 @@ class DkubeApi(ApiBase, FilesBase):
             "performance_metrics_template",
             "updated_at",
             "id",
+            "datasets",
+            "alerts",
             "created_at",
             "pipeline_component",
             "status",
@@ -2929,36 +2924,6 @@ class DkubeApi(ApiBase, FilesBase):
             if config_dict[k] == None or config_dict[k] == []:
                  del config_dict[k] 
        
-        if 'alerts' in config_dict.keys():
-            all_alerts = super().get_modelmonitor_alerts(id)
-            for i in all_alerts:
-                for j in config_dict["alerts"]:
-                    if i["name"] == j["name"]:
-                        j["id"] = i["id"]
-                for k in range(len(j["conditions"])):
-                    if j["conditions"][k]["feature"] == i["conditions"][k]["feature"]:
-                        j["conditions"][k]["id"] = i["conditions"][k]["id"]
-            
-                if i["name"]==j["name"]:
-                    for c in i["conditions"]:
-                        if c["threshold"] != j["conditions"][0]["threshold"]:
-                            c["threshold"] = j["conditions"][0]["threshold"]
-                            if i not in config_dict["alerts"]:
-                                config_dict["alerts"].append(i)
-        
-            for i in config_dict["alerts"]:
-                i["class"] = i["_class"]
-                del i["_class"]
-        
-        if 'datasets' in config_dict.keys():
-            for i in config_dict["datasets"]:
-                i["class"] = i["_class"]
-                del i["_class"]
-                for k in list(i.keys()):
-                    for l in range(len(config_dict["datasets"])):
-                            if config_dict["datasets"][l][k]==None:
-                                del config_dict["datasets"][l][k]
-
         response = super().update_modelmonitor_config(id, config_dict)
 
         while wait_for_completion:
