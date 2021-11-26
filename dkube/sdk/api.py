@@ -2910,7 +2910,6 @@ class DkubeApi(ApiBase, FilesBase):
             "performance_metrics_template",
             "updated_at",
             "id",
-            "datasets",
             "alerts",
             "created_at",
             "pipeline_component",
@@ -2923,7 +2922,16 @@ class DkubeApi(ApiBase, FilesBase):
         for k in list(config_dict.keys()):
             if config_dict[k] == None or config_dict[k] == []:
                  del config_dict[k] 
-       
+        
+        if 'datasets' in config_dict.keys():
+            for i in config_dict["datasets"]:
+                i["class"] = i["_class"]
+                del i["_class"]
+                for k in list(i.keys()):
+                    for l in range(len(config_dict["datasets"])):
+                            if config_dict["datasets"][l][k]==None:
+                                del config_dict["datasets"][l][k]
+
         response = super().update_modelmonitor_config(id, config_dict)
 
         while wait_for_completion:

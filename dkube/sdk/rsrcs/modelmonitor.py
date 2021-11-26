@@ -349,7 +349,42 @@ class DkubeModelmonitor(object):
         for index, data in enumerate(self.modelmonitor.datasets):
             if data.name == data_name:
                 self.modelmonitor.datasets[index].transformer_script = script
-
+    
+    def upsert_dataset(
+        self,
+        name,
+        id=None,
+        data_class: DatasetClass = None,
+        data_format: DatasetFormat = "csv",
+        version=None,
+        s3_subpath=None,
+        gt_col=None,
+        predict_col=None,
+        sql_query=None,
+    ):
+        """
+        This function is for adding or updating the dataset in the model monitor.
+            name : name of the dataset,
+            data class : see the Enum DatasetClass,
+            format of the dataset: see the Enum class DatasetFormat,
+            version : version of the dataset,
+            s3_subpath : s3_subpath of the dataset,
+            gt_col: groundtruth column of Labelled Dataset,
+            predict_col : predict column of Predict dataset,
+            sql query in case of sql dataset.
+        """
+        mm_dataset = {}
+        mm_dataset["name"]=name
+        mm_dataset["id"]=id
+        mm_dataset["_class"]=data_class
+        mm_dataset["data_format"]=data_format
+        mm_dataset["version"]=version
+        mm_dataset["s3_subpath"]=s3_subpath
+        mm_dataset["groundtruth_col"]=gt_col
+        mm_dataset["predict_col"]=predict_col
+        mm_dataset["sql_query"]=sql_query
+        
+        self.modelmonitor.datasets.append(mm_dataset)
 
 class DkubeModelmonitordataset(object):
     """
@@ -365,7 +400,7 @@ class DkubeModelmonitordataset(object):
     def __init__(self, name=generate("mm-data")):
         self._class = None
         self.transformer_script = None
-        self.name = name
+        selfi.name = name
         self.sql_query = None
         self.s3_subpath = None
         self.version = None
