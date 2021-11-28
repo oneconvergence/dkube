@@ -2718,7 +2718,7 @@ class DkubeApi(ApiBase, FilesBase):
         while wait_for_completion:
             mm_config = super().get_modelmonitor_configuration(id)
             state = mm_config["status"]["state"]
-            if state.lower() in ["init", "ready", "error"]:
+            if state.lower() in ["init", "ready", "error","pending"]:
                 break
             else:
                 print(
@@ -2847,7 +2847,7 @@ class DkubeApi(ApiBase, FilesBase):
         response = super().update_modelmonitor_dataset(id, data_id, data_dict)
         while wait_for_completion:
             mm_state = self.modelmonitor_get(id=id)["status"]["state"]
-            if mm_state.lower() in ["init", "error", "ready"]:
+            if mm_state.lower() in ["init", "error", "ready","pending"]:
                 break
             else:
                 print("ModelMonitor {} - is in {} state".format(id, mm_state))
@@ -2907,13 +2907,10 @@ class DkubeApi(ApiBase, FilesBase):
         config_dict = config.__dict__["modelmonitor"].__dict__
         config_dict = {k.replace("_", "", 1): v for k, v in config_dict.items()}
         rem_list = [
-            "datasets",
-            "model",
-            "alerts",
             "performance_metrics_template",
             "updated_at",
             "id",
-            "drift_detection_algorithm",
+            "alerts",
             "created_at",
             "pipeline_component",
             "status",
@@ -2924,7 +2921,16 @@ class DkubeApi(ApiBase, FilesBase):
         [config_dict.pop(key) for key in rem_list]
         for k in list(config_dict.keys()):
             if config_dict[k] == None or config_dict[k] == []:
-                del config_dict[k]
+                 del config_dict[k] 
+        
+        if 'datasets' in config_dict.keys():
+            for i in config_dict["datasets"]:
+                i["class"] = i["_class"]
+                del i["_class"]
+                for k in list(i.keys()):
+                    for l in range(len(config_dict["datasets"])):
+                            if config_dict["datasets"][l][k]==None:
+                                del config_dict["datasets"][l][k]
 
         response = super().update_modelmonitor_config(id, config_dict)
 
@@ -2994,3 +3000,4 @@ class DkubeApi(ApiBase, FilesBase):
             print("Schema is Null")
             return 
             
+

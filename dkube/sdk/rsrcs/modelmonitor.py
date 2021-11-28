@@ -349,10 +349,11 @@ class DkubeModelmonitor(object):
         for index, data in enumerate(self.modelmonitor.datasets):
             if data.name == data_name:
                 self.modelmonitor.datasets[index].transformer_script = script
-
-    def add_dataset(
+    
+    def upsert_dataset(
         self,
         name,
+        id=None,
         data_class: DatasetClass = None,
         data_format: DatasetFormat = "csv",
         version=None,
@@ -362,7 +363,7 @@ class DkubeModelmonitor(object):
         sql_query=None,
     ):
         """
-        This function is for adding the dataset in the model monitor.
+        This function is for adding or updating the dataset in the model monitor.
             name : name of the dataset,
             data class : see the Enum DatasetClass,
             format of the dataset: see the Enum class DatasetFormat,
@@ -372,45 +373,18 @@ class DkubeModelmonitor(object):
             predict_col : predict column of Predict dataset,
             sql query in case of sql dataset.
         """
-        mm_dataset = ModelmonitorDatasetDef(
-            id=None,
-            _class=data_class,
-            transformer_script=None,
-            name=name,
-            sql_query=sql_query,
-            s3_subpath=s3_subpath,
-            version=version,
-            data_format=data_format,
-            groundtruth_col=gt_col,
-            predict_col=predict_col,
-            created_at=None,
-            updated_at=None,
-        )
-
-        self.modelmonitor.datasets.append(mm_dataset)
-
-    def add_alert(self, name, alert_class, feature=None, threshold=None):
-        """
-        This function is for adding the alert in the model monitor after adding train and predict datasets.
-            name : name of the alert,
-            alert_class : see the Enum AlertClass,
-            feature: name of the feature for which alert needs to be added
-            threshold : threshold for the feature
-        """
+        mm_dataset = {}
+        mm_dataset["name"]=name
+        mm_dataset["id"]=id
+        mm_dataset["_class"]=data_class
+        mm_dataset["data_format"]=data_format
+        mm_dataset["version"]=version
+        mm_dataset["s3_subpath"]=s3_subpath
+        mm_dataset["groundtruth_col"]=gt_col
+        mm_dataset["predict_col"]=predict_col
+        mm_dataset["sql_query"]=sql_query
         
-        self.conditions = []
-        self.conditions.append(
-            ModelmonitorAlertCondDef(feature=feature, op=">", threshold=threshold)
-        )
-        mm_alert = ModelmonitorAlertDef(
-            _class=alert_class, email=None, name=name, conditions=self.conditions
-        )
-
-        self.modelmonitor.alerts.append(mm_alert)
-
-    def to_JSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
+        self.modelmonitor.datasets.append(mm_dataset)
 
 class DkubeModelmonitordataset(object):
     """
@@ -598,3 +572,4 @@ class DkubeModelmonitoralert(object):
                 "percent_threshold": percent_threshold,
             }
         )
+
