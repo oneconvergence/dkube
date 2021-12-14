@@ -124,7 +124,7 @@ class DkubeServing(object):
         self.transformer_container.password = login_pswd
         self.transformer.image = self.transformer_container
 
-    def update_serving_model(self, model, version=None):
+    def update_serving_model(self, model, owner=None, version=None):
         """
             Method to update Model Repo input for Model Serving
 
@@ -133,12 +133,18 @@ class DkubeServing(object):
                 name
                     Name of Model Repo containing the model files
 
+                owner
+                    Owner of Model Repo containing the model files
+
                 version
                     Version (unique id) to use from Model Repo
         """
         self.serving_def.model = model
         self.serving_def.version = version
-        self.serving_def.owner = self.user
+        if owner is not None:
+            self.serving_def.owner = owner
+        else:
+            self.serving_def.owner = self.user
 
     def update_serving_image(self, deploy=None, image_url='', login_uname=None, login_pswd=None):
         """
