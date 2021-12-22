@@ -29,12 +29,15 @@ def downloadOutput(sdk, user, datasetName, output):
     output = json.loads(output)
     open("/output", "w").write("No output from user code")
     open("/metadata.json", "w").write("{}")
+    open("/metrics.json", "w").write("{}")
     for k, v in output.items():
         filename = v.split("/")[-1]
         if k == "output":
             shutil.copy(f"{output_dir}/{version}/data/{filename}", "/output")
         elif k == "mlpipeline-ui-metadata":
             shutil.copy(f"{output_dir}/{version}/data/{filename}", "/metadata.json")
+        elif k == "mlpipeline-metrics":
+            shutil.copy(f"{output_dir}/{version}/data/{filename}", "/metrics.json")
         else:
             print(f"ERROR: output key{k} not supported.")
 
