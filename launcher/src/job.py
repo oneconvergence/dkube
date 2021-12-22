@@ -37,7 +37,7 @@ def downloadOutput(sdk, user, datasetName, output):
         elif k == "mlpipeline-ui-metadata":
             shutil.copy(f"{output_dir}/{version}/data/{filename}", "/metadata.json")
         elif k == "mlpipeline-metrics":
-            shutil.copy(f"{output_dir}/{version}/data/mlpipeline_metrics/{filename}", "/metrics.json")
+            shutil.copy(f"{output_dir}/{version}/data/{filename}", "/metrics.json")
         else:
             print(f"ERROR: output key{k} not supported.")
 
