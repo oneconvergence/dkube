@@ -443,8 +443,8 @@ class ApiBase(object):
         response = self._mmapi.modelmonitor_delete_datasets(mm_id,{'data':delete_dataset_list})
         return response.to_dict()
     
-    def delete_modelmonitor_alert(self,mm_data,delete_alerts_list):
-        response = self._mmapi.modelmonitor_delete_alerts(mm_id,{data:delete_alerts_list})
+    def delete_modelmonitor_alert(self,mm_id,delete_alerts_list):
+        response = self._mmapi.modelmonitor_delete_alerts(mm_id,{'data':delete_alerts_list})
         return response.to_dict()
    
     def modelmonitor_addalert(self,modelmonitor,alert_data):

@@ -2936,7 +2936,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         while wait_for_completion:
             mm_state = self.modelmonitor_get(id=id)["status"]["state"]
-            if mm_state.lower() in ["init", "error", "ready"]:
+            if mm_state.lower() in ["init", "error", "ready","pending"]:
                 break
             else:
                 print("ModelMonitor {} - is in {} state".format(id, mm_state))
