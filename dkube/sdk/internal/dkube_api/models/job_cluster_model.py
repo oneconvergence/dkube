@@ -96,12 +96,17 @@ class JobClusterModel(object):
         :param kind: The kind of this JobClusterModel.  # noqa: E501
         :type: str
         """
+        # Shabbir: Manually commenting out the following piece of code to prevent raising exception because
+        # the enum for cluster kind has been changed with lsf support and
+        # this version of sdk does not have models generated with the swagger spec which has related changes.
+        """
         allowed_values = ["CLUSTER_LOCAL", "CLUSTER_SLURMHPC_REMOTE"]  # noqa: E501
         if kind not in allowed_values:
             raise ValueError(
                 "Invalid value for `kind` ({0}), must be one of {1}"  # noqa: E501
                 .format(kind, allowed_values)
             )
+        """
 
         self._kind = kind
 
