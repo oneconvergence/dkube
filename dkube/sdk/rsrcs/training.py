@@ -116,9 +116,9 @@ class DkubeTraining(object):
                          image_url="", login_uname="", login_pswd=""):
 
         framework = framework.lower()
-        framework_opts = DkubeTraining.FRAMEWORK_OPTS
-        assert framework in framework_opts, "Invalid choice for framework, select oneof(" + str(
-            framework_opts) + ")"
+        #framework_opts = DkubeTraining.FRAMEWORK_OPTS
+        #assert framework in framework_opts, "Invalid choice for framework, select oneof(" + str(
+        #    framework_opts) + ")"
 
         if framework == "custom":
             framework_str = "custom"
