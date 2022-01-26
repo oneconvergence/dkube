@@ -19,5 +19,5 @@ def componentize(fn: Callable, name: str, desc: str,
     envs: Mapping[str, str] = {'pipeline': 'true',
                                'wfid': '{{workflow.uid}}', 'runid': '{{pod.name}}'}
     cfunc.component_spec.implementation.container.env = envs
-    cfunc.component_spec.save("dkube-slurmjob-kfpl-op.yaml")
+    cfunc.component_spec.save("dkube-remotejob-kfpl-op.yaml")
     return cfunc

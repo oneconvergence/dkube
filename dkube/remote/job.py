@@ -1,22 +1,20 @@
 import os
 import json
-import kfp
 
 from typing import NamedTuple
-
-from ._kfpl import componentize
-from .job_properties import JobProperties
 
 from dkube.sdk.internal.dkube_api.models.job_model import JobModel
 
 
 __all__ = [
-    'launch_slurmjob',
-    'dkube_slurmjob_op'
+    'launch_remotejob'
 ]
 
 
-def launch_slurmjob(cluster: str, props: type(JobProperties),
+ClusterKindSlurmRemote = "slurm-remote"
+ClusterKindLsfRemote = "lsf-remote"
+
+def launch_remotejob(cluster: str, cluster_kind: str, props,
                     user: str, token: str, run: type(JobModel),
                     url: str = 'https://dkube-proxy.dkube') -> NamedTuple(
 
@@ -31,7 +29,6 @@ def launch_slurmjob(cluster: str, props: type(JobProperties),
     import time
     import os
     import json
-    import kfp
     import json
     import yaml
     from pyfiglet import Figlet
@@ -40,7 +37,7 @@ def launch_slurmjob(cluster: str, props: type(JobProperties),
     from json import JSONDecodeError
     from dkube.sdk.internal.dkube_api.models.job_model import JobModel
     from dkube.sdk.internal.api_base import ApiBase
-    from dkube.slurm.job_properties import JobProperties
+    from dkube.remote.job_properties import SLURM_JobProperties, LSF_JobProperties
 
     if isinstance(run, JobModel) == True:
         run = run.to_dict()
@@ -49,19 +46,27 @@ def launch_slurmjob(cluster: str, props: type(JobProperties),
     else:
         assert True, "type of parameter run can be either instance of JobModel or a string of dict"
 
-    if isinstance(props, JobProperties) == True:
+    assert cluster_kind in [ClusterKindSlurmRemote, ClusterKindLsfRemote], "Not a valid cluster kind: {}".format(cluster_kind)
+
+    if isinstance(props, SLURM_JobProperties) == True or isinstance(props, LSF_JobProperties) == True:
         props = props.to_dict()
     elif isinstance(props, str) == True:
-        props = ast.literal_eval(props)
+        props = json.loads(props)
+        #props = ast.literal_eval(props)
     else:
-        assert True, "type of parameter props can be either instance of JobProperties or a string of dict"
+        assert True, "type of parameter props can be either instance of SLURM_JobProperties, LSF_JobProperties or a string of dict"
 
     kind = run['parameters']['_class']
     assert kind in [
-        "training", "preprocessing"], "Slurm job is supported only for Training/Preprocessing DKube job types"
+        "training", "preprocessing"], "{} job is supported only for Training/Preprocessing DKube job types".format(cluster_kind)
 
     f = Figlet(font='slant', width=200)
-    print(f.renderText('Dkube {}'.format("SlurmJob")))
+    figletMsg = ""
+    if cluster_kind == ClusterKindSlurmRemote:
+        figletMsg = 'Dkube {}'.format("SlurmJob")
+    else:
+        figletMsg = 'Dkube {}'.format("LsfJob")
+    print(f.renderText(figletMsg))
 
     print("... Input (run) ...")
     print(yaml.dump(run))
@@ -82,21 +87,22 @@ def launch_slurmjob(cluster: str, props: type(JobProperties),
         run['parameters']['generated']['uuid'] = runid
         run['parameters']['generated'].update({'pipeline': {'runid': wfid}})
 
-    slurm = {
+    if cluster_kind == ClusterKindSlurmRemote:
+        props = {"extra": json.dumps(props)}
+    cluster = {
         "name": cluster,
-        "kind": "CLUSTER_SLURMHPC_REMOTE",
+        "kind": cluster_kind,
         "scheduling_opts": {
-                "slurmhpc": {
+                "hpc": {
                     "file": {
                         "name": "properties.json",
-                        "body": json.dumps({
-                            "extra": json.dumps(props)})
+                        "body": json.dumps(props)
                     }
                 }
         }
     }
 
-    run['parameters'][kind]["cluster"] = slurm
+    run['parameters'][kind]["cluster"] = cluster
 
     name = run['name']
     api = ApiBase(url, token, [])
@@ -105,9 +111,20 @@ def launch_slurmjob(cluster: str, props: type(JobProperties),
     # wait loop
     recorded = None
     while True:
-        run = api.get_run(kind, user, name)['job']
-        status = run['parameters']['generated']['status']
-        state, reason = status['state'], status['reason']
+        status = {}
+        try:
+            run = api.get_run(kind, user, name)['job']
+            status = run['parameters']['generated']['status']
+            state, reason = status['state'], status['reason']
+        except ValueError as ve:
+            ve_without_num = "".join(i for i in str(ve) if not i.isdigit()).lower()
+            if "Invalid value for `state` (Waiting for  gpu(s))".lower() in ve_without_num or "versioning" in ve_without_num or "login_required" in ve_without_num or "pending" in ve_without_num:
+                num = "".join(i for i in str(ve) if i.isdigit())
+                status["state"] = "Waiting for {} gpu(s)".format(num)
+                status["reason"] = ""
+            else:
+                raise ve
+
         if state.lower() in ['complete', 'failed', 'error']:
             print(
                 "run {} - completed with state {} and reason {}".format(name, state, reason))
@@ -135,20 +152,3 @@ def launch_slurmjob(cluster: str, props: type(JobProperties),
 
     output = namedtuple('Outputs', ['artifacts', 'run_details'])
     return output(artifacts, rundetails)
-
-
-dkube_slurmjob_op = componentize(launch_slurmjob,
-                                 "dkube_slurmjob_launcher",
-                                 "Launcher for slurmjob using DKube APIs.",
-                                 "ocdr/dkube_launcher:slurm",
-                                 {
-                                     'platform': 'Dkube'
-                                 },
-                                 {
-                                     'platform': 'Dkube',
-                                     'stage': 'training',
-                                     'logger': 'dkubepl',
-                                     'dkube.garbagecollect': 'true',
-                                     'dkube.garbagecollect.policy':
-                                     'all'
-                                 })

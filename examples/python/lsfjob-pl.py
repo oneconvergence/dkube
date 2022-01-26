@@ -13,8 +13,8 @@ from typing import NamedTuple
 from dkube.remote._kfpl import componentize
 
 
-def create_and_launch_slurmjob(cluster: str, cluster_kind: str, props,
-        token: str, code: str, dataset:str, model: str) -> NamedTuple(
+def create_and_launch_lsfjob(cluster: str, cluster_kind: str, props, application: str,
+         gpu: int, gpu_mode: str, token: str, code: str, dataset:str, model: str) -> NamedTuple(
 
         'outputs',
         [
@@ -28,6 +28,17 @@ def create_and_launch_slurmjob(cluster: str, cluster_kind: str, props,
     from dkube.sdk import generate
     from dkube.remote import launch_remotejob
 
+    if isinstance(props, LSF_JobProperties) == True:
+        props = props.to_dict()
+    elif isinstance(props, str) == True:
+        props = ast.literal_eval(props)
+    else:
+        assert True, "type of parameter props can be either instance of LSF_JobProperties or a string of dict"
+
+    jobprops['application'] = application
+    jobprops['gpu'] = gpu
+    jobprops['gpu_mode'] = gpu_mode
+
     auth_url = "http://dkube-auth-server.dkube:3001/verifyToken"
     headers = {"accept":"application/json"}
     assert token != "", "Token is empty"
@@ -40,7 +51,7 @@ def create_and_launch_slurmjob(cluster: str, cluster_kind: str, props,
     training = DkubeTraining(
         str(user), name=training_name, description='triggered from dkube pl launcher')
     training.update_container(
-        framework="tensorflow_2.0.0", image_url="ocdr/dkube-datascience-tf-cpu:v2.0.0-9")
+        framework="tensorflow_2.0.0-gpu", image_url="ocdr/dkube-datascience-tf-gpu:v2.0.0-9")
     training.update_startupscript("python mnist/train.py")
     training.add_code(str(code))
     training.add_input_dataset(str(dataset), mountpath='/mnist')
@@ -48,9 +59,9 @@ def create_and_launch_slurmjob(cluster: str, cluster_kind: str, props,
     return launch_remotejob(cluster, cluster_kind, props, user, token, training.job)
 
 
-dkube_slurmjob_op = componentize(create_and_launch_slurmjob,
-                                 "dkube_slurmjob_launcher",
-                                 "Launcher for slurmjob using DKube APIs.",
+dkube_lsfjob_op = componentize(create_and_launch_lsfjob,
+                                 "dkube_lsfjob_launcher",
+                                 "Launcher for remotejob using DKube APIs.",
                                  "ocdr/dkube_launcher:remote",
                                  {
                                      'platform': 'Dkube'
@@ -63,6 +74,7 @@ dkube_slurmjob_op = componentize(create_and_launch_slurmjob,
                                      'dkube.garbagecollect.policy':
                                      'all'
                                  })
+
 
 dkube_servingop = kfplc.load_component_from_url(
     "https://raw.githubusercontent.com/oneconvergence/dkube/2.2.lsf/components/serving/component.yaml")
@@ -78,22 +90,28 @@ def extract_version(artifacts: str) -> str:
 
 
 @kfp.dsl.pipeline(
-    name='slurm job pipeline',
-    description='An example pipeline for launching slurm job.'
+    name='lsf job pipeline',
+    description='An example pipeline for launching lsf job.'
 )
-def slurm_pipeline(
+def lsf_pipeline(
         token=None,
         code=None,
         dataset=None,
         model=None,
-        slurm_cluster=None,
-        slurm_jobprops: type(SLURM_JobProperties) = SLURM_JobProperties()):
+        lsf_cluster=None,
+        lsf_token=None,
+        application='generic',
+        gpu: int = 0,
+        gpu_mode='shared',
+        lsf_jobprops: type(LSF_JobProperties) = LSF_JobProperties()):
 
-    slurm_task = dkube_slurmjob_op(
-        slurm_cluster, "slurm-remote", slurm_jobprops, str(token), code, dataset, model).set_display_name("training")
+
+    lsf_task = dkube_lsfjob_op(
+        lsf_cluster, "lsf-remote", lsf_jobprops, application, gpu, gpu_mode,
+        str(token), code, dataset, model).set_display_name("training")
 
     extract_task = extract_version(
-        slurm_task.outputs['artifacts']).after(slurm_task).set_display_name("extract_version")
+        lsf_task.outputs['artifacts']).after(lsf_task).set_display_name("extract_version")
     serving_task = dkube_servingop(
         str(token), str(model),
         model_version=extract_task.output,
@@ -104,4 +122,4 @@ def slurm_pipeline(
         transformer_code='mnist/transformer.py').after(extract_task).set_display_name("serving")
 
 
-compiler.Compiler().compile(slurm_pipeline, __file__ + '.tar.gz')
+compiler.Compiler().compile(lsf_pipeline, __file__ + '.tar.gz')
