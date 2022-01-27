@@ -23,21 +23,25 @@ def create_and_launch_lsfjob(cluster: str, cluster_kind: str, props, application
         ]):
 
     import requests
+    import ast
+    import json
 
     from dkube.sdk import DkubeTraining
     from dkube.sdk import generate
-    from dkube.remote import launch_remotejob
+    from dkube.remote import launch_remotejob, LSF_JobProperties
 
     if isinstance(props, LSF_JobProperties) == True:
         props = props.to_dict()
     elif isinstance(props, str) == True:
-        props = ast.literal_eval(props)
+        props = json.loads(props)
+        #props = ast.literal_eval(props)
     else:
         assert True, "type of parameter props can be either instance of LSF_JobProperties or a string of dict"
 
-    jobprops['application'] = application
-    jobprops['gpu'] = gpu
-    jobprops['gpu_mode'] = gpu_mode
+    props['application'] = application
+    props['ngpu'] = int(gpu)
+    props['gpu_mode'] = gpu_mode
+    props = json.dumps(props)
 
     auth_url = "http://dkube-auth-server.dkube:3001/verifyToken"
     headers = {"accept":"application/json"}
@@ -51,7 +55,7 @@ def create_and_launch_lsfjob(cluster: str, cluster_kind: str, props, application
     training = DkubeTraining(
         str(user), name=training_name, description='triggered from dkube pl launcher')
     training.update_container(
-        framework="tensorflow_2.0.0-gpu", image_url="ocdr/dkube-datascience-tf-gpu:v2.0.0-9")
+        framework="tensorflow_2.6.0-gpu", image_url="ocdr/dkube-datascience-tf-gpu:v2.6.0-9")
     training.update_startupscript("python mnist/train.py")
     training.add_code(str(code))
     training.add_input_dataset(str(dataset), mountpath='/mnist')
