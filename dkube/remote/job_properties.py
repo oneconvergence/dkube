@@ -2115,24 +2115,7 @@ def from_int(x: Any) -> int:
     assert isinstance(x, int) and not isinstance(x, bool)
     return x
 
-class LSF_JobProperties:
-    application: str
-    min_num_cpu: int
-    max_num_cpu: int
-    proc_per_host: int
-    extra_res: str
-    runlimithour: int
-    runlimitminute: int
-    max_mem: int
-    rerunnable: str
-    app_profile: str
-    prj_name: str
-    res_id: str
-    login_shell: str
-    queue: str
-    ngpu: int
-    gpu_mode: str
-    extra_params: str
+class LSF_JobProperties(object):
 
     def __init__(self, application: str = "", min_num_cpu: int = 1, max_num_cpu: int = 0, proc_per_host: int = 0, extra_res: str = "", runlimithour: int = 0, runlimitminute: int = 0, max_mem: int = 0, rerunnable: str = "", app_profile: str = "", prj_name: str = "default", res_id: str = "", login_shell: str = "", queue: str = "long", ngpu: int = 0, gpu_mode: str = "", extra_params: str = "") -> None:
         self.application = application
@@ -2154,7 +2137,7 @@ class LSF_JobProperties:
         self.extra_params = extra_params
 
     def to_dict(self) -> dict:
-        result: dict = {}
+        result = {}
         result["application"] = from_str(self.application)
         result["min_num_cpu"] = from_int(self.min_num_cpu)
         result["max_num_cpu"] = from_int(self.max_num_cpu)
