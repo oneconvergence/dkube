@@ -97,8 +97,12 @@ class JobClusterModel(object):
         :type: str
         """
         # Shabbir: Manually commenting out the following piece of code to prevent raising exception because
-        # the enum for cluster kind has been changed with lsf support and
+        # the enum for cluster kind has been changed with lsf support(lsf support was added in 2.2.1.16 release) and
         # this version of sdk does not have models generated with the swagger spec which has related changes.
+        # This version of sdk has models which were generated with merge of 2.2.x and 2.1.x releases swagger spec.
+        # If we generate models from 2.2.1.16 release swagger spec, which does not have all the changes from 2.1.x releases,
+        # may break sdk compatibilty with 2.1.x releases.
+        # So commenting out following code to make sdk compatible with 2.2.1.x and 2.1.x releases.
         """
         allowed_values = ["CLUSTER_LOCAL", "CLUSTER_SLURMHPC_REMOTE"]  # noqa: E501
         if kind not in allowed_values:
