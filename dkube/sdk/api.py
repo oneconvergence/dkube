@@ -3000,4 +3000,81 @@ class DkubeApi(ApiBase, FilesBase):
             print("Schema is Null")
             return 
             
+### operator api's ####
 
+    def configure_clusters(self,data):
+        """
+        Method to configure clusters in dkube
+
+        *Available in DKube Release: 3.x*
+
+        *Inputs*
+
+            data
+               Instance of :bash:`dkube.sdk.rsrcs.operator.DkubeCluster` class.
+                Please see the :bash:`Resources` section for details on this class.
+                
+        Outputs*
+            a dictionary object with response status
+        """
+        clusters_info=[]
+        clusters_info.append(data)
+        clusters_dict={}
+        clusters_dict["clusters"]=clusters_info
+        response = super().configure_clusters(clusters_dict)
+        return response
+
+    def get_clusters(self):
+        """
+        Method to get the clusters in dkube
+
+        *Available in DKube Release: 3.x*
+
+        Outputs*
+            returns the configured clusters
+        """
+        response = super().get_clusters()
+        return response
+
+    def get_cluster_details(self,clustername):
+        """
+        Method to get the cluster details in dkube
+
+        *Available in DKube Release: 3.x*
+
+        Outputs*
+            returns the details of that particular cluster
+        """
+        response = super().get_cluster_details(clustername)
+        return response
+    
+    def delete_cluster(self,clustername):
+        """
+        Method to delete the clusters in dkube
+
+        *Available in DKube Release: 3.x*
+
+        Outputs*
+            returns the response
+        """
+        response = super().delete_cluster(clustername)
+        return response
+
+    def update_cluster_configuration(self,clustername,data):
+        """
+        Method to update the cluster configuration in dkube
+
+        *Available in DKube Release: 3.x*
+
+        Outputs*
+            returns the response
+        """
+        data = {k.replace("_", "", 1): v for k, v in data.__dict__.items()}
+        data = {k: v for k, v in data.items() if v is not None}
+        clusters_info=[]
+        clusters_info.append(data)
+        clusters_dict={}
+        clusters_dict["clusters"]=clusters_info
+        print(clusters_dict)
+        response = super().update_cluster_configuration(clustername,clusters_dict)
+        return response
