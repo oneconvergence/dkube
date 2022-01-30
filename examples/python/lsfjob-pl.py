@@ -81,7 +81,7 @@ dkube_lsfjob_op = componentize(create_and_launch_lsfjob,
 
 
 dkube_servingop = kfplc.load_component_from_url(
-    "https://raw.githubusercontent.com/oneconvergence/dkube/2.2.lsf/components/serving/component.yaml")
+    "https://raw.githubusercontent.com/oneconvergence/dkube/2.2/components/serving/component.yaml")
 
 
 @kfplc.create_component_from_func
