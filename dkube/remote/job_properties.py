@@ -2117,7 +2117,7 @@ def from_int(x: Any) -> int:
 
 class LSF_JobProperties(object):
 
-    def __init__(self, application: str = "", min_num_cpu: int = 1, max_num_cpu: int = 0, proc_per_host: int = 0, extra_res: str = "", runlimithour: int = 0, runlimitminute: int = 0, max_mem: int = 0, rerunnable: str = "", app_profile: str = "", prj_name: str = "default", res_id: str = "", login_shell: str = "", queue: str = "long", ngpu: int = 0, gpu_mode: str = "", extra_params: str = "") -> None:
+    def __init__(self, application: str = "", min_num_cpu: int = 1, max_num_cpu: int = 0, proc_per_host: int = 0, extra_res: str = "", runlimithour: int = 0, runlimitminute: int = 0, max_mem: int = 0, rerunnable: str = "", app_profile: str = "", prj_name: str = "", res_id: str = "", login_shell: str = "", queue: str = "", ngpu: int = 0, gpu_mode: str = "", extra_params: str = "") -> None:
         self.application = application
         self.min_num_cpu = min_num_cpu
         self.max_num_cpu = max_num_cpu
