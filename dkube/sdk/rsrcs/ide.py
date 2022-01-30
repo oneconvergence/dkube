@@ -1,35 +1,58 @@
 from __future__ import print_function
-import time
+
+import json
 import sys
+import time
+from pprint import pprint
 
 from dkube.sdk.internal import dkube_api
-from dkube.sdk.internal.dkube_api.rest import ApiException
-from dkube.sdk.internal.dkube_api.models.job_model import JobModel
-from dkube.sdk.internal.dkube_api.models.job_model_parameters import JobModelParameters
-from dkube.sdk.internal.dkube_api.models.ds_job_model import DSJobModel
-from dkube.sdk.internal.dkube_api.models.ds_job_model_executor import DSJobModelExecutor
-from dkube.sdk.internal.dkube_api.models.dkube_container_model import DkubeContainerModel
-from dkube.sdk.internal.dkube_api.models.dkube_container_model_framework import DkubeContainerModelFramework
-from dkube.sdk.internal.dkube_api.models.dkube_container_model_framework_details import DkubeContainerModelFrameworkDetails
-from dkube.sdk.internal.dkube_api.models.job_datum_model import JobDatumModel
-from dkube.sdk.internal.dkube_api.models.job_datum_model_workspace import JobDatumModelWorkspace
-from dkube.sdk.internal.dkube_api.models.job_input_datum_model import JobInputDatumModel
-from dkube.sdk.internal.dkube_api.models.job_model_parameters_run import JobModelParametersRun
-from dkube.sdk.internal.dkube_api.models.ds_job_model_hyperparams import DSJobModelHyperparams
+from dkube.sdk.internal.dkube_api.models.config_file_model import \
+    ConfigFileModel
+from dkube.sdk.internal.dkube_api.models.custom_container_model import \
+    CustomContainerModel
+from dkube.sdk.internal.dkube_api.models.custom_container_model_image import \
+    CustomContainerModelImage
 from dkube.sdk.internal.dkube_api.models.custom_kv_model import CustomKVModel
-from dkube.sdk.internal.dkube_api.models.config_file_model import ConfigFileModel
-from dkube.sdk.internal.dkube_api.models.custom_container_model import CustomContainerModel
-from dkube.sdk.internal.dkube_api.models.custom_container_model_image import CustomContainerModelImage
-from dkube.sdk.internal.dkube_api.models.ds_job_model_hptuning import DSJobModelHptuning
-from pprint import pprint
+from dkube.sdk.internal.dkube_api.models.dkube_container_model import \
+    DkubeContainerModel
+from dkube.sdk.internal.dkube_api.models.dkube_container_model_framework import \
+    DkubeContainerModelFramework
+from dkube.sdk.internal.dkube_api.models.dkube_container_model_framework_details import \
+    DkubeContainerModelFrameworkDetails
+from dkube.sdk.internal.dkube_api.models.ds_job_model import DSJobModel
+from dkube.sdk.internal.dkube_api.models.ds_job_model_executor import \
+    DSJobModelExecutor
+from dkube.sdk.internal.dkube_api.models.ds_job_model_hptuning import \
+    DSJobModelHptuning
+from dkube.sdk.internal.dkube_api.models.ds_job_model_hyperparams import \
+    DSJobModelHyperparams
+from dkube.sdk.internal.dkube_api.models.job_datum_model import JobDatumModel
+from dkube.sdk.internal.dkube_api.models.job_datum_model_workspace import \
+    JobDatumModelWorkspace
+from dkube.sdk.internal.dkube_api.models.job_input_datum_model import \
+    JobInputDatumModel
+from dkube.sdk.internal.dkube_api.models.job_model import JobModel
+from dkube.sdk.internal.dkube_api.models.job_model_parameters import \
+    JobModelParameters
+from dkube.sdk.internal.dkube_api.models.job_model_parameters_run import \
+    JobModelParametersRun
+from dkube.sdk.internal.dkube_api.rest import ApiException
 
 from .util import *
 
 
 class DkubeIDE(object):
 
-    FRAMEWORK_OPTS = ["custom", "tensorflow_1.14", "tensorflow_2.0",
-                      "pytorch_2.6", "scikit_0.2.2"]
+    """
+
+        This class defines DKube IDE with helper functions to set properties of IDE.::
+
+            from dkube.sdk import *
+            ide = DkubeIDE("oneconv", name="ide")
+
+            Where first argument is the user of the IDE. User should be a valid onboarded user in dkube.
+
+    """
 
     def __init__(self, user, name=generate('notebook'), description='', tags=[]):
         self.repo = JobInputDatumModel  # class assignment, caller creates objects
@@ -70,6 +93,9 @@ class DkubeIDE(object):
         self.update_basic(user, name, description, tags)
 
     def update_basic(self, user, name, description, tags):
+        """
+            Method to update the attributes specified at creation. Description and tags can be updated. tags is a list of string values.
+        """
         tags = list_of_strs(tags)
 
         self.user = user
@@ -86,16 +112,32 @@ class DkubeIDE(object):
         return self
 
     def update_group(self, group='default'):
+        """
+            Method to update the group to place the IDE.
+        """
         self.run_def.group = group
 
-    def update_container(self, framework=FRAMEWORK_OPTS[0],
+    def update_container(self, framework="custom",
                          image_url="", login_uname="", login_pswd=""):
+        """
+            Method to update the framework and image to use for the IDE.
+
+            *Inputs*
+
+                framework
+
+                image_url
+                    url for the image repository |br|
+                    e.g, docker.io/ocdr/dkube-datascience-tf-cpu:v2.0.0
+
+                login_uname
+                    username to access the image repository
+
+                login_pswd
+                    password to access the image repository
+        """
 
         framework = framework.lower()
-        framework_opts = DkubeIDE.FRAMEWORK_OPTS
-        assert framework in framework_opts, "Invalid choice for framework, select oneof(" + str(
-            framework_opts) + ")"
-
         if framework == "custom":
             framework_str = "custom"
             version_str = ""
@@ -120,21 +162,76 @@ class DkubeIDE(object):
         return self
 
     def add_envvar(self, key, value):
+        """
+            Method to add env variable for the IDE
+
+            *Inputs*
+
+                key
+                    Name of env variable
+
+                value
+                    Value of env variable
+        """
         self.customenv.append(str(dict(key=value)))
         return self
 
     def add_code(self, name, commitid=None):
-        name = self.user + ':' + name
+        """
+            Method to update Code Repo for IDE
+
+            *Inputs*
+
+                name
+                    Name of Code Repo
+
+                commitid
+                    commit id to retreive from code repository
+        """
+        if ":" not in name:
+            name = self.user + ':' + name
         self.input_project_data.name = name
         self.input_project_data.version = commitid
 
     def add_input_dataset(self, name, version=None, mountpath=None):
-        name = self.user + ':' + name
+        """
+            Method to update Dataset Repo input for IDE
+
+            *Inputs*
+
+                name
+                    Name of Dataset Repo
+
+                version
+                    Version (unique id) to use from Dataset
+
+                mountpath
+                    Path at which the Dataset contents are made available in the IDE pod.
+                    For local Dataset, mountpath points to the contents of Dataset.
+                    For remote Dataset, mounpath contains the metadata for the Dataset.
+        """
+        if ":" not in name:
+            name = self.user + ':' + name
         repo = self.repo(name=name, version=version, mountpath=mountpath)
         self.input_datasets.append(repo)
 
     def add_input_model(self, name, version=None, mountpath=None):
-        name = self.user + ':' + name
+        """
+            Method to update Model Repo input for IDE
+
+            *Inputs*
+
+                name
+                    Name of Model Repo
+
+                version
+                    Version (unique id) to use from Model
+
+                mountpath
+                    Path at which the Model contents are made available in the IDE pod
+        """
+        if ":" not in name:
+            name = self.user + ':' + name
         repo = self.repo(name=name, version=version, mountpath=mountpath)
         self.input_models.append(repo)
 
@@ -144,12 +241,49 @@ class DkubeIDE(object):
         self.output_models.append(repo)
 
     def update_config_file(self, name, body=None):
+        """
+            Method to update config file for IDE
+
+            *Inputs*
+
+                name
+                    Name of config file
+
+                body
+                    Config data which is made available as file with the specified name to the IDE under /mnt/dkube/config
+        """
         self.configfile.name = name
         self.configfile.body = body
 
     def update_hptuning(self, name, body=None):
+        """
+            Method to update hyperparameter tuning file for IDE
+
+            *Inputs*
+
+                name
+                    Name of hyperparameter tuning file
+
+                body
+                    Hyperparameter tuning data in yaml format which is made available as file with the specified name to the IDE pod under /mnt/dkube/config
+        """
         self.hptuning.name = name
         self.hptuning.body = body
 
     def update_resources(self, cpus=None, mem=None, ngpus=0):
+        """
+            Method to update resource requirements for IDE
+
+            *Inputs*
+
+                cpus
+                    Number of required cpus
+
+                mem
+                    Memory requied in MB (TODO)
+
+                gpus
+                    Number of required gpus
+        """
         self.notebook_def.ngpus = ngpus
+        self.notebook_def.gpus_override = False

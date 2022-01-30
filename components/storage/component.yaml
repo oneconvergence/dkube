@@ -9,7 +9,7 @@ inputs:
      description: 'Required. Command to storage op to export or reclaim.'}
   - {name: auth_token,      type: String,   optional: false,
      description: 'Required. Dkube authentication token.'}
-  - {name: namespace,       type: String,     optional: true,     default: 'kubeflow',
+  - {name: namespace,       type: String,     default: 'kubeflow',
      description: 'Required. Namespace to export volumes to.'}
   - {name: input_volumes,        type: List,     optional: true,     default: '[]',
      description: 'Optional. List of input artifacts to be exported.'}
@@ -17,13 +17,13 @@ inputs:
      description: 'Optional. List of input artifacts to be exported.'}
   - {name: intermediate_volume,        type: String,     optional: true,     default: '',
      description: 'Optional. Intermediate artifact to be exported.'}
-  - {name: uid,        type: String,     optional: true,     default: '',
+  - {name: uid,        type: String,     default: '{{workflow.uid}}',
      description: 'Optional. UID of artifact to be reclaimed.'}
 outputs:
   - {name: volumes,        description: 'Volumes exported by this component'}
 implementation:
   container:
-    image: ocdr/dkubepl:2.2.1.4
+    image: ocdr/dkubepl:2.2.1.10
     command: ['dkubepl']
     args: [
       storage,

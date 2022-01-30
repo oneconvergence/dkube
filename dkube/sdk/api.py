@@ -11,16 +11,18 @@
 import json
 import os
 import time
-import pandas as pd
 
+import pandas as pd
 import urllib3
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.internal.dkube_api.models.conditions import \
     Conditions as TriggerCondition
+from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
 from dkube.sdk.rsrcs.project import DkubeProject
+from packaging import version as pversion
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -68,7 +70,7 @@ class DkubeApi(ApiBase, FilesBase):
     def __init__(self, URL=None, token=None, common_tags=[], req_timeout=None, req_retries=None):
 
         self.url = URL
-        if self.url == None:
+        if self.url is None:
             self.url = os.getenv(
                 "DKUBE_ACCESS_URL", "http://dkube-controller-master.dkube.svc.cluster.local:5000")
             self.files_url = os.getenv(
@@ -83,11 +85,14 @@ class DkubeApi(ApiBase, FilesBase):
 
         ApiBase.__init__(self, self.url, self.token, common_tags)
         FilesBase.__init__(self, self.files_url, self.token)
-        self.wait_interval = 10
+
+        self.dkubeinfo = super().dkubeinfo()
 
     def set_active_project(self, project_id):
         """
         Set active project. Any resources created using this API instance will belong to the given project.
+
+        *Available in DKube Release: 2.2*
 
         *Inputs*
 
@@ -99,7 +104,7 @@ class DkubeApi(ApiBase, FilesBase):
         ]
         if project_id:
             self.common_tags.append("project:" + str(project_id))
-            
+
     def validate_token(self):
         """
             Method which can be used to validate the token.
@@ -180,7 +185,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "IDE {} - waiting for completion, current state {}".format(ide.name, state))
                 time.sleep(self.wait_interval)
 
-    def list_ides(self, user, filters='*'):
+    def list_ides(self, user, shared=False, filters='*'):
         """
             Method to list all the IDEs of a user.
             Raises exception on any connection errors.
@@ -199,12 +204,12 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().list_ides('notebook', user)
+        return super().list_ides('notebook', user, shared)
 
-    def delete_ide(self, user, name):
+    def delete_ide(self, user, name, wait_for_completion=True):
         """
-            Method tio delete an IDE.
-            Raises exception if token is of different user or if training run with name doesnt exist or on any connection errors.
+            Method to delete an IDE.
+            Raises exception if token is of different user or if IDE with name doesnt exist or on any connection errors.
 
             *Inputs*
 
@@ -214,9 +219,16 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the IDE which needs to be deleted.
 
-        """
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for ide to get deleted.
 
-        super().delete_ide('notebook', user, name)
+        """
+        data = super().get_ide('notebook', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['uuid']
+        ret = super().delete_ide('notebook', user, name)
+        if wait_for_completion:
+            self._wait_for_rundelete_completion(uuid, 'notebook', name)
+        return ret
 
     def create_training_run(self, run: DkubeTraining, wait_for_completion=True):
         """
@@ -239,12 +251,42 @@ class DkubeApi(ApiBase, FilesBase):
 
         assert type(
             run) == DkubeTraining, "Invalid type for run, value must be instance of rsrcs:DkubeTraining class"
+        valid_fw = False
+        fw_opts = ['custom']
+        if run.executor_dkube_framework.choice == 'custom':
+            valid_fw = True
+        else:
+            fws = self.get_training_capabilities()
+            for fw in fws:
+                for v in fw['versions']:
+                    if run.executor_dkube_framework.choice == fw['name'] and run.dkube_framework_details.version == v['name']:
+                        valid_fw = True
+                        break
+                    else:
+                        name = fw['name'] + "_" + v['name']
+                        fw_opts.append(name)
+                if valid_fw == True:
+                    break
+
+        assert valid_fw == True, "Invalid choice for framework, select oneof(" + str(
+            fw_opts) + ")"
+
         super().update_tags(run.training_def)
         super().create_run(run)
         while wait_for_completion:
-            status = super().get_run('training', run.user, run.name, fields='status')
+            status = {}
+            try:
+                status = super().get_run('training', run.user, run.name, fields='status')
+            except ValueError as ve:
+                ve_without_num = ''.join(i for i in str(ve) if not i.isdigit())
+                if "Invalid value for `state` (Waiting for  gpu(s))" in ve_without_num:
+                    num = ''.join(i for i in str(ve) if i.isdigit())
+                    status['state'] = "Waiting for {} gpu(s)".format(num)
+                    status['reason'] = ""
+                else:
+                    raise ve
             state, reason = status['state'], status['reason']
-            if state.lower() in ['complete', 'failed', 'error']:
+            if state.lower() in ['complete', 'failed', 'error', 'stopped', 'created']:
                 print(
                     "run {} - completed with state {} and reason {}".format(run.name, state, reason))
                 break
@@ -272,7 +314,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_run('training', user, name)
 
-    def list_training_runs(self, user, filters='*'):
+    def list_training_runs(self, user, shared=False, filters='*'):
         """
             Method to list all the training runs of a user.
             Raises exception on any connection errors.
@@ -291,9 +333,9 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().list_runs('training', user)
+        return super().list_runs('training', user, shared)
 
-    def delete_training_run(self, user, name):
+    def delete_training_run(self, user, name, wait_for_completion=True):
         """
             Method to delete a run.
             Raises exception if token is of different user or if training run with name doesnt exist or on any connection errors.
@@ -306,9 +348,16 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the run which needs to be deleted.
 
-        """
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for training run to get deleted.
 
-        super().delete_run('training', user, name)
+        """
+        data = super().get_run('training', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['uuid']
+        ret = super().delete_run('training', user, name)
+        if wait_for_completion:
+            self._wait_for_rundelete_completion(uuid, 'training', name)
+        return ret
 
     def create_preprocessing_run(self, run: DkubePreprocessing, wait_for_completion=True):
         """
@@ -334,9 +383,19 @@ class DkubeApi(ApiBase, FilesBase):
         super().update_tags(run.pp_def)
         super().create_run(run)
         while wait_for_completion:
-            status = super().get_run('preprocessing', run.user, run.name, fields='status')
+            status = {}
+            try:
+                status = super().get_run('preprocessing', run.user, run.name, fields='status')
+            except ValueError as ve:
+                ve_without_num = ''.join(i for i in str(ve) if not i.isdigit())
+                if "Invalid value for `state` (Waiting for  gpu(s))" in ve_without_num:
+                    num = ''.join(i for i in str(ve) if i.isdigit())
+                    status['state'] = "Waiting for {} gpu(s)".format(num)
+                    status['reason'] = ""
+                else:
+                    raise ve
             state, reason = status['state'], status['reason']
-            if state.lower() in ['complete', 'failed', 'error']:
+            if state.lower() in ['complete', 'failed', 'error', 'stopped']:
                 print(
                     "run {} - completed with state {} and reason {}".format(run.name, state, reason))
                 break
@@ -364,7 +423,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_run('preprocessing', user, name)
 
-    def list_preprocessing_runs(self, user, filters='*'):
+    def list_preprocessing_runs(self, user, shared=False, filters='*'):
         """
             Method to list all the preprocessing runs of a user.
             Raises exception on any connection errors.
@@ -383,9 +442,9 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().list_runs('preprocessing', user)
+        return super().list_runs('preprocessing', user, shared)
 
-    def delete_preprocessing_run(self, user, name):
+    def delete_preprocessing_run(self, user, name, wait_for_completion=True):
         """
             Method to delete a run.
             Raises exception if token is of different user or if preprocessing run with name doesnt exist or on any connection errors.
@@ -398,9 +457,100 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the run which needs to be deleted.
 
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for preprocess run to get deleted.
+
+        """
+        data = super().get_run('preprocessing', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['uuid']
+        ret = super().delete_run('preprocessing', user, name)
+        if wait_for_completion:
+            self._wait_for_rundelete_completion(uuid, 'preprocessing', name)
+        return ret
+
+    def update_inference(self, run: DkubeServing, wait_for_completion=True):
+        """
+            Method to update a test inference/deployment in DKube.
+            Raises Exception in case of errors.
+
+
+            *Inputs*
+
+                run
+                    Instance of :bash:`dkube.sdk.rsrcs.serving` class.
+                    Please see the :bash:`Resources` section for details on this class.
+
+                    Picks defaults for predictor, transformer configs from the existing inference deployment.
+                    If version is not specified then deployment is updated to latest version.
+
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for job to complete after submission.
+                    Job is declared complete if it is one of the :bash:`complete/failed/error` state
+
         """
 
-        super().delete_run('preprocessing', user, name)
+        inference = super().get_run('inference', run.user, run.name)
+        inference = inference['job']['parameters']['inference']
+
+        if run.predictor.image == None:
+            run.update_serving_image(None, inference['serving_image']['image']['path'],
+                                     inference['serving_image']['image']['username'],
+                                     inference['serving_image']['image']['password'])
+
+        if run.serving_def.model == None:
+            run.serving_def.model = inference['model']
+
+        if run.serving_def.version == None:
+            run.serving_def.version = inference['version']
+
+        if inference['transformer'] == True and run.serving_def.transformer == False:
+            run.update_transformer_image(inference['transformer_image']['image']['path'],
+                                         inference['transformer_image']['image']['username'],
+                                         inference['transformer_image']['image']['password'])
+
+            run.set_transformer(True, script=inference['transformer_code'])
+            run.update_transformer_code(
+                inference['transformer_project'], inference['transformer_commit_id'])
+        elif inference['transformer'] == False and run.serving_def.transformer == True:
+            li = self.get_model_lineage(
+                run.serving_def.owner, run.serving_def.model, run.serving_def.version)
+
+            if run.transformer.image == None:
+                ti = li['run']['parameters']['generated'][
+                    'training_image']['image']
+                run.update_transformer_image(
+                    ti['path'], ti['username'], ti['password'])
+
+            if run.serving_def.transformer_project == None:
+                code = li['run']['parameters']['training'][
+                    'datums']['workspace']['data']
+                name = code['name'].split(':')[1]
+                run.update_transformer_code(name, code['version'])
+
+        if run.serving_def.min_replicas == 0:
+            run.serving_def.min_replicas = inference['minreplicas']
+
+        if run.serving_def.max_concurrent_requests == 0:
+            run.serving_def.max_concurrent_requests = inference['maxconcurrentrequests']
+
+        if super().is_model_catalog_enabled() == True:
+            run.serving_def.deploy = inference['deploy']
+        else:
+            run.serving_def.deploy = None
+
+        super().update_inference(run)
+
+        while wait_for_completion:
+            status = super().get_run('inference', run.user, run.name, fields='status')
+            state, reason = status['state'], status['reason']
+            if state.lower() in ['complete', 'failed', 'error', 'running', 'stopped']:
+                print(
+                    "run {} - completed with state {} and reason {}".format(run.name, state, reason))
+                break
+            else:
+                print(
+                    "run {} - waiting for completion, current state {}".format(run.name, state))
+                time.sleep(self.wait_interval)
 
     def create_test_inference(self, run: DkubeServing, wait_for_completion=True):
         """
@@ -446,29 +596,40 @@ class DkubeApi(ApiBase, FilesBase):
 
             li = self.get_model_lineage(
                 run.serving_def.owner, run.serving_def.model, run.serving_def.version)
-            if run.predictor.image == None:
+
+            if li == None or li['run'] == None:
+                li = None
+
+            if li == None and run.predictor.image == None:
+                raise Exception(
+                    "Lineage is nil, predictor image must be provided.")
+
+            if li != None and run.predictor.image == None:
                 si = li['run']['parameters'][
                     'generated']['serving_image']['image']
-                run.update_serving_image(
-                    si['path'], si['username'], si['password'])
+                run.update_serving_image(None,
+                                         si['path'], si['username'], si['password'])
 
-            if run.serving_def.transformer == True and run.transformer.image == None:
+            if li != None and run.serving_def.transformer == True and run.transformer.image == None:
                 ti = li['run']['parameters']['generated'][
                     'training_image']['image']
                 run.update_transformer_image(
                     ti['path'], ti['username'], ti['password'])
 
-            if run.serving_def.transformer == True and run.serving_def.transformer_project == None:
+            if li != None and run.serving_def.transformer == True and run.serving_def.transformer_project == None:
                 code = li['run']['parameters']['training'][
                     'datums']['workspace']['data']
                 name = code['name'].split(':')[1]
                 run.update_transformer_code(name, code['version'])
+        # Don't allow prod deploy using this API, if MODEL_CATALOG_ENABLED=true
+        if run.serving_def.deploy == True and super().is_model_catalog_enabled() == True:
+            run.serving_def.deploy = None
 
         super().create_run(run)
         while wait_for_completion:
             status = super().get_run('inference', run.user, run.name, fields='status')
             state, reason = status['state'], status['reason']
-            if state.lower() in ['complete', 'failed', 'error', 'running']:
+            if state.lower() in ['complete', 'failed', 'error', 'running', 'stopped']:
                 print(
                     "run {} - completed with state {} and reason {}".format(run.name, state, reason))
                 break
@@ -496,7 +657,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_run('inference', user, name)
 
-    def list_test_inferences(self, user, filters='*'):
+    def list_test_inferences(self, user, shared=False, filters='*'):
         """
             Method to list all the training inferences of a user.
             Raises exception on any connection errors.
@@ -515,9 +676,9 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().list_runs('inference', user)
+        return super().list_runs('inference', user, shared)
 
-    def delete_test_inference(self, user, name):
+    def delete_test_inference(self, user, name, wait_for_completion=True):
         """
             Method to delete a test inference.
             Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.
@@ -530,9 +691,16 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the run which needs to be deleted.
 
-        """
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for inference to get deleted.
 
-        super().delete_run('inference', user, name)
+        """
+        data = super().get_run('inference', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['uuid']
+        ret = super().delete_run('inference', user, name)
+        if wait_for_completion:
+            self._wait_for_rundelete_completion(uuid, 'inference', name)
+        return ret
 
     def create_code(self, code: DkubeCode, wait_for_completion=True):
         """
@@ -587,7 +755,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_repo('program', user, name)
 
-    def list_code(self, user, filters='*'):
+    def list_code(self, user, shared=False, filters='*'):
         """
             Method to list all the code repos of a user.
             Raises exception on any connection errors.
@@ -606,9 +774,9 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().list_repos('program', user)
+        return super().list_repos('program', user, shared)
 
-    def delete_code(self, user, name):
+    def delete_code(self, user, name, force=False):
         """
             Method to delete a code repo.
             Raises exception if token is of different user or if code with name doesnt exist or on any connection errors.
@@ -623,14 +791,14 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        super().delete_repo('program', user, name)
+        super().delete_repo('program', user, name, force=force)
 
 ################### Feature Store ############################
-    def create_featureset(self, featureset: DkubeFeatureSet):
+    def create_featureset(self, featureset: DkubeFeatureSet, wait_for_completion=True):
         """
             Method to create a featureset on DKube.
-            Raises Exception in case of errors.
 
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -638,9 +806,13 @@ class DkubeApi(ApiBase, FilesBase):
                     Instance of :bash:`dkube.sdk.rsrcs.featureSet` class.
                     Please see the :bash:`Resources` section for details on this class.
 
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for featureset resource to be ready or created
+                    with v1 version in :bash:`sync` state
+
             *Outputs*
 
-                A Json string with response status 
+                A dictionary object with response status
 
         """
         assert type(
@@ -652,12 +824,27 @@ class DkubeApi(ApiBase, FilesBase):
             if spec_response['code'] != 200:
                 self.delete_featureset(featureset.featureset.name)
                 return spec_response
+        while wait_for_completion:
+            versions = super().get_featureset_versions(featureset.featureset.name)
+            if versions is None:
+                print("create_featureset: waiting for featureset to be setup")
+                time.sleep(self.wait_interval)
+                continue
+
+            version_status = DKubeFeatureSetUtils().get_version_status(versions, 'v1')
+            if version_status.lower() == 'synced':
+                break
+            print("create_featureset: waiting for featureset to be setup")
+            time.sleep(self.wait_interval)
+
         return response
 
     def delete_featuresets(self, featureset_list):
         """
             Method to delete a list of featuresets on DKube.
             Raises Exception in case of errors.
+
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -667,7 +854,7 @@ class DkubeApi(ApiBase, FilesBase):
 
             *Outputs*
 
-                A Json string with response status with the list of deleted featureset names
+                A dictionary object  with response status with the list of deleted featureset names
 
         """
         assert (
@@ -679,18 +866,19 @@ class DkubeApi(ApiBase, FilesBase):
 
     def delete_featureset(self, name):
         """
-        Method to delete a a featureset on DKube.
-        Raises Exception in case of errors.
+        Method to delete a a featureset.
+
+        *Available in DKube Release: 2.2*
 
         *Inputs*
 
             name
-                featureset name to be deleted. 
+                featureset name to be deleted.
                 example: "mnist-fs"
 
         *Outputs*
 
-            A dictionary with response status and the deleted featureset name
+            A dictionary object with response status and the deleted featureset name
 
         """
         assert(
@@ -699,37 +887,48 @@ class DkubeApi(ApiBase, FilesBase):
         ), "Invalid parameter, value must be a featureset name"
         return super().delete_featureset([name])
 
-
     def commit_featureset(self, **kwargs):
         """
             Method to commit sticky featuresets.
 
-            featureset should be in ready state. It will be in created state if no featurespec is uploaded. 
+            featureset should be in ready state. It will be in created state if no featurespec is uploaded.
             If the featureset is in created state, the following will happen.
+
                 a) If metadata is passed, it will be uploaded as featurespec
                 b) If no metadata is passed, it derives from df and uploads it.
+
             If the featureset is in ready state, the following will happen.
+
                 a) metadata if passed any will be ignored
                 b) featurespec will be downloaded for the specifed featureset and df is validated for conformance.
 
-            If name is specified, it derives the path for committing the features
+            If name is specified, it derives the path for committing the features.
+
             If path is also specified, it doesn't derive the path. It uses the specified path. However, path should a mount path into dkube store.
+
+            If df is not specified, it assumes the df is already written to the featureset path. Features can be written to featureset mount path using DkubeFeatureSet.write_features
+
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
                 name
                     featureset name or None
                     example: name='fset'
+
                 df
                     Dataframe with features to be written
+                    None or empty df are invalid
                     type: pandas.DataFrame
+
                 metadata
                     optional yaml object with name, description and schema fields or None
-                    example:metadata=[{'name':gender, 'description:'', 'schema':int64}]
+                    example:metadata=[{'name':age, 'description:'', 'schema':int64}]
+
                 path
                     Mount path where featureset is mounted or None
                     example: path='/opt/dkube/fset'
-                   
+
             *Outputs*
 
                 Dictionary with response status
@@ -737,37 +936,49 @@ class DkubeApi(ApiBase, FilesBase):
         """
 
         name = kwargs.get('name', None)
-        df = kwargs.get('df', pd.DataFrame({'A': []}))
+        df = kwargs.get('df', None)
         metadata = kwargs.get('metadata', None)
         path = kwargs.get('path', None)
+        merge = kwargs.get('merge', "True")
+        dftype = kwargs.get('dftype', "Py")
 
-        assert(isinstance(df, pd.DataFrame)
-        ), "df must be a DataFrame object"
-        assert(not df.empty), "df can not be empty"
+        if not df is None:
+            assert(not df.empty), "df should not be empty"
+        else:
+            # Todo: Handle commit for featuresets mounted as k8s volumes
+            assert(name or path),  "name or path should be specified"
 
         featurespec = None
-        
+        existing_spec = []
+
         if name is not None:
             featurespec, valid = super().get_featurespec(name)
             assert(valid), "featureset not found"
-        if ((not featurespec) and (name is not None)):
+            if featurespec:
+                existing_spec = featurespec
+        if merge is False:
+            existing_spec = []
+        if (dftype == "Py") and ((len(existing_spec) != len(df.keys())) and (name is not None) and (df is not None)):
             if not metadata:
-                metadata = DKubeFeatureSetUtils().compute_features_metadata(df)
+                metadata = DKubeFeatureSetUtils().compute_features_metadata(df, existing_spec)
             assert(metadata), "The specified featureset is invalid"
-            self.upload_featurespec(featureset=name, filepath=None, metadata=metadata)
+            self.upload_featurespec(
+                featureset=name, filepath=None, metadata=metadata)
             featurespec = metadata
 
-        if featurespec is not None:
+        if (dftype == "Py") and (featurespec is not None) and (df is not None):
             isdf_valid = DKubeFeatureSetUtils().validate_features(df, featurespec)
             assert(isdf_valid), "DataFrame validation failed"
 
-        return super().commit_featureset(name, df, path)
+        return super().commit_featureset(name, df, path, dftype)
 
     def read_featureset(self, **kwargs):
         """
             Method to read a featureset version.
             If name is specified, path is derived. If featureset is not mounted, a copy is made to user's homedir
             If path is specified, it should be a mounted path
+
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -782,7 +993,7 @@ class DkubeApi(ApiBase, FilesBase):
 
                 path
                     path where featureset is mounted.
-                    path='/opt/dkube/fset' or None 
+                    path='/opt/dkube/fset' or None
 
             *Outputs*
 
@@ -792,16 +1003,19 @@ class DkubeApi(ApiBase, FilesBase):
         name = kwargs.get('name', None)
         version = kwargs.get('version', None)
         path = kwargs.get('path', None)
-        
-        assert ((version == None) or isinstance(version,str)), "version must be a string"
+        dftype = kwargs.get('dftype', "Py")
 
-        return super().read_featureset(name, version, path)
+        assert ((version == None) or isinstance(
+            version, str)), "version must be a string"
 
+        return super().read_featureset(name, version, path, dftype)
 
     def list_featuresets(self, query=None):
         """
             Method to list featuresets based on query string.
             Raises Exception in case of errors.
+
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -810,7 +1024,7 @@ class DkubeApi(ApiBase, FilesBase):
 
             *Outputs*
 
-                A Json string with response status and the list of featuresets
+                A dictionary object  with response status and the list of featuresets
 
         """
         return super().list_featureset(query)
@@ -818,7 +1032,8 @@ class DkubeApi(ApiBase, FilesBase):
     def upload_featurespec(self, featureset=None, filepath=None, metadata=None):
         """
             Method to upload feature specification file.
-            Raises Exception in case of errors.
+
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -829,23 +1044,26 @@ class DkubeApi(ApiBase, FilesBase):
                     Filepath for the feature specification metadata yaml file
 
                 metadata
-                    feature specification in yaml object. 
+                    feature specification in yaml object.
 
                 One of filepath or metadata should be specified.
 
             *Outputs*
 
-                A Json string with response status
+                A dictionary object with response status
 
         """
-        assert(featureset and isinstance(featureset,str)), "featureset must be string"
-        assert(bool(filepath) ^ bool(metadata)), "One of filepath and metadata should be specified"
+        assert(featureset and isinstance(featureset, str)
+               ), "featureset must be string"
+        assert(bool(filepath) ^ bool(metadata)
+               ), "One of filepath and metadata should be specified"
         return super().featureset_upload_featurespec(featureset, filepath, metadata)
 
-    def get_featurespec(self, featureset=None):
+    def get_featureset(self, featureset=None):
         """
-            Method to retrieve feature specification method.
-            Raises Exception in case of errors.
+            Method to retrieve details of a featureset
+
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -855,14 +1073,33 @@ class DkubeApi(ApiBase, FilesBase):
 
             *Outputs*
 
-                A Json string with response status and feature specification metadata
+                A dictionary object with response status, featureset metadata and feature versions
+
+        """
+        return super().get_featureset(featureset)
+
+    def get_featurespec(self, featureset=None):
+        """
+            Method to retrieve feature specification method.
+
+            *Available in DKube Release: 2.2*
+
+            *Inputs*
+
+                featureset
+
+                    The name of featureset
+
+            *Outputs*
+
+                A dictionary object with response status and feature specification metadata
 
         """
         return super().get_featurespec(featureset)
 
 ###############################################################
 
-    def create_dataset(self, dataset: DkubeDataset, wait_for_completion=True):
+    def create_dataset(self, dataset: DkubeDataset,wait_for_completion=True):
         """
             Method to create a dataset on DKube.
             Raises Exception in case of errors.
@@ -880,11 +1117,11 @@ class DkubeApi(ApiBase, FilesBase):
                     dataset is declared complete if it is one of the :bash:`complete/failed/error` state
 
         """
-
-
         assert type(
             dataset) == DkubeDataset, "Invalid type for run, value must be instance of rsrcs:DkubeDataset class"
         super().create_repo(dataset)
+        if dataset.datum.remote == True:
+            wait_for_completion = False
         while wait_for_completion:
             status = super().get_repo('dataset', dataset.user, dataset.name, fields='status')
             state, reason = status['state'], status['reason']
@@ -916,7 +1153,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_repo('dataset', user, name)
 
-    def list_datasets(self, user, filters='*'):
+    def list_datasets(self, user, shared=False, filters='*'):
         """
             Method to list all the datasets of a user.
             Raises exception on any connection errors.
@@ -935,9 +1172,9 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        return super().list_repos('dataset', user)
+        return super().list_repos('dataset', user, shared)
 
-    def delete_dataset(self, user, name):
+    def delete_dataset(self, user, name, force=False):
         """
             Method to delete a dataset.
             Raises exception if token is of different user or if dataset with name doesnt exist or on any connection errors.
@@ -952,7 +1189,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        super().delete_repo('dataset', user, name)
+        super().delete_repo('dataset', user, name, force=force)
 
     def create_model(self, model: DkubeModel, wait_for_completion=True):
         """
@@ -988,7 +1225,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "model {} - waiting for completion, current state {}".format(model.name, state))
                 time.sleep(self.wait_interval)
 
-    def get_model(self, user, name):
+    def get_model(self, user, name, publish_details=False):
         """
             Method to fetch the model with given name for the given user.
             Raises exception in case of model is not found or any other connection errors.
@@ -1004,10 +1241,21 @@ class DkubeApi(ApiBase, FilesBase):
                     Name of the model to be fetched
 
         """
+        
+        dkubever = self.dkubeinfo['version']
+        if (pversion.parse(dkubever) < pversion.parse("2.3.0.0")) or publish_details == False:
+            return super().get_repo('model', user, name)
+        else:
+            modelObj = super().get_repo('model', user, name)
+            versions = modelObj['versions']
+            for v in versions:
+                if v['version']['model']['stage'] == 'PUBLISHED':
+                    publish = super().get_model_catalog(user, name)
+                    modelObj["publish_details"] = publish
+                    return modelObj
+            return modelObj
 
-        return super().get_repo('model', user, name)
-
-    def list_models(self, user, filters='*'):
+    def list_models(self, user, shared=False, published=False, filters='*'):
         """
             Method to list all the models of a user.
             Raises exception on any connection errors.
@@ -1023,12 +1271,16 @@ class DkubeApi(ApiBase, FilesBase):
                     Only :bash:`*` is supported now.
 
                     User will able to filter models based on state or the source
+                published
+                    If Published is true, it will return all published models
 
         """
 
-        return super().list_repos('model', user)
+        if published == True:
+            return super().list_published_models(user)
+        return super().list_repos('model', user, shared)
 
-    def delete_model(self, user, name):
+    def delete_model(self, user, name, force=False):
         """
             Method to delete a model.
             Raises exception if token is of different user or if model with name doesnt exist or on any connection errors.
@@ -1043,7 +1295,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
 
-        super().delete_repo('model', user, name)
+        super().delete_repo('model', user, name, force=force)
 
     def trigger_runs_bycode(self, code, user):
         """
@@ -1329,11 +1581,21 @@ class DkubeApi(ApiBase, FilesBase):
         caps = self.get_datascience_capabilities()
         return caps['serving']['frameworks']
 
+    def list_frameworks(self):
+        fw_opts = ['custom']
+        fws = self.get_training_capabilities()
+        for fw in fws:
+            for v in fw['versions']:
+                name = fw['name'] + "_" + v['name']
+                fw_opts.append(name)
+        return json.dumps(fw_opts)
+
     def release_model(self, user, model, version=None, wait_for_completion=True):
         """
             Method to release a model to model catalog.
             Raises Exception in case of errors.
 
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -1341,7 +1603,7 @@ class DkubeApi(ApiBase, FilesBase):
                     Name with model.
 
                 version
-                    Version of the model to be released. 
+                    Version of the model to be released.
                     If not passed then latest version is released automatically.
 
                 user
@@ -1377,6 +1639,7 @@ class DkubeApi(ApiBase, FilesBase):
             Method to publish a model to model catalog.
             Raises Exception in case of errors.
 
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
@@ -1424,8 +1687,8 @@ class DkubeApi(ApiBase, FilesBase):
             if run.predictor.image == None:
                 si = li['run']['parameters'][
                     'generated']['serving_image']['image']
-                run.update_serving_image(
-                    si['path'], si['username'], si['password'])
+                run.update_serving_image(None,
+                                         si['path'], si['username'], si['password'])
 
             if run.serving_def.transformer == True and run.transformer.image == None:
                 ti = li['run']['parameters']['generated'][
@@ -1458,7 +1721,9 @@ class DkubeApi(ApiBase, FilesBase):
 
     def create_model_deployment(self, user, name, model, version,
                                 description=None,
-                                stage_or_deploy="stage", wait_for_completion=True):
+                                stage_or_deploy="stage",
+                                min_replicas=0,
+                                max_concurrent_requests=0, wait_for_completion=True):
         """
             Method to create a serving deployment for a model in the model catalog.
             Raises Exception in case of errors.
@@ -1486,6 +1751,14 @@ class DkubeApi(ApiBase, FilesBase):
                                         deploying it for production.
                                         Change to :bash: `deploy` to deploy the model in production
 
+                min_replicas
+                    Minimum number of replicas that each Revision should have.
+                    If not prvided, uses value set in platform config map.
+
+                max_concurrent_requests
+                    Soft limit that specifies the maximum number of requests an inf pod can process at a time.
+                    If not prvided, uses value set in platform config map.
+
                 wait_for_completion
                     When set to :bash:`True` this method will wait for job to complete after submission.
                     Job is declared complete if it is one of the :bash:`complete/failed/error` state
@@ -1495,13 +1768,21 @@ class DkubeApi(ApiBase, FilesBase):
         assert stage_or_deploy in [
             "stage", "deploy"], "Invalid value for stage_or_deploy parameter."
 
-        # Fetch the model from modelcatalog
-        mcitem = self.get_modelcatalog_item(user, model, version)
-
         run = DkubeServing(user, name=name, description=description)
         run.update_serving_model(model, version=version)
-        run.update_serving_image(image_url=mcitem['serving']['images'][
-                                 'serving']['image']['path'])
+        run.update_autoscaling_config(min_replicas, max_concurrent_requests)
+
+        dkubever = self.dkubeinfo['version']
+        if (pversion.parse(dkubever) < pversion.parse("2.3.0.0")):
+            mcitem = self.get_modelcatalog_item(user, modelcatalog=model, version=version)
+            run.update_serving_image(image_url=mcitem['serving']['images']['serving']['image']['path'])
+        else:
+            mcitem = super().get_model_catalog(user, model)
+            versions = mcitem['versions']
+            for v in versions:
+                if v['version'] == version:
+                    serving_image = v['serving']['images']['serving']['image']['path']
+            run.update_serving_image(image_url=serving_image)
 
         if stage_or_deploy == "stage":
             super().stage_model(run)
@@ -1520,7 +1801,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "run {} - waiting for completion, current state {}".format(run.name, state))
                 time.sleep(self.wait_interval)
 
-    def delete_model_deployment(self, user, name):
+    def delete_model_deployment(self, user, name, wait_for_completion=True):
         """
             Method to delete a model deployment.
             Raises exception if token is of different user or if serving run with name doesnt exist or on any connection errors.
@@ -1533,11 +1814,18 @@ class DkubeApi(ApiBase, FilesBase):
                 name
                     Name of the run which needs to be deleted.
 
+                wait_for_completion
+                    When set to :bash:`True` this method will wait for deployment to get deleted.
+
         """
+        data = super().get_run('inference', user, name, fields='*')
+        uuid = data['job']['parameters']['generated']['uuid']
+        ret = super().delete_run('inference', user, name)
+        if wait_for_completion:
+            self._wait_for_rundelete_completion(uuid, 'inference', name)
+        return ret
 
-        super().delete_run('inference', user, name)
-
-    def list_model_deployments(self, user, filters='*'):
+    def list_model_deployments(self, user, shared=False, filters='*'):
         """
             Method to list all the model deployments.
             Raises exception on any connection errors.
@@ -1555,7 +1843,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
 
         deps = []
-        resp = super().list_runs('inference', user)
+        resp = super().list_runs('inference', user, shared)
         for item in resp:
             for inf in item['jobs']:
                 deploy = inf['parameters']['inference']['deploy']
@@ -1571,6 +1859,8 @@ class DkubeApi(ApiBase, FilesBase):
             ready for staging or deployment on a production cluster.
             The user must have permission to fetch the model catalog.
 
+            *Available in DKube Release: 2.2*
+
             *Inputs*
 
                 user
@@ -1578,56 +1868,126 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().modelcatalog(user)
 
-    def get_modelcatalog_item(self, user, model, version):
+    def get_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
         """
             Method to get an item from modelcatalog
             Raises exception on any connection errors.
+
+            *Available in DKube Release: 2.2*
 
             *Inputs*
 
                 user
                     Name of the user.
 
+                modelcatalog
+                    Model catalog name
+
                 model
-                    Name of the model in the model catalog
+                    Name of the model catalog
 
                 version
                     Version of the model
 
         """
-        mc = self.modelcatalog(user)
+        if modelcatalog is None and model is None:
+            return "either model catalog name or model name should be provided"
+        if version is None:
+            return "Model Version must be provided"
+        if modelcatalog:
+            mc = self.modelcatalog(user)
+            for item in mc:
+                if item['name'] == modelcatalog:
+                    for iversion in item['versions']:
+                        if iversion['model']['version'] == version:
+                            return iversion
 
-        for item in mc:
-            if item['name'] == model:
-                for iversion in item['versions']:
-                    if iversion['model']['version'] == version:
-                        return iversion
+            raise Exception(
+                '{}.{} not found in model catalog'.format(model, version))
+        else:
+            mc = self.modelcatalog(user)
+            for item in mc:
+                if item['model']['name'] == model:
+                    for iversion in item['versions']:
+                        if iversion['model']['version'] == version:
+                            return iversion
 
-        raise Exception('{}.{} not found in model catalog'.format(model, version))
+            raise Exception(
+                '{}.{} not found in model catalog'.format(model, version))
+
+    def delete_modelcatalog_item(self, user, modelcatalog=None, model=None, version=None):
+        """
+            Method to delete an item from modelcatalog
+            Raises exception on any connection errors.
+
+            *Available in DKube Release: 2.2*
+
+            *Inputs*
+
+                user
+                    Name of the user.
+
+                modelcatalog
+                    Model catalog name
+
+                model
+                    Name of the model catalog
+
+                version
+                    Version of the model
+
+        """
+        if modelcatalog is None and model is None:
+            return "either model catalog name or model name should be provided"
+        if version is None:
+            return "Model Version must be provided"
+        if modelcatalog:
+            response = self._api.delete_model_catalog_item(
+                user, modelcatalog, version)
+            return response
+        else:
+            mc = self.modelcatalog(user)
+            for item in mc:
+                if item['model']['name'] == model:
+                    modelcatalog = item["name"]
+                    response = self._api.delete_model_catalog_item(
+                        user, modelcatalog, version)
+                    return response
+            raise Exception(
+                '{}.{} not found in model catalog'.format(model, version))
 
     def list_projects(self):
-        """Return list of DKube projects."""
+        """
+            Return list of DKube projects.
+
+            *Available in DKube Release: 2.2*
+        """
         response = self._api.get_all_projects().to_dict()
         assert response['response']['code'] == 200, response['response']['message']
         return response['data']
 
-    def create_project(self, project:DkubeProject):
+    def create_project(self, project: DkubeProject):
         """Creates DKube Project.
+
+        *Available in DKube Release: 2.2*
 
         *Inputs*
 
             project
                 instance of :bash:`dkube.sdk.rsrcs.DkubeProject` class.
         """
-        assert type(project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
+        assert type(
+            project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
         response = self._api.create_project(project).to_dict()
         assert response['response']['code'] == 200, response['response']['message']
         return response['data']
 
-    def update_project (self, project_id, project:DkubeProject):
-        """Update project details. 
+    def update_project(self, project_id, project: DkubeProject):
+        """Update project details.
+
+        *Available in DKube Release: 2.2*
         Note: details and evail_details fields are base64 encoded.
-        
+
         *Inputs*
 
             project_id
@@ -1636,13 +1996,17 @@ class DkubeApi(ApiBase, FilesBase):
             project
                 instance of :bash:`dkube.sdk.rsrcs.DkubeProject` class.
         """
-        assert type(project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
+        assert type(
+            project) == DkubeProject, "Invalid type for project, value must be instance of rsrcs:DkubeProject class"
         project.id = project_id
-        response = self._api.update_one_project(project, project.id).to_dict()
+        response = self._api.update_one_project(
+            project_id=project.id, data=project).to_dict()
         assert response['code'] == 200, response['message']
 
-    def get_project_id (self, name):
+    def get_project_id(self, name):
         """"Get project id from project name.
+
+        *Available in DKube Release: 2.2*
 
         *Inputs*
 
@@ -1658,7 +2022,9 @@ class DkubeApi(ApiBase, FilesBase):
 
     def get_project(self, project_id):
         """Get project details.
-        
+
+        *Available in DKube Release: 2.2*
+
         *Inputs*
 
             project_id
@@ -1670,7 +2036,9 @@ class DkubeApi(ApiBase, FilesBase):
 
     def get_leaderboard(self, project_id):
         """Get project's leaderboard details.
-        
+
+        *Available in DKube Release: 2.2*
+
         *Inputs*
 
             project_id
@@ -1682,7 +2050,9 @@ class DkubeApi(ApiBase, FilesBase):
 
     def delete_project(self, project_id):
         """Delete project. This only deletes the project and not the associated resources.
-        
+
+        *Available in DKube Release: 2.2*
+
         *Inputs*
 
             project_id
@@ -1691,3 +2061,153 @@ class DkubeApi(ApiBase, FilesBase):
         project_ids = {"project_ids": [project_id]}
         response = self._api.projects_delete_list(project_ids).to_dict()
         assert response['code'] == 200, response['message']
+
+    def upload_model(self, user, name, filepath, extract=False, wait_for_completion=True):
+        """Upload model. This creates a model and uploads the file residing in your local workstation.
+        Supported formats are tar, gz, tar.gz, tgz, zip, csv and txt.
+
+        *Available in DKube Release: 2.2*
+
+        *Inputs*
+
+            user
+                name of user under which model is to be created in dkube.
+
+            name
+                name of model to be created in dkube.
+
+            filepath
+                path of the file to be uploaded
+
+            extract
+                if extract is set to True, the file will be extracted after upload.
+
+            wait_for_completion
+                When set to :bash:`True` this method will wait for model resource to get into one of the complete state.
+                model is declared complete if it is one of the :bash:`complete/failed/error` state
+        """
+        upl_resp = super().upload_model(user, name, filepath, extract=extract)
+        while wait_for_completion:
+            status = super().get_repo('model', user, name, fields='status')
+            state, reason = status['state'], status['reason']
+            if state.lower() in ['ready', 'failed', 'error']:
+                print(
+                    "model {} - completed with state {} and reason {}".format(name, state, reason))
+                break
+            else:
+                print(
+                    "model {} - waiting for completion, current state {}".format(name, state))
+                time.sleep(self.wait_interval)
+
+    def download_dataset(self, path, user, name, version=None):
+        """This method is to download a version of dataset.
+        Downloaded content will be copied in the specified path.
+
+        *Inputs*
+
+            path
+                Target path where the dataset must be downloaded.
+
+            user
+                name of user who owns the dataset.
+
+            name
+                name of dataset.
+
+            version
+                version of the dataset.
+
+        """
+
+        if version == None:
+            version = self.get_dataset_latest_version(user, name)
+            version = version['uuid']
+
+        super().download_dataset(path, user, name, version)
+
+    def download_model(self, path, user, name, version=None):
+        """This method is to download a version of model.
+        Downloaded content will be copied in the specified path.
+
+        *Inputs*
+
+            path
+                Target path where the dataset must be downloaded.
+
+            user
+                name of user who owns the dataset.
+
+            name
+                name of dataset.
+
+            version
+                version of the dataset.
+
+        """
+        if version == None:
+            version = self.get_model_latest_version(user, name)
+            version = version['uuid']
+
+        super().download_model(path, user, name, version)
+
+    def _wait_for_rundelete_completion(self, uuid, _class, name):
+
+        dkubever = self.dkubeinfo['version']
+        # MAK - ideally the target version should be 2.2.7.0 and it should
+        # be sufficient to check for older release(s), but there is an internal patch to enable
+        # automation suite which returns release version as 2.2.1.13
+        if pversion.parse(dkubever) < pversion.parse("2.2.1.13"):
+            # Older release - waiting for deletion to complete not supported
+            return
+
+        try:  # MAK - try block can be removed, once 2.2.7.0 is released
+            while True:
+                data = super().get_run_byuuid(uuid)
+                state = data['parameters']['generated']['status']['sub_state']
+                if state == None:  # MAK - check can be removed once 2.2.7.0 is released
+                    # Older release - ignore the error
+                    break
+                if state.lower() == 'deleting':
+                    print(
+                        "{} {} - waiting for deletion, current state {}".format(_class, name, state))
+                    time.sleep(self.wait_interval)
+                elif state.lower() == 'deleted':
+                    print(
+                        "{} {} - deleted successfully".format(_class, name))
+                    break
+        except ApiException as ae:
+            if ae.status == 404:
+                # Older release - ignore the error
+                print(
+                    "ignoring 404 - fetching deleted jobs failed, older release of dkube")
+            else:
+                raise ae
+
+    def list_inference_endpoints(self):
+        """
+            Method to list all the inferences in the dkube cluster.
+            Raises exception on any connection errors.
+        """
+
+        return super().list_inference_endpoints()
+
+    def list_cicd_images(self, repo = None):
+        """
+            Method to list all the CICD images + Any images manually added in DKube.
+
+        *Inputs*
+
+            repo
+                Git repo URL. If provided, only returns images generated for that repo
+        """
+        response = self._api.get_all_cicd_images().to_dict()
+        assert response['response']['code'] == 200, response['response']['message']
+        if repo is None:
+            return response['data']
+            
+        images = []
+        
+        for entry in response['data']:
+            if "repo" in entry["image"] and entry["image"]["repo"] == repo:
+                images.append(entry)
+        return images

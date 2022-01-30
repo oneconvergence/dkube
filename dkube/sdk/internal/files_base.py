@@ -39,10 +39,13 @@ class FilesBase(object):
         self.request_headers['Authorization'] = 'Bearer {}'.format(self.token)
 
 
-    def _upload_file(self, urlpath=None, filepath=None):
+    def _upload_file(self, urlpath=None, filepath=None, params=None, is_binary=False):
 
         try:
-            fp = open(filepath)
+            if is_binary:
+                fp = open(filepath, 'rb')
+            else:
+                fp = open(filepath)
         except BaseException:
             print("Specified filepath {} is not valid".format(filepath))
             return response()
@@ -54,6 +57,7 @@ class FilesBase(object):
             ep,
             headers=self.request_headers,
             files={'upfile': fp},
+            params=params,
             verify=False,
         )
         return response
@@ -104,5 +108,39 @@ class FilesBase(object):
         resp_dict = json.loads(resp.text)
         return resp_dict
 
-
-
+    def upload_model(self, user, name, filepath, extract=False, wait_for_completion=True):
+        """
+        Upload model. This creates a model and uploads the file residing in your local workstation.
+        Supported formats are tar, gz, tar.gz, tgz, zip, csv and txt.
+        
+        *Inputs*
+        
+            user
+                name of user under which model is to be created in dkube.
+            
+            name
+                name of model to be created in dkube.
+            
+            filepath
+                path of the file to be uploaded
+            
+            extract
+                if extract is set to True, the file will be extracted after upload.
+        
+        """
+        
+        assert (
+            os.path.isfile(filepath) == True
+        ), "Specified file path {} is invalid".format(filepath)
+        
+        filesize = os.stat(filepath).st_size
+        url = "/users/"+user+"/class/model/datum/"+name+"/upload"
+        
+        filename = os.path.basename(filepath)
+        params = {'filename': filename,
+                'filesize': filesize,
+                'extract': extract}
+        
+        resp = self._upload_file(url, filepath, params=params, is_binary=True)
+        resp_dict = json.loads(resp.text)
+        return resp_dict

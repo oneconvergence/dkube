@@ -14,8 +14,8 @@ class DkubeOp(kfp.dsl.ContainerOp):
             stage in VALID_STAGES
         ), "stage must be one of training/preprocessing/serving/storage/submit"
 
-        kwargs = {"name": name, "image": "ocdr/dkube_launcher:storage"}
-        kwargs["command"] = ["python3", "/dkubepl/main.py", name, authtoken]
+        kwargs = {"name": name, "image": "ocdr/dkube_pylauncher:2.2"}
+        kwargs["command"] = ["python3", "-u", "/dkubepl/main.py", name, authtoken]
         kwargs["command"].extend(["{{workflow.uid}}", "{{pod.name}}", stage])
         kwargs["arguments"] = args
 
@@ -23,7 +23,7 @@ class DkubeOp(kfp.dsl.ContainerOp):
 
         if stage in ["training", "preprocessing", "serving"]:
             self.add_pod_label(name="platform", value="Dkube")
-        self.add_pod_label(name="dkube.garbagecollect", value="false")
+        self.add_pod_label(name="dkube.garbagecollect", value="true")
         self.add_pod_label(name="dkube.garbagecollect.policy", value="all")
         self.add_pod_label(name="stage", value=stage)
         self.add_pod_label(name="runid", value="{{pod.name}}")
