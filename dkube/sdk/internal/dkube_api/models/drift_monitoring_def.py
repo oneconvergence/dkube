@@ -34,6 +34,7 @@ class DriftMonitoringDef(object):
         'enabled': 'bool',
         'frequency': 'int',
         'algorithm': 'str',
+        'pipeline_soft_threshold': 'float',
         'soft_threshold': 'float'
     }
 
@@ -41,15 +42,17 @@ class DriftMonitoringDef(object):
         'enabled': 'enabled',
         'frequency': 'frequency',
         'algorithm': 'algorithm',
+        'pipeline_soft_threshold': 'pipeline_soft_threshold',
         'soft_threshold': 'soft_threshold'
     }
 
-    def __init__(self, enabled=None, frequency=None, algorithm=None, soft_threshold=None):  # noqa: E501
+    def __init__(self, enabled=None, frequency=None, algorithm=None, pipeline_soft_threshold=None, soft_threshold=None):  # noqa: E501
         """DriftMonitoringDef - a model defined in Swagger"""  # noqa: E501
 
         self._enabled = None
         self._frequency = None
         self._algorithm = None
+        self._pipeline_soft_threshold = None
         self._soft_threshold = None
         self.discriminator = None
 
@@ -59,6 +62,8 @@ class DriftMonitoringDef(object):
             self.frequency = frequency
         if algorithm is not None:
             self.algorithm = algorithm
+        if pipeline_soft_threshold is not None:
+            self.pipeline_soft_threshold = pipeline_soft_threshold
         if soft_threshold is not None:
             self.soft_threshold = soft_threshold
 
@@ -132,6 +137,27 @@ class DriftMonitoringDef(object):
             )
 
         self._algorithm = algorithm
+
+    @property
+    def pipeline_soft_threshold(self):
+        """Gets the pipeline_soft_threshold of this DriftMonitoringDef.  # noqa: E501
+
+
+        :return: The pipeline_soft_threshold of this DriftMonitoringDef.  # noqa: E501
+        :rtype: float
+        """
+        return self._pipeline_soft_threshold
+
+    @pipeline_soft_threshold.setter
+    def pipeline_soft_threshold(self, pipeline_soft_threshold):
+        """Sets the pipeline_soft_threshold of this DriftMonitoringDef.
+
+
+        :param pipeline_soft_threshold: The pipeline_soft_threshold of this DriftMonitoringDef.  # noqa: E501
+        :type: float
+        """
+
+        self._pipeline_soft_threshold = pipeline_soft_threshold
 
     @property
     def soft_threshold(self):

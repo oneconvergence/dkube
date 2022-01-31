@@ -39,6 +39,7 @@ class Cluster(object):
         'version': 'str',
         'auth_type': 'str',
         'jwt_token_type': 'str',
+        'headers': 'dict(str, str)',
         'jwt_token': 'str',
         'jwt_signing_key': 'str',
         'cluster_user': 'str',
@@ -58,6 +59,7 @@ class Cluster(object):
         'version': 'version',
         'auth_type': 'auth_type',
         'jwt_token_type': 'jwt_token_type',
+        'headers': 'headers',
         'jwt_token': 'jwt_token',
         'jwt_signing_key': 'jwt_signing_key',
         'cluster_user': 'cluster_user',
@@ -68,7 +70,7 @@ class Cluster(object):
         'plugin': 'plugin'
     }
 
-    def __init__(self, name=None, kind=None, _class=None, url=None, ca=None, version=None, auth_type=None, jwt_token_type=None, jwt_token=None, jwt_signing_key=None, cluster_user=None, role_delegation=None, access_keys=None, tags=None, description=None, plugin=None):  # noqa: E501
+    def __init__(self, name=None, kind=None, _class=None, url=None, ca=None, version=None, auth_type=None, jwt_token_type=None, headers=None, jwt_token=None, jwt_signing_key=None, cluster_user=None, role_delegation=None, access_keys=None, tags=None, description=None, plugin=None):  # noqa: E501
         """Cluster - a model defined in Swagger"""  # noqa: E501
 
         self._name = None
@@ -79,6 +81,7 @@ class Cluster(object):
         self._version = None
         self._auth_type = None
         self._jwt_token_type = None
+        self._headers = None
         self._jwt_token = None
         self._jwt_signing_key = None
         self._cluster_user = None
@@ -105,6 +108,8 @@ class Cluster(object):
             self.auth_type = auth_type
         if jwt_token_type is not None:
             self.jwt_token_type = jwt_token_type
+        if headers is not None:
+            self.headers = headers
         if jwt_token is not None:
             self.jwt_token = jwt_token
         if jwt_signing_key is not None:
@@ -161,7 +166,7 @@ class Cluster(object):
         :param kind: The kind of this Cluster.  # noqa: E501
         :type: str
         """
-        allowed_values = ["kubernetes", "slurm-remote", "sagemaker", "kserve"]  # noqa: E501
+        allowed_values = ["kubernetes", "slurm-remote", "sagemaker", "kserve", "custom"]  # noqa: E501
         if kind not in allowed_values:
             raise ValueError(
                 "Invalid value for `kind` ({0}), must be one of {1}"  # noqa: E501
@@ -319,6 +324,27 @@ class Cluster(object):
             )
 
         self._jwt_token_type = jwt_token_type
+
+    @property
+    def headers(self):
+        """Gets the headers of this Cluster.  # noqa: E501
+
+
+        :return: The headers of this Cluster.  # noqa: E501
+        :rtype: dict(str, str)
+        """
+        return self._headers
+
+    @headers.setter
+    def headers(self, headers):
+        """Sets the headers of this Cluster.
+
+
+        :param headers: The headers of this Cluster.  # noqa: E501
+        :type: dict(str, str)
+        """
+
+        self._headers = headers
 
     @property
     def jwt_token(self):

@@ -149,7 +149,7 @@ class ModelmonitorSchemaFeature(object):
         :param type: The type of this ModelmonitorSchemaFeature.  # noqa: E501
         :type: str
         """
-        allowed_values = ["input_feature", "prediction_output", "timestamp", "row_id"]  # noqa: E501
+        allowed_values = ["input_feature", "prediction_output", "timestamp", "row_id", "null"]  # noqa: E501
         if type not in allowed_values:
             raise ValueError(
                 "Invalid value for `type` ({0}), must be one of {1}"  # noqa: E501
