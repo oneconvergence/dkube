@@ -37,7 +37,8 @@ def launch_remotejob(cluster: str, cluster_kind: str, props,
     from json import JSONDecodeError
     from dkube.sdk.internal.dkube_api.models.job_model import JobModel
     from dkube.sdk.internal.api_base import ApiBase
-    from dkube.remote.job_properties import SLURM_JobProperties, LSF_JobProperties
+    from dkube.remote.slurm_jobproperties import JobProperties as slurmJP
+    from dkube.remote.lsf_jobproperties import JobProperties as lsfJP
 
     if isinstance(run, JobModel) == True:
         run = run.to_dict()
@@ -48,13 +49,13 @@ def launch_remotejob(cluster: str, cluster_kind: str, props,
 
     assert cluster_kind in [ClusterKindSlurmRemote, ClusterKindLsfRemote], "Not a valid cluster kind: {}".format(cluster_kind)
 
-    if isinstance(props, SLURM_JobProperties) == True or isinstance(props, LSF_JobProperties) == True:
+    if isinstance(props, slurmJP) == True or isinstance(props, lsfJP) == True:
         props = props.to_dict()
     elif isinstance(props, str) == True:
         props = json.loads(props)
         #props = ast.literal_eval(props)
     else:
-        assert True, "type of parameter props can be either instance of SLURM_JobProperties, LSF_JobProperties or a string of dict"
+        assert True, "type of parameter props can be either instance of slurm/lsf JobProperties or a json string"
 
     kind = run['parameters']['_class']
     assert kind in [
@@ -125,7 +126,9 @@ def launch_remotejob(cluster: str, cluster_kind: str, props,
             else:
                 raise ve
 
-        if state.lower() in ['complete', 'failed', 'error']:
+        if state.lower() in ['failed', 'error']:
+            raise Exception("run {} - failed with state {} and reason {}".format(name, state, reason))
+        elif state.lower() in ['complete']:
             print(
                 "run {} - completed with state {} and reason {}".format(name, state, reason))
             break

@@ -5,7 +5,7 @@ import json
 import ast
 
 from dkube.sdk import *
-from dkube.remote.job_properties import *
+from dkube.remote.slurm_jobproperties import *
 from dkube.pipelines import *
 
 from typing import NamedTuple
@@ -87,7 +87,7 @@ def slurm_pipeline(
         dataset=None,
         model=None,
         slurm_cluster=None,
-        slurm_jobprops: type(SLURM_JobProperties) = SLURM_JobProperties()):
+        slurm_jobprops: str = json.dumps(JobProperties().to_dict(), sort_keys=True)):
 
     slurm_task = dkube_slurmjob_op(
         slurm_cluster, "slurm-remote", slurm_jobprops, str(token), code, dataset, model).set_display_name("training")

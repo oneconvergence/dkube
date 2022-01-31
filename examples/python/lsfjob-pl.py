@@ -5,7 +5,7 @@ import json
 import ast
 
 from dkube.sdk import *
-from dkube.remote.job_properties import *
+from dkube.remote.lsf_jobproperties import *
 from dkube.pipelines import *
 
 from typing import NamedTuple
@@ -28,15 +28,16 @@ def create_and_launch_lsfjob(cluster: str, cluster_kind: str, props, application
 
     from dkube.sdk import DkubeTraining
     from dkube.sdk import generate
-    from dkube.remote import launch_remotejob, LSF_JobProperties
+    from dkube.remote import launch_remotejob
+    from dkube.remote.lsf_jobproperties import JobProperties
 
-    if isinstance(props, LSF_JobProperties) == True:
+    if isinstance(props, JobProperties) == True:
         props = props.to_dict()
     elif isinstance(props, str) == True:
         props = json.loads(props)
         #props = ast.literal_eval(props)
     else:
-        assert True, "type of parameter props can be either instance of LSF_JobProperties or a string of dict"
+        assert True, "type of parameter props can be either instance of lsf JobProperties or a json string"
 
     props['application'] = application
     props['ngpu'] = int(gpu)
@@ -107,7 +108,7 @@ def lsf_pipeline(
         application='generic',
         gpu: int = 0,
         gpu_mode='shared',
-        lsf_jobprops: type(LSF_JobProperties) = LSF_JobProperties()):
+        lsf_jobprops: str = json.dumps(JobProperties().to_dict(), sort_keys=True)):
 
 
     lsf_task = dkube_lsfjob_op(
