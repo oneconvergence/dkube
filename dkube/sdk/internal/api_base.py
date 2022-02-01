@@ -4,6 +4,7 @@ from pprint import pprint
 
 from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.models import *
+from dkube.sdk.internal.dkube_api.api import dkube_operator_exclusive_api
 from dkube.sdk.internal.dkube_api.models.feature_set_commit_def import \
     FeatureSetCommitDef
 from dkube.sdk.internal.dkube_api.models.feature_set_commit_def_job import \
@@ -28,6 +29,7 @@ class ApiBase(object):
         configuration.verify_ssl = False
         self._api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
         self._mmapi = dkube_api.ModelmonitorApi(dkube_api.ApiClient(configuration))
+        self._opapi = dkube_operator_exclusive_api.DkubeOperatorExclusiveApi(dkube_api.ApiClient(configuration))
         self.common_tags = list_of_strs(common_tags)
         self.wait_interval = 10
 
@@ -475,5 +477,25 @@ class ApiBase(object):
         response = self._mmapi.modelmonitor_update(modelmonitor,data)
         return response.to_dict()
 
+## operator api's
 
+    def configure_clusters(self,data):
+        response = self._opapi.configure_clusters(data)
+        return response.to_dict()
 
+    def get_clusters(self):
+        response = self._opapi.get_clusters()
+        return response.to_dict()
+    
+    def get_cluster_details(self,clustername):
+        response = self._opapi.get_cluster_details(clustername)
+        return response.to_dict()
+    
+    def delete_cluster(self,clustername):
+        response = self._opapi.delete_cluster(clustername)
+        return response.to_dict()
+
+    def update_cluster_configuration(self,clustername,data):
+        response = self._opapi.update_cluster(clustername,data)
+        return response.to_dict()
+        
