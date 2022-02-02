@@ -8,7 +8,8 @@ from .serving import DkubeServing
 from .storage import DkubeResourcePVC
 from .training import DkubeTraining
 from .modelmonitor import DkubeModelmonitor
+from .operator import DkubeCluster
 
 __all__ = ['DkubeIDE', 'DkubeTraining', 'DkubePreprocessing',
            'DkubeServing', 'DkubeCode', 'DkubeDataset', 'DkubeModel',
-           'DkubeFeatureSet', 'DkubeResourcePVC','DkubeModelmonitor']
+           'DkubeFeatureSet', 'DkubeResourcePVC','DkubeModelmonitor','DkubeCluster']
