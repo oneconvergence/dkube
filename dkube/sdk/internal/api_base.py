@@ -4,6 +4,7 @@ from pprint import pprint
 
 from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.models import *
+from dkube.sdk.internal.dkube_api.api import dkube_operator_exclusive_api
 from dkube.sdk.internal.dkube_api.models.feature_set_commit_def import \
     FeatureSetCommitDef
 from dkube.sdk.internal.dkube_api.models.feature_set_commit_def_job import \
@@ -27,7 +28,10 @@ class ApiBase(object):
         configuration.api_key['Authorization'] = token
         configuration.verify_ssl = False
         self._api = dkube_api.DkubeApi(dkube_api.ApiClient(configuration))
-        self._mmapi = dkube_api.ModelmonitorApi(dkube_api.ApiClient(configuration))
+        self._mmapi = dkube_api.ModelmonitorApi(
+            dkube_api.ApiClient(configuration))
+        self._opsapi = dkube_operator_exclusive_api.DkubeOperatorExclusiveApi(
+            dkube_api.ApiClient(configuration))
         self.common_tags = list_of_strs(common_tags)
         self.wait_interval = 10
 
@@ -112,7 +116,8 @@ class ApiBase(object):
 
     def create_repo(self, repo):
         self.update_tags(repo.datum)
-        response = self._api.datums_add_one(user=repo.user, data=repo.datum,extract=str(repo.extract).lower())
+        response = self._api.datums_add_one(
+            user=repo.user, data=repo.datum, extract=str(repo.extract).lower())
         print(response.to_dict())
 
     def get_repo(self, category, user, name, fields='*'):
@@ -326,7 +331,7 @@ class ApiBase(object):
             dkube_api.ApiClient(configuration))
         response = api.get_model_catalog(user)
         return response.to_dict()['data']
-        
+
     def get_model_catalog(self, user, model):
         response = self._api.get_one_modelcatalog_model(user, model)
         return response.to_dict()['data']
@@ -388,14 +393,14 @@ class ApiBase(object):
             dkube_api.ApiClient(configuration))
         response = api.get_all_deployments()
         return response.to_dict()['data']
-    
+
     def get_smtp_artifact(self):
         api = dkube_api.DkubeOperatorExclusiveApi(
             dkube_api.ApiClient(configuration))
         response = api.smtp_artifact_get()
         return response.to_dict()['data']
 
-    def update_smtp_artifact(self,data):
+    def update_smtp_artifact(self, data):
         api = dkube_api.DkubeOperatorExclusiveApi(
             dkube_api.ApiClient(configuration))
         response = api.upsert_smtp_artifact(data)
@@ -403,77 +408,102 @@ class ApiBase(object):
 
    #### MODEL MONITOR APIS ###
 
-    def create_model_monitor(self,modelmonitor):
-        response = self._mmapi.modelmonitor_add_one(data=modelmonitor.modelmonitor)
+    def create_model_monitor(self, modelmonitor):
+        response = self._mmapi.modelmonitor_add_one(
+            data=modelmonitor.modelmonitor)
         return response.to_dict()
-    
-    def get_modelmonitor(self,modelmonitor):
+
+    def get_modelmonitor(self, modelmonitor):
         response = self._mmapi.modelmonitor_get(modelmonitor)
         return response
 
-    def list_modelmonitor(self,params):
+    def list_modelmonitor(self, params):
         response = self._mmapi.modelmonitor_list(**params)
         return response.to_dict()['data']
-    
-    def get_modelmonitor_id(self,name):
+
+    def get_modelmonitor_id(self, name):
         response = self._mmapi.modelmonitor_ids(name)
         return response
 
-    def get_modelmonitor_configuration(self,modelmonitor_id):
+    def get_modelmonitor_configuration(self, modelmonitor_id):
         response = self._mmapi.modelmonitor_get(modelmonitor_id)
         return response.to_dict()['data']
-    
-    def get_modelmonitor_dataset(self,modelmonitor):
+
+    def get_modelmonitor_dataset(self, modelmonitor):
         response = self._mmapi.modelmonitor_datasets_list(modelmonitor)
         return response.to_dict()['data']
 
-    def get_modelmonitor_alerts(self,modelmonitor_id):
+    def get_modelmonitor_alerts(self, modelmonitor_id):
         response = self._mmapi.modelmonitor_alerts_list(modelmonitor_id)
         return response.to_dict()['data']
-    
+
     def get_modelmonitor_template(self):
         response = self._mmapi.modelmonitor_get_metrics_template()
         return response.to_dict()['data']
 
-    def delete_modelmonitors(self,delete_list):
+    def delete_modelmonitors(self, delete_list):
         response = self._mmapi.modelmonitor_delete({'data': delete_list})
         return response.to_dict()
 
-    def delete_modelmonitor_dataset(self,mm_id,delete_dataset_list):
-        response = self._mmapi.modelmonitor_delete_datasets(mm_id,{'data':delete_dataset_list})
-        return response.to_dict()
-    
-    def delete_modelmonitor_alert(self,mm_id,delete_alerts_list):
-        response = self._mmapi.modelmonitor_delete_alerts(mm_id,{'data':delete_alerts_list})
-        return response.to_dict()
-   
-    def modelmonitor_addalert(self,modelmonitor,alert_data):
-        response = self._mmapi.modelmonitor_add_alerts(modelmonitor,alert_data)
-        return response.to_dict()
-    
-    def modelmonitor_adddataset(self,modelmonitor,dataset):
-        response = self._mmapi.modelmonitor_add_datasets(modelmonitor,dataset)
+    def delete_modelmonitor_dataset(self, mm_id, delete_dataset_list):
+        response = self._mmapi.modelmonitor_delete_datasets(
+            mm_id, {'data': delete_dataset_list})
         return response.to_dict()
 
-    def modelmonitor_archive(self,modelmonitor,archive):
-        response = self._mmapi.modelmonitor_archive(modelmonitor,archive)
+    def delete_modelmonitor_alert(self, mm_id, delete_alerts_list):
+        response = self._mmapi.modelmonitor_delete_alerts(
+            mm_id, {'data': delete_alerts_list})
         return response.to_dict()
 
-    def modelmonitor_state(self,modelmonitor,state):
-        response = self._mmapi.modelmonitor_state(modelmonitor,state)
-        return response.to_dict()
-    
-    def update_modelmonitor_dataset(self,modelmonitor,dataset,data):
-        response = self._mmapi.modelmonitor_update_dataset(modelmonitor,dataset,data)
-        return response.to_dict()
-    
-    def update_modelmonitor_alert(self,modelmonitor,alert,data):
-        response = self._mmapi.modelmonitor_update_alert(modelmonitor,alert,data)
-        return response.to_dict()
-    
-    def update_modelmonitor_config(self,modelmonitor,data):
-        response = self._mmapi.modelmonitor_update(modelmonitor,data)
+    def modelmonitor_addalert(self, modelmonitor, alert_data):
+        response = self._mmapi.modelmonitor_add_alerts(
+            modelmonitor, alert_data)
         return response.to_dict()
 
+    def modelmonitor_adddataset(self, modelmonitor, dataset):
+        response = self._mmapi.modelmonitor_add_datasets(modelmonitor, dataset)
+        return response.to_dict()
 
+    def modelmonitor_archive(self, modelmonitor, archive):
+        response = self._mmapi.modelmonitor_archive(modelmonitor, archive)
+        return response.to_dict()
 
+    def modelmonitor_state(self, modelmonitor, state):
+        response = self._mmapi.modelmonitor_state(modelmonitor, state)
+        return response.to_dict()
+
+    def update_modelmonitor_dataset(self, modelmonitor, dataset, data):
+        response = self._mmapi.modelmonitor_update_dataset(
+            modelmonitor, dataset, data)
+        return response.to_dict()
+
+    def update_modelmonitor_alert(self, modelmonitor, alert, data):
+        response = self._mmapi.modelmonitor_update_alert(
+            modelmonitor, alert, data)
+        return response.to_dict()
+
+    def update_modelmonitor_config(self, modelmonitor, data):
+        response = self._mmapi.modelmonitor_update(modelmonitor, data)
+        return response.to_dict()
+
+# operator api's
+
+    def configure_clusters(self, data):
+        response = self._opsapi.configure_clusters(data)
+        return response.to_dict()
+
+    def get_clusters(self):
+        response = self._opsapi.get_clusters()
+        return response.to_dict()
+
+    def get_cluster_details(self, clustername):
+        response = self._opsapi.get_cluster_details(clustername)
+        return response.to_dict()
+
+    def delete_cluster(self, clustername):
+        response = self._opsapi.delete_cluster(clustername)
+        return response.to_dict()
+
+    def update_cluster_configuration(self, clustername, data):
+        response = self._opsapi.update_cluster(clustername, data)
+        return response.to_dict()
