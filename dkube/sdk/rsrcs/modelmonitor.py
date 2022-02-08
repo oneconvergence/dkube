@@ -16,8 +16,10 @@ from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_def import (
 from dkube.sdk.internal.dkube_api.models.modelmonitor_component_def import (
     ModelmonitorComponentDef,
 )
+from dkube.sdk.internal.dkube_api.models.modelmonitor_data_source_def import (
+    ModelmonitorDataSourceDef,
+)
 from dkube.sdk.internal.dkube_api.models.modelmonitor_def import ModelmonitorDef
-
 from dkube.sdk.internal.dkube_api.models.modelmonitor_features_spec_def import (
     ModelmonitorFeaturesSpecDef,
 )
@@ -31,17 +33,16 @@ from dkube.sdk.internal.dkube_api.models.modelmonitor_status_def import (
 from .util import *
 
 
-class DatasetClass(Enum):
+class SchemaFeatureClass(Enum):
     """
-    This Enum class defines the dataset class that are suported for the Dkube modelmonitor.
+    This Enum class defines the feature classes that are suported for the Dkube modelmonitor schema.
 
-    *Available in DKube Release: 3.0*
+    *Available in DKube Release: 3.x*
 
     """
 
-    TrainData = "TrainData"
-    PredictData = "PredictData"
-    LabelledData = "LabelledData"
+    Categorical = "categorical"
+    Continuous = "continuous"
 
     def __repr__(self):
         return self.value
@@ -50,17 +51,19 @@ class DatasetClass(Enum):
         return self.value
 
 
-class DatasetFormat(Enum):
+class SchemaFeatureType(Enum):
     """
-    This Enum class defines the dataset formats that are suported for the Dkube modelmonitor.
+    This Enum class defines the feature type that are suported for the Dkube modelmonitor schema.
 
-    *Available in DKube Release: 3.0*
+    *Available in DKube Release: 3.x*
 
     """
 
-    csv = "csv"
-    cloudevents = "cloudevents"
-    sagemakerlogs = "sagemakerlogs"
+    InputFeature = "input_feature"
+    PredictionOutput = "prediction_output"
+    Timestamp = "timestamp"
+    RowId = "row_id"
+    Null = "null"
 
     def __repr__(self):
         return self.value
@@ -69,19 +72,18 @@ class DatasetFormat(Enum):
         return self.value
 
 
-class ModelFrameworks(Enum):
+class PipelineComponentType(Enum):
     """
-    This Enum class defines the frameworks that are suported for the Dkube modelmonitor.
+    This Enum class defines the type that are suported for the Pipeline component of the Dkube modelmonitor.
 
-    *Available in DKube Release: 3.0*
+    *Available in DKube Release: 3.x*
 
     """
 
-    Tensorflow1x = "Tensorflow-1x"
-    Tensorflow2x = "Tensorflow-2x"
-    PyTorch = "PyTorch"
-    SkLearn = "SkLearn"
-    Other = "Other"
+    Baseline = "baseline"
+    DataDrift = "data_drift"
+    PerformanceDrift = "performance_drift"
+    DeploymentHealth = "deployment_health"
 
     def __repr__(self):
         return self.value
@@ -90,54 +92,16 @@ class ModelFrameworks(Enum):
         return self.value
 
 
-class AlertClass(Enum):
+class Protocol(Enum):
     """
-    This Enum class defines the alert class that are suported for the Dkube modelmonitor.
+    This Enum class defines the protocols that are suported for the metrics in deployment of the Dkube modelmonitor.
 
-    *Available in DKube Release: 3.0*
-
-    """
-
-    FeatureDrift = "FeatureDrift"
-    PerformanceDecay = "PerformanceDecay"
-    PredictionDrift = "PredictionDrift"
-
-    def __repr__(self):
-        return self.value
-
-    def __str__(self):
-        return self.value
-
-
-class ModelType(Enum):
-    """
-    This Enum class defines the model type that are suported for the Dkube modelmonitor.
-
-    *Available in DKube Release: 3.0*
+    *Available in DKube Release: 3.x*
 
     """
 
-    Regression = "Regression"
-    Classification = "Classification"
-
-    def __repr__(self):
-        return self.value
-
-    def __str__(self):
-        return self.value
-
-
-class ModelCategory(Enum):
-    """
-    This Enum class defines the category of the model that are suported for the Dkube modelmonitor.
-
-    *Available in DKube Release: 3.0*
-
-    """
-
-    AutoEncoder = "AutoEncoder"
-    TimeSeries = "TimeSeries"
-    Other = "Other"
+    tcp = "tcp"
+    http = "http"
 
     def __repr__(self):
         return self.value
@@ -154,16 +118,516 @@ class DriftAlgo(Enum):
 
     """
 
-    KS = "Kolmogorov-Smirnov"
-    ChiSquared = "Chi Squared"
-    KSChiSquared = "Kolmogorov-Smirnov & Chi Squared"
-    Auto = "Auto"
+    KS = "kolmogorov-smirnov"
+    ChiSquared = "chi Squared"
+    KSChiSquared = "kolmogorov-smirnov & chi squared"
+    Auto = "auto"
 
     def __repr__(self):
         return self.value
 
     def __str__(self):
         return self.value
+
+
+class SourceTypePerformance(Enum):
+    """
+    This Enum class defines the source type for the performance monitoring.
+
+    *Available in DKube Release: 3.0*
+
+    """
+
+    LabelledData = "labelled_data"
+    Metrics = "metrics"
+    Custom = "custom"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
+class ModelType(Enum):
+    """
+    This Enum class defines the model type that are suported for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.0*
+
+    """
+
+    Regression = "regression"
+    Classification = "classification"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
+class ModelCategory(Enum):
+    """
+    This Enum class defines the category of the model that are suported for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.0*
+
+    """
+
+    TimeSeries = "time_series"
+    Other = "other"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
+class SourceTypeDeployment(Enum):
+    """
+    This Enum class defines the source type that are suported for the Dkube deployment monitoring.
+
+    *Available in DKube Release: 3.0*
+
+    """
+
+    Metrics = "metrics"
+    Custom = "custom"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
+class DatasetClass(Enum):
+    """
+    This Enum class defines the dataset class that are suported for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.x*
+
+    """
+
+    Train = "train"
+    Predict = "predict"
+    Labelled = "labelled"
+    Metrics = "metrics"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
+class DatasetFormat(Enum):
+    """
+    This Enum class defines the dataset formats that are suported for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.0*
+
+    """
+
+    Tabular = "tabular"
+    Cloudevents = "cloudevents"
+    Sagemakerlogs = "sagemakerlogs"
+    Image = "image"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
+class AlertClass(Enum):
+    """
+    This Enum class defines the alert class that are suported for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.x*
+
+    """
+
+    FeatureDrift = "feature_drift"
+    PerformanceDecay = "performance_decay"
+    DeploymentHealth = "deployment_health"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
+class AlertState(Enum):
+    """
+    This Enum class defines the alert state that are suported for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.0*
+
+    """
+
+    Enabled = "enabled"
+    Disabled = "disabled"
+    Invalid = "invalid"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
+class AlertActionType(Enum):
+    """
+    This Enum class defines the alert action type that are suported for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.0*
+
+    """
+
+    Email = "email"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
+class DriftMonitor(object):
+    """
+    This class defines the DKube Drift Monitoring with helper functions to set properties
+    *Available in DKube Release: 3.x
+    """
+
+    def __init__(
+        self, enabled=None, frequency=None, algorithm=None, soft_threshold=None
+    ):
+        self.enabled = None
+        self.frequency = None
+        self.algorithm = None
+        self.soft_threshold = None
+
+    def to_JSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
+
+    def update_drift_monitoring_details(
+        self,
+        enabled=None,
+        frequency=None,
+        algorithm: DriftAlgo = None,
+        soft_threshold=None,
+    ):
+        """
+        This function updates the DKube drift monitor details. The following updates are supported:
+        enabled : boolean value,
+        frequency : an integer, frequency for detecting concept drift
+        algorithm : Drift Algorithm, see the DriftAlgo Enum class for the details,
+        soft_threshold : float , threshold defined by user. if not defined the pipeline_soft_threshold will be utilised
+        """
+        if enabled:
+            self.update_drift_enabled(enabled)
+        if frequency:
+            self.update_drift_frequency(frequency)
+        if algorithm:
+            self.update_drift_algorithm(algorithm)
+        if soft_threshold:
+            self.update_drift_soft_threshold(soft_threshold)
+
+    def update_drift_enabled(self, enabled=None):
+        """
+        Method to update the enable option in drift monitoring
+        """
+        self.enabled = enabled
+
+    def update_drift_frequency(self, frequency=None):
+        """
+        Method to update the drift frequency in the drift monitoring
+        """
+        self.frequency = frequency
+
+    def update_drift_algorithm(self, algorithm: DriftAlgo = None):
+        """
+        Method to update the algorithm for evaluating the drift
+        """
+        self.algorithm = algorithm
+
+    def update_drift_soft_threshold(self, soft_threshold=None):
+        """
+        Method to update the soft threshold in the drift monitoring
+        """
+        self.soft_threshold = soft_threshold
+
+
+class PerformanceMonitor(object):
+    """
+    This class defines the DKube Performance Monitoring with helper functions to set properties
+    *Available in DKube Release: 3.x
+    """
+
+    def __init__(
+        self,
+        enabled=None,
+        frequency=None,
+        source_type: SourceTypePerformance = None,
+        docker_image=None,
+        soft_thresholds=None,
+    ):
+        self.enabled = None
+        self.frequency = None
+        self.source_type = None
+        self.docker_image = None
+        self.soft_thresholds = None
+
+    def to_JSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
+
+    def update_performance_monitoring_details(
+        self,
+        enabled=None,
+        frequency=None,
+        source_type: SourceTypePerformance = None,
+        docker_image=None,
+        startup_script=None,
+        soft_thresholds=None,
+    ):
+        """
+        This function updates the DKube performance monitoring details. The following updates are supported:
+        enabled : boolean value,
+        frequency : an integer, frequency for performance monitoring
+        source_type: SourceType see the SourceType Enum class for the details,
+        startup_script: the startup script
+        soft_thresholds : a dictionary containing baseline and soft thresholds, eg : { baseline:0.02, soft:0.01}
+        """
+        if enabled:
+            self.update_performance_enabled(enabled)
+        if frequency:
+            self.update_performance_frequency(frequency)
+        if source_type:
+            self.update_performance_source_type(source_type)
+        if docker_image:
+            self.update_performance_docker_image(docker_image)
+        if startup_script:
+            self.update_performance_startup_script(startup_script)
+        if soft_thresholds:
+            self.update_performance_soft_thresholds(soft_thresholds)
+
+    def update_performance_enabled(self, enabled=None):
+        """
+        Method to update the enable option in performance monitoring
+        """
+        self.enabled = enabled
+
+    def update_performance_frequency(self, frequency=None):
+        """
+        Method to update the frequency in the perfromance monitoring
+        """
+        self.frequency = frequency
+
+    def update_performance_source_type(self, source_type: SourceTypePerformance = None):
+        """
+        Method to update the source_type in performance monitoring
+        """
+        self.source_type = source_type
+
+    def update_performance_docker_image(self, docker_image=None):
+        """
+        Method to update the docker image in the performance monitoring
+        """
+        self.docker_image = docker_image
+
+    def update_performance_startup_script(self, startup_script=None):
+        """
+        Method to update the startup script in the performance montitoring
+        """
+        self.startup_script = startup_script
+
+    def update_performance_soft_thresholds(self, soft_thresholds=None):
+        """
+        Method to update the soft thresholds in the performance monitoring
+        """
+        self.soft_thresholds = soft_thresholds
+
+
+class DeploymentMonitor(object):
+    def __init__(
+        self,
+        enabled=None,
+        frequency=None,
+        cluster=None,
+        source_type: SourceTypeDeployment = None,
+        metrics=None,
+        collect_metrics=None,
+        soft_thresholds=None,
+    ):
+        self.enabled = None
+        self.frequency = None
+        self.cluster = None
+        self.source_type = None
+        self.metrics = {}
+        self.collect_metrics = None
+        self.soft_thresholds = {}
+
+    def to_JSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
+
+    def update_deployment_monitoring_details(
+        self,
+        enabled=None,
+        frequency=None,
+        cluster=None,
+        source_type: SourceTypeDeployment = None,
+        metrics=None,
+        collect_metrics=None,
+        soft_thresholds=None,
+    ):
+        """
+        This function updates the DKube deployment monitoring details. The following updates are supported:
+        enabled : boolean value,
+        frequency : an integer, frequency for deployment monitoring
+        cluster: cluster
+        source_type: SourceType see the DeploymentSourceType Enum class for the details,
+        metrics:
+        soft_thresholds : a dictionary containing baseline and soft thresholds, eg : { baseline:0.02, soft:0.01}
+        """
+        if enabled:
+            self.update_deployment_enabled(enabled)
+        if frequency:
+            self.update_deployment_frequency(frequency)
+        if cluster:
+            self.update_deployment_cluster(cluster)
+        if source_type:
+            self.update_deployment_source_type(source_type)
+        if collect_metrics:
+            self.update_deployment_collect_metrics(collect_metrics)
+        if soft_thresholds:
+            self.update_deployment_soft_thresholds(soft_thresholds)
+
+    def update_deployment_enabled(self, enabled=None):
+        """
+        Method to update the enable option in deployment monitoring
+        """
+        self.enabled = enabled
+
+    def update_deployment_frequency(self, frequency=None):
+        """
+        Method to update the frequency in the deployment monitoring
+        """
+        self.frequency = frequency
+
+    def update_deployment_cluster(self, cluster=None):
+        """
+        Method to update the cluster in the deployment monitoring
+        """
+        self.cluster = cluster
+
+    def update_performance_source_type(self, source_type: SourceTypeDeployment = None):
+        """
+        Method to update the source_type in deployment monitoring
+        """
+        self.source_type = source_type
+
+    def update_deployment_collect_metrics(self, collect_metrics=None):
+        """
+        Method to update whether to collect metrics in the performance monitoring or not
+        """
+        self.collect_metrics = collect_metrics
+
+    def update_deployment_soft_thresholds(self, soft_thresholds=None):
+        """
+        Method to update deployment soft thresholds in performance monitoring
+        """
+        self.soft_thresholds = soft_thresholds
+
+    def update_deployment_metrics(
+        self,
+        heartbeat=None,
+        protocol: Protocol = None,
+        payload=None,
+        headers=None,
+        response_status_code=None,
+        response_body=None,
+    ):
+        """
+        Method to update deployment metrics in performance monitoring
+        """
+        self.metrics = {
+            "heartbeat": heartbeat,
+            "protocol": protocol,
+            "payload": payload,
+            "headers": headers,
+            "response_status_code": response_status_code,
+            "response_body": response_body,
+        }
+
+
+class DkubeModelmonitoralert(object):
+    """
+    This class defines the DKube Modelmonitor alert with helper functions to set properties of modelmonitor alert.::
+        from dkube.sdk import *
+        mm = DkubeModelmonitoralert(name="mm-alert")
+        Where first argument is the name of the alert in the modelmonitor .
+    *Available in DKube Release: 3.x*
+    """
+
+    def __init__(self, name="mm-alert", tags=[]):
+        self.id = None
+        self._class = None
+        self.enabled = None
+        self.name = name
+        self.tags = tags
+        self.conditions = []
+        self.alert_action = {}
+
+    def to_JSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
+
+    def update_alert(
+        self,
+        alert_class: AlertClass = "FeatureDrift",
+        enabled=None,
+        tags=None,
+        feature=None,
+        metric=None,
+        threshold=None,
+        percent_threshold=None,
+        breach_threshold=None,
+        action_type="email",
+    ):
+        """
+        This function updates the alert in the model monitor. The following updates are supported.
+            alert_class,
+            enabled,
+            tags,
+            feature,
+            metric,
+            threshold,
+            percent_threshold,
+            breach_threshold,
+            action_type
+        """
+        if tags:
+            self.tags = tags
+        self.name = self.name
+        self._class = alert_class
+        self.conditions.append(
+            {
+                "id": None,
+                "feature": feature,
+                "metric": metric,
+                "op": ">",
+                "threshold": threshold,
+                "percent_threshold": percent_threshold,
+            }
+        )
+        if breach_threshold:
+            self.alert_action["breach_threshold"] = breach_threshold
+        if action_type:
+            self.alert_action["action_type"] = action_type
 
 
 class DkubeModelmonitor(object):
@@ -175,30 +639,44 @@ class DkubeModelmonitor(object):
         second argument is the name of the model that you want to monitor i.e. nameofmodel:user
         user should be a valid onboarded user in dkube.
 
-    *Available in DKube Release: 3.0*
+    *Available in DKube Release: 3.x
 
     """
 
     def __init__(self, name=generate("mm"), model_name="", description="", tags=None):
 
-        self.schema = {}
-        self.default_thresholds = []
-        self.default_thresholds.append(
-            ModelmonitorDefaultThresholdDef(
-                id=None, type="performance_threshold", threshold=0, percent_threshold=0
-            )
-        )
-
-        self.datasets = []
-
         self.alerts = []
-
+        self.datasources = {}
+        self.features = []
+        self.metrics = {}
+        self.schema = {}
+        self.deployment_monitoring = {}
+        self.drift_monitoring = {}
+        self.performance_monitoring = {}
+        self.features.append(
+            ModelmonitorSchemaFeature(selected=None, _class=None, label=None, type=None)
+        )
+        self.status = ModelmonitorStatusDef(
+            state=None,
+            sub_state=None,
+            message=None,
+            code=None,
+            success=None,
+            schema_updated=None,
+            alerts_updated=None,
+        )
+        self.pipeline_component = ModelmonitorComponentDef(
+            run_id=None, status_info=None, status=None, type=None
+        )
         self.modelmonitor = ModelmonitorDef(
             id=None,
-            schema=None,
-            pipeline_component=None,
+            status=self.status,
+            schema=self.schema,
+            pipeline_component=self.pipeline_component,
+            deployment_monitoring=self.deployment_monitoring,
+            drift_monitoring=self.drift_monitoring,
+            performance_monitoring=self.performance_monitoring,
             owner=None,
-            emails=None,
             name=None,
             description=None,
             tags=None,
@@ -206,14 +684,8 @@ class DkubeModelmonitor(object):
             version=None,
             endpoint_url=None,
             model_type=None,
-            model_framework=None,
             model_category=None,
-            drift_detection_run_frequency_hrs=None,
-            drift_detection_algorithm=None,
-            performance_metrics_template=None,
-            train_metrics=None,
-            default_thresholds=self.default_thresholds,
-            datasets=self.datasets,
+            datasources=self.datasources,
             alerts=self.alerts,
         )
 
@@ -237,57 +709,27 @@ class DkubeModelmonitor(object):
         self,
         model_type: ModelType = None,
         model_category: ModelCategory = None,
-        model_framework: ModelFrameworks = None,
         version=None,
-        run_freq=None,
-        drift_algo: DriftAlgo = None,
-        emails=None,
-        train_metrics=None,
     ):
         """
         This function updates the DKube Modelmonitor configuration. The following updates are supported:
             model type,
             model category,
-            model framework,
             drift detection algorithm,
-            run frequency,
-            train metrics,
-            emails,
             model version.
         """
         if model_type == None:
-            self.update_model_type("Regression")
+            self.update_model_type("regression")
         else:
             self.update_model_type(model_type)
 
         if model_category == None:
-            self.update_model_category("TimeSeries")
+            self.update_model_category("time_series")
         else:
             self.update_model_category(model_category)
 
-        if model_framework == None:
-            self.update_model_framework("Tensorflow-1x")
-        else:
-            self.update_model_framework(model_framework)
-
-        if drift_algo == None:
-            self.update_drift_detection_algorithm("Kolmogorov-Smirnov & Chi Squared")
-        else:
-            self.update_drift_detection_algorithm(drift_algo)
-
-        if run_freq == None:
-            self.update_run_frequency(1)
-        else:
-            self.update_run_frequency(run_freq)
-
-        if train_metrics:
-            self.update_train_metrics(train_metrics)
-
         if version:
             self.update_model_version(version)
-
-        if emails:
-            self.update_emails(emails)
 
     def update_model_type(self, model_type=None):
         """
@@ -301,270 +743,66 @@ class DkubeModelmonitor(object):
         """
         self.modelmonitor.model_category = category
 
-    def update_model_framework(self, framework=None):
-        """
-        Method to update the framework, check the Enum Class ModelFramework for the possible values
-        """
-        self.modelmonitor.model_framework = framework
-
-    def update_drift_detection_algorithm(self, algorithm=None):
-        """
-        Method to update the drift detection Algorithm, check the Enum Class DriftAlgo for the possible values
-        """
-        self.modelmonitor.drift_detection_algorithm = algorithm
-
-    def update_run_frequency(self, frequency=None):
-        """
-        Method to update the frequency
-        """
-        self.modelmonitor.drift_detection_run_frequency_hrs = frequency
-
-    def update_train_metrics(self, train_metrics=None):
-        """
-        Method to update the train metrics
-        """
-        self.modelmonitor.train_metrics = train_metrics
-
     def update_model_version(self, version=None):
         """
         Method to update the model version
         """
         self.modelmonitor.version = version
 
-    def update_emails(self, emails=None):
-        """
-        Method to update the emails
-        """
-        self.modelmonitor.emails = emails
-
-    def update_transformer_script(self, data_name, script):
-        """
-        Method to update the transformer script
-        """
-        for index, data in enumerate(self.modelmonitor.datasets):
-            if data.name == data_name:
-                self.modelmonitor.datasets[index].transformer_script = script
-    
-    def upsert_dataset(
+    def upsert_datasources(
         self,
-        name,
         id=None,
-        data_class: DatasetClass = None,
-        data_format: DatasetFormat = "csv",
-        version=None,
+        _class: DatasetClass = None,
+        transfomer_script=None,
+        name=None,
+        sql_query=None,
         s3_subpath=None,
-        gt_col=None,
-        predict_col=None,
-        sql_query=None,
-    ):
-        """
-        This function is for adding or updating the dataset in the model monitor.
-            name : name of the dataset,
-            data class : see the Enum DatasetClass,
-            format of the dataset: see the Enum class DatasetFormat,
-            version : version of the dataset,
-            s3_subpath : s3_subpath of the dataset,
-            gt_col: groundtruth column of Labelled Dataset,
-            predict_col : predict column of Predict dataset,
-            sql query in case of sql dataset.
-        """
-        mm_dataset = {}
-        mm_dataset["name"]=name
-        mm_dataset["id"]=id
-        mm_dataset["_class"]=data_class
-        mm_dataset["data_format"]=data_format
-        mm_dataset["version"]=version
-        mm_dataset["s3_subpath"]=s3_subpath
-        mm_dataset["groundtruth_col"]=gt_col
-        mm_dataset["predict_col"]=predict_col
-        mm_dataset["sql_query"]=sql_query
-        
-        self.modelmonitor.datasets.append(mm_dataset)
-
-class DkubeModelmonitordataset(object):
-    """
-    This class defines the DKube Modelmonitor dataset with helper functions to set properties of modelmonitor dataset.::
-        from dkube.sdk import *
-        mm = DkubeModelmonitordataset(name="mm-data:ocdkube")
-        Where first argument is the name of the modelmonitor dataset.
-
-    *Available in DKube Release: 3.0*
-    
-    """
-
-    def __init__(self, name=generate("mm-data")):
-        self._class = None
-        self.transformer_script = None
-        self.name = name
-        self.sql_query = None
-        self.s3_subpath = None
-        self.version = None
-        self.data_format = None
-        self.groundtruth_col = None
-        self.predict_col = None
-
-    def to_JSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-    def update_dataset(
-        self,
-        data_name=None,
-        data_class: DatasetClass = None,
-        data_format: DatasetFormat = "csv",
-        transformer_script=None,
-        sql_query=None,
+        version=None,
+        data_format=str(DatasetFormat.Tabular),
         groundtruth_col=None,
         predict_col=None,
-        s3_subpath=None,
-        version=None,
+        date_suffix=None,
     ):
-
         """
-        This function updates the DKube Modelmonitor dataset. The following updates are supported:
-            data class,
-            transformer script,
-            sql query in case of sql dataset,
-            groundtruth column of Labelled Dataset,
-            predict column of Predict dataset,
-            format of the dataset.
-
+        This function updates the DKube Modelmonitor datasources fields.
         """
-        if data_name:
-            self.update_data_name(data_name)
-
-        if data_class:
-            self.update_data_class(data_class)
-
-        if transformer_script:
-            self.update_transformer_script(transformer_script)
-
-        if sql_query:
-            self.update_sql_query(sql_query)
-
-        if groundtruth_col:
-            self.update_groundtruth_col(groundtruth_col)
-
-        if predict_col:
-            self.update_predict_col(predict_col)
-
-        if data_format == None:
-            self.update_data_format("csv")
-        else:
-            self.update_data_format(data_format)
-
-        if s3_subpath:
-            self.update_s3_subpath(s3_subpath)
-
+        mm_dataset = {}
+        if name:
+            mm_dataset["name"] = name
+        if id:
+            mm_dataset["id"] = id
+        if data_format:
+            mm_dataset["data_format"] = data_format
         if version:
-            self.update_dataset_version(version)
+            mm_dataset["version"] = version
+        if s3_subpath:
+            mm_dataset["s3_subpath"] = s3_subpath
+        if groundtruth_col:
+            mm_dataset["groundtruth_col"] = groundtruth_col
+        if predict_col:
+            mm_dataset["predict_col"] = predict_col
+        if sql_query:
+            mm_dataset["sql_query"] = sql_query
+        if _class not in self.modelmonitor.datasources:
+            self.modelmonitor.datasources[_class] = mm_dataset
+        else:
+            for key in mm_dataset:
+                self.modelmonitor.datasources[_class][key] = mm_dataset[key]
 
-    def update_data_name(self, data_name=None):
+    def update_drift_monitoring(self, drift=None):
         """
-        Method to update the dataset name in the model monitor
+        This function updates the DKube Modelmonitor drift monitoring field.
         """
-        self.name = data_name
+        self.modelmonitor.drift_monitoring = json.loads(drift.to_JSON())
 
-    def update_data_class(self, data_class=None):
+    def update_performance_monitoring(self, performance=None):
         """
-        Method to update the class of the dataset
+        This function updates the DKube Modelmonitor performance monitoring field.
         """
-        self._class = data_class
+        self.modelmonitor.performance_monitoring = json.loads(performance.to_JSON())
 
-    def update_transformer_script(self, script=None):
+    def update_deployment_monitoring(self, deployment=None):
         """
-        Method to update transformer script
+        This function updates the DKube Modelmonitor deployment monitoring field.
         """
-        self.transformer_script = script
-
-    def update_sql_query(self, sql_query=None):
-        """
-        Method to update sql query in case of sql dataset
-        """
-        self.sql_query = sql_query
-
-    def update_groundtruth_col(self, groundtruth_col=None):
-        """
-        Method to update the groundtruth column for Labelled Dataset
-        """
-        self.groundtruth_col = groundtruth_col
-
-    def update_predict_col(self, predict_col=None):
-        """
-        Method to update the predict column for the Predict Dataset
-        """
-        self.predict_col = predict_col
-
-    def update_data_format(self, data_format=None):
-        """
-        Method to update the format of the dataset, check the Enum DatasetFormat class
-        """
-        self.data_format = data_format
-
-    def update_s3_subpath(self, path=None):
-        """
-        Method to update s3 subpath of the dataset
-        """
-        self.s3_subpath = path
-
-    def update_dataset_version(self, version=None):
-        """
-        Method to update the dataset version
-        """
-        self.version = version
-
-
-class DkubeModelmonitoralert(object):
-    """
-    This class defines the DKube Modelmonitor alert with helper functions to set properties of modelmonitor alert.::
-        from dkube.sdk import *
-        mm = DkubeModelmonitoralert(name="mm-alert")
-        Where first argument is the name of the alert in the modelmonitor .
-
-    *Available in DKube Release: 3.0*
-
-    """
-
-    def __init__(self, name="mm-alert"):
-        self.id = None
-        self._class = None
-        self.name = name
-        self.email = None
-        self.conditions = []
-
-    def to_JSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
-
-    def update_alert(
-        self,
-        email=None,
-        alert_class: AlertClass = "FeatureDrift",
-        feature=None,
-        metric=None,
-        threshold=None,
-        percent_threshold=None,
-    ):
-        """
-        This function updates the alert in the model monitor. The following updates are supported.
-            email,
-            alert_class,
-            feature,
-            metric,
-            threshold,
-            percent_threshold
-        """
-
-        self.id = None
-        self.name = self.name
-        self._class = alert_class
-        self.email = email
-        self.conditions.append(
-            {
-                "id": None,
-                "feature": feature,
-                "metric": metric,
-                "op": ">",
-                "threshold": threshold,
-                "percent_threshold": percent_threshold,
-            }
-        )
-
+        self.modelmonitor.deployment_monitoring = json.loads(deployment.to_JSON())
