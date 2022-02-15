@@ -2443,7 +2443,7 @@ class DkubeApi(ApiBase, FilesBase):
             mm_config = super().get_modelmonitor_configuration(
                 response["uuid"])
             state = mm_config["status"]["state"]
-            if state.lower() in ["init", "ready", "error","pending"]:
+            if state.lower() in ["init", "ready", "error","incomplete","pending"]:
                 print(
                     "ModelMonitor {} - is in state {} and reason {}".format(
                         modelmonitor.name, state, mm_config["status"]["message"]
@@ -2813,7 +2813,7 @@ class DkubeApi(ApiBase, FilesBase):
         response = super().update_modelmonitor_config(id, config_dict)
         while wait_for_completion:
             mm_state = self.modelmonitor_get(id=id)["status"]["state"]
-            if mm_state.lower() in ["init", "error", "ready", "pending"]:
+            if mm_state.lower() in ["init", "error", "ready", "incomplete","pending"]:
                 break
             else:
                 print("ModelMonitor {} - is in {} state".format(id, mm_state))
@@ -2865,7 +2865,7 @@ class DkubeApi(ApiBase, FilesBase):
             if not found:
                 print("specified label is not in the derived schema")
                 return None
-
+a
             for d in config["schema"]["features"]:
                 d["class"] = d.pop("_class")
             mm = DkubeModelmonitor(
