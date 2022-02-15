@@ -21,8 +21,7 @@ from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
-from dkube.sdk.rsrcs.modelmonitor import (DatasetClass, DkubeModelmonitoralert,
-                                          DkubeModelmonitordataset)
+from dkube.sdk.rsrcs.modelmonitor import DatasetClass
 from dkube.sdk.rsrcs.project import DkubeProject
 from packaging import version as pversion
 
@@ -2444,10 +2443,10 @@ class DkubeApi(ApiBase, FilesBase):
             mm_config = super().get_modelmonitor_configuration(
                 response["uuid"])
             state = mm_config["status"]["state"]
-            if state.lower() in ["init", "ready", "error"]:
+            if state.lower() in ["init", "ready", "error","incomplete","pending"]:
                 print(
-                    "ModelMonitor {} - completed with state {} and reason {}".format(
-                        modelmonitor.name, state, response["message"]
+                    "ModelMonitor {} - is in state {} and reason {}".format(
+                        modelmonitor.name, state, mm_config["status"]["message"]
                     )
                 )
                 break
@@ -2552,38 +2551,6 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_modelmonitor_configuration(id)
 
-    def modelmonitor_get_datasets(self, id=None, data_class: DatasetClass = None):
-        """
-        Method to get the datasets of the modelmonitor.
-
-        *Available in DKube Release: 3.0*
-
-        *Inputs*
-
-            id
-                Modelmonitor Id
-
-            data_class
-                data class of the dataset in the modelmonitor must be one of ["TrainData","PredictData","LabelledData"]
-                by default set to None
-
-        *Outputs*
-
-            if data_class is None:
-                A list of dictionaries containing all the datasets information.
-
-            if data_class is 'PredictData' or 'LabelledData' or 'TrainData':
-                An individual data dictionary for that data class.
-        """
-
-        datasets = super().get_modelmonitor_dataset(id)
-        if data_class == None:
-            return datasets
-        else:
-            for data in datasets:
-                if data["_class"] == data_class:
-                    return data
-
     def modelmonitor_get_alerts(self, id=None):
         """
         Method to get the alerts of the modelmonitor.
@@ -2668,7 +2635,7 @@ class DkubeApi(ApiBase, FilesBase):
         return super().delete_modelmonitor_alert(id, delete_alertsid_list)
 
     def modelmonitor_add_alert(
-        self, id=None, alert_data: DkubeModelmonitoralert = None
+        self, id=None, alert_data = None
     ):
         """
         Method to add the alerts in the modelmonitor
@@ -2688,59 +2655,12 @@ class DkubeApi(ApiBase, FilesBase):
             a dictionary object with response status
 
         """
-        if self.modelmonitor_get_datasets(
-            id=id, data_class="TrainData"
-        ) and self.modelmonitor_get_datasets(id=id, data_class="PredictData"):
-            alert_dict = json.loads(alert_data.to_JSON())
-            alert_dict["class"] = alert_dict.pop("_class")
-            response = super().modelmonitor_addalert(
-                id, {"data": [alert_dict]})
-            return response
-        else:
-            print("Add train and predict data before adding alerts")
-            return None
-
-    def modelmonitor_add_dataset(
-        self, id=None, data: DkubeModelmonitordataset = None, wait_for_completion=True
-    ):
-        """
-        Method to add the dataset in the modelmonitor
-
-        *Available in DKube Release: 3.0*
-
-        *Inputs*
-           id
-                Modelmonitor Id
-
-            data
-                Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitordataset` class.
-                Please see the :bash:`Resources` section for details on this class.
-
-            wait_for_completion
-                When set to :bash:`True` this method will wait for modelmonitor resource to get into one of the complete state and then add the datasets.
-                modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state
-
-        Outputs*
-            a dictionary object with response status
-
-        """
-        data_dict = json.loads(data.to_JSON())
-        data_dict["class"] = data_dict.pop("_class")
-        response = super().modelmonitor_adddataset(id, {"data": data_dict})
-
-        while wait_for_completion:
-            mm_config = super().get_modelmonitor_configuration(id)
-            state = mm_config["status"]["state"]
-            if state.lower() in ["init", "ready", "error", "pending"]:
-                break
-            else:
-                print(
-                    "Modelmonitor add dataset not completed yet, current state {}".format(
-                        state
-                    )
-                )
-                time.sleep(self.wait_interval)
-        return response["response"]
+        
+        alert_dict = json.loads(alert_data.to_JSON())
+        alert_dict["class"] = alert_dict.pop("_class")
+        response = super().modelmonitor_addalert(
+            id, {"data": [alert_dict]})
+        return response
 
     def modelmonitor_archive(self, id=None):
         """
@@ -2815,61 +2735,9 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().modelmonitor_state(id, "stop")
 
-    def modelmonitor_update_dataset(
-        self,
-        id=None,
-        data_class: DatasetClass = None,
-        data: DkubeModelmonitordataset = None,
-        wait_for_completion=True,
-    ):
-        """
-        Method to update the modelmonitor dataset
-
-        *Available in DKube Release: 3.0*
-
-        *Inputs*
-            id
-                Modelmonitor Id
-
-            data
-                Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitordataset` class.
-                Please see the :bash:`Resources` section for details on this class.
-
-            data_class
-                Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DatasetClass` class.
-                Enum = ["TrainData","PredictData","LabelledData"]
-                Please see the :bash:`Resources` section for details on this class.
-
-            wait_for_completion
-                When set to :bash:`True` this method will wait for modelmonitor resource to get into one of the complete state and then update the datasets
-                modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state , if it is in active state, modelmonitor update to datasets not allowed
-
-
-        Outputs*
-            a dictionary object with response status
-
-        """
-        data_id = self.modelmonitor_get_datasets(
-            id, data_class=data_class)["id"]
-        data_dict = json.loads(data.to_JSON())
-        for k in list(data_dict.keys()):
-            if data_dict[k] == None and k != "_class":
-                del data_dict[k]
-        data_dict["class"] = data_dict["_class"]
-        if data_dict["class"] == None:
-            data_dict["class"] = data_class
-        response = super().update_modelmonitor_dataset(id, data_id, data_dict)
-        while wait_for_completion:
-            mm_state = self.modelmonitor_get(id=id)["status"]["state"]
-            if mm_state.lower() in ["init", "error", "ready", "pending"]:
-                break
-            else:
-                print("ModelMonitor {} - is in {} state".format(id, mm_state))
-                time.sleep(self.wait_interval)
-        return response
 
     def modelmonitor_update_alert(
-        self, id=None, alert: DkubeModelmonitoralert = None, alert_id=None
+        self, id=None, alert = None, alert_id=None
     ):
         """
         Method to update the modelmonitor alert
@@ -2922,7 +2790,6 @@ class DkubeApi(ApiBase, FilesBase):
         config_dict = {k.replace("_", "", 1): v for k,
                        v in config_dict.items()}
         rem_list = [
-            "performance_metrics_template",
             "updated_at",
             "id",
             "alerts",
@@ -2935,23 +2802,18 @@ class DkubeApi(ApiBase, FilesBase):
         ]
         [config_dict.pop(key) for key in rem_list]
         for k in list(config_dict.keys()):
-            if config_dict[k] == None or config_dict[k] == []:
+            if config_dict[k] == None or config_dict[k] == [] or config_dict[k] == {}:
                 del config_dict[k]
 
-        if 'datasets' in config_dict.keys():
-            for i in config_dict["datasets"]:
-                i["class"] = i["_class"]
-                del i["_class"]
-                for k in list(i.keys()):
-                    for l in range(len(config_dict["datasets"])):
-                        if config_dict["datasets"][l][k] == None:
-                            del config_dict["datasets"][l][k]
-
+        if 'datasources' in config_dict:
+            for i in config_dict["datasources"]:
+                if config_dict["datasources"][i]["name"] == self.modelmonitor_get(id)["datasources"][i]["name"]:
+                    config_dict["datasources"][i]["id"] = self.modelmonitor_get(id)["datasources"][i]["id"]
+        
         response = super().update_modelmonitor_config(id, config_dict)
-
         while wait_for_completion:
             mm_state = self.modelmonitor_get(id=id)["status"]["state"]
-            if mm_state.lower() in ["init", "error", "ready", "pending"]:
+            if mm_state.lower() in ["init", "error", "ready", "incomplete","pending"]:
                 break
             else:
                 print("ModelMonitor {} - is in {} state".format(id, mm_state))
@@ -3003,7 +2865,7 @@ class DkubeApi(ApiBase, FilesBase):
             if not found:
                 print("specified label is not in the derived schema")
                 return None
-
+a
             for d in config["schema"]["features"]:
                 d["class"] = d.pop("_class")
             mm = DkubeModelmonitor(
