@@ -167,24 +167,6 @@ class ModelType(Enum):
         return self.value
 
 
-class ModelCategory(Enum):
-    """
-    This Enum class defines the category of the model that are suported for the Dkube modelmonitor.
-
-    *Available in DKube Release: 3.0*
-
-    """
-
-    TimeSeries = "time_series"
-    Other = "other"
-
-    def __repr__(self):
-        return self.value
-
-    def __str__(self):
-        return self.value
-
-
 class SourceTypeDeployment(Enum):
     """
     This Enum class defines the source type that are suported for the Dkube deployment monitoring.
@@ -352,7 +334,6 @@ class DkubeModelmonitor(object):
             version=None,
             endpoint_url=None,
             model_type=None,
-            model_category=None,
             datasources=self.datasources,
             alerts=self.alerts,
         )
@@ -376,46 +357,21 @@ class DkubeModelmonitor(object):
     def update_modelmonitor(
         self,
         model_type: ModelType = None,
-        model_category: ModelCategory = None,
-        version=None,
     ):
         """
-        This function updates the DKube Modelmonitor configuration. The following updates are supported:
-            model type,
-            model category,
-            drift detection algorithm,
-            model version.
+        This function updates the DKube Modelmonitor configuration. The following update is supported:
+            model type
         """
         if model_type == None:
             self.update_model_type("regression")
         else:
             self.update_model_type(model_type)
 
-        if model_category == None:
-            self.update_model_category("time_series")
-        else:
-            self.update_model_category(model_category)
-
-        if version:
-            self.update_model_version(version)
-
     def update_model_type(self, model_type=None):
         """
         Method to update the type of the model, check the Enum Class ModelType for the posible values
         """
         self.modelmonitor.model_type = model_type
-
-    def update_model_category(self, category=None):
-        """
-        Method to update the category of the model, check the Enum Class ModelCategory for the possible values
-        """
-        self.modelmonitor.model_category = category
-
-    def update_model_version(self, version=None):
-        """
-        Method to update the model version
-        """
-        self.modelmonitor.version = version
 
     def add_datasources(
         self,
@@ -525,37 +481,13 @@ class DkubeModelmonitor(object):
         soft_threshold : float , threshold defined by user. if not defined the pipeline_soft_threshold will be utilised
         """
         if enabled:
-            self.update_drift_enabled(enabled)
+            self.modelmonitor.drift_monitoring["enabled"] = enabled
         if frequency:
-            self.update_drift_frequency(frequency)
+            self.modelmonitor.drift_monitoring["frequency"] = frequency
         if algorithm:
-            self.update_drift_algorithm(algorithm)
+            self.modelmonitor.drift_monitoring["algorithm"] = algorithm
         if soft_threshold:
-            self.update_drift_soft_threshold(soft_threshold)
-
-    def update_drift_enabled(self, enabled=None):
-        """
-        Method to update the enable option in drift monitoring
-        """
-        self.modelmonitor.drift_monitoring["enabled"] = enabled
-
-    def update_drift_frequency(self, frequency=None):
-        """
-        Method to update the drift frequency in the drift monitoring
-        """
-        self.modelmonitor.drift_monitoring["frequency"] = frequency
-
-    def update_drift_algorithm(self, algorithm: DriftAlgo = None):
-        """
-        Method to update the algorithm for evaluating the drift
-        """
-        self.modelmonitor.drift_monitoring["algorithm"] = algorithm
-
-    def update_drift_soft_threshold(self, soft_threshold=None):
-        """
-        Method to update the soft threshold in the drift monitoring
-        """
-        self.modelmonitor.drift_monitoring["soft_threshold"] = soft_threshold
+            self.modelmonitor.drift_monitoring["soft_threshold"] = soft_threshold
 
     def update_performance_monitoring_details(
         self,
@@ -575,53 +507,19 @@ class DkubeModelmonitor(object):
         soft_thresholds : a dictionary containing baseline and soft thresholds, eg : { baseline:0.02, soft:0.01}
         """
         if enabled:
-            self.update_performance_enabled(enabled)
+            self.modelmonitor.performance_monitoring["enabled"] = enabled
         if frequency:
-            self.update_performance_frequency(frequency)
+            self.modelmonitor.performance_monitoring["frequency"] = frequency
         if source_type:
-            self.update_performance_source_type(source_type)
+            self.modelmonitor.performance_monitoring["source_type"] = source_type
         if docker_image:
-            self.update_performance_docker_image(docker_image)
+            self.modelmonitor.performance_monitoring["docker_image"] = docker_image
         if startup_script:
-            self.update_performance_startup_script(startup_script)
+            self.modelmonitor.performance_monitoring["startup_script"] = startup_script
         if soft_thresholds:
-            self.update_performance_soft_thresholds(soft_thresholds)
-
-    def update_performance_enabled(self, enabled=None):
-        """
-        Method to update the enable option in performance monitoring
-        """
-        self.modelmonitor.performance_monitoring["enabled"] = enabled
-
-    def update_performance_frequency(self, frequency=None):
-        """
-        Method to update the frequency in the perfromance monitoring
-        """
-        self.modelmonitor.performance_monitoring["frequency"] = frequency
-
-    def update_performance_source_type(self, source_type: SourceTypePerformance = None):
-        """
-        Method to update the source_type in performance monitoring
-        """
-        self.modelmonitor.performance_monitoring["source_type"] = source_type
-
-    def update_performance_docker_image(self, docker_image=None):
-        """
-        Method to update the docker image in the performance monitoring
-        """
-        self.modelmonitor.performance_monitoring["docker_image"] = docker_image
-
-    def update_performance_startup_script(self, startup_script=None):
-        """
-        Method to update the startup script in the performance montitoring
-        """
-        self.modelmonitor.performance_monitoring["startup_script"] = startup_script
-
-    def update_performance_soft_thresholds(self, soft_thresholds=None):
-        """
-        Method to update the soft thresholds in the performance monitoring
-        """
-        self.modelmonitor.performance_monitoring["soft_thresholds"] = soft_thresholds
+            self.modelmonitor.performance_monitoring[
+                "soft_thresholds"
+            ] = soft_thresholds
 
     def update_deployment_monitoring_details(
         self,
@@ -643,53 +541,17 @@ class DkubeModelmonitor(object):
         soft_thresholds : a dictionary containing baseline and soft thresholds, eg : { baseline:0.02, soft:0.01}
         """
         if enabled:
-            self.update_deployment_enabled(enabled)
+            self.modelmonitor.deployment_monitoring["enabled"] = enabled
         if frequency:
-            self.update_deployment_frequency(frequency)
+            self.modelmonitor.deployment_monitoring["frequency"] = frequency
         if cluster:
-            self.update_deployment_cluster(cluster)
+            self.modelmonitor.deployment_monitoring["cluster"] = cluster
         if source_type:
-            self.update_deployment_source_type(source_type)
+            self.modelmonitor.deployment_monitoring["source_type"] = source_type
         if collect_metrics:
-            self.update_deployment_collect_metrics(collect_metrics)
+            self.modelmonitor.deployment_monitoring["collect_metrics"] = collect_metrics
         if soft_thresholds:
-            self.update_deployment_soft_thresholds(soft_thresholds)
-
-    def update_deployment_enabled(self, enabled=None):
-        """
-        Method to update the enable option in deployment monitoring
-        """
-        self.modelmonitor.deployment_monitoring["enabled"] = enabled
-
-    def update_deployment_frequency(self, frequency=None):
-        """
-        Method to update the frequency in the deployment monitoring
-        """
-        self.modelmonitor.deployment_monitoring["frequency"] = frequency
-
-    def update_deployment_cluster(self, cluster=None):
-        """
-        Method to update the cluster in the deployment monitoring
-        """
-        self.modelmonitor.deployment_monitoring["cluster"] = cluster
-
-    def update_performance_source_type(self, source_type: SourceTypeDeployment = None):
-        """
-        Method to update the source_type in deployment monitoring
-        """
-        self.modelmonitor.deployment_monitoring["source_type"] = source_type
-
-    def update_deployment_collect_metrics(self, collect_metrics=None):
-        """
-        Method to update whether to collect metrics in the performance monitoring or not
-        """
-        self.modelmonitor.deployment_monitoring["collect_metrics"] = collect_metrics
-
-    def update_deployment_soft_thresholds(self, soft_thresholds=None):
-        """
-        Method to update deployment soft thresholds in performance monitoring
-        """
-        self.modelmonitor.deployment_monitoring["soft_thresholds"] = soft_thresholds
+            self.modelmonitor.deployment_monitoring["soft_thresholds"] = soft_thresholds
 
     def update_deployment_metrics(
         self,
