@@ -293,7 +293,7 @@ class DkubeModelmonitor(object):
 
     """
 
-    def __init__(self, name=generate("mm"), model_name="", description="", tags=None):
+    def __init__(self, name=generate("mm"),model_type="regression"):
 
         self.alerts = []
         self.datasources = {}
@@ -328,9 +328,6 @@ class DkubeModelmonitor(object):
             performance_monitoring=self.performance_monitoring,
             owner=None,
             name=None,
-            description=None,
-            tags=None,
-            model=None,
             version=None,
             endpoint_url=None,
             model_type=None,
@@ -338,40 +335,16 @@ class DkubeModelmonitor(object):
             alerts=self.alerts,
         )
 
-        self.update_basic(name, model_name, description, tags)
+        self.update_modelmonitor(name,model_type)
 
-    def update_basic(self, name, model_name, description, tags):
+    def update_modelmonitor(self, name=None, model_type:ModelType=None):
         """
-        Method to update the attributes specified at creation. Description and tags can be updated. tags is a list of string values.
+        Method to update the attributes specified at creation.
         """
-        tags = list_of_strs(tags)
-
-        self.name = name
-        self.modelmonitor.name = name
-        self.modelmonitor.description = description
-        self.modelmonitor.model = model_name
-        self.modelmonitor.tags = tags
-
-        return self
-
-    def update_modelmonitor(
-        self,
-        model_type: ModelType = None,
-    ):
-        """
-        This function updates the DKube Modelmonitor configuration. The following update is supported:
-            model type
-        """
-        if model_type == None:
-            self.update_model_type("regression")
-        else:
-            self.update_model_type(model_type)
-
-    def update_model_type(self, model_type=None):
-        """
-        Method to update the type of the model, check the Enum Class ModelType for the posible values
-        """
+        if name:
+            self.modelmonitor.name = name
         self.modelmonitor.model_type = model_type
+        return self
 
     def add_datasources(
         self,
