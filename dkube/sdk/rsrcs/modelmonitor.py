@@ -293,7 +293,7 @@ class DkubeModelmonitor(object):
 
     """
 
-    def __init__(self, name=generate("mm"),model_type="regression"):
+    def __init__(self, name=generate("mm"), model_type="regression"):
 
         self.alerts = []
         self.datasources = {}
@@ -328,16 +328,14 @@ class DkubeModelmonitor(object):
             performance_monitoring=self.performance_monitoring,
             owner=None,
             name=None,
-            version=None,
-            endpoint_url=None,
             model_type=None,
             datasources=self.datasources,
             alerts=self.alerts,
         )
 
-        self.update_modelmonitor(name,model_type)
+        self.update_modelmonitor(name, model_type)
 
-    def update_modelmonitor(self, name=None, model_type:ModelType=None):
+    def update_modelmonitor(self, name=None, model_type: ModelType = None):
         """
         Method to update the attributes specified at creation.
         """
