@@ -328,8 +328,6 @@ class DkubeModelmonitor(object):
             performance_monitoring=self.performance_monitoring,
             owner=None,
             name=None,
-            version=None,
-            endpoint_url=None,
             model_type=None,
             datasources=self.datasources,
             alerts=self.alerts,
