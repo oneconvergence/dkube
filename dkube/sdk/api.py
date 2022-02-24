@@ -2952,3 +2952,252 @@ class DkubeApi(ApiBase, FilesBase):
         data["class"] = data.pop("Cluster__class")
         response = super().update_cluster_configuration(clustername, data)
         return response
+
+    ### Deployment Api's ###
+
+    def list_deployments(self, **kwargs):
+        """
+        Return list of DKube deployments.
+
+        *Available in DKube Release: 3.x*
+        """
+        shared = kwargs.get("shared")
+        tags = kwargs.get("tags")
+        page = kwargs.get("page")
+        archived = kwargs.get("archived", False)
+        query_params = {}
+        if shared:
+            query_params["shared"] = shared
+        if tags:
+            query_params["tags"] = tags
+        if page:
+            query_params["page"] = page
+        if archived:
+            query_params["archived"] = archived
+        response = self._api.list_deployments().to_dict()
+        return response["data"]
+
+    def get_deployment_id(self, name=None):
+        """
+        Method to get the id  of a deployment.
+
+        *Available in DKube Release: 3.x*
+
+        *Inputs*
+
+          name
+            Name of the deployment
+        *Outputs*
+          An uuid of the deployment
+        """
+        for deployment in self.list_deployments():
+            if deployment["name"] == name:
+                return deployment["id"]
+
+    def get_deployment(self, id=None):
+        """
+        Method to get the deployment based on the id
+
+        *Available in DKube Release: 3.x*
+
+        *Inputs*
+         id
+          id of the deployment
+
+        Outputs*
+          a dictionary object with response and data containing that deployment details
+        """
+        response = self._api.get_deployment(id)
+        return response
+
+    def import_deployment(
+        self,
+        name=None,
+        description=None,
+        tags=None,
+        cluster=None,
+        deployment_url=None,
+        model_reference=None,
+        namespace=None,
+        variant=None,
+    ):
+        """
+         Method to import the deployment
+
+        *Available in DKube Release: 3.0*
+
+        *Inputs*
+         name of the deployment
+         description of the deployment
+         tags is a list of tags
+         cluster is cluster name
+         deployment_url is url of the deployment
+         model_reference,
+         if cluster is Dkube, namespace is compulsory field
+         if cluster is Sagemaker, variant is compulsory field
+
+        *Outputs*
+          a dictionary object with response status
+        """
+        data = {}
+        data["name"] = name
+        data["cluster"] = cluster
+        cluster_type = self.get_cluster_details(cluster)["data"]["cluster"]["kind"]
+        if cluster_type == "dkube-remote":
+            data["namespace"] = namespace
+        if cluster_type == "sagemaker":
+            data["variant"] = variant
+        if description:
+            data["description"] = description
+        if tags:
+            data["tags"] = tags
+        if deployment_url:
+            data["deployment_url"] = deployment_url
+        if model_reference:
+            data["model_reference"] = model_reference
+        response = self._api.import_new_deployment(data)
+        return response
+
+    def update_deployment(
+        self,
+        id=None,
+        description=None,
+        tags=None,
+        cluster=None,
+        deployment_url=None,
+        model_reference=None,
+        namespace=None,
+        variant=None,
+    ):
+        """
+        Method to update the imported deployment
+
+        *Available in DKube Release: 3.x*
+
+        *Inputs*
+          id of the deployment
+          description of the deployment
+          tags is a list of tags
+          cluster is cluster name
+          deployment_url is url of the deployment
+          model_reference,
+          namespace and variant
+
+        Outputs*
+          a dictionary object with response status
+        """
+        data = {}
+        if description:
+            data["description"] = description
+        if tags:
+            data["tags"] = tags
+        if cluster:
+            data["cluster"] = cluster
+        if deployment_url:
+            data["deployment_url"] = deployment_url
+        if model_reference:
+            data["model_reference"] = model_reference
+        if namespace:
+            data["namespace"] = namespace
+        if variant:
+            data["variant"] = variant
+        response = self._api.update_deployment(id, data)
+        return response
+
+    def delete_deployments(self, ids=[]):
+        """
+        Method to delete the multiple deployments.
+        *Available in DKube Release: 3.x*
+        *Inputs*
+          ids
+            List of deployment Ids to be deleted. Example: ["cd123","345fg"]
+        *Outputs*
+           A dictionary object with response status
+        """
+        response = self._api.delete_deployments({"deployment_ids": ids})
+        return response
+
+    def delete_deployment(self, id=None):
+        """
+        Method to delete deployment.
+        *Available in DKube Release: 3.x*
+        *Inputs*
+          id
+            id of the deployment to be deleted
+        *Outputs*
+            A dictionary object with response status
+        """
+        response = self._api.delete_deployments({"deployment_ids": [id]})
+        return response
+
+    def archive_deployment(self, id=None):
+        """
+        Method to archive the deployment
+
+        *Available in DKube Release: 3.0*
+
+        *Inputs*
+            id
+            deployment Id to be archived
+
+        Outputs*
+            a dictionary object with response status
+        """
+        response = self._api.archive_deployments(
+            data={"deployment_ids": [id]}, archive="true"
+        )
+        return response
+
+    def archive_deployments(self, ids=[]):
+        """
+        Method to archive multiple deployments
+
+        *Available in DKube Release: 3.x*
+
+        *Inputs*
+            ids
+            List of deployment Ids to be archived. Example: ["cd123","345fg"]
+
+        Outputs*
+            a dictionary object with response status
+        """
+        response = self._api.archive_deployments(
+            data={"deployment_ids": ids}, archive="true"
+        )
+        return response
+
+    def unarchive_deployment(self, id=None):
+        """
+        Method to unarchive the deployment
+
+        *Available in DKube Release: 3.0*
+
+        *Inputs*
+            id
+            deployment Id to be archived
+
+        Outputs*
+            a dictionary object with response status
+        """
+        response = self._api.archive_deployments(
+            data={"deployment_ids": [id]}, archive="false"
+        )
+        return response
+
+    def unarchive_deployments(self, ids=[]):
+        """
+        Method to unarchive the deployments
+
+        *Available in DKube Release: 3.0*
+
+        *Inputs*
+            id
+            List of deployment Ids to be unarchived. Example: ["cd123","345fg"]
+
+        Outputs*
+            a dictionary object with response status
+        """
+        response = self._api.archive_deployments(
+            data={"deployment_ids": ids}, archive="false"
+        )
+        return response
