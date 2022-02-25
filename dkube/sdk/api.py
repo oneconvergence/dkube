@@ -2959,7 +2959,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         Return list of DKube deployments.
 
-        *Available in DKube Release: 3.x*
+        *Available in DKube Release: 3.3.x*
         """
         shared = kwargs.get("shared")
         tags = kwargs.get("tags")
@@ -2977,28 +2977,56 @@ class DkubeApi(ApiBase, FilesBase):
         response = self._api.list_deployments().to_dict()
         return response["data"]
 
-    def get_deployment_id(self, name=None):
+    def get_deployment_id(
+        self, name=None, clustername=None, variant=None, namespace=None
+    ):
         """
         Method to get the id  of a deployment.
 
-        *Available in DKube Release: 3.x*
+        *Available in DKube Release: 3.3.x*
 
         *Inputs*
 
           name
             Name of the deployment
+          clustername
+            Name of the cluster
+          variant
+            variant of the cluster, if cluster type is sagemaker it's mandatory
+          namespace
+            namespace for the cluster, if cluster type is dkube, it's mandatory
+
         *Outputs*
           An uuid of the deployment
         """
-        for deployment in self.list_deployments():
-            if deployment["name"] == name:
-                return deployment["id"]
+        if clustername == None:
+            for deployment in self.list_deployments():
+                if deployment["name"] == name:
+                    return deployment["id"]
+        else:
+            if clustername:
+                cluster_kind = self.get_cluster_details(clustername)["data"]["cluster"][
+                    "kind"
+                ]
+                if cluster_kind == "sagemaker" and variant == None:
+                    print("Please provide the variant for the AWS cluster first")
+                elif cluster_kind == "dkube-remote" and namespace == None:
+                    print(
+                        "Please provide the namespace for the dkube-remote cluster first"
+                    )
+                else:
+                    for deployment in self.list_deployments():
+                        if (
+                            deployment["imported_deployment"]["cluster"]["name"]
+                            == clustername
+                        ):
+                            return deployment["id"]
 
     def get_deployment(self, id=None):
         """
         Method to get the deployment based on the id
 
-        *Available in DKube Release: 3.x*
+        *Available in DKube Release: 3.3.x*
 
         *Inputs*
          id
@@ -3024,7 +3052,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
          Method to import the deployment
 
-        *Available in DKube Release: 3.0*
+        *Available in DKube Release: 3.3.x*
 
         *Inputs*
          name of the deployment
@@ -3041,12 +3069,13 @@ class DkubeApi(ApiBase, FilesBase):
         """
         data = {}
         data["name"] = name
-        data["cluster"] = cluster
-        cluster_type = self.get_cluster_details(cluster)["data"]["cluster"]["kind"]
-        if cluster_type == "dkube-remote":
-            data["namespace"] = namespace
-        if cluster_type == "sagemaker":
-            data["variant"] = variant
+        if cluster:
+            data["cluster"] = cluster
+            cluster_type = self.get_cluster_details(cluster)["data"]["cluster"]["kind"]
+            if cluster_type == "dkube-remote":
+                data["namespace"] = namespace
+            if cluster_type == "sagemaker":
+                data["variant"] = variant
         if description:
             data["description"] = description
         if tags:
@@ -3072,7 +3101,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         Method to update the imported deployment
 
-        *Available in DKube Release: 3.x*
+        *Available in DKube Release: 3.3.x*
 
         *Inputs*
           id of the deployment
@@ -3107,7 +3136,7 @@ class DkubeApi(ApiBase, FilesBase):
     def delete_deployments(self, ids=[]):
         """
         Method to delete the multiple deployments.
-        *Available in DKube Release: 3.x*
+        *Available in DKube Release: 3.3.x*
         *Inputs*
           ids
             List of deployment Ids to be deleted. Example: ["cd123","345fg"]
@@ -3120,7 +3149,7 @@ class DkubeApi(ApiBase, FilesBase):
     def delete_deployment(self, id=None):
         """
         Method to delete deployment.
-        *Available in DKube Release: 3.x*
+        *Available in DKube Release: 3.3.x*
         *Inputs*
           id
             id of the deployment to be deleted
@@ -3134,7 +3163,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         Method to archive the deployment
 
-        *Available in DKube Release: 3.0*
+        *Available in DKube Release: 3.3.x*
 
         *Inputs*
             id
@@ -3152,7 +3181,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         Method to archive multiple deployments
 
-        *Available in DKube Release: 3.x*
+        *Available in DKube Release: 3.3.x*
 
         *Inputs*
             ids
@@ -3170,7 +3199,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         Method to unarchive the deployment
 
-        *Available in DKube Release: 3.0*
+        *Available in DKube Release: 3.3.x*
 
         *Inputs*
             id
@@ -3188,7 +3217,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         Method to unarchive the deployments
 
-        *Available in DKube Release: 3.0*
+        *Available in DKube Release: 3.3.x*
 
         *Inputs*
             id
