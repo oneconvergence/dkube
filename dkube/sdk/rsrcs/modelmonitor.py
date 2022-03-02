@@ -293,7 +293,7 @@ class DkubeModelmonitor(object):
 
     """
 
-    def __init__(self, name=generate("mm"),model_type="regression"):
+    def __init__(self, name=generate("mm"), model_type="regression"):
 
         self.alerts = []
         self.datasources = {}
@@ -328,22 +328,29 @@ class DkubeModelmonitor(object):
             performance_monitoring=self.performance_monitoring,
             owner=None,
             name=None,
-            version=None,
-            endpoint_url=None,
             model_type=None,
             datasources=self.datasources,
             alerts=self.alerts,
         )
 
-        self.update_modelmonitor(name,model_type)
+        self.update_modelmonitor(name, model_type)
 
-    def update_modelmonitor(self, name=None, model_type:ModelType=None):
+    def update_modelmonitor(
+        self, name=None, model_type: ModelType = None, data_timezone=None
+    ):
         """
         Method to update the attributes specified at creation.
         """
         if name:
             self.modelmonitor.name = name
-        self.modelmonitor.model_type = model_type
+        if data_timezone:
+            self.modelmonitor.data_timezone = data_timezone
+        if model_type in ["regression", "classification"]:
+            self.modelmonitor.model_type = model_type
+        else:
+            print(
+                "Please define the supported model types, regression or classification"
+            )
         return self
 
     def add_datasources(
@@ -388,6 +395,8 @@ class DkubeModelmonitor(object):
                 mm_dataset["sql_query"] = sql_query
             if data_class:
                 mm_dataset["class"] = data_class
+            if date_suffix:
+                mm_dataset["date_suffix"] = date_suffix
 
             if data_class not in self.modelmonitor.datasources:
                 self.modelmonitor.datasources[data_class] = mm_dataset
@@ -435,6 +444,8 @@ class DkubeModelmonitor(object):
                 mm_dataset["sql_query"] = sql_query
             if data_class:
                 mm_dataset["class"] = data_class
+            if date_suffix:
+                mm_dataset["date_suffix"] = date_suffix
 
             for key in mm_dataset:
                 self.modelmonitor.datasources[data_class][key] = mm_dataset[key]

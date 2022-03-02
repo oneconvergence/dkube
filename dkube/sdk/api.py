@@ -15,8 +15,9 @@ import time
 import pandas as pd
 import urllib3
 from dkube.sdk.internal.api_base import *
-from dkube.sdk.internal.dkube_api.models.conditions import \
-    Conditions as TriggerCondition
+from dkube.sdk.internal.dkube_api.models.conditions import (
+    Conditions as TriggerCondition,
+)
 from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
@@ -571,8 +572,7 @@ class DkubeApi(ApiBase, FilesBase):
 
             if run.transformer.image == None:
                 ti = li["run"]["parameters"]["generated"]["training_image"]["image"]
-                run.update_transformer_image(
-                    ti["path"], ti["username"], ti["password"])
+                run.update_transformer_image(ti["path"], ti["username"], ti["password"])
 
             if run.serving_def.transformer_project == None:
                 code = li["run"]["parameters"]["training"]["datums"]["workspace"][
@@ -669,8 +669,7 @@ class DkubeApi(ApiBase, FilesBase):
                 li = None
 
             if li == None and run.predictor.image == None:
-                raise Exception(
-                    "Lineage is nil, predictor image must be provided.")
+                raise Exception("Lineage is nil, predictor image must be provided.")
 
             if li != None and run.predictor.image == None:
                 si = li["run"]["parameters"]["generated"]["serving_image"]["image"]
@@ -684,8 +683,7 @@ class DkubeApi(ApiBase, FilesBase):
                 and run.transformer.image == None
             ):
                 ti = li["run"]["parameters"]["generated"]["training_image"]["image"]
-                run.update_transformer_image(
-                    ti["path"], ti["username"], ti["password"])
+                run.update_transformer_image(ti["path"], ti["username"], ti["password"])
 
             if (
                 li != None
@@ -1061,8 +1059,7 @@ class DkubeApi(ApiBase, FilesBase):
                     df, existing_spec
                 )
             assert metadata, "The specified featureset is invalid"
-            self.upload_featurespec(
-                featureset=name, filepath=None, metadata=metadata)
+            self.upload_featurespec(featureset=name, filepath=None, metadata=metadata)
             featurespec = metadata
 
         if (dftype == "Py") and (featurespec is not None) and (df is not None):
@@ -1104,8 +1101,7 @@ class DkubeApi(ApiBase, FilesBase):
         path = kwargs.get("path", None)
         dftype = kwargs.get("dftype", "Py")
 
-        assert (version == None) or isinstance(
-            version, str), "version must be a string"
+        assert (version == None) or isinstance(version, str), "version must be a string"
 
         return super().read_featureset(name, version, path, dftype)
 
@@ -1152,8 +1148,7 @@ class DkubeApi(ApiBase, FilesBase):
             A dictionary object with response status
 
         """
-        assert featureset and isinstance(
-            featureset, str), "featureset must be string"
+        assert featureset and isinstance(featureset, str), "featureset must be string"
         assert bool(filepath) ^ bool(
             metadata
         ), "One of filepath and metadata should be specified"
@@ -1829,8 +1824,7 @@ class DkubeApi(ApiBase, FilesBase):
 
             if run.serving_def.transformer == True and run.transformer.image == None:
                 ti = li["run"]["parameters"]["generated"]["training_image"]["image"]
-                run.update_transformer_image(
-                    ti["path"], ti["username"], ti["password"])
+                run.update_transformer_image(ti["path"], ti["username"], ti["password"])
 
             if (
                 run.serving_def.transformer == True
@@ -1842,8 +1836,7 @@ class DkubeApi(ApiBase, FilesBase):
                 cname = code["name"].split(":")[1]
                 run.update_transformer_code(cname, code["version"])
 
-        data = {"name": name, "description": description,
-                "serving": run.serving_def}
+        data = {"name": name, "description": description, "serving": run.serving_def}
         super().publish_model(user, model, version, data)
 
         while wait_for_completion:
@@ -2067,8 +2060,7 @@ class DkubeApi(ApiBase, FilesBase):
                         if iversion["model"]["version"] == version:
                             return iversion
 
-            raise Exception(
-                "{}.{} not found in model catalog".format(model, version))
+            raise Exception("{}.{} not found in model catalog".format(model, version))
         else:
             mc = self.modelcatalog(user)
             for item in mc:
@@ -2077,8 +2069,7 @@ class DkubeApi(ApiBase, FilesBase):
                         if iversion["model"]["version"] == version:
                             return iversion
 
-            raise Exception(
-                "{}.{} not found in model catalog".format(model, version))
+            raise Exception("{}.{} not found in model catalog".format(model, version))
 
     def delete_modelcatalog_item(
         self, user, modelcatalog=None, model=None, version=None
@@ -2109,8 +2100,7 @@ class DkubeApi(ApiBase, FilesBase):
         if version is None:
             return "Model Version must be provided"
         if modelcatalog:
-            response = self._api.delete_model_catalog_item(
-                user, modelcatalog, version)
+            response = self._api.delete_model_catalog_item(user, modelcatalog, version)
             return response
         else:
             mc = self.modelcatalog(user)
@@ -2121,8 +2111,7 @@ class DkubeApi(ApiBase, FilesBase):
                         user, modelcatalog, version
                     )
                     return response
-            raise Exception(
-                "{}.{} not found in model catalog".format(model, version))
+            raise Exception("{}.{} not found in model catalog".format(model, version))
 
     def list_projects(self):
         """
@@ -2402,17 +2391,33 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().get_smtp_artifact()
 
-    def update_smtp_artifact(self, full_name=None, sender_email=None, smtp_password=None, smtp_port=None, smtp_server=None, smtp_tls_port=None, enabled=True):
+    def update_smtp_artifact(
+        self,
+        full_name=None,
+        sender_email=None,
+        smtp_password=None,
+        smtp_port=None,
+        smtp_server=None,
+        smtp_tls_port=None,
+        enabled=True,
+    ):
         """
         Method to update the smtp artifact"
 
         * Available in Dkube Release: 3.0*
         """
-        data = {"full_name": full_name, "sender_email": sender_email, "smtp_password": smtp_password,
-                "smtp_port": smtp_port, "smtp_server": smtp_server, "smtp_tls_port": smtp_tls_port, "enabled": enabled}
+        data = {
+            "full_name": full_name,
+            "sender_email": sender_email,
+            "smtp_password": smtp_password,
+            "smtp_port": smtp_port,
+            "smtp_server": smtp_server,
+            "smtp_tls_port": smtp_tls_port,
+            "enabled": enabled,
+        }
         return super().update_smtp_artifact(data)
 
-   ### Model monitor apis ##########
+    ### Model monitor apis ##########
 
     def modelmonitor_create(
         self, modelmonitor: DkubeModelmonitor, wait_for_completion=True
@@ -2440,20 +2445,21 @@ class DkubeApi(ApiBase, FilesBase):
         ), "Invalid type for model monitor, value must be instance of rsrcs:DkubeModelmonitor class"
         response = super().create_model_monitor(modelmonitor)
         while wait_for_completion:
-            mm_config = super().get_modelmonitor_configuration(
-                response["uuid"])
+            mm_config = super().get_modelmonitor_configuration(response["uuid"])
             state = mm_config["status"]["state"]
-            if state.lower() in ["init", "ready", "error","incomplete","pending"]:
+            if state.lower() in ["init", "ready", "error", "incomplete", "pending"]:
                 print(
                     "ModelMonitor {} - is in state {} and reason {}".format(
-                        modelmonitor.name, state, mm_config["status"]["message"]
+                        modelmonitor.modelmonitor.name,
+                        state,
+                        mm_config["status"]["message"],
                     )
                 )
                 break
             else:
                 print(
                     "ModelMonitor {} - waiting for completion, current state {}".format(
-                        modelmonitor.name, state
+                        modelmonitor.modelmonitor.name, state
                     )
                 )
                 time.sleep(self.wait_interval)
@@ -2634,9 +2640,7 @@ class DkubeApi(ApiBase, FilesBase):
         delete_alertsid_list.append(alert_id)
         return super().delete_modelmonitor_alert(id, delete_alertsid_list)
 
-    def modelmonitor_add_alert(
-        self, id=None, alert_data = None
-    ):
+    def modelmonitor_add_alert(self, id=None, alert_data=None):
         """
         Method to add the alerts in the modelmonitor
 
@@ -2655,11 +2659,10 @@ class DkubeApi(ApiBase, FilesBase):
             a dictionary object with response status
 
         """
-        
+
         alert_dict = json.loads(alert_data.to_JSON())
         alert_dict["class"] = alert_dict.pop("_class")
-        response = super().modelmonitor_addalert(
-            id, {"data": [alert_dict]})
+        response = super().modelmonitor_addalert(id, {"data": [alert_dict]})
         return response
 
     def modelmonitor_archive(self, id=None):
@@ -2735,10 +2738,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().modelmonitor_state(id, "stop")
 
-
-    def modelmonitor_update_alert(
-        self, id=None, alert = None, alert_id=None
-    ):
+    def modelmonitor_update_alert(self, id=None, alert=None, alert_id=None):
         """
         Method to update the modelmonitor alert
 
@@ -2787,8 +2787,7 @@ class DkubeApi(ApiBase, FilesBase):
             a dictionary object with response status
         """
         config_dict = config.__dict__["modelmonitor"].__dict__
-        config_dict = {k.replace("_", "", 1): v for k,
-                       v in config_dict.items()}
+        config_dict = {k.replace("_", "", 1): v for k, v in config_dict.items()}
         rem_list = [
             "updated_at",
             "id",
@@ -2805,15 +2804,20 @@ class DkubeApi(ApiBase, FilesBase):
             if config_dict[k] == None or config_dict[k] == [] or config_dict[k] == {}:
                 del config_dict[k]
 
-        if 'datasources' in config_dict:
+        if "datasources" in config_dict:
             for i in config_dict["datasources"]:
-                if config_dict["datasources"][i]["name"] == self.modelmonitor_get(id)["datasources"][i]["name"]:
-                    config_dict["datasources"][i]["id"] = self.modelmonitor_get(id)["datasources"][i]["id"]
-        
+                if (
+                    config_dict["datasources"][i]["name"]
+                    == self.modelmonitor_get(id)["datasources"][i]["name"]
+                ):
+                    config_dict["datasources"][i]["id"] = self.modelmonitor_get(id)[
+                        "datasources"
+                    ][i]["id"]
+
         response = super().update_modelmonitor_config(id, config_dict)
         while wait_for_completion:
             mm_state = self.modelmonitor_get(id=id)["status"]["state"]
-            if mm_state.lower() in ["init", "error", "ready", "incomplete","pending"]:
+            if mm_state.lower() in ["init", "error", "ready", "incomplete", "pending"]:
                 break
             else:
                 print("ModelMonitor {} - is in {} state".format(id, mm_state))
@@ -2865,19 +2869,16 @@ class DkubeApi(ApiBase, FilesBase):
             if not found:
                 print("specified label is not in the derived schema")
                 return None
-a
             for d in config["schema"]["features"]:
                 d["class"] = d.pop("_class")
-            mm = DkubeModelmonitor(
-                model_name=config["model"], description=config["description"]
-            )
+            mm = DkubeModelmonitor(name=config["name"])
             mm.__dict__["modelmonitor"].__dict__["_schema"] = config["schema"]
             return self.modelmonitor_update(id, mm)
         except TypeError:
             print("Schema is Null")
             return
 
-### operator api's ####
+    ### operator api's ####
 
     def configure_clusters(self, data):
         """
@@ -2950,4 +2951,282 @@ a
         data = {k: v for k, v in data.items() if v is not None}
         data["class"] = data.pop("Cluster__class")
         response = super().update_cluster_configuration(clustername, data)
+        return response
+
+    ### Deployment Api's ###
+
+    def list_deployments(self, **kwargs):
+        """
+        Return list of DKube deployments.
+
+        *Available in DKube Release: 3.3.x*
+        """
+        shared = kwargs.get("shared")
+        tags = kwargs.get("tags")
+        page = kwargs.get("page")
+        archived = kwargs.get("archived", False)
+        query_params = {}
+        if shared:
+            query_params["shared"] = shared
+        if tags:
+            query_params["tags"] = tags
+        if page:
+            query_params["page"] = page
+        if archived:
+            query_params["archived"] = archived
+        response = self._api.list_deployments().to_dict()
+        return response["data"]
+
+    def get_deployment_id(
+        self, name=None, clustername=None, variant=None, namespace=None
+    ):
+        """
+        Method to get the id  of a deployment.
+
+        *Available in DKube Release: 3.3.x*
+
+        *Inputs*
+
+          name
+            Name of the deployment
+          clustername
+            Name of the cluster
+          variant
+            variant of the cluster, if cluster type is sagemaker it's mandatory
+          namespace
+            namespace for the cluster, if cluster type is dkube, it's mandatory
+
+        *Outputs*
+          An uuid of the deployment
+        """
+        if clustername == None:
+            for deployment in self.list_deployments():
+                if deployment["name"] == name:
+                    return deployment["id"]
+        else:
+            if clustername:
+                cluster_kind = self.get_cluster_details(clustername)["data"]["cluster"][
+                    "kind"
+                ]
+                if cluster_kind == "sagemaker" and variant == None:
+                    print("Please provide the variant for the AWS cluster first")
+                elif cluster_kind == "dkube-remote" and namespace == None:
+                    print(
+                        "Please provide the namespace for the dkube-remote cluster first"
+                    )
+                else:
+                    for deployment in self.list_deployments():
+                        if (
+                            deployment["imported_deployment"]["cluster"]["name"]
+                            == clustername
+                        ):
+                            return deployment["id"]
+
+    def get_deployment(self, id=None):
+        """
+        Method to get the deployment based on the id
+
+        *Available in DKube Release: 3.3.x*
+
+        *Inputs*
+         id
+          id of the deployment
+
+        Outputs*
+          a dictionary object with response and data containing that deployment details
+        """
+        response = self._api.get_deployment(id)
+        return response
+
+    def import_deployment(
+        self,
+        name=None,
+        description=None,
+        tags=None,
+        cluster=None,
+        deployment_url=None,
+        model_reference=None,
+        namespace=None,
+        variant=None,
+    ):
+        """
+         Method to import the deployment
+
+        *Available in DKube Release: 3.3.x*
+
+        *Inputs*
+         name of the deployment
+         description of the deployment
+         tags is a list of tags
+         cluster is cluster name
+         deployment_url is url of the deployment
+         model_reference,
+         if cluster is Dkube, namespace is compulsory field
+         if cluster is Sagemaker, variant is compulsory field
+
+        *Outputs*
+          a dictionary object with response status
+        """
+        data = {}
+        data["name"] = name
+        if cluster:
+            data["cluster"] = cluster
+            cluster_type = self.get_cluster_details(cluster)["data"]["cluster"]["kind"]
+            if cluster_type == "dkube-remote":
+                data["namespace"] = namespace
+            if cluster_type == "sagemaker":
+                data["variant"] = variant
+        if description:
+            data["description"] = description
+        if tags:
+            data["tags"] = tags
+        if deployment_url:
+            data["deployment_url"] = deployment_url
+        if model_reference:
+            data["model_reference"] = model_reference
+        response = self._api.import_new_deployment(data)
+        return response
+
+    def update_deployment(
+        self,
+        id=None,
+        description=None,
+        tags=None,
+        cluster=None,
+        deployment_url=None,
+        model_reference=None,
+        namespace=None,
+        variant=None,
+    ):
+        """
+        Method to update the imported deployment
+
+        *Available in DKube Release: 3.3.x*
+
+        *Inputs*
+          id of the deployment
+          description of the deployment
+          tags is a list of tags
+          cluster is cluster name
+          deployment_url is url of the deployment
+          model_reference,
+          namespace and variant
+
+        Outputs*
+          a dictionary object with response status
+        """
+        data = {}
+        if description:
+            data["description"] = description
+        if tags:
+            data["tags"] = tags
+        if cluster:
+            data["cluster"] = cluster
+        if deployment_url:
+            data["deployment_url"] = deployment_url
+        if model_reference:
+            data["model_reference"] = model_reference
+        if namespace:
+            data["namespace"] = namespace
+        if variant:
+            data["variant"] = variant
+        response = self._api.update_deployment(id, data)
+        return response
+
+    def delete_deployments(self, ids=[]):
+        """
+        Method to delete the multiple deployments.
+        *Available in DKube Release: 3.3.x*
+        *Inputs*
+          ids
+            List of deployment Ids to be deleted. Example: ["cd123","345fg"]
+        *Outputs*
+           A dictionary object with response status
+        """
+        response = self._api.delete_deployments({"deployment_ids": ids})
+        return response
+
+    def delete_deployment(self, id=None):
+        """
+        Method to delete deployment.
+        *Available in DKube Release: 3.3.x*
+        *Inputs*
+          id
+            id of the deployment to be deleted
+        *Outputs*
+            A dictionary object with response status
+        """
+        response = self._api.delete_deployments({"deployment_ids": [id]})
+        return response
+
+    def archive_deployment(self, id=None):
+        """
+        Method to archive the deployment
+
+        *Available in DKube Release: 3.3.x*
+
+        *Inputs*
+            id
+            deployment Id to be archived
+
+        Outputs*
+            a dictionary object with response status
+        """
+        response = self._api.archive_deployments(
+            data={"deployment_ids": [id]}, archive="true"
+        )
+        return response
+
+    def archive_deployments(self, ids=[]):
+        """
+        Method to archive multiple deployments
+
+        *Available in DKube Release: 3.3.x*
+
+        *Inputs*
+            ids
+            List of deployment Ids to be archived. Example: ["cd123","345fg"]
+
+        Outputs*
+            a dictionary object with response status
+        """
+        response = self._api.archive_deployments(
+            data={"deployment_ids": ids}, archive="true"
+        )
+        return response
+
+    def unarchive_deployment(self, id=None):
+        """
+        Method to unarchive the deployment
+
+        *Available in DKube Release: 3.3.x*
+
+        *Inputs*
+            id
+            deployment Id to be archived
+
+        Outputs*
+            a dictionary object with response status
+        """
+        response = self._api.archive_deployments(
+            data={"deployment_ids": [id]}, archive="false"
+        )
+        return response
+
+    def unarchive_deployments(self, ids=[]):
+        """
+        Method to unarchive the deployments
+
+        *Available in DKube Release: 3.3.x*
+
+        *Inputs*
+            id
+            List of deployment Ids to be unarchived. Example: ["cd123","345fg"]
+
+        Outputs*
+            a dictionary object with response status
+        """
+        response = self._api.archive_deployments(
+            data={"deployment_ids": ids}, archive="false"
+        )
         return response
