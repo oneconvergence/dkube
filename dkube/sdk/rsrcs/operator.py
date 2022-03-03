@@ -172,3 +172,10 @@ class DkubeCluster(object):
         """
         self.cluster.access_keys = ClusterAccessKeysDef(
             access_key=access_key, secret_key=secret_key)
+        
+    def update_region(self, region=None):
+        """
+        Method to update the region 
+        """
+        self.cluster.access_keys.region = region     
+   
