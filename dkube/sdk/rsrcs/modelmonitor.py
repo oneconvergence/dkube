@@ -366,6 +366,7 @@ class DkubeModelmonitor(object):
         groundtruth_col=None,
         predict_col=None,
         date_suffix=None,
+        timestamp_col=None,
     ):
         """
         This function adds the datasource in dkube Model monitor.
@@ -397,6 +398,8 @@ class DkubeModelmonitor(object):
                 mm_dataset["class"] = data_class
             if date_suffix:
                 mm_dataset["date_suffix"] = date_suffix
+            if data_class == "labelled" and timestamp_col:
+                mm_dataset["timestamp_col"] = timestamp_col
 
             if data_class not in self.modelmonitor.datasources:
                 self.modelmonitor.datasources[data_class] = mm_dataset
@@ -414,6 +417,7 @@ class DkubeModelmonitor(object):
         groundtruth_col=None,
         predict_col=None,
         date_suffix=None,
+        timestamp_col=None,
     ):
         """
         This function updates the DKube Modelmonitor datasource.
@@ -446,6 +450,8 @@ class DkubeModelmonitor(object):
                 mm_dataset["class"] = data_class
             if date_suffix:
                 mm_dataset["date_suffix"] = date_suffix
+            if data_class == "labelled" and timestamp_col:
+                mm_dataset["timestamp_col"] = timestamp_col
 
             for key in mm_dataset:
                 self.modelmonitor.datasources[data_class][key] = mm_dataset[key]
