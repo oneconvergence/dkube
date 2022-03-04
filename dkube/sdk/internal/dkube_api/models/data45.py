@@ -31,6 +31,10 @@ class Data45(object):
                             and the value is json key in definition.
     """
     swagger_types = {
+        'input_data_type': 'str',
+        'dashboard_plugin': 'object',
+        'thresholds': 'object',
+        'input_data_shape': 'ModelmonitorInputDataShapeDef',
         'data_timezone': 'str',
         'alerts': 'list[ModelmonitorAlertDef]',
         'schema': 'ModelmonitorFeaturesSpecDef',
@@ -42,6 +46,10 @@ class Data45(object):
     }
 
     attribute_map = {
+        'input_data_type': 'input_data_type',
+        'dashboard_plugin': 'dashboard_plugin',
+        'thresholds': 'thresholds',
+        'input_data_shape': 'input_data_shape',
         'data_timezone': 'data_timezone',
         'alerts': 'alerts',
         'schema': 'schema',
@@ -52,9 +60,13 @@ class Data45(object):
         'performance_monitoring': 'performance_monitoring'
     }
 
-    def __init__(self, data_timezone=None, alerts=None, schema=None, model_type=None, datasources=None, deployment_monitoring=None, drift_monitoring=None, performance_monitoring=None):  # noqa: E501
+    def __init__(self, input_data_type=None, dashboard_plugin=None, thresholds=None, input_data_shape=None, data_timezone=None, alerts=None, schema=None, model_type=None, datasources=None, deployment_monitoring=None, drift_monitoring=None, performance_monitoring=None):  # noqa: E501
         """Data45 - a model defined in Swagger"""  # noqa: E501
 
+        self._input_data_type = None
+        self._dashboard_plugin = None
+        self._thresholds = None
+        self._input_data_shape = None
         self._data_timezone = None
         self._alerts = None
         self._schema = None
@@ -65,6 +77,14 @@ class Data45(object):
         self._performance_monitoring = None
         self.discriminator = None
 
+        if input_data_type is not None:
+            self.input_data_type = input_data_type
+        if dashboard_plugin is not None:
+            self.dashboard_plugin = dashboard_plugin
+        if thresholds is not None:
+            self.thresholds = thresholds
+        if input_data_shape is not None:
+            self.input_data_shape = input_data_shape
         if data_timezone is not None:
             self.data_timezone = data_timezone
         if alerts is not None:
@@ -81,6 +101,98 @@ class Data45(object):
             self.drift_monitoring = drift_monitoring
         if performance_monitoring is not None:
             self.performance_monitoring = performance_monitoring
+
+    @property
+    def input_data_type(self):
+        """Gets the input_data_type of this Data45.  # noqa: E501
+
+        training dataset type  # noqa: E501
+
+        :return: The input_data_type of this Data45.  # noqa: E501
+        :rtype: str
+        """
+        return self._input_data_type
+
+    @input_data_type.setter
+    def input_data_type(self, input_data_type):
+        """Sets the input_data_type of this Data45.
+
+        training dataset type  # noqa: E501
+
+        :param input_data_type: The input_data_type of this Data45.  # noqa: E501
+        :type: str
+        """
+        allowed_values = ["image", "tabular"]  # noqa: E501
+        if input_data_type not in allowed_values:
+            raise ValueError(
+                "Invalid value for `input_data_type` ({0}), must be one of {1}"  # noqa: E501
+                .format(input_data_type, allowed_values)
+            )
+
+        self._input_data_type = input_data_type
+
+    @property
+    def dashboard_plugin(self):
+        """Gets the dashboard_plugin of this Data45.  # noqa: E501
+
+
+        :return: The dashboard_plugin of this Data45.  # noqa: E501
+        :rtype: object
+        """
+        return self._dashboard_plugin
+
+    @dashboard_plugin.setter
+    def dashboard_plugin(self, dashboard_plugin):
+        """Sets the dashboard_plugin of this Data45.
+
+
+        :param dashboard_plugin: The dashboard_plugin of this Data45.  # noqa: E501
+        :type: object
+        """
+
+        self._dashboard_plugin = dashboard_plugin
+
+    @property
+    def thresholds(self):
+        """Gets the thresholds of this Data45.  # noqa: E501
+
+
+        :return: The thresholds of this Data45.  # noqa: E501
+        :rtype: object
+        """
+        return self._thresholds
+
+    @thresholds.setter
+    def thresholds(self, thresholds):
+        """Sets the thresholds of this Data45.
+
+
+        :param thresholds: The thresholds of this Data45.  # noqa: E501
+        :type: object
+        """
+
+        self._thresholds = thresholds
+
+    @property
+    def input_data_shape(self):
+        """Gets the input_data_shape of this Data45.  # noqa: E501
+
+
+        :return: The input_data_shape of this Data45.  # noqa: E501
+        :rtype: ModelmonitorInputDataShapeDef
+        """
+        return self._input_data_shape
+
+    @input_data_shape.setter
+    def input_data_shape(self, input_data_shape):
+        """Sets the input_data_shape of this Data45.
+
+
+        :param input_data_shape: The input_data_shape of this Data45.  # noqa: E501
+        :type: ModelmonitorInputDataShapeDef
+        """
+
+        self._input_data_shape = input_data_shape
 
     @property
     def data_timezone(self):

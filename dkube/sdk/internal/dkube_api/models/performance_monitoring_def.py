@@ -33,44 +33,49 @@ class PerformanceMonitoringDef(object):
     swagger_types = {
         'enabled': 'bool',
         'frequency': 'int',
+        'row_id': 'str',
+        'prediction_timestamp_col_name': 'str',
         'source_type': 'str',
         'docker_image': 'str',
-        'startup_script': 'str',
-        'soft_thresholds': 'dict(str, PerformanceMonitoringSoftThresholdDef)'
+        'startup_script': 'str'
     }
 
     attribute_map = {
         'enabled': 'enabled',
         'frequency': 'frequency',
+        'row_id': 'row_id',
+        'prediction_timestamp_col_name': 'prediction_timestamp_col_name',
         'source_type': 'source_type',
         'docker_image': 'docker_image',
-        'startup_script': 'startup_script',
-        'soft_thresholds': 'soft_thresholds'
+        'startup_script': 'startup_script'
     }
 
-    def __init__(self, enabled=None, frequency=None, source_type=None, docker_image=None, startup_script=None, soft_thresholds=None):  # noqa: E501
+    def __init__(self, enabled=None, frequency=None, row_id=None, prediction_timestamp_col_name=None, source_type=None, docker_image=None, startup_script=None):  # noqa: E501
         """PerformanceMonitoringDef - a model defined in Swagger"""  # noqa: E501
 
         self._enabled = None
         self._frequency = None
+        self._row_id = None
+        self._prediction_timestamp_col_name = None
         self._source_type = None
         self._docker_image = None
         self._startup_script = None
-        self._soft_thresholds = None
         self.discriminator = None
 
         if enabled is not None:
             self.enabled = enabled
         if frequency is not None:
             self.frequency = frequency
+        if row_id is not None:
+            self.row_id = row_id
+        if prediction_timestamp_col_name is not None:
+            self.prediction_timestamp_col_name = prediction_timestamp_col_name
         if source_type is not None:
             self.source_type = source_type
         if docker_image is not None:
             self.docker_image = docker_image
         if startup_script is not None:
             self.startup_script = startup_script
-        if soft_thresholds is not None:
-            self.soft_thresholds = soft_thresholds
 
     @property
     def enabled(self):
@@ -115,6 +120,50 @@ class PerformanceMonitoringDef(object):
         """
 
         self._frequency = frequency
+
+    @property
+    def row_id(self):
+        """Gets the row_id of this PerformanceMonitoringDef.  # noqa: E501
+
+        required in case of modelmonitor.input_data_type is image  # noqa: E501
+
+        :return: The row_id of this PerformanceMonitoringDef.  # noqa: E501
+        :rtype: str
+        """
+        return self._row_id
+
+    @row_id.setter
+    def row_id(self, row_id):
+        """Sets the row_id of this PerformanceMonitoringDef.
+
+        required in case of modelmonitor.input_data_type is image  # noqa: E501
+
+        :param row_id: The row_id of this PerformanceMonitoringDef.  # noqa: E501
+        :type: str
+        """
+
+        self._row_id = row_id
+
+    @property
+    def prediction_timestamp_col_name(self):
+        """Gets the prediction_timestamp_col_name of this PerformanceMonitoringDef.  # noqa: E501
+
+
+        :return: The prediction_timestamp_col_name of this PerformanceMonitoringDef.  # noqa: E501
+        :rtype: str
+        """
+        return self._prediction_timestamp_col_name
+
+    @prediction_timestamp_col_name.setter
+    def prediction_timestamp_col_name(self, prediction_timestamp_col_name):
+        """Sets the prediction_timestamp_col_name of this PerformanceMonitoringDef.
+
+
+        :param prediction_timestamp_col_name: The prediction_timestamp_col_name of this PerformanceMonitoringDef.  # noqa: E501
+        :type: str
+        """
+
+        self._prediction_timestamp_col_name = prediction_timestamp_col_name
 
     @property
     def source_type(self):
@@ -184,27 +233,6 @@ class PerformanceMonitoringDef(object):
         """
 
         self._startup_script = startup_script
-
-    @property
-    def soft_thresholds(self):
-        """Gets the soft_thresholds of this PerformanceMonitoringDef.  # noqa: E501
-
-
-        :return: The soft_thresholds of this PerformanceMonitoringDef.  # noqa: E501
-        :rtype: dict(str, PerformanceMonitoringSoftThresholdDef)
-        """
-        return self._soft_thresholds
-
-    @soft_thresholds.setter
-    def soft_thresholds(self, soft_thresholds):
-        """Sets the soft_thresholds of this PerformanceMonitoringDef.
-
-
-        :param soft_thresholds: The soft_thresholds of this PerformanceMonitoringDef.  # noqa: E501
-        :type: dict(str, PerformanceMonitoringSoftThresholdDef)
-        """
-
-        self._soft_thresholds = soft_thresholds
 
     def to_dict(self):
         """Returns the model properties as a dict"""

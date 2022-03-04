@@ -34,26 +34,23 @@ class DeploymentMonitoringDef(object):
         'enabled': 'bool',
         'frequency': 'int',
         'metrics': 'ModelmonitorHeartbeatDef',
-        'collect_metrics': 'bool',
-        'soft_thresholds': 'object'
+        'collect_metrics': 'bool'
     }
 
     attribute_map = {
         'enabled': 'enabled',
         'frequency': 'frequency',
         'metrics': 'metrics',
-        'collect_metrics': 'collect_metrics',
-        'soft_thresholds': 'soft_thresholds'
+        'collect_metrics': 'collect_metrics'
     }
 
-    def __init__(self, enabled=None, frequency=None, metrics=None, collect_metrics=None, soft_thresholds=None):  # noqa: E501
+    def __init__(self, enabled=None, frequency=None, metrics=None, collect_metrics=None):  # noqa: E501
         """DeploymentMonitoringDef - a model defined in Swagger"""  # noqa: E501
 
         self._enabled = None
         self._frequency = None
         self._metrics = None
         self._collect_metrics = None
-        self._soft_thresholds = None
         self.discriminator = None
 
         if enabled is not None:
@@ -64,8 +61,6 @@ class DeploymentMonitoringDef(object):
             self.metrics = metrics
         if collect_metrics is not None:
             self.collect_metrics = collect_metrics
-        if soft_thresholds is not None:
-            self.soft_thresholds = soft_thresholds
 
     @property
     def enabled(self):
@@ -152,27 +147,6 @@ class DeploymentMonitoringDef(object):
         """
 
         self._collect_metrics = collect_metrics
-
-    @property
-    def soft_thresholds(self):
-        """Gets the soft_thresholds of this DeploymentMonitoringDef.  # noqa: E501
-
-
-        :return: The soft_thresholds of this DeploymentMonitoringDef.  # noqa: E501
-        :rtype: object
-        """
-        return self._soft_thresholds
-
-    @soft_thresholds.setter
-    def soft_thresholds(self, soft_thresholds):
-        """Sets the soft_thresholds of this DeploymentMonitoringDef.
-
-
-        :param soft_thresholds: The soft_thresholds of this DeploymentMonitoringDef.  # noqa: E501
-        :type: object
-        """
-
-        self._soft_thresholds = soft_thresholds
 
     def to_dict(self):
         """Returns the model properties as a dict"""

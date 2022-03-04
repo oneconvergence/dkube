@@ -43,6 +43,7 @@ class ModelmonitorDataSourceDef(object):
         'data_format': 'str',
         'groundtruth_col': 'str',
         'predict_col': 'str',
+        'image_transformation': 'list[str]',
         'date_suffix': 'str'
     }
 
@@ -59,10 +60,11 @@ class ModelmonitorDataSourceDef(object):
         'data_format': 'data_format',
         'groundtruth_col': 'groundtruth_col',
         'predict_col': 'predict_col',
+        'image_transformation': 'image_transformation',
         'date_suffix': 'date_suffix'
     }
 
-    def __init__(self, id=None, _class=None, transformer_script=None, name=None, timezone=None, timestamp_col=None, sql_query=None, s3_subpath=None, version=None, data_format='tabular', groundtruth_col=None, predict_col=None, date_suffix='none'):  # noqa: E501
+    def __init__(self, id=None, _class=None, transformer_script=None, name=None, timezone=None, timestamp_col=None, sql_query=None, s3_subpath=None, version=None, data_format='tabular', groundtruth_col=None, predict_col=None, image_transformation=None, date_suffix='none'):  # noqa: E501
         """ModelmonitorDataSourceDef - a model defined in Swagger"""  # noqa: E501
 
         self._id = None
@@ -77,6 +79,7 @@ class ModelmonitorDataSourceDef(object):
         self._data_format = None
         self._groundtruth_col = None
         self._predict_col = None
+        self._image_transformation = None
         self._date_suffix = None
         self.discriminator = None
 
@@ -104,6 +107,8 @@ class ModelmonitorDataSourceDef(object):
             self.groundtruth_col = groundtruth_col
         if predict_col is not None:
             self.predict_col = predict_col
+        if image_transformation is not None:
+            self.image_transformation = image_transformation
         if date_suffix is not None:
             self.date_suffix = date_suffix
 
@@ -390,6 +395,34 @@ class ModelmonitorDataSourceDef(object):
         self._predict_col = predict_col
 
     @property
+    def image_transformation(self):
+        """Gets the image_transformation of this ModelmonitorDataSourceDef.  # noqa: E501
+
+
+        :return: The image_transformation of this ModelmonitorDataSourceDef.  # noqa: E501
+        :rtype: list[str]
+        """
+        return self._image_transformation
+
+    @image_transformation.setter
+    def image_transformation(self, image_transformation):
+        """Sets the image_transformation of this ModelmonitorDataSourceDef.
+
+
+        :param image_transformation: The image_transformation of this ModelmonitorDataSourceDef.  # noqa: E501
+        :type: list[str]
+        """
+        allowed_values = ["standardisation", "normalization", "scaling"]  # noqa: E501
+        if not set(image_transformation).issubset(set(allowed_values)):
+            raise ValueError(
+                "Invalid values for `image_transformation` [{0}], must be a subset of [{1}]"  # noqa: E501
+                .format(", ".join(map(str, set(image_transformation) - set(allowed_values))),  # noqa: E501
+                        ", ".join(map(str, allowed_values)))
+            )
+
+        self._image_transformation = image_transformation
+
+    @property
     def date_suffix(self):
         """Gets the date_suffix of this ModelmonitorDataSourceDef.  # noqa: E501
 
@@ -409,7 +442,7 @@ class ModelmonitorDataSourceDef(object):
         :param date_suffix: The date_suffix of this ModelmonitorDataSourceDef.  # noqa: E501
         :type: str
         """
-        allowed_values = ["yyyy/mm/dd/hh", "yyyy/mm/dd", "yyy/mm", "none"]  # noqa: E501
+        allowed_values = ["yyyy/mm/dd/hh", "yyyy/mm/dd", "yyyy/mm", "none"]  # noqa: E501
         if date_suffix not in allowed_values:
             raise ValueError(
                 "Invalid value for `date_suffix` ({0}), must be one of {1}"  # noqa: E501
