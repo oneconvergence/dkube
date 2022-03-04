@@ -13,6 +13,7 @@ from dkube.sdk.internal.dkube_api.models.git_access_credentials import \
     GitAccessCredentials
 from dkube.sdk.internal.dkube_api.models.git_access_info import GitAccessInfo
 from dkube.sdk.internal.dkube_api.models.nfs_access_info import NFSAccessInfo
+from dkube.sdk.internal.dkube_api.models.snowflake_access_info import SnowflakeAccessInfo
 from dkube.sdk.internal.dkube_api.models.redshift_access_info import \
     RedshiftAccessInfo
 from dkube.sdk.internal.dkube_api.models.repo_gcs_access_info_secret import \
@@ -84,7 +85,7 @@ class DkubeModel(object):
 
     """
 
-    def __init__(self, user, name=generate("dataset"), tags=None):
+    def __init__(self, user, name=generate("dataset"), remote=False, tags=None):
         self.k8svolume = DatumModelK8svolume(name=None)
 
         self.nfsaccess = NFSAccessInfo(server=None, path=None)
@@ -127,7 +128,7 @@ class DkubeModel(object):
             dvs=None,
             source='dvs',
             url=None,
-            remote=False,
+            remote=remote,
             gitaccess=self.gitaccess,
             s3access=self.s3access,
             snowflake=self.snowflake,
