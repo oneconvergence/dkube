@@ -42,6 +42,7 @@ class DkubeModel(object):
         "git",
         "aws_s3",
         "s3",
+        "snowflake"
         "gcs",
         "nfs",
         "k8svolume",
@@ -66,6 +67,8 @@ class DkubeModel(object):
     :bash:`k8svolume` :- Kubernetes volume as data source. :bash:`Remote`
 
     :bash:`workstation` :- To upload data that is present on the local workstation. :bash:`Uploaded`
+
+    :bash:`snowflake` :- snowflake dataset source :bash:`Remote`
     """
 
     GIT_ACCESS_OPTS = ["apikey", "sshkey", "password"]
@@ -106,6 +109,17 @@ class DkubeModel(object):
         self.gitaccess = GitAccessInfo(
             path=None, url=None, branch=None, credentials=self.gitcreds)
 
+        self.snowflake = SnowflakeAccessInfo(
+            account=None,
+            username=None,
+            password=None,
+            database=None,
+            odbc_connection_string=None,
+            jdbc_connection_string=None,
+            schema=None,
+            warehouse=None,
+            parameters=None)
+
         self.datum = DatumModel(
             name=None,
             tags=None,
@@ -116,6 +130,7 @@ class DkubeModel(object):
             remote=False,
             gitaccess=self.gitaccess,
             s3access=self.s3access,
+            snowflake=self.snowflake,
             nfsaccess=self.nfsaccess,
             gcsaccess=self.gcsaccess)
         self.extract = False
@@ -308,3 +323,52 @@ i            Method to update the details of git source.
         self.datum.source = "pub_url"
         self.datum.url = url
         self.extract = extract
+
+    def update_snowflake_details(self, account='', username=None, password=None, database='', odbc_connection_string=None, jdbc_connection_string=None, schema='', warehouse='', parameters={}):
+        """
+            Method to update details of snowflake data source.
+
+            *Inputs*
+
+                account
+                    snowflake account URL without the '.snowflakecomputing.com' (string)
+
+                username
+                    username for accessing the database (string)
+
+                password
+                    password for accessing the database (string)
+
+                database
+                    name of the database (string)
+
+                odbc_connection_string
+                    odbc connection string
+
+                jdbc_connection_string
+                    jdbc connection string
+
+                schema
+                    database schema to use by default in the client session (string)
+
+                warehouse
+                    virtual warehouse to use by default for queries, loading, etc. in the client session (string)
+
+                parameters
+                    Dictionary of env parameters name and value
+        """
+
+        self.datum.source = "snowflake"
+        self.snowflake.account = account
+        self.snowflake.username = username
+        self.snowflake.password = password
+        self.snowflake.database = database
+        self.snowflake.odbc_connection_string = odbc_connection_string
+        self.snowflake.jdbc_connection_string = jdbc_connection_string
+        self.snowflake.schema = schema
+        self.snowflake.warehouse = warehouse
+
+        params = []
+        for k, v in parameters.items():
+            params.append({"key": k, "value": v})
+        self.snowflake.parameters = params
