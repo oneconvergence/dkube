@@ -480,7 +480,7 @@ class DkubeDataset(object):
         """
 
         self.datum.source = "snowflake"
-        self.snowflake.account = account`
+        self.snowflake.account = account
         self.snowflake.username = username
         self.snowflake.password = password
         self.snowflake.database = database
