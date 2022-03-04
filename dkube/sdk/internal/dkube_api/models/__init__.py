@@ -139,7 +139,6 @@ from dkube.sdk.internal.dkube_api.models.datum_status_model import DatumStatusMo
 from dkube.sdk.internal.dkube_api.models.deployment_def import DeploymentDef
 from dkube.sdk.internal.dkube_api.models.deployment_import_request_def import DeploymentImportRequestDef
 from dkube.sdk.internal.dkube_api.models.deployment_monitoring_def import DeploymentMonitoringDef
-from dkube.sdk.internal.dkube_api.models.deployment_monitoring_threshold_def import DeploymentMonitoringThresholdDef
 from dkube.sdk.internal.dkube_api.models.device_model import DeviceModel
 from dkube.sdk.internal.dkube_api.models.device_pool_model import DevicePoolModel
 from dkube.sdk.internal.dkube_api.models.dkube_container_model import DkubeContainerModel
@@ -365,11 +364,13 @@ from dkube.sdk.internal.dkube_api.models.modelmonitor_data_source_def import Mod
 from dkube.sdk.internal.dkube_api.models.modelmonitor_def import ModelmonitorDef
 from dkube.sdk.internal.dkube_api.models.modelmonitor_features_spec_def import ModelmonitorFeaturesSpecDef
 from dkube.sdk.internal.dkube_api.models.modelmonitor_heartbeat_def import ModelmonitorHeartbeatDef
+from dkube.sdk.internal.dkube_api.models.modelmonitor_input_data_shape_def import ModelmonitorInputDataShapeDef
 from dkube.sdk.internal.dkube_api.models.modelmonitor_metric_def import ModelmonitorMetricDef
 from dkube.sdk.internal.dkube_api.models.modelmonitor_metrics_template_def import ModelmonitorMetricsTemplateDef
 from dkube.sdk.internal.dkube_api.models.modelmonitor_name_id_map_def import ModelmonitorNameIdMapDef
 from dkube.sdk.internal.dkube_api.models.modelmonitor_schema_feature import ModelmonitorSchemaFeature
 from dkube.sdk.internal.dkube_api.models.modelmonitor_status_def import ModelmonitorStatusDef
+from dkube.sdk.internal.dkube_api.models.modelmonitor_threshold_def import ModelmonitorThresholdDef
 from dkube.sdk.internal.dkube_api.models.nfs_access_info import NFSAccessInfo
 from dkube.sdk.internal.dkube_api.models.node_collection import NodeCollection
 from dkube.sdk.internal.dkube_api.models.node_collection_devices import NodeCollectionDevices
@@ -385,7 +386,6 @@ from dkube.sdk.internal.dkube_api.models.notebook_result_model import NotebookRe
 from dkube.sdk.internal.dkube_api.models.notification_data import NotificationData
 from dkube.sdk.internal.dkube_api.models.notification_data_study import NotificationDataStudy
 from dkube.sdk.internal.dkube_api.models.performance_monitoring_def import PerformanceMonitoringDef
-from dkube.sdk.internal.dkube_api.models.performance_monitoring_soft_threshold_def import PerformanceMonitoringSoftThresholdDef
 from dkube.sdk.internal.dkube_api.models.plugin_model import PluginModel
 from dkube.sdk.internal.dkube_api.models.plugin_model_generated import PluginModelGenerated
 from dkube.sdk.internal.dkube_api.models.plugin_status_model import PluginStatusModel

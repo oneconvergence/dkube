@@ -33,39 +33,39 @@ class DriftMonitoringDef(object):
     swagger_types = {
         'enabled': 'bool',
         'frequency': 'int',
-        'algorithm': 'str',
-        'baseline_threshold': 'float',
-        'soft_threshold': 'float'
+        'image_train_data_savedfile_format': 'str',
+        'image_predict_data_savedfile_format': 'str',
+        'algorithm': 'str'
     }
 
     attribute_map = {
         'enabled': 'enabled',
         'frequency': 'frequency',
-        'algorithm': 'algorithm',
-        'baseline_threshold': 'baseline_threshold',
-        'soft_threshold': 'soft_threshold'
+        'image_train_data_savedfile_format': 'image_train_data_savedfile_format',
+        'image_predict_data_savedfile_format': 'image_predict_data_savedfile_format',
+        'algorithm': 'algorithm'
     }
 
-    def __init__(self, enabled=None, frequency=None, algorithm=None, baseline_threshold=None, soft_threshold=None):  # noqa: E501
+    def __init__(self, enabled=None, frequency=None, image_train_data_savedfile_format=None, image_predict_data_savedfile_format=None, algorithm=None):  # noqa: E501
         """DriftMonitoringDef - a model defined in Swagger"""  # noqa: E501
 
         self._enabled = None
         self._frequency = None
+        self._image_train_data_savedfile_format = None
+        self._image_predict_data_savedfile_format = None
         self._algorithm = None
-        self._baseline_threshold = None
-        self._soft_threshold = None
         self.discriminator = None
 
         if enabled is not None:
             self.enabled = enabled
         if frequency is not None:
             self.frequency = frequency
+        if image_train_data_savedfile_format is not None:
+            self.image_train_data_savedfile_format = image_train_data_savedfile_format
+        if image_predict_data_savedfile_format is not None:
+            self.image_predict_data_savedfile_format = image_predict_data_savedfile_format
         if algorithm is not None:
             self.algorithm = algorithm
-        if baseline_threshold is not None:
-            self.baseline_threshold = baseline_threshold
-        if soft_threshold is not None:
-            self.soft_threshold = soft_threshold
 
     @property
     def enabled(self):
@@ -112,6 +112,64 @@ class DriftMonitoringDef(object):
         self._frequency = frequency
 
     @property
+    def image_train_data_savedfile_format(self):
+        """Gets the image_train_data_savedfile_format of this DriftMonitoringDef.  # noqa: E501
+
+        Describe how the train datasource is organized - bin_numpy_array             : binary numpy array - img_files_labels_csv        : image files, and labels in csv - images_in_labelled_folder   : directory name same as labels  # noqa: E501
+
+        :return: The image_train_data_savedfile_format of this DriftMonitoringDef.  # noqa: E501
+        :rtype: str
+        """
+        return self._image_train_data_savedfile_format
+
+    @image_train_data_savedfile_format.setter
+    def image_train_data_savedfile_format(self, image_train_data_savedfile_format):
+        """Sets the image_train_data_savedfile_format of this DriftMonitoringDef.
+
+        Describe how the train datasource is organized - bin_numpy_array             : binary numpy array - img_files_labels_csv        : image files, and labels in csv - images_in_labelled_folder   : directory name same as labels  # noqa: E501
+
+        :param image_train_data_savedfile_format: The image_train_data_savedfile_format of this DriftMonitoringDef.  # noqa: E501
+        :type: str
+        """
+        allowed_values = ["bin_numpy_array", "img_files_labels_csv", "images_in_labelled_folder"]  # noqa: E501
+        if image_train_data_savedfile_format not in allowed_values:
+            raise ValueError(
+                "Invalid value for `image_train_data_savedfile_format` ({0}), must be one of {1}"  # noqa: E501
+                .format(image_train_data_savedfile_format, allowed_values)
+            )
+
+        self._image_train_data_savedfile_format = image_train_data_savedfile_format
+
+    @property
+    def image_predict_data_savedfile_format(self):
+        """Gets the image_predict_data_savedfile_format of this DriftMonitoringDef.  # noqa: E501
+
+        Describe how the predict datasource is organized - bin_numpy_array             : binary numpy array - img_files_labels_csv        : image files, and labels in csv - images_in_labelled_folder   : directory name same as labels  # noqa: E501
+
+        :return: The image_predict_data_savedfile_format of this DriftMonitoringDef.  # noqa: E501
+        :rtype: str
+        """
+        return self._image_predict_data_savedfile_format
+
+    @image_predict_data_savedfile_format.setter
+    def image_predict_data_savedfile_format(self, image_predict_data_savedfile_format):
+        """Sets the image_predict_data_savedfile_format of this DriftMonitoringDef.
+
+        Describe how the predict datasource is organized - bin_numpy_array             : binary numpy array - img_files_labels_csv        : image files, and labels in csv - images_in_labelled_folder   : directory name same as labels  # noqa: E501
+
+        :param image_predict_data_savedfile_format: The image_predict_data_savedfile_format of this DriftMonitoringDef.  # noqa: E501
+        :type: str
+        """
+        allowed_values = ["bin_numpy_array", "img_files_labels_csv", "images_in_labelled_folder"]  # noqa: E501
+        if image_predict_data_savedfile_format not in allowed_values:
+            raise ValueError(
+                "Invalid value for `image_predict_data_savedfile_format` ({0}), must be one of {1}"  # noqa: E501
+                .format(image_predict_data_savedfile_format, allowed_values)
+            )
+
+        self._image_predict_data_savedfile_format = image_predict_data_savedfile_format
+
+    @property
     def algorithm(self):
         """Gets the algorithm of this DriftMonitoringDef.  # noqa: E501
 
@@ -137,48 +195,6 @@ class DriftMonitoringDef(object):
             )
 
         self._algorithm = algorithm
-
-    @property
-    def baseline_threshold(self):
-        """Gets the baseline_threshold of this DriftMonitoringDef.  # noqa: E501
-
-
-        :return: The baseline_threshold of this DriftMonitoringDef.  # noqa: E501
-        :rtype: float
-        """
-        return self._baseline_threshold
-
-    @baseline_threshold.setter
-    def baseline_threshold(self, baseline_threshold):
-        """Sets the baseline_threshold of this DriftMonitoringDef.
-
-
-        :param baseline_threshold: The baseline_threshold of this DriftMonitoringDef.  # noqa: E501
-        :type: float
-        """
-
-        self._baseline_threshold = baseline_threshold
-
-    @property
-    def soft_threshold(self):
-        """Gets the soft_threshold of this DriftMonitoringDef.  # noqa: E501
-
-
-        :return: The soft_threshold of this DriftMonitoringDef.  # noqa: E501
-        :rtype: float
-        """
-        return self._soft_threshold
-
-    @soft_threshold.setter
-    def soft_threshold(self, soft_threshold):
-        """Sets the soft_threshold of this DriftMonitoringDef.
-
-
-        :param soft_threshold: The soft_threshold of this DriftMonitoringDef.  # noqa: E501
-        :type: float
-        """
-
-        self._soft_threshold = soft_threshold
 
     def to_dict(self):
         """Returns the model properties as a dict"""

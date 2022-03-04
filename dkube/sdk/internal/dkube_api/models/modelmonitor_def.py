@@ -33,15 +33,19 @@ class ModelmonitorDef(object):
     swagger_types = {
         'id': 'str',
         'data_timezone': 'str',
+        'dashboard_plugin': 'object',
         'status': 'ModelmonitorStatusDef',
         'schema': 'ModelmonitorFeaturesSpecDef',
         'pipeline_component': 'ModelmonitorComponentDef',
         'deployment_monitoring': 'DeploymentMonitoringDef',
         'drift_monitoring': 'DriftMonitoringDef',
         'performance_monitoring': 'PerformanceMonitoringDef',
+        'thresholds': 'object',
         'owner': 'str',
         'name': 'str',
         'model_type': 'str',
+        'input_data_type': 'str',
+        'input_data_shape': 'ModelmonitorInputDataShapeDef',
         'datasources': 'dict(str, ModelmonitorDataSourceDef)',
         'created_at': 'str',
         'updated_at': 'str',
@@ -51,35 +55,43 @@ class ModelmonitorDef(object):
     attribute_map = {
         'id': 'id',
         'data_timezone': 'data_timezone',
+        'dashboard_plugin': 'dashboard_plugin',
         'status': 'status',
         'schema': 'schema',
         'pipeline_component': 'pipeline_component',
         'deployment_monitoring': 'deployment_monitoring',
         'drift_monitoring': 'drift_monitoring',
         'performance_monitoring': 'performance_monitoring',
+        'thresholds': 'thresholds',
         'owner': 'owner',
         'name': 'name',
         'model_type': 'model_type',
+        'input_data_type': 'input_data_type',
+        'input_data_shape': 'input_data_shape',
         'datasources': 'datasources',
         'created_at': 'created_at',
         'updated_at': 'updated_at',
         'alerts': 'alerts'
     }
 
-    def __init__(self, id=None, data_timezone=None, status=None, schema=None, pipeline_component=None, deployment_monitoring=None, drift_monitoring=None, performance_monitoring=None, owner=None, name=None, model_type=None, datasources=None, created_at=None, updated_at=None, alerts=None):  # noqa: E501
+    def __init__(self, id=None, data_timezone=None, dashboard_plugin=None, status=None, schema=None, pipeline_component=None, deployment_monitoring=None, drift_monitoring=None, performance_monitoring=None, thresholds=None, owner=None, name=None, model_type=None, input_data_type=None, input_data_shape=None, datasources=None, created_at=None, updated_at=None, alerts=None):  # noqa: E501
         """ModelmonitorDef - a model defined in Swagger"""  # noqa: E501
 
         self._id = None
         self._data_timezone = None
+        self._dashboard_plugin = None
         self._status = None
         self._schema = None
         self._pipeline_component = None
         self._deployment_monitoring = None
         self._drift_monitoring = None
         self._performance_monitoring = None
+        self._thresholds = None
         self._owner = None
         self._name = None
         self._model_type = None
+        self._input_data_type = None
+        self._input_data_shape = None
         self._datasources = None
         self._created_at = None
         self._updated_at = None
@@ -90,6 +102,8 @@ class ModelmonitorDef(object):
             self.id = id
         if data_timezone is not None:
             self.data_timezone = data_timezone
+        if dashboard_plugin is not None:
+            self.dashboard_plugin = dashboard_plugin
         if status is not None:
             self.status = status
         if schema is not None:
@@ -102,12 +116,18 @@ class ModelmonitorDef(object):
             self.drift_monitoring = drift_monitoring
         if performance_monitoring is not None:
             self.performance_monitoring = performance_monitoring
+        if thresholds is not None:
+            self.thresholds = thresholds
         if owner is not None:
             self.owner = owner
         if name is not None:
             self.name = name
         if model_type is not None:
             self.model_type = model_type
+        if input_data_type is not None:
+            self.input_data_type = input_data_type
+        if input_data_shape is not None:
+            self.input_data_shape = input_data_shape
         if datasources is not None:
             self.datasources = datasources
         if created_at is not None:
@@ -160,6 +180,27 @@ class ModelmonitorDef(object):
         """
 
         self._data_timezone = data_timezone
+
+    @property
+    def dashboard_plugin(self):
+        """Gets the dashboard_plugin of this ModelmonitorDef.  # noqa: E501
+
+
+        :return: The dashboard_plugin of this ModelmonitorDef.  # noqa: E501
+        :rtype: object
+        """
+        return self._dashboard_plugin
+
+    @dashboard_plugin.setter
+    def dashboard_plugin(self, dashboard_plugin):
+        """Sets the dashboard_plugin of this ModelmonitorDef.
+
+
+        :param dashboard_plugin: The dashboard_plugin of this ModelmonitorDef.  # noqa: E501
+        :type: object
+        """
+
+        self._dashboard_plugin = dashboard_plugin
 
     @property
     def status(self):
@@ -288,6 +329,27 @@ class ModelmonitorDef(object):
         self._performance_monitoring = performance_monitoring
 
     @property
+    def thresholds(self):
+        """Gets the thresholds of this ModelmonitorDef.  # noqa: E501
+
+
+        :return: The thresholds of this ModelmonitorDef.  # noqa: E501
+        :rtype: object
+        """
+        return self._thresholds
+
+    @thresholds.setter
+    def thresholds(self, thresholds):
+        """Sets the thresholds of this ModelmonitorDef.
+
+
+        :param thresholds: The thresholds of this ModelmonitorDef.  # noqa: E501
+        :type: object
+        """
+
+        self._thresholds = thresholds
+
+    @property
     def owner(self):
         """Gets the owner of this ModelmonitorDef.  # noqa: E501
 
@@ -363,6 +425,56 @@ class ModelmonitorDef(object):
             )
 
         self._model_type = model_type
+
+    @property
+    def input_data_type(self):
+        """Gets the input_data_type of this ModelmonitorDef.  # noqa: E501
+
+        training dataset type  # noqa: E501
+
+        :return: The input_data_type of this ModelmonitorDef.  # noqa: E501
+        :rtype: str
+        """
+        return self._input_data_type
+
+    @input_data_type.setter
+    def input_data_type(self, input_data_type):
+        """Sets the input_data_type of this ModelmonitorDef.
+
+        training dataset type  # noqa: E501
+
+        :param input_data_type: The input_data_type of this ModelmonitorDef.  # noqa: E501
+        :type: str
+        """
+        allowed_values = ["image", "tabular"]  # noqa: E501
+        if input_data_type not in allowed_values:
+            raise ValueError(
+                "Invalid value for `input_data_type` ({0}), must be one of {1}"  # noqa: E501
+                .format(input_data_type, allowed_values)
+            )
+
+        self._input_data_type = input_data_type
+
+    @property
+    def input_data_shape(self):
+        """Gets the input_data_shape of this ModelmonitorDef.  # noqa: E501
+
+
+        :return: The input_data_shape of this ModelmonitorDef.  # noqa: E501
+        :rtype: ModelmonitorInputDataShapeDef
+        """
+        return self._input_data_shape
+
+    @input_data_shape.setter
+    def input_data_shape(self, input_data_shape):
+        """Sets the input_data_shape of this ModelmonitorDef.
+
+
+        :param input_data_shape: The input_data_shape of this ModelmonitorDef.  # noqa: E501
+        :type: ModelmonitorInputDataShapeDef
+        """
+
+        self._input_data_shape = input_data_shape
 
     @property
     def datasources(self):
