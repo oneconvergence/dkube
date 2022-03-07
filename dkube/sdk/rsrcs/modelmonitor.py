@@ -336,7 +336,7 @@ class DkubeModelmonitor(object):
         self.update_modelmonitor(name, model_type)
 
     def update_modelmonitor(
-        self, name=None, model_type: ModelType = None, data_timezone=None
+        self, name=None, model_type: ModelType = None, data_timezone=None, input_data_type=None,
     ):
         """
         Method to update the attributes specified at creation.
@@ -351,6 +351,8 @@ class DkubeModelmonitor(object):
             print(
                 "Please define the supported model types, regression or classification"
             )
+        if input_data_type:
+            self.modelmonitor.input_data_type = input_data_type
         return self
 
     def add_datasources(
