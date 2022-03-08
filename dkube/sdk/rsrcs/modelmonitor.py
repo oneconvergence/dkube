@@ -328,6 +328,7 @@ class DkubeModelmonitor(object):
             performance_monitoring=self.performance_monitoring,
             owner=None,
             name=None,
+            thresholds=None,
             model_type=None,
             datasources=self.datasources,
             alerts=self.alerts,
@@ -336,7 +337,11 @@ class DkubeModelmonitor(object):
         self.update_modelmonitor(name, model_type)
 
     def update_modelmonitor(
-        self, name=None, model_type: ModelType = None, data_timezone=None, input_data_type=None,
+        self, name=None, 
+        model_type: ModelType = None, 
+        data_timezone=None, 
+        input_data_type=None,
+        thresholds=None,
     ):
         """
         Method to update the attributes specified at creation.
@@ -353,6 +358,8 @@ class DkubeModelmonitor(object):
             )
         if input_data_type:
             self.modelmonitor.input_data_type = input_data_type
+        if thresholds:
+            self.modelmonitor.thresholds = thresholds
         return self
 
     def add_datasources(
@@ -463,14 +470,12 @@ class DkubeModelmonitor(object):
         enabled=None,
         frequency=None,
         algorithm: DriftAlgo = None,
-        soft_threshold=None,
     ):
         """
         This function updates the DKube drift monitor details. The following updates are supported:
         enabled : boolean value,
         frequency : an integer, frequency for detecting concept drift
         algorithm : Drift Algorithm, see the DriftAlgo Enum class for the details,
-        soft_threshold : float , threshold defined by user. if not defined the pipeline_soft_threshold will be utilised
         """
         if enabled:
             self.modelmonitor.drift_monitoring["enabled"] = enabled
@@ -478,9 +483,7 @@ class DkubeModelmonitor(object):
             self.modelmonitor.drift_monitoring["frequency"] = frequency
         if algorithm:
             self.modelmonitor.drift_monitoring["algorithm"] = algorithm
-        if soft_threshold:
-            self.modelmonitor.drift_monitoring["soft_threshold"] = soft_threshold
-
+        
     def update_performance_monitoring_details(
         self,
         enabled=None,
@@ -488,7 +491,6 @@ class DkubeModelmonitor(object):
         source_type: SourceTypePerformance = None,
         docker_image=None,
         startup_script=None,
-        soft_thresholds=None,
     ):
         """
         This function updates the DKube performance monitoring details. The following updates are supported:
@@ -496,7 +498,6 @@ class DkubeModelmonitor(object):
         frequency : an integer, frequency for performance monitoring
         source_type: SourceType see the SourceType Enum class for the details,
         startup_script: the startup script
-        soft_thresholds : a dictionary containing baseline and soft thresholds, eg : { baseline:0.02, soft:0.01}
         """
         if enabled:
             self.modelmonitor.performance_monitoring["enabled"] = enabled
@@ -508,11 +509,7 @@ class DkubeModelmonitor(object):
             self.modelmonitor.performance_monitoring["docker_image"] = docker_image
         if startup_script:
             self.modelmonitor.performance_monitoring["startup_script"] = startup_script
-        if soft_thresholds:
-            self.modelmonitor.performance_monitoring[
-                "soft_thresholds"
-            ] = soft_thresholds
-
+        
     def update_deployment_monitoring_details(
         self,
         enabled=None,
@@ -521,7 +518,6 @@ class DkubeModelmonitor(object):
         source_type: SourceTypeDeployment = None,
         metrics=None,
         collect_metrics=None,
-        soft_thresholds=None,
     ):
         """
         This function updates the DKube deployment monitoring details. The following updates are supported:
@@ -530,7 +526,7 @@ class DkubeModelmonitor(object):
         cluster: cluster
         source_type: SourceType see the DeploymentSourceType Enum class for the details,
         metrics:
-        soft_thresholds : a dictionary containing baseline and soft thresholds, eg : { baseline:0.02, soft:0.01}
+        thresholds : a dictionary containing hard and soft thresholds, eg : { hard:0.02, soft:0.01}
         """
         if enabled:
             self.modelmonitor.deployment_monitoring["enabled"] = enabled
@@ -542,8 +538,6 @@ class DkubeModelmonitor(object):
             self.modelmonitor.deployment_monitoring["source_type"] = source_type
         if collect_metrics:
             self.modelmonitor.deployment_monitoring["collect_metrics"] = collect_metrics
-        if soft_thresholds:
-            self.modelmonitor.deployment_monitoring["soft_thresholds"] = soft_thresholds
 
     def update_deployment_metrics(
         self,
@@ -584,13 +578,14 @@ class DkubeModelmonitoralert(object):
         self.tags = tags
         self.conditions = []
         self.alert_action = {}
+        self.emails=None
 
     def to_JSON(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
     def update_alert(
         self,
-        alert_class: AlertClass = "FeatureDrift",
+        alert_class: AlertClass = "feature_drift",
         enabled=None,
         tags=None,
         feature=None,
@@ -598,6 +593,7 @@ class DkubeModelmonitoralert(object):
         threshold=None,
         percent_threshold=None,
         breach_threshold=None,
+        emails=None,
         action_type="email",
     ):
         """
@@ -610,12 +606,14 @@ class DkubeModelmonitoralert(object):
             threshold,
             percent_threshold,
             breach_threshold,
-            action_type
+            emails
         """
         if tags:
             self.tags = tags
         self.name = self.name
         self._class = alert_class
+        self.enabled = enabled
+        self.alert_action["action_type"] = "email"
         self.conditions.append(
             {
                 "id": None,
@@ -626,7 +624,9 @@ class DkubeModelmonitoralert(object):
                 "percent_threshold": percent_threshold,
             }
         )
+       
         if breach_threshold:
             self.alert_action["breach_threshold"] = breach_threshold
-        if action_type:
-            self.alert_action["action_type"] = action_type
+        if emails:
+            self.alert_action["emails"] = emails
+            
