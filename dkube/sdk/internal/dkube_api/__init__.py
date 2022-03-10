@@ -418,6 +418,7 @@ from dkube.sdk.internal.dkube_api.models.s3_access_credentials import S3AccessCr
 from dkube.sdk.internal.dkube_api.models.sql_access_info import SQLAccessInfo
 from dkube.sdk.internal.dkube_api.models.serving_result_model import ServingResultModel
 from dkube.sdk.internal.dkube_api.models.smtp_artifact import SmtpArtifact
+from dkube.sdk.internal.dkube_api.models.snowflake_access_info import SnowflakeAccessInfo
 from dkube.sdk.internal.dkube_api.models.submission_model import SubmissionModel
 from dkube.sdk.internal.dkube_api.models.tensor import Tensor
 from dkube.sdk.internal.dkube_api.models.tensorboard_model import TensorboardModel

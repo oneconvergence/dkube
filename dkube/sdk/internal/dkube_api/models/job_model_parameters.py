@@ -120,7 +120,7 @@ class JobModelParameters(object):
         :param _class: The _class of this JobModelParameters.  # noqa: E501
         :type: str
         """
-        allowed_values = ["training", "notebook", "inference", "preprocessing", "custom", "rstudio"]  # noqa: E501
+        allowed_values = ["training", "notebook", "inference", "preprocessing", "custom", "rstudio", "vscode"]  # noqa: E501
         if _class not in allowed_values:
             raise ValueError(
                 "Invalid value for `_class` ({0}), must be one of {1}"  # noqa: E501
