@@ -3097,3 +3097,39 @@ class DkubeApi(ApiBase, FilesBase):
                     inputs.append(datum_info)
         return inputs
 
+    def get_job_outputs(self, user=None, job_class=None, job_name=None):
+        """
+        Method to fetch the output datum details of a job with given name for the given user.
+        Raises exception in case of job is not found or any other connection errors.
+        *Inputs*
+            user
+                User whose job output details has to be fetched.
+            job_class
+                job_class must be one of ["training", "notebook", "preprocessing"]
+            job_name
+                Name of the job to be fetched
+        """
+        if not user:
+            user = os.getenv("DKUBE_USER_LOGIN_NAME", None)
+        if not job_class:
+            job_class = os.getenv("DKUBE_JOB_CLASS", None)
+        if not job_name:
+            job_name = os.getenv("DKUBE_JOB_NAME", None)
+        if not user or not job_class or not job_name:
+            raise Exception("User, job_class and job_name must be provided.")
+        if job_class == "inference":
+            raise Exception("Invalid job_class")
+
+        job = super().get_run(job_class, user, job_name)
+
+        outputs = []
+        output_datums = job["job"]["parameters"][job_class]["datums"]["outputs"]
+        if output_datums:
+            datum_class = "model"
+            if job_class == "preprocessing":
+                datum_class = "dataset"
+            for d in output_datums:
+                datum_info = self._get_job_datum_info(d, datum_class)
+                if datum_info:
+                    outputs.append(datum_info)
+        return outputs
