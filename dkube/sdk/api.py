@@ -3000,4 +3000,100 @@ class DkubeApi(ApiBase, FilesBase):
             print("Schema is Null")
             return 
             
+    def _get_job_datum_info(self, datum, _class):
+        d = {}
+
+        user = datum["name"].split(":")[0]
+        name = datum["name"].split(":")[1]
+        datum_obj = super().get_repo(_class, user, name)
+        if not datum_obj or not datum_obj["datum"]:
+            return
+
+        source = datum_obj["datum"]["source"]
+
+        d["name"] = name
+        d["class"] = _class
+        d["source"] = source
+
+        if source == "sql":
+            d.update(datum_obj["datum"]["sql"])
+        elif source == "snowflake":
+            params = datum_obj["datum"]["snowflake"]["parameters"]
+            for p in params:
+                key = p["key"]
+                value = p["value"]
+                d[key] = value
+            del datum_obj["datum"]["snowflake"]["parameters"]
+
+            d.update(datum_obj["datum"]["snowflake"])
+        elif source == "s3" or source == "aws_s3":
+            d.update(datum_obj["datum"]["s3access"])
+        elif source == "fsx":
+            d.update(datum_obj["datum"]["fsx"])
+        elif source == "git":
+            d.update(datum_obj["datum"]["gitaccess"])
+        elif source == "gcs":
+            d.update(datum_obj["datum"]["gcsaccess"])
+        elif source == "k8s_volume":
+            if datum_obj["datum"]["k8svolume"]:
+                d["pv_name"] = datum_obj["datum"]["k8svolume"]["name"]
+        elif source == "nfs":
+            d.update(datum_obj["datum"]["nfsaccess"])
+        elif source == "redshift":
+            d.update(datum_obj["datum"]["redshift"])
+        elif source == "hostpath":
+            d["hostpath"] = datum_obj["datum"]["hostpath"]
+        elif source == "pub_url":
+            d["url"] = datum_obj["datum"]["url"]
+        else:
+            pass
+
+        if datum["version"]:
+            if datum_obj["versions"]:
+                for v in datum_obj["versions"]:
+                    if v["version"]["uuid"] == datum["version"]:
+                        d["version"] = v["version"]["name"]
+                        d["version_info"] = v["version"]["info"]
+
+        return {k: v for k, v in d.items() if v is not None}
+
+    def get_job_inputs(self, user=None, job_class=None, job_name=None):
+        """
+        Method to fetch the input datum details of a job with given name for the given user.
+        Raises exception in case of job is not found or any other connection errors.
+        *Inputs*
+            user
+                User whose job input details has to be fetched.
+            job_class
+                job_class must be one of ["training", "notebook", "preprocessing"]
+            job_name
+                Name of the job to be fetched
+        """
+        if not user:
+            user = os.getenv("DKUBE_USER_LOGIN_NAME", None)
+        if not job_class:
+            job_class = os.getenv("DKUBE_JOB_CLASS", None)
+        if not job_name:
+            job_name = os.getenv("DKUBE_JOB_NAME", None)
+        if not user or not job_class or not job_name:
+            raise Exception("User, job_class and job_name must be provided.")
+        if job_class == "inference":
+            raise Exception("Invalid job_class")
+
+        job = super().get_run(job_class, user, job_name)
+
+        inputs = []
+        datasets = job["job"]["parameters"][job_class]["datums"]["datasets"]
+        if datasets:
+            for d in datasets:
+                datum_info = self._get_job_datum_info(d, "dataset")
+                if datum_info:
+                    inputs.append(datum_info)
+        models = job["job"]["parameters"][job_class]["datums"]["models"]
+        if models:
+            for d in models:
+                datum_info = self._get_job_datum_info(d, "model")
+                if datum_info:
+                    inputs.append(datum_info)
+        return inputs
 
