@@ -3057,39 +3057,33 @@ class DkubeApi(ApiBase, FilesBase):
 
         return {k: v for k, v in d.items() if v is not None}
 
-    def get_job_inputs(self, user=None, job_class=None, job_name=None):
+    def get_job_inputs(self, uuid=None):
         """
         Method to fetch the input datum details of a job with given name for the given user.
         Raises exception in case of job is not found or any other connection errors.
         *Inputs*
-            user
-                User whose job input details has to be fetched.
-            job_class
-                job_class must be one of ["training", "notebook", "preprocessing"]
-            job_name
-                Name of the job to be fetched
+            uuid
+                UUID of job of which the input details has to be fetched.
         """
-        if not user:
-            user = os.getenv("DKUBE_USER_LOGIN_NAME", None)
-        if not job_class:
-            job_class = os.getenv("DKUBE_JOB_CLASS", None)
-        if not job_name:
-            job_name = os.getenv("DKUBE_JOB_NAME", None)
-        if not user or not job_class or not job_name:
-            raise Exception("User, job_class and job_name must be provided.")
+        if not uuid:
+            uuid = os.getenv("DKUBE_JOB_UUID", None)
+            if not uuid:
+                raise Exception("Job UUID must be provided.")
+
+        job = super().get_run_byuuid(uuid)
+        job_class = job["parameters"]["_class"]
+
         if job_class == "inference":
             raise Exception("Invalid job_class")
 
-        job = super().get_run(job_class, user, job_name)
-
         inputs = []
-        datasets = job["job"]["parameters"][job_class]["datums"]["datasets"]
+        datasets = job["parameters"][job_class]["datums"]["datasets"]
         if datasets:
             for d in datasets:
                 datum_info = self._get_job_datum_info(d, "dataset")
                 if datum_info:
                     inputs.append(datum_info)
-        models = job["job"]["parameters"][job_class]["datums"]["models"]
+        models = job["parameters"][job_class]["datums"]["models"]
         if models:
             for d in models:
                 datum_info = self._get_job_datum_info(d, "model")
@@ -3097,33 +3091,27 @@ class DkubeApi(ApiBase, FilesBase):
                     inputs.append(datum_info)
         return inputs
 
-    def get_job_outputs(self, user=None, job_class=None, job_name=None):
+    def get_job_outputs(self, uuid=None):
         """
         Method to fetch the output datum details of a job with given name for the given user.
         Raises exception in case of job is not found or any other connection errors.
         *Inputs*
-            user
-                User whose job output details has to be fetched.
-            job_class
-                job_class must be one of ["training", "notebook", "preprocessing"]
-            job_name
-                Name of the job to be fetched
+            uuid
+                UUID of job of which the output details has to be fetched.
         """
-        if not user:
-            user = os.getenv("DKUBE_USER_LOGIN_NAME", None)
-        if not job_class:
-            job_class = os.getenv("DKUBE_JOB_CLASS", None)
-        if not job_name:
-            job_name = os.getenv("DKUBE_JOB_NAME", None)
-        if not user or not job_class or not job_name:
-            raise Exception("User, job_class and job_name must be provided.")
-        if job_class == "inference":
-            raise Exception("Invalid job_class")
+        if not uuid:
+            uuid = os.getenv("DKUBE_JOB_UUID", None)
+            if not uuid:
+                raise Exception("Job UUID must be provided.")
 
-        job = super().get_run(job_class, user, job_name)
+        job = super().get_run_byuuid(uuid)
+        job_class = job["parameters"]["_class"]
+
+        if job_class == "inference":
+             raise Exception("Invalid job_class")
 
         outputs = []
-        output_datums = job["job"]["parameters"][job_class]["datums"]["outputs"]
+        output_datums = job["parameters"][job_class]["datums"]["outputs"]
         if output_datums:
             datum_class = "model"
             if job_class == "preprocessing":
