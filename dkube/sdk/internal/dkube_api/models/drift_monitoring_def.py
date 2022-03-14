@@ -187,7 +187,7 @@ class DriftMonitoringDef(object):
         :param algorithm: The algorithm of this DriftMonitoringDef.  # noqa: E501
         :type: str
         """
-        allowed_values = ["auto", "kolmogrov-smirnov", "chi squared", "kolmogorov-smirnov & chi squared"]  # noqa: E501
+        allowed_values = ["auto", "kolmogorov-smirnov", "chi squared", "kolmogorov-smirnov & chi squared"]  # noqa: E501
         if algorithm not in allowed_values:
             raise ValueError(
                 "Invalid value for `algorithm` ({0}), must be one of {1}"  # noqa: E501
