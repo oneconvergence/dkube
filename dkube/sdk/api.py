@@ -3011,42 +3011,39 @@ class DkubeApi(ApiBase, FilesBase):
 
         source = datum_obj["datum"]["source"]
 
-        dinfo["name"] = name
-        dinfo["class"] = _class
-        dinfo["source"] = source
+        assert (source in DkubeDataset.DATASET_SOURCES), "Invalid datum source"
 
-        if source == "sql":
-            dinfo.update(datum_obj["datum"]["sql"])
+        if source in datum_obj["datum"] and source != "hostpath" and source != "dvs":
+            dinfo.update(datum_obj["datum"][source])
+
+        if source == "aws_s3" or source == "s3":
+            dinfo.update(datum_obj["datum"]["s3access"])
+        elif source == "git":
+            dinfo.update(datum_obj["datum"]["gitaccess"])
+        elif source == "gcs":
+            dinfo.update(datum_obj["datum"]["gcsaccess"])
+        elif source == "nfs":
+            dinfo.update(datum_obj["datum"]["nfsaccess"])
+        elif source == "hostpath":
+            dinfo["hostpath"] = datum_obj["datum"]["hostpath"]
+        elif source == "pub_url":
+            dinfo["url"] = datum_obj["datum"]["url"]
         elif source == "snowflake":
             params = datum_obj["datum"]["snowflake"]["parameters"]
             for p in params:
                 key = p["key"]
                 value = p["value"]
                 dinfo[key] = value
-            del datum_obj["datum"]["snowflake"]["parameters"]
-
-            dinfo.update(datum_obj["datum"]["snowflake"])
-        elif source == "s3" or source == "aws_s3":
-            dinfo.update(datum_obj["datum"]["s3access"])
-        elif source == "fsx":
-            dinfo.update(datum_obj["datum"]["fsx"])
-        elif source == "git":
-            dinfo.update(datum_obj["datum"]["gitaccess"])
-        elif source == "gcs":
-            dinfo.update(datum_obj["datum"]["gcsaccess"])
+            del dinfo["parameters"]
         elif source == "k8s_volume":
             if datum_obj["datum"]["k8svolume"]:
                 dinfo["pv_name"] = datum_obj["datum"]["k8svolume"]["name"]
-        elif source == "nfs":
-            dinfo.update(datum_obj["datum"]["nfsaccess"])
-        elif source == "redshift":
-            dinfo.update(datum_obj["datum"]["redshift"])
-        elif source == "hostpath":
-            dinfo["hostpath"] = datum_obj["datum"]["hostpath"]
-        elif source == "pub_url":
-            dinfo["url"] = datum_obj["datum"]["url"]
         else:
             pass
+
+        dinfo["name"] = name
+        dinfo["class"] = _class
+        dinfo["source"] = source
 
         if datum["version"]:
             if datum_obj["versions"]:
@@ -3081,16 +3078,16 @@ class DkubeApi(ApiBase, FilesBase):
         if "datasets" in job["parameters"][job_class]["datums"]:
             datasets = job["parameters"][job_class]["datums"]["datasets"]
             if datasets:
-                for d in datasets:
-                    datum_info = self._get_job_datum_info(d, "dataset")
+                for dataset in datasets:
+                    datum_info = self._get_job_datum_info(dataset, "dataset")
                     if datum_info:
                         inputs.append(datum_info)
 
         if "models" in job["parameters"][job_class]["datums"]:
             models = job["parameters"][job_class]["datums"]["models"]
             if models:
-                for d in models:
-                    datum_info = self._get_job_datum_info(d, "model")
+                for model in models:
+                    datum_info = self._get_job_datum_info(model, "model")
                     if datum_info:
                         inputs.append(datum_info)
         return inputs
@@ -3122,8 +3119,8 @@ class DkubeApi(ApiBase, FilesBase):
                 datum_class = "model"
                 if job_class == "preprocessing":
                     datum_class = "dataset"
-                for d in output_datums:
-                    datum_info = self._get_job_datum_info(d, datum_class)
+                for output in output_datums:
+                    datum_info = self._get_job_datum_info(output, datum_class)
                     if datum_info:
                         outputs.append(datum_info)
         return outputs
