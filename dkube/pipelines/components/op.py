@@ -14,7 +14,7 @@ class DkubeOp(kfp.dsl.ContainerOp):
             stage in VALID_STAGES
         ), "stage must be one of training/preprocessing/serving/storage/submit"
 
-        kwargs = {"name": name, "image": "ocdr/dkube_pylauncher:2.2"}
+        kwargs = {"name": name, "image": "ocdr/dkube_pylauncher:2.2.0.1"}
         kwargs["command"] = ["python3", "-u", "/dkubepl/main.py", name, authtoken]
         kwargs["command"].extend(["{{workflow.uid}}", "{{pod.name}}", stage])
         kwargs["arguments"] = args
