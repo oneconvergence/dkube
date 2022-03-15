@@ -3058,14 +3058,13 @@ class DkubeApi(ApiBase, FilesBase):
             uuid
                 UUID of job of which the input details has to be fetched.
         """
-        if not uuid:
-            uuid = os.getenv("DKUBE_JOB_UUID", None)
-            assert (uuid), "Job UUID must be provided."
+        uuid = uuid or os.getenv("DKUBE_JOB_UUID", None)
+        assert (uuid), "Job UUID must be provided."
 
         job = super().get_run_byuuid(uuid)
         job_class = job["parameters"]["_class"]
 
-        assert (job_class != "inference"), "Invalid job_class"
+        assert (job_class != "inference"), "Invalid job_class {}".format(job_class)
 
         inputs = []
         if "datums" not in job["parameters"][job_class] or not job["parameters"][job_class]["datums"]:
@@ -3096,14 +3095,13 @@ class DkubeApi(ApiBase, FilesBase):
             uuid
                 UUID of job of which the output details has to be fetched.
         """
-        if not uuid:
-            uuid = os.getenv("DKUBE_JOB_UUID", None)
-            assert (uuid), "Job UUID must be provided."
+        uuid = uuid or os.getenv("DKUBE_JOB_UUID", None)
+        assert (uuid), "Job UUID must be provided."
 
         job = super().get_run_byuuid(uuid)
         job_class = job["parameters"]["_class"]
 
-        assert (job_class != "inference"), "Invalid job_class"
+        assert (job_class != "inference"), "Invalid job_class {}".format(job_class)
 
         outputs = []
         if "datums" not in job["parameters"][job_class] or not job["parameters"][job_class]["datums"]:
