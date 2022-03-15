@@ -2999,9 +2999,9 @@ class DkubeApi(ApiBase, FilesBase):
         except TypeError:
             print("Schema is Null")
             return 
-            
+
     def _get_job_datum_info(self, datum, _class):
-        d = {}
+        dinfo = {}
 
         user = datum["name"].split(":")[0]
         name = datum["name"].split(":")[1]
@@ -3011,40 +3011,40 @@ class DkubeApi(ApiBase, FilesBase):
 
         source = datum_obj["datum"]["source"]
 
-        d["name"] = name
-        d["class"] = _class
-        d["source"] = source
+        dinfo["name"] = name
+        dinfo["class"] = _class
+        dinfo["source"] = source
 
         if source == "sql":
-            d.update(datum_obj["datum"]["sql"])
+            dinfo.update(datum_obj["datum"]["sql"])
         elif source == "snowflake":
             params = datum_obj["datum"]["snowflake"]["parameters"]
             for p in params:
                 key = p["key"]
                 value = p["value"]
-                d[key] = value
+                dinfo[key] = value
             del datum_obj["datum"]["snowflake"]["parameters"]
 
-            d.update(datum_obj["datum"]["snowflake"])
+            dinfo.update(datum_obj["datum"]["snowflake"])
         elif source == "s3" or source == "aws_s3":
-            d.update(datum_obj["datum"]["s3access"])
+            dinfo.update(datum_obj["datum"]["s3access"])
         elif source == "fsx":
-            d.update(datum_obj["datum"]["fsx"])
+            dinfo.update(datum_obj["datum"]["fsx"])
         elif source == "git":
-            d.update(datum_obj["datum"]["gitaccess"])
+            dinfo.update(datum_obj["datum"]["gitaccess"])
         elif source == "gcs":
-            d.update(datum_obj["datum"]["gcsaccess"])
+            dinfo.update(datum_obj["datum"]["gcsaccess"])
         elif source == "k8s_volume":
             if datum_obj["datum"]["k8svolume"]:
-                d["pv_name"] = datum_obj["datum"]["k8svolume"]["name"]
+                dinfo["pv_name"] = datum_obj["datum"]["k8svolume"]["name"]
         elif source == "nfs":
-            d.update(datum_obj["datum"]["nfsaccess"])
+            dinfo.update(datum_obj["datum"]["nfsaccess"])
         elif source == "redshift":
-            d.update(datum_obj["datum"]["redshift"])
+            dinfo.update(datum_obj["datum"]["redshift"])
         elif source == "hostpath":
-            d["hostpath"] = datum_obj["datum"]["hostpath"]
+            dinfo["hostpath"] = datum_obj["datum"]["hostpath"]
         elif source == "pub_url":
-            d["url"] = datum_obj["datum"]["url"]
+            dinfo["url"] = datum_obj["datum"]["url"]
         else:
             pass
 
@@ -3052,10 +3052,10 @@ class DkubeApi(ApiBase, FilesBase):
             if datum_obj["versions"]:
                 for v in datum_obj["versions"]:
                     if v["version"]["uuid"] == datum["version"]:
-                        d["version"] = v["version"]["name"]
-                        d["version_info"] = v["version"]["info"]
+                        dinfo["version"] = v["version"]["name"]
+                        dinfo["version_info"] = v["version"]["info"]
 
-        return {k: v for k, v in d.items() if v is not None}
+        return {k: v for k, v in dinfo.items() if v is not None}
 
     def get_job_inputs(self, uuid=None):
         """
@@ -3067,28 +3067,32 @@ class DkubeApi(ApiBase, FilesBase):
         """
         if not uuid:
             uuid = os.getenv("DKUBE_JOB_UUID", None)
-            if not uuid:
-                raise Exception("Job UUID must be provided.")
+            assert (uuid), "Job UUID must be provided."
 
         job = super().get_run_byuuid(uuid)
         job_class = job["parameters"]["_class"]
 
-        if job_class == "inference":
-            raise Exception("Invalid job_class")
+        assert (job_class != "inference"), "Invalid job_class"
 
         inputs = []
-        datasets = job["parameters"][job_class]["datums"]["datasets"]
-        if datasets:
-            for d in datasets:
-                datum_info = self._get_job_datum_info(d, "dataset")
-                if datum_info:
-                    inputs.append(datum_info)
-        models = job["parameters"][job_class]["datums"]["models"]
-        if models:
-            for d in models:
-                datum_info = self._get_job_datum_info(d, "model")
-                if datum_info:
-                    inputs.append(datum_info)
+        if "datums" not in job["parameters"][job_class] or not job["parameters"][job_class]["datums"]:
+            return inputs
+
+        if "datasets" in job["parameters"][job_class]["datums"]:
+            datasets = job["parameters"][job_class]["datums"]["datasets"]
+            if datasets:
+                for d in datasets:
+                    datum_info = self._get_job_datum_info(d, "dataset")
+                    if datum_info:
+                        inputs.append(datum_info)
+
+        if "models" in job["parameters"][job_class]["datums"]:
+            models = job["parameters"][job_class]["datums"]["models"]
+            if models:
+                for d in models:
+                    datum_info = self._get_job_datum_info(d, "model")
+                    if datum_info:
+                        inputs.append(datum_info)
         return inputs
 
     def get_job_outputs(self, uuid=None):
@@ -3101,23 +3105,25 @@ class DkubeApi(ApiBase, FilesBase):
         """
         if not uuid:
             uuid = os.getenv("DKUBE_JOB_UUID", None)
-            if not uuid:
-                raise Exception("Job UUID must be provided.")
+            assert (uuid), "Job UUID must be provided."
 
         job = super().get_run_byuuid(uuid)
         job_class = job["parameters"]["_class"]
 
-        if job_class == "inference":
-             raise Exception("Invalid job_class")
+        assert (job_class != "inference"), "Invalid job_class"
 
         outputs = []
-        output_datums = job["parameters"][job_class]["datums"]["outputs"]
-        if output_datums:
-            datum_class = "model"
-            if job_class == "preprocessing":
-                datum_class = "dataset"
-            for d in output_datums:
-                datum_info = self._get_job_datum_info(d, datum_class)
-                if datum_info:
-                    outputs.append(datum_info)
+        if "datums" not in job["parameters"][job_class] or not job["parameters"][job_class]["datums"]:
+            return outputs
+
+        if "outputs" in job["parameters"][job_class]["datums"]:
+            output_datums = job["parameters"][job_class]["datums"]["outputs"]
+            if output_datums:
+                datum_class = "model"
+                if job_class == "preprocessing":
+                    datum_class = "dataset"
+                for d in output_datums:
+                    datum_info = self._get_job_datum_info(d, datum_class)
+                    if datum_info:
+                        outputs.append(datum_info)
         return outputs
