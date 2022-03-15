@@ -42,7 +42,7 @@ class DkubeDataset(object):
     """
 
     DATASET_SOURCES = ["dvs", "git", "aws_s3",
-                       "s3", "gcs", "nfs", "redshift", "k8svolume", "sql", "snowflake"]
+            "s3", "gcs", "nfs", "redshift", "k8s_volume", "sql", "snowflake", "fsx", "pub_url", "hostpath"]
     """
 	List of valid datasources in DKube.
 	Some datasources are downloaded while some are remotely referenced.
@@ -68,6 +68,10 @@ class DkubeDataset(object):
 	:bash:`sql` :- sql dataset source :bash:`Remote`
 
 	:bash:`snowflake` :- snowflake dataset source :bash:`Remote`
+
+	:bash:`fsx` :- FSx dataset source :bash:`Remote`
+
+	:bash:`pub_url` :- If data is available publicly and can be downloaded using the URL :bash:`Downloaded`
 
     """
 
