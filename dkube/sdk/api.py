@@ -3011,10 +3011,11 @@ class DkubeApi(ApiBase, FilesBase):
 
         source = datum_obj["datum"]["source"]
 
-        assert (source in DkubeDataset.DATASET_SOURCES), "Invalid datum source"
+        assert (source in DkubeDataset.DATASET_SOURCES), "Invalid datum source {}".format(source)
 
-        if source in datum_obj["datum"] and source != "hostpath" and source != "dvs":
-            dinfo.update(datum_obj["datum"][source])
+        data = datum_obj["datum"].get(source, {})
+        if type(data) is dict:
+            dinfo.update(data)
 
         if source == "aws_s3" or source == "s3":
             dinfo.update(datum_obj["datum"]["s3access"])
