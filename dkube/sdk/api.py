@@ -3003,19 +3003,13 @@ class DkubeApi(ApiBase, FilesBase):
     def _get_job_datum_info(self, datum, _class):
         dinfo = {}
 
-        user = datum["name"].split(":")[0]
-        name = datum["name"].split(":")[1]
+        user,name = datum["name"].split(":")
         datum_obj = super().get_repo(_class, user, name)
         if not datum_obj or not datum_obj["datum"]:
             return
 
         source = datum_obj["datum"]["source"]
-
         assert (source in DkubeDataset.DATASET_SOURCES), "Invalid datum source {}".format(source)
-
-        data = datum_obj["datum"].get(source, {})
-        if type(data) is dict:
-            dinfo.update(data)
 
         if source == "aws_s3" or source == "s3":
             dinfo.update(datum_obj["datum"]["s3access"])
@@ -3031,16 +3025,17 @@ class DkubeApi(ApiBase, FilesBase):
             dinfo["url"] = datum_obj["datum"]["url"]
         elif source == "snowflake":
             params = datum_obj["datum"]["snowflake"]["parameters"]
-            for p in params:
-                key = p["key"]
-                value = p["value"]
-                dinfo[key] = value
-            del dinfo["parameters"]
+            [dinfo.update({param["key"]: param["value"]}) for param in params]
+
+            del datum_obj["datum"]["snowflake"]["parameters"]
+            dinfo.update(datum_obj["datum"]["snowflake"])
         elif source == "k8s_volume":
             if datum_obj["datum"]["k8svolume"]:
                 dinfo["pv_name"] = datum_obj["datum"]["k8svolume"]["name"]
-        else:
+        elif source == "dvs":
             pass
+        else:
+            dinfo.update(datum_obj["datum"].get(source, {}))
 
         dinfo["name"] = name
         dinfo["class"] = _class

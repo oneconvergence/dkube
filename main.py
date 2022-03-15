@@ -1,8 +1,0 @@
-from dkube.sdk import *
-
-user = "ocdkube"
-token = "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijc0YmNkZjBmZWJmNDRiOGRhZGQxZWIyOGM2MjhkYWYxIn0.eyJ1c2VybmFtZSI6Im9jZGt1YmUiLCJyb2xlIjoiZGF0YXNjaWVudGlzdCxtbGUscGUsb3BlcmF0b3IiLCJkZXBsb3kiOmZhbHNlLCJleHAiOjQ4ODY5ODc1MDQsImlhdCI6MTY0Njk4NzUwNCwiaXNzIjoiRGt1YmUifQ.1fkXPvtomgq7DZh7WuHfjbN2npSnmsEsa8AXuqC5Oc_K23W25iZ_90wISUDSaOzukYxvQCIXV0ybZeX5yywksn-VWEZmYbF11ow7mIgXG7IwQXBnYTtam7_w7vFy6XPCEbDK9wYFq6MW7MX-aJ1if37cfkxd7_80W5OJN3PKuXCtiS7CDStO41oBvzSRfaa9PI0NoPYLGB2FbhSwIfnJ3_D2mVioNQrPhXQkzG8CaQ0F5d25QJDQ8AqIFWjRhay8ODccbS3wTNcq-sfuhWRVQS3fdsDYYDsBrJrutc96ZKzys7oUisbqVm9QpwH1-4LAmaiEG2gV5-3-qXfUYL7yXA"
-api = DkubeApi(URL="https://192.168.200.123:32222", token=token)
-
-print(api.get_job_inputs("bcd9eee3-155f-47ab-8422-a5a1403300fd"))
-
