@@ -14,19 +14,20 @@
 #
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('../../..'))
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'DKubeSDK'
-copyright = '2021, OneConvergence'
+copyright = '2022, OneConvergence'
 author = 'OneConvergence'
 
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '2.1.6.2'
+release = '3.3.x'
 
 # -- General configuration ---------------------------------------------------
 
