@@ -4,7 +4,6 @@ from pprint import pprint
 from dkube.sdk.internal.dkube_api.models.cluster import Cluster
 from dkube.sdk.internal.dkube_api.api import dkube_operator_exclusive_api
 from dkube.sdk.internal.dkube_api.models.cluster_access_keys_def import ClusterAccessKeysDef
-from dkube.sdk.internal.dkube_api.models.cluster_role_delegation_def import ClusterRoleDelegationDef
 
 from .util import *
 
@@ -158,13 +157,6 @@ class DkubeCluster(object):
         Method to update the plugin
         """
         self.cluster.plugin = plugin
-
-    def update_role_delegation(self, account_id=None, external_id=None, role_name=None):
-        """
-        Method to update the role delegation for the cluster
-        """
-        self.cluster.role_delegation = ClusterRoleDelegationDef(
-            account_id=account_id, external_id=external_id, role_name=role_name)
 
     def update_access_keys(self, access_key=None, secret_key=None):
         """
