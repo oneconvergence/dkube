@@ -2440,7 +2440,7 @@ class DkubeApi(ApiBase, FilesBase):
                     modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state
 
         *Outputs*
-                returns the uuid of the Modelmonitor created.
+                a dictionary object with response status.
         """
         assert (
             type(modelmonitor) == DkubeModelmonitor
@@ -2466,7 +2466,7 @@ class DkubeApi(ApiBase, FilesBase):
                     )
                 )
                 time.sleep(self.wait_interval)
-        return response['uuid']
+        return response
 
     def modelmonitor_list(self, **kwargs):
         """
@@ -3068,7 +3068,7 @@ class DkubeApi(ApiBase, FilesBase):
          if cluster is Sagemaker, variant is compulsory field
 
         *Outputs*
-          returns the uuid of the deployment
+          a dictionary object with response status
         """
         data = {}
         data["name"] = name
@@ -3088,7 +3088,7 @@ class DkubeApi(ApiBase, FilesBase):
         if model_reference:
             data["model_reference"] = model_reference
         response = self._api.import_new_deployment(data)
-        return response.to_dict()['uuid']
+        return response.to_dict()
 
     def update_deployment(
         self,
