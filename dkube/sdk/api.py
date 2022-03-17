@@ -3118,3 +3118,210 @@ class DkubeApi(ApiBase, FilesBase):
                     if datum_info:
                         outputs.append(datum_info)
         return outputs
+
+    def add_dataset_version(self, user, dataset, version, info, description=None):
+        """
+        Method to add a new version to a remote dataset in Dkube.
+        Raises exception in case of dataset is not found or any other connection errors.
+        *Inputs*
+            user
+                Name of the user who owns the dataset.
+
+            dataset
+                Name of the dataset for which version must be created.
+
+            version
+                Name of the version that needs to be added.
+
+            info
+                Version metadata or information.
+
+            description
+                Version description.
+        """
+        versions = [{"name": version, "info": info, "description": description}]
+        return super().add_datum_versions(user, "dataset", dataset, versions)
+
+    def add_model_version(self, user, model, version, info, description=None):
+        """
+        Method to add anew version to a remote model in Dkube.
+        Raises exception in case of model is not found or any other connection errors.
+        *Inputs*
+            user
+                Name of the user who owns the model.
+
+            model
+                Name of the model for which version must be created.
+
+            version
+                Name of the version that needs to be added.
+
+            info
+                Version metadata or information.
+
+            description
+                Version description.
+        """
+        versions = [{"name": version, "info": info, "description": description}]
+        return super().add_datum_versions(user, "model", model, versions)
+
+    def add_dataset_versions(self, user, dataset, versions=[]):
+        """
+        Method to add a list of versions to a remote dataset in Dkube.
+        Raises exception in case of dataset is not found or any other connection errors.
+        *Inputs*
+            user
+                Name of the user who owns the dataset.
+
+            dataset
+                Name of the dataset for which version must be created.
+
+            versions
+                List of versions to be added.
+                List must of the format [{"name": "version name", "info": "version info", "description": "version description"}]
+
+        """
+        return super().add_datum_versions(user, "dataset", dataset, versions)
+
+    def add_model_versions(self, user, model, versions=[]):
+        """
+        Method to add a list of versions to a remote model in Dkube.
+        Raises exception in case of model is not found or any other connection errors.
+        *Inputs*
+            user
+                Name of the user who owns the model.
+
+            model
+                Name of the model for which version must be created.
+
+            versions
+                List of versions to be added.
+                List must of the format [{"name": "version name", "info": "version info", "description": "version description"}]
+
+        """
+        return super().add_datum_versions(user, "model", model, versions)
+
+    def log_job_input_dataset_version(self, dataset, version, info=None, description=None, jobuuid=None):
+        """
+        Method to add a dataset version in job inputs.
+        If given version of dataset is not present, new version is created.
+        Raises exception in case of job is not found or any other connection errors.
+        *Inputs*
+            jobuuid
+                UUID of job of which the version has to be logged.
+
+            dataset
+                Name of the dataset.
+                It must be of the format "owner:dataset name".
+
+            version
+                Version name of dataset to be logged.
+
+            info
+                Version metadata or information.
+                Needed if the version is not preset already for the dataset.
+
+            description
+                Version description.
+                Needed if the version is not present already for the dataset.
+        """
+        jobuuid = jobuuid or os.getenv("DKUBE_JOB_UUID", None)
+        assert (jobuuid), "Job UUID must be provided."
+
+        job = super().get_run_byuuid(jobuuid)
+        job_name = job["name"]
+        job_class = job["parameters"]["_class"]
+        job_owner = job["parameters"]["generated"]["user"]
+
+        assert(job_class != "inference"), "unsupported job class {}".format(job_class)
+
+        assert(len(dataset.split(":")) == 2), "Dataset name must be of the form owner:dataset_name"
+
+        dataset_owner, dataset_name = dataset.split(":")
+
+        return super().log_job_datum_version(job_owner, job_class, job_name, dataset_owner, "dataset", dataset_name, "input", version, info, description)
+
+    def log_job_input_model_version(self, model, version, info=None, description=None, jobuuid=None):
+        """
+        Method to add a model version in job inputs.
+        If given version of model is not present, new version is created.
+        Raises exception in case of job is not found or any other connection errors.
+        *Inputs*
+            jobuuid
+                UUID of job of which the version has to be logged.
+
+            model
+                Name of the model.
+                It must be of the format "owner:model name".
+
+            version
+                Version name of model to be logged.
+
+            info
+                Version metadata or information.
+                Needed if the version is not preset already for the model.
+
+            description
+                Version description.
+                Needed if the version is not present already for the model.
+        """
+        jobuuid = jobuuid or os.getenv("DKUBE_JOB_UUID", None)
+        assert (jobuuid), "Job UUID must be provided."
+
+        job = super().get_run_byuuid(jobuuid)
+        job_name = job["name"]
+        job_class = job["parameters"]["_class"]
+        job_owner = job["parameters"]["generated"]["user"]
+
+        assert(job_class != "inference"), "unsupported job class {}".format(job_class)
+
+        assert(len(model.split(":")) == 2), "Dataset name must be of the form owner:model_name"
+
+        model_owner, model_name = model.split(":")
+
+        return super().log_job_datum_version(job_owner, job_class, job_name, model_owner, "model", model_name, "input", version, info, description)
+
+    def log_job_output_version(self, datum, version, info=None, description=None, jobuuid= None):
+        """
+        Method to add an output datum version in job inputs.
+        If given version of datum is not present, new version is created.
+        Raises exception in case of job is not found or any other connection errors.
+        *Inputs*
+            jobuuid
+                UUID of job of which the version has to be logged.
+
+            datum
+                Name of the output datum.
+                It must be of the format "owner:datum name".
+
+            version
+                Version of datum to be logged.
+
+            info
+                Version metadata or information.
+                Needed if the version is not preset already for the output datum.
+
+            description
+                Version description.
+                Needed if the version is not present already for the output datum.
+        """
+        jobuuid = jobuuid or os.getenv("DKUBE_JOB_UUID", None)
+        assert (jobuuid), "Job UUID must be provided."
+
+        job = super().get_run_byuuid(jobuuid)
+        job_name = job["name"]
+        job_class = job["parameters"]["_class"]
+        job_owner = job["parameters"]["generated"]["user"]
+
+        assert(job_class != "notebook" and job_class != "inference"), "unsupported job class {}".format(job_class)
+
+        assert(len(datum.split(":")) == 2), "Output datum name must be of the form owner:datum_name"
+
+        datum_owner, datum_name = datum.split(":")
+
+        datum_class = "model"
+        if job_calss == "preprocessing":
+            datum_class = "dataset"
+
+        return super().log_job_datum_version(job_owner, job_class, job_name, datum_owner, datum_class, datum_name, "output", version, info, description)
+
