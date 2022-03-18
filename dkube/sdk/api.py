@@ -3089,6 +3089,7 @@ class DkubeApi(ApiBase, FilesBase):
         if model_reference:
             data["model_reference"] = model_reference
         response = self._api.import_new_deployment(data)
+        response = response.to_dict()
         assert response["code"] == 200, response["message"]
         return response["uuid"]
 
