@@ -2420,7 +2420,7 @@ class DkubeApi(ApiBase, FilesBase):
     ### Model monitor apis ##########
 
     def modelmonitor_create(
-        self, modelmonitor: DkubeModelmonitor, wait_for_completion=True
+        self,id, modelmonitor: DkubeModelmonitor, wait_for_completion=True
     ):
         """
         Method to create Model Monitor on Dkube
@@ -2429,6 +2429,8 @@ class DkubeApi(ApiBase, FilesBase):
 
         *Inputs*
 
+            id
+              id of the deployment
             modelmonitor
                     Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitor class.
                     Please see the :bash:`Resources` section for details on this class.
@@ -2438,16 +2440,17 @@ class DkubeApi(ApiBase, FilesBase):
                     modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state
 
         *Outputs*
-                a dictionary object with response status
+                modelmonitor ID
         """
         assert (
             type(modelmonitor) == DkubeModelmonitor
         ), "Invalid type for model monitor, value must be instance of rsrcs:DkubeModelmonitor class"
+        modelmonitor.modelmonitor.id = id
         response = super().create_model_monitor(modelmonitor)
         while wait_for_completion:
             mm_config = super().get_modelmonitor_configuration(response["uuid"])
             state = mm_config["status"]["state"]
-            if state.lower() in ["init", "ready", "error", "incomplete", "pending"]:
+            if state.lower() in ["init", "ready", "error", "incomplete","pending"]:
                 print(
                     "ModelMonitor {} - is in state {} and reason {}".format(
                         modelmonitor.modelmonitor.name,
@@ -2463,7 +2466,8 @@ class DkubeApi(ApiBase, FilesBase):
                     )
                 )
                 time.sleep(self.wait_interval)
-        return response
+        assert response["code"] == 200, response["message"]
+        return response["uuid"]
 
     def modelmonitor_list(self, **kwargs):
         """
@@ -3085,7 +3089,9 @@ class DkubeApi(ApiBase, FilesBase):
         if model_reference:
             data["model_reference"] = model_reference
         response = self._api.import_new_deployment(data)
-        return response
+        response = response.to_dict()
+        assert response["code"] == 200, response["message"]
+        return response["uuid"]
 
     def update_deployment(
         self,
