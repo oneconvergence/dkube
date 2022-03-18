@@ -3203,8 +3203,8 @@ class DkubeApi(ApiBase, FilesBase):
 
     def log_job_input_dataset_version(self, dataset, version, info=None, description=None, jobuuid=None):
         """
-        Method to add a dataset version in job inputs.
-        If given version of dataset is not present, new version is created.
+        Method to log a dataset version in job input.
+        If given version of dataset is not present, a new version is created.
         Raises exception in case of job is not found or any other connection errors.
         *Inputs*
             jobuuid
@@ -3212,18 +3212,18 @@ class DkubeApi(ApiBase, FilesBase):
 
             dataset
                 Name of the dataset.
-                It must be of the format "owner:dataset name".
+                It must be of the format "owner:dataset_name".
 
             version
                 Version name of dataset to be logged.
 
             info
                 Version metadata or information.
-                Needed if the version is not preset already for the dataset.
+                Needed if the version is not preset for the dataset.
 
             description
                 Version description.
-                Needed if the version is not present already for the dataset.
+                Needed if the version is not present for the dataset.
         """
         jobuuid = jobuuid or os.getenv("DKUBE_JOB_UUID", None)
         assert (jobuuid), "Job UUID must be provided."
@@ -3233,7 +3233,7 @@ class DkubeApi(ApiBase, FilesBase):
         job_class = job["parameters"]["_class"]
         job_owner = job["parameters"]["generated"]["user"]
 
-        assert(job_class != "inference"), "unsupported job class {}".format(job_class)
+        assert(job_class != "inference"), "Unsupported job class {}".format(job_class)
 
         assert(len(dataset.split(":")) == 2), "Dataset name must be of the form owner:dataset_name"
 
@@ -3243,8 +3243,8 @@ class DkubeApi(ApiBase, FilesBase):
 
     def log_job_input_model_version(self, model, version, info=None, description=None, jobuuid=None):
         """
-        Method to add a model version in job inputs.
-        If given version of model is not present, new version is created.
+        Method to log a model version in job input.
+        If given version of model is not present, a new version is created.
         Raises exception in case of job is not found or any other connection errors.
         *Inputs*
             jobuuid
@@ -3252,18 +3252,18 @@ class DkubeApi(ApiBase, FilesBase):
 
             model
                 Name of the model.
-                It must be of the format "owner:model name".
+                It must be of the format "owner:model_name".
 
             version
                 Version name of model to be logged.
 
             info
                 Version metadata or information.
-                Needed if the version is not preset already for the model.
+                Needed if the version is not preset for the model.
 
             description
                 Version description.
-                Needed if the version is not present already for the model.
+                Needed if the version is not present for the model.
         """
         jobuuid = jobuuid or os.getenv("DKUBE_JOB_UUID", None)
         assert (jobuuid), "Job UUID must be provided."
@@ -3273,9 +3273,9 @@ class DkubeApi(ApiBase, FilesBase):
         job_class = job["parameters"]["_class"]
         job_owner = job["parameters"]["generated"]["user"]
 
-        assert(job_class != "inference"), "unsupported job class {}".format(job_class)
+        assert(job_class != "inference"), "Unsupported job class {}".format(job_class)
 
-        assert(len(model.split(":")) == 2), "Dataset name must be of the form owner:model_name"
+        assert(len(model.split(":")) == 2), "Model name must be of the form owner:model_name"
 
         model_owner, model_name = model.split(":")
 
@@ -3283,8 +3283,8 @@ class DkubeApi(ApiBase, FilesBase):
 
     def log_job_output_version(self, datum, version, info=None, description=None, jobuuid= None):
         """
-        Method to add an output datum version in job inputs.
-        If given version of datum is not present, new version is created.
+        Method to log an output datum version in job output.
+        If given version of datum is not present, a new version is created.
         Raises exception in case of job is not found or any other connection errors.
         *Inputs*
             jobuuid
@@ -3292,7 +3292,7 @@ class DkubeApi(ApiBase, FilesBase):
 
             datum
                 Name of the output datum.
-                It must be of the format "owner:datum name".
+                It must be of the format "owner:datum_name".
 
             version
                 Version of datum to be logged.
@@ -3313,7 +3313,7 @@ class DkubeApi(ApiBase, FilesBase):
         job_class = job["parameters"]["_class"]
         job_owner = job["parameters"]["generated"]["user"]
 
-        assert(job_class != "notebook" and job_class != "inference"), "unsupported job class {}".format(job_class)
+        assert(job_class != "notebook" and job_class != "inference"), "Unsupported job class {}".format(job_class)
 
         assert(len(datum.split(":")) == 2), "Output datum name must be of the form owner:datum_name"
 
