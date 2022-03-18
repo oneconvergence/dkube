@@ -3139,7 +3139,8 @@ class DkubeApi(ApiBase, FilesBase):
             description
                 Version description.
         """
-        versions = [{"name": version, "info": info, "description": description}]
+        versions = [{"name": version, "info": info,
+                     "description": description}]
         return super().add_datum_versions(user, "dataset", dataset, versions)
 
     def add_model_version(self, user, model, version, info, description=None):
@@ -3162,7 +3163,8 @@ class DkubeApi(ApiBase, FilesBase):
             description
                 Version description.
         """
-        versions = [{"name": version, "info": info, "description": description}]
+        versions = [{"name": version, "info": info,
+                     "description": description}]
         return super().add_datum_versions(user, "model", model, versions)
 
     def add_dataset_versions(self, user, dataset, versions=[]):
@@ -3233,9 +3235,11 @@ class DkubeApi(ApiBase, FilesBase):
         job_class = job["parameters"]["_class"]
         job_owner = job["parameters"]["generated"]["user"]
 
-        assert(job_class != "inference"), "Unsupported job class {}".format(job_class)
+        assert(job_class != "inference"), "Unsupported job class {}".format(
+            job_class)
 
-        assert(len(dataset.split(":")) == 2), "Dataset name must be of the form owner:dataset_name"
+        assert(len(dataset.split(":")) ==
+               2), "Dataset name must be of the form owner:dataset_name"
 
         dataset_owner, dataset_name = dataset.split(":")
 
@@ -3273,15 +3277,17 @@ class DkubeApi(ApiBase, FilesBase):
         job_class = job["parameters"]["_class"]
         job_owner = job["parameters"]["generated"]["user"]
 
-        assert(job_class != "inference"), "Unsupported job class {}".format(job_class)
+        assert(job_class != "inference"), "Unsupported job class {}".format(
+            job_class)
 
-        assert(len(model.split(":")) == 2), "Model name must be of the form owner:model_name"
+        assert(len(model.split(":")) ==
+               2), "Model name must be of the form owner:model_name"
 
         model_owner, model_name = model.split(":")
 
         return super().log_job_datum_version(job_owner, job_class, job_name, model_owner, "model", model_name, "input", version, info, description)
 
-    def log_job_output_version(self, datum, version, info=None, description=None, jobuuid= None):
+    def log_job_output_version(self, datum, version, info=None, description=None, jobuuid=None):
         """
         Method to log an output datum version in job output.
         If given version of datum is not present, a new version is created.
@@ -3313,9 +3319,11 @@ class DkubeApi(ApiBase, FilesBase):
         job_class = job["parameters"]["_class"]
         job_owner = job["parameters"]["generated"]["user"]
 
-        assert(job_class != "notebook" and job_class != "inference"), "Unsupported job class {}".format(job_class)
+        assert(job_class != "notebook" and job_class !=
+               "inference"), "Unsupported job class {}".format(job_class)
 
-        assert(len(datum.split(":")) == 2), "Output datum name must be of the form owner:datum_name"
+        assert(len(datum.split(":")) ==
+               2), "Output datum name must be of the form owner:datum_name"
 
         datum_owner, datum_name = datum.split(":")
 
@@ -3324,4 +3332,3 @@ class DkubeApi(ApiBase, FilesBase):
             datum_class = "dataset"
 
         return super().log_job_datum_version(job_owner, job_class, job_name, datum_owner, datum_class, datum_name, "output", version, info, description)
-

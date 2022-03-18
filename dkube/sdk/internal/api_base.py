@@ -402,16 +402,19 @@ class ApiBase(object):
         return response.to_dict()
 
     def add_datum_versions(self, user, _class, datum, versions):
-        response = self._api.add_remote_datum_versions(user, _class, datum, {"versions": versions})
+        response = self._api.add_remote_datum_versions(
+            user, _class, datum, {"versions": versions})
         return response.to_dict()
 
     def log_job_datum_version(self, job_owner, job_class, job_name, datum_owner, datum_class, datum_name, category, version, info, description):
-        datumModel = LogVersionModelDatum(datum_name, datum_class, datum_owner, category)
+        datumModel = LogVersionModelDatum(
+            datum_name, datum_class, datum_owner, category)
         versionModel = RemoteDatumVersionModel(version, description, info)
 
         data = LogVersionModel(datumModel, versionModel)
 
-        response = self._api.log_job_datum_version(job_owner, job_class, job_name, data)
+        response = self._api.log_job_datum_version(
+            job_owner, job_class, job_name, data)
         return response.to_dict()
 
    #### MODEL MONITOR APIS ###
