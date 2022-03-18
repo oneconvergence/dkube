@@ -2440,7 +2440,7 @@ class DkubeApi(ApiBase, FilesBase):
                     modelmonitor is declared complete if it is one of the :bash:`init/ready/error` state
 
         *Outputs*
-                a dictionary object with response status.
+                modelmonitor ID
         """
         assert (
             type(modelmonitor) == DkubeModelmonitor
@@ -2466,7 +2466,8 @@ class DkubeApi(ApiBase, FilesBase):
                     )
                 )
                 time.sleep(self.wait_interval)
-        return response
+        assert response["code"] == 200, response["message"]
+        return response["uuid"]
 
     def modelmonitor_list(self, **kwargs):
         """
@@ -3088,7 +3089,8 @@ class DkubeApi(ApiBase, FilesBase):
         if model_reference:
             data["model_reference"] = model_reference
         response = self._api.import_new_deployment(data)
-        return response.to_dict()
+        assert response["code"] == 200, response["message"]
+        return response["uuid"]
 
     def update_deployment(
         self,
