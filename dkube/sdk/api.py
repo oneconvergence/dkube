@@ -3119,7 +3119,7 @@ class DkubeApi(ApiBase, FilesBase):
                         outputs.append(datum_info)
         return outputs
 
-    def add_dataset_version(self, user, dataset, version, info, description=None):
+    def create_dataset_version(self, user, dataset, version, info, description=None):
         """
         Method to add a new version to a remote dataset in Dkube.
         Raises exception in case of dataset is not found or any other connection errors.
@@ -3143,7 +3143,7 @@ class DkubeApi(ApiBase, FilesBase):
                      "description": description}]
         return super().add_datum_versions(user, "dataset", dataset, versions)
 
-    def add_model_version(self, user, model, version, info, description=None):
+    def create_model_version(self, user, model, version, info, description=None):
         """
         Method to add anew version to a remote model in Dkube.
         Raises exception in case of model is not found or any other connection errors.
@@ -3167,7 +3167,7 @@ class DkubeApi(ApiBase, FilesBase):
                      "description": description}]
         return super().add_datum_versions(user, "model", model, versions)
 
-    def add_dataset_versions(self, user, dataset, versions=[]):
+    def create_dataset_versions(self, user, dataset, versions=[]):
         """
         Method to add a list of versions to a remote dataset in Dkube.
         Raises exception in case of dataset is not found or any other connection errors.
@@ -3185,7 +3185,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().add_datum_versions(user, "dataset", dataset, versions)
 
-    def add_model_versions(self, user, model, versions=[]):
+    def create_model_versions(self, user, model, versions=[]):
         """
         Method to add a list of versions to a remote model in Dkube.
         Raises exception in case of model is not found or any other connection errors.
