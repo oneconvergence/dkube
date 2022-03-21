@@ -7,28 +7,24 @@ from enum import Enum
 from pprint import pprint
 
 from dkube.sdk.internal import dkube_api
-from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_cond_def import (
-    ModelmonitorAlertCondDef,
-)
-from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_def import (
-    ModelmonitorAlertDef,
-)
-from dkube.sdk.internal.dkube_api.models.modelmonitor_component_def import (
-    ModelmonitorComponentDef,
-)
-from dkube.sdk.internal.dkube_api.models.modelmonitor_data_source_def import (
-    ModelmonitorDataSourceDef,
-)
-from dkube.sdk.internal.dkube_api.models.modelmonitor_def import ModelmonitorDef
-from dkube.sdk.internal.dkube_api.models.modelmonitor_features_spec_def import (
-    ModelmonitorFeaturesSpecDef,
-)
-from dkube.sdk.internal.dkube_api.models.modelmonitor_schema_feature import (
-    ModelmonitorSchemaFeature,
-)
-from dkube.sdk.internal.dkube_api.models.modelmonitor_status_def import (
-    ModelmonitorStatusDef,
-)
+from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_cond_def import \
+    ModelmonitorAlertCondDef
+from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_def import \
+    ModelmonitorAlertDef
+from dkube.sdk.internal.dkube_api.models.modelmonitor_component_def import \
+    ModelmonitorComponentDef
+from dkube.sdk.internal.dkube_api.models.modelmonitor_data_source_def import \
+    ModelmonitorDataSourceDef
+from dkube.sdk.internal.dkube_api.models.modelmonitor_def import \
+    ModelmonitorDef
+from dkube.sdk.internal.dkube_api.models.modelmonitor_features_spec_def import \
+    ModelmonitorFeaturesSpecDef
+from dkube.sdk.internal.dkube_api.models.modelmonitor_input_data_shape_def import \
+    ModelmonitorInputDataShapeDef
+from dkube.sdk.internal.dkube_api.models.modelmonitor_schema_feature import \
+    ModelmonitorSchemaFeature
+from dkube.sdk.internal.dkube_api.models.modelmonitor_status_def import \
+    ModelmonitorStatusDef
 
 from .util import *
 
@@ -205,6 +201,61 @@ class DatasetClass(Enum):
         return self.value
 
 
+class DataType(Enum):
+    """
+    This Enum class defines the input data type for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.0*
+
+    """
+
+    Tabular = "tabular"
+    Image = "image"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
+class ChannelOrder(Enum):
+    """
+    This Enum class defines the channel order for image data.
+
+    *Available in DKube Release: 3.0*
+
+    """
+
+    ChannelsLast = "last"
+    ChannelsFirst = "first"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
+class ImageDataSavedFileFormat(Enum):
+    """
+    This Enum class defines the possible data arrangements for image data.
+
+    *Available in DKube Release: 3.0*
+
+    """
+
+    BinNumpyArray = "bin_numpy_array"
+    ImgFilesLabelsCSV = "img_files_labels_csv"
+    ImagesInLabelledFolder = "images_in_labelled_folder"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
 class DatasetFormat(Enum):
     """
     This Enum class defines the dataset formats that are suported for the Dkube modelmonitor.
@@ -303,6 +354,7 @@ class DkubeModelmonitor(object):
         self.deployment_monitoring = {}
         self.drift_monitoring = {}
         self.performance_monitoring = {}
+        self.input_data_shape = {}
         self.features.append(
             ModelmonitorSchemaFeature(selected=None, _class=None, label=None, type=None)
         )
@@ -330,6 +382,7 @@ class DkubeModelmonitor(object):
             name=None,
             thresholds=None,
             model_type=None,
+            input_data_shape=self.input_data_shape,
             datasources=self.datasources,
             alerts=self.alerts,
         )
@@ -340,7 +393,7 @@ class DkubeModelmonitor(object):
         self, name=None, 
         model_type: ModelType = None, 
         data_timezone=None, 
-        input_data_type=None,
+        input_data_type: DataType = None,
         thresholds=None,
     ):
         """
@@ -413,6 +466,21 @@ class DkubeModelmonitor(object):
             if data_class not in self.modelmonitor.datasources:
                 self.modelmonitor.datasources[data_class] = mm_dataset
 
+    def update_image_data_shape(
+        self,
+        height,
+        width,
+        channel=0,
+        channel_order=str(ChannelOrder.ChannelsLast)
+    ):
+        """
+        This function updates the DKube Modelmonitor image data shape.
+        """
+        self.input_data_shape["height"] = height
+        self.input_data_shape["width"] = width
+        self.input_data_shape["channel"] = channel
+        self.input_data_shape["channel_order"] = channel_order
+
     def update_datasources(
         self,
         id=None,
@@ -470,6 +538,8 @@ class DkubeModelmonitor(object):
         enabled=None,
         frequency=None,
         algorithm: DriftAlgo = None,
+        image_train_data_savedfile_format: ImageDataSavedFileFormat = None,
+        image_predict_data_savedfile_format: ImageDataSavedFileFormat = None,
     ):
         """
         This function updates the DKube drift monitor details. The following updates are supported:
@@ -483,7 +553,15 @@ class DkubeModelmonitor(object):
             self.modelmonitor.drift_monitoring["frequency"] = frequency
         if algorithm:
             self.modelmonitor.drift_monitoring["algorithm"] = algorithm
-        
+        if str(self.modelmonitor.input_data_type) == "image":
+            if (image_train_data_savedfile_format is None
+                and
+                    image_predict_data_savedfile_format is None):
+                print("Please image saved file format for train and predict data")
+            else:
+                self.modelmonitor.drift_monitoring["image_train_data_savedfile_format"] = image_train_data_savedfile_format
+                self.modelmonitor.drift_monitoring["image_predict_data_savedfile_format"] = image_predict_data_savedfile_format
+     
     def update_performance_monitoring_details(
         self,
         enabled=None,
