@@ -557,7 +557,7 @@ class DkubeModelmonitor(object):
             if (image_train_data_savedfile_format is None
                 and
                     image_predict_data_savedfile_format is None):
-                print("Please image saved file format for train and predict data")
+                print("Please provide image saved file format for train and predict data")
             else:
                 self.modelmonitor.drift_monitoring["image_train_data_savedfile_format"] = image_train_data_savedfile_format
                 self.modelmonitor.drift_monitoring["image_predict_data_savedfile_format"] = image_predict_data_savedfile_format
