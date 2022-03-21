@@ -589,7 +589,7 @@ class DkubeApi(ApiBase, FilesBase):
         if run.serving_def.enable_logs is None:
             run.serving_def.max_concurrent_requests = inference["enable_logs"]
 
-        if super().is_model_catalog_enabled() == True:
+        if run.serving_def.deploy:
             run.serving_def.deploy = inference["deploy"]
         else:
             run.serving_def.deploy = None
