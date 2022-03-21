@@ -581,10 +581,10 @@ class DkubeApi(ApiBase, FilesBase):
                 run.update_transformer_code(name, code["version"])
 
         if run.serving_def.min_replicas == 0:
-            run.serving_def.min_replicas = inference["minreplicas"]
+            run.serving_def.min_replicas = inference["min_replicas"]
 
         if run.serving_def.max_concurrent_requests == 0:
-            run.serving_def.max_concurrent_requests = inference["maxconcurrentrequests"]
+            run.serving_def.max_concurrent_requests = inference["max_concurrent_requests"]
 
         if run.serving_def.enable_logs is None:
             run.serving_def.max_concurrent_requests = inference["enable_logs"]
