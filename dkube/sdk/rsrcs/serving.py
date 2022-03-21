@@ -46,7 +46,8 @@ class DkubeServing(object):
                                              serving_image=self.predictor, transformer=False,
                                              transformer_image=self.transformer, transformer_project=None,
                                              transformer_commit_id=None, transformer_code=None,
-                                             min_replicas=0, max_concurrent_requests=0)
+                                             min_replicas=0, max_concurrent_requests=0,
+                                             enable_logs=None)
         self.run_def = JobModelParametersRun(template=None, group='default')
         self.job_parameters = JobModelParameters(
             _class='inference', inference=self.serving_def, run=self.run_def)
@@ -190,3 +191,14 @@ class DkubeServing(object):
         """
         self.serving_def.min_replicas = min_replicas
         self.serving_def.max_concurrent_requests = max_concurrent_requests
+
+    def update_enable_logs(self, enable_logs):
+        """
+            Method to enable logs for Model Serving
+
+            *Inputs*
+
+                enable_logs
+                    Boolean value, it can be either True or False
+        """
+        self.serving_def.enable_logs = enable_logs

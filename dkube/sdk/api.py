@@ -15,9 +15,8 @@ import time
 import pandas as pd
 import urllib3
 from dkube.sdk.internal.api_base import *
-from dkube.sdk.internal.dkube_api.models.conditions import (
-    Conditions as TriggerCondition,
-)
+from dkube.sdk.internal.dkube_api.models.conditions import \
+    Conditions as TriggerCondition
 from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
@@ -586,6 +585,9 @@ class DkubeApi(ApiBase, FilesBase):
 
         if run.serving_def.max_concurrent_requests == 0:
             run.serving_def.max_concurrent_requests = inference["maxconcurrentrequests"]
+
+        if run.serving_def.enable_logs is None:
+            run.serving_def.max_concurrent_requests = inference["enable_logs"]
 
         if super().is_model_catalog_enabled() == True:
             run.serving_def.deploy = inference["deploy"]
