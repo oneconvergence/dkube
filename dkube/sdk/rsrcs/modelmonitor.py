@@ -205,7 +205,7 @@ class DataType(Enum):
     """
     This Enum class defines the input data type for the Dkube modelmonitor.
 
-    *Available in DKube Release: 3.0*
+    *Available in DKube Release: 3.3*
 
     """
 
@@ -223,7 +223,7 @@ class ChannelOrder(Enum):
     """
     This Enum class defines the channel order for image data.
 
-    *Available in DKube Release: 3.0*
+    *Available in DKube Release: 3.3*
 
     """
 
@@ -560,6 +560,7 @@ class DkubeModelmonitor(object):
             else:
                 self.modelmonitor.drift_monitoring["image_train_data_savedfile_format"] = image_train_data_savedfile_format
                 self.modelmonitor.drift_monitoring["image_predict_data_savedfile_format"] = image_predict_data_savedfile_format
+            self.schema = None
      
     def update_performance_monitoring_details(
         self,
