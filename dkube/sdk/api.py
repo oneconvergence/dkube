@@ -15,9 +15,8 @@ import time
 import pandas as pd
 import urllib3
 from dkube.sdk.internal.api_base import *
-from dkube.sdk.internal.dkube_api.models.conditions import (
-    Conditions as TriggerCondition,
-)
+from dkube.sdk.internal.dkube_api.models.conditions import \
+    Conditions as TriggerCondition
 from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
@@ -582,12 +581,15 @@ class DkubeApi(ApiBase, FilesBase):
                 run.update_transformer_code(name, code["version"])
 
         if run.serving_def.min_replicas == 0:
-            run.serving_def.min_replicas = inference["minreplicas"]
+            run.serving_def.min_replicas = inference["min_replicas"]
 
         if run.serving_def.max_concurrent_requests == 0:
-            run.serving_def.max_concurrent_requests = inference["maxconcurrentrequests"]
+            run.serving_def.max_concurrent_requests = inference["max_concurrent_requests"]
 
-        if super().is_model_catalog_enabled() == True:
+        if run.serving_def.enable_logs is None:
+            run.serving_def.max_concurrent_requests = inference["enable_logs"]
+
+        if run.serving_def.deploy:
             run.serving_def.deploy = inference["deploy"]
         else:
             run.serving_def.deploy = None
