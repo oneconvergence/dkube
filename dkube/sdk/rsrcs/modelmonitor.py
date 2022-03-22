@@ -241,7 +241,7 @@ class ImageDataSavedFileFormat(Enum):
     """
     This Enum class defines the possible data arrangements for image data.
 
-    *Available in DKube Release: 3.0*
+    *Available in DKube Release: 3.3*
 
     """
 
