@@ -344,8 +344,7 @@ class DkubeModelmonitor(object):
 
     """
 
-    def __init__(self, name=generate("mm"), model_type="regression"):
-
+    def __init__(self, name, model_type):
         self.alerts = []
         self.datasources = {}
         self.features = []
