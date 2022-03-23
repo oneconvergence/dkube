@@ -451,7 +451,7 @@ class DkubeModelmonitor(object):
         sql_query=None,
         s3_subpath=None,
         version=None,
-        data_format=str(DatasetFormat.Tabular),
+        data_format: DatasetFormat = None,
         groundtruth_col=None,
         predict_col=None,
         date_suffix=None,
