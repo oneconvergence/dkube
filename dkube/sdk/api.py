@@ -3000,4 +3000,66 @@ class DkubeApi(ApiBase, FilesBase):
             print("Schema is Null")
             return 
             
+    def get_registry(self, project):
+        """
+        Returns feast registry details
 
+        *Inputs*
+
+            project
+                Name of the feast project
+
+        Output*
+            a dictionary object
+        """
+        reg_data = {"project": project}
+        resp = super().get_registry(reg_data)
+        return resp
+
+    def update_registry(self, update_data):
+        """
+        Update metadata of a feast project in registry
+
+        *Inputs*
+
+            update_data
+                Dict of metdata
+                eg. {
+                    "project": <feast project name>,
+                    "regblob": string,
+                    "to_add": <dict of attributes to add>,
+                    "to_delete": <dict of attributes to delete>
+                }
+        
+        """
+        return super().update_registry(update_data)
+
+    def delete_registry(self, project):
+        """
+        Delete metadata of a feast project from registry
+
+        *Inputs*
+
+            project
+                Name of the feast project
+        """
+        del_data = {"project": project}
+        return super().delete_registry(del_data)
+
+    def validate_project_changes(self, infra_update):
+        """
+        Validate the changes in a feast project
+
+        *Inputs*
+            infra_update
+                type: dict
+                schema: {
+                    "project": <name of feast project>,
+                    "to_add": <dict of attributes to add>,
+                    "to_delete": <dict of attributes to delete>
+                }
+
+        *Output
+            A dict with 'valid' as key
+        """
+        return super().validate_project_input(infra_update)
