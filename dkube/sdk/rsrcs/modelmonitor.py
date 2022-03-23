@@ -344,7 +344,7 @@ class DkubeModelmonitor(object):
 
     """
 
-    def __init__(self, name, model_type):
+    def __init__(self, name, model_type,input_data_type):
         self.alerts = []
         self.datasources = {}
         self.features = []
@@ -386,13 +386,13 @@ class DkubeModelmonitor(object):
             alerts=self.alerts,
         )
 
-        self.update_modelmonitor(name, model_type)
+        self.update_modelmonitor(name, model_type, input_data_type)
 
     def update_modelmonitor(
         self, name=None, 
-        model_type: ModelType = None, 
-        data_timezone=None, 
+        model_type: ModelType = None,  
         input_data_type: DataType = None,
+        data_timezone=None,
         thresholds=None,
     ):
         """
@@ -404,10 +404,6 @@ class DkubeModelmonitor(object):
             self.modelmonitor.data_timezone = data_timezone
         if model_type in ["regression", "classification"]:
             self.modelmonitor.model_type = model_type
-        else:
-            print(
-                "Please define the supported model types, regression or classification"
-            )
         if input_data_type:
             self.modelmonitor.input_data_type = input_data_type
         if thresholds:
