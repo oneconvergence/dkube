@@ -4,7 +4,6 @@ import json
 import sys
 import time
 from enum import Enum
-from pprint import pprint
 
 from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_cond_def import \
@@ -219,6 +218,24 @@ class DataType(Enum):
         return self.value
 
 
+class TimeZone(Enum):
+    """
+    This Enum class defines the timezone for the Dkube modelmonitor.
+
+    *Available in DKube Release: 3.3*
+
+    """
+
+    UTC = "utc"
+    DKube = "dkube"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
 class ChannelOrder(Enum):
     """
     This Enum class defines the channel order for image data.
@@ -344,7 +361,7 @@ class DkubeModelmonitor(object):
 
     """
 
-    def __init__(self, name, model_type):
+    def __init__(self, name):
         self.alerts = []
         self.datasources = {}
         self.features = []
@@ -386,30 +403,41 @@ class DkubeModelmonitor(object):
             alerts=self.alerts,
         )
 
-        self.update_modelmonitor(name, model_type)
-
-    def update_modelmonitor(
-        self, name=None, 
-        model_type: ModelType = None, 
-        data_timezone=None, 
-        input_data_type: DataType = None,
-        thresholds=None,
-    ):
-        """
-        Method to update the attributes specified at creation.
-        """
         if name:
             self.modelmonitor.name = name
+        else:
+            raise("Monitor name required")
+
+    def update_modelmonitor(
+        self, 
+        model_type: ModelType,  
+        input_data_type: DataType,
+        data_timezone: TimeZone = "utc",
+    ):
+        """
+        Method to update the basic attributes specified at creation.
+        """
         if data_timezone:
             self.modelmonitor.data_timezone = data_timezone
         if model_type in ["regression", "classification"]:
             self.modelmonitor.model_type = model_type
         else:
-            print(
+            raise(
                 "Please define the supported model types, regression or classification"
             )
         if input_data_type:
             self.modelmonitor.input_data_type = input_data_type
+        else:
+            raise("Input data type is required")
+        return self
+
+    def add_thresholds(
+        self,
+        thresholds
+    ):
+        """
+        Method to update the thresholds.
+        """
         if thresholds:
             self.modelmonitor.thresholds = thresholds
         return self
@@ -433,7 +461,7 @@ class DkubeModelmonitor(object):
         This function adds the datasource in dkube Model monitor.
         """
         if data_class == None:
-            print("Please provide a class for which dataset needs to be added")
+            raise("Please provide a class for which dataset needs to be added")
 
         else:
             mm_dataset = {}
@@ -499,7 +527,7 @@ class DkubeModelmonitor(object):
         This function updates the DKube Modelmonitor datasource.
         """
         if data_class == None:
-            print("Please provide a class for which dataset needs to be updated")
+            raise("Please provide a class for which dataset needs to be updated")
 
         else:
 
@@ -535,8 +563,8 @@ class DkubeModelmonitor(object):
     def update_drift_monitoring_details(
         self,
         enabled=None,
-        frequency=None,
-        algorithm: DriftAlgo = None,
+        frequency=5,
+        algorithm: DriftAlgo = "auto",
         image_train_data_savedfile_format: ImageDataSavedFileFormat = None,
         image_predict_data_savedfile_format: ImageDataSavedFileFormat = None,
     ):
@@ -556,7 +584,7 @@ class DkubeModelmonitor(object):
             if (image_train_data_savedfile_format is None
                 and
                     image_predict_data_savedfile_format is None):
-                print("Please provide image saved file format for train and predict data")
+                raise("Please provide image saved file format for train and predict data")
             else:
                 self.modelmonitor.drift_monitoring["image_train_data_savedfile_format"] = image_train_data_savedfile_format
                 self.modelmonitor.drift_monitoring["image_predict_data_savedfile_format"] = image_predict_data_savedfile_format
@@ -565,7 +593,7 @@ class DkubeModelmonitor(object):
     def update_performance_monitoring_details(
         self,
         enabled=None,
-        frequency=None,
+        frequency=5,
         source_type: SourceTypePerformance = None,
         docker_image=None,
         startup_script=None,
@@ -591,7 +619,7 @@ class DkubeModelmonitor(object):
     def update_deployment_monitoring_details(
         self,
         enabled=None,
-        frequency=None,
+        frequency=1,
         cluster=None,
         source_type: SourceTypeDeployment = None,
         metrics=None,
