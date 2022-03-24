@@ -361,7 +361,7 @@ class DkubeModelmonitor(object):
 
     """
 
-    def __init__(self):
+    def __init__(self, name):
         self.alerts = []
         self.datasources = {}
         self.features = []
@@ -403,7 +403,12 @@ class DkubeModelmonitor(object):
             alerts=self.alerts,
         )
 
-    def update_modelmonitor(
+        if name:
+            self.modelmonitor.name = name
+        else:
+            raise("Monitor name required")
+
+    def update_modelmonitor_basics(
         self, 
         model_type: ModelType,  
         input_data_type: DataType,
