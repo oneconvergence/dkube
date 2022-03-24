@@ -2422,7 +2422,7 @@ class DkubeApi(ApiBase, FilesBase):
     ### Model monitor apis ##########
 
     def modelmonitor_create(
-        self,id, modelmonitor: DkubeModelmonitor, wait_for_completion=True
+        self, modelmonitor: DkubeModelmonitor, wait_for_completion=True
     ):
         """
         Method to create Model Monitor on Dkube
@@ -2447,7 +2447,6 @@ class DkubeApi(ApiBase, FilesBase):
         assert (
             type(modelmonitor) == DkubeModelmonitor
         ), "Invalid type for model monitor, value must be instance of rsrcs:DkubeModelmonitor class"
-        modelmonitor.modelmonitor.id = id
         response = super().create_model_monitor(modelmonitor)
         while wait_for_completion:
             mm_config = super().get_modelmonitor_configuration(response["uuid"])
