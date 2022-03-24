@@ -361,7 +361,7 @@ class DkubeModelmonitor(object):
 
     """
 
-    def __init__(self):
+    def __init__(self, deployemnt_id):
         self.alerts = []
         self.datasources = {}
         self.features = []
@@ -387,7 +387,7 @@ class DkubeModelmonitor(object):
             run_id=None, status_info=None, status=None, type=None
         )
         self.modelmonitor = ModelmonitorDef(
-            id=None,
+            id=deployemnt_id,
             status=self.status,
             schema=self.schema,
             pipeline_component=self.pipeline_component,
@@ -395,7 +395,7 @@ class DkubeModelmonitor(object):
             drift_monitoring=self.drift_monitoring,
             performance_monitoring=self.performance_monitoring,
             owner=None,
-            name=None,
+            name="",
             thresholds=None,
             model_type=None,
             input_data_shape=self.input_data_shape,
@@ -439,7 +439,7 @@ class DkubeModelmonitor(object):
 
     def add_datasources(
         self,
-        id=None,
+        dataset_id=None,
         data_class: DatasetClass = None,
         transformer_script=None,
         name=None,
@@ -455,15 +455,15 @@ class DkubeModelmonitor(object):
         """
         This function adds the datasource in dkube Model monitor.
         """
-        if data_class == None:
+        if data_class is None:
             raise("Please provide a class for which dataset needs to be added")
 
         else:
             mm_dataset = {}
             if name:
                 mm_dataset["name"] = name
-            if id:
-                mm_dataset["id"] = id
+            if dataset_id:
+                mm_dataset["id"] = dataset_id
             if transformer_script:
                 mm_dataset["transformer_script"] = transformer_script
             if data_format:
@@ -505,7 +505,7 @@ class DkubeModelmonitor(object):
 
     def update_datasources(
         self,
-        id=None,
+        dataset_id=None,
         data_class: DatasetClass = None,
         transformer_script=None,
         name=None,
@@ -521,7 +521,7 @@ class DkubeModelmonitor(object):
         """
         This function updates the DKube Modelmonitor datasource.
         """
-        if data_class == None:
+        if data_class is None:
             raise("Please provide a class for which dataset needs to be updated")
 
         else:
@@ -529,8 +529,8 @@ class DkubeModelmonitor(object):
             mm_dataset = {}
             if name:
                 mm_dataset["name"] = name
-            if id:
-                mm_dataset["id"] = id
+            if dataset_id:
+                mm_dataset["id"] = dataset_id
             if transformer_script:
                 mm_dataset["transformer_script"] = transformer_script
             if data_format:
@@ -617,7 +617,6 @@ class DkubeModelmonitor(object):
         frequency=1,
         cluster=None,
         source_type: SourceTypeDeployment = None,
-        metrics=None,
         collect_metrics=None,
     ):
         """
