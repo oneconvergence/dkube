@@ -2421,7 +2421,7 @@ class DkubeApi(ApiBase, FilesBase):
 
     ### Model monitor apis ##########
 
-    def create_modelmonitor(
+    def modelmonitor_create(
         self, modelmonitor: DkubeModelmonitor, wait_for_completion=True
     ):
         """
