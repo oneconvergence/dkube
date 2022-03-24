@@ -395,7 +395,7 @@ class DkubeModelmonitor(object):
             drift_monitoring=self.drift_monitoring,
             performance_monitoring=self.performance_monitoring,
             owner=None,
-            name="",
+            name=None,
             thresholds=None,
             model_type=None,
             input_data_shape=self.input_data_shape,
