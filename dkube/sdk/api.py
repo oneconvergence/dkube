@@ -2879,7 +2879,7 @@ class DkubeApi(ApiBase, FilesBase):
                 d["class"] = d.pop("_class")
             mm = DkubeModelmonitor(deployemnt_id=id)
             mm.__dict__["modelmonitor"].__dict__["_schema"] = config["schema"]
-            return self.modelmonitor_update(id, mm)
+            return self.modelmonitor_update(mm)
         except TypeError:
             print("Schema is Null")
             return
