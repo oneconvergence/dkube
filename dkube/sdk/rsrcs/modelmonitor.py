@@ -417,13 +417,13 @@ class DkubeModelmonitor(object):
         if model_type in ["regression", "classification"]:
             self.modelmonitor.model_type = model_type
         else:
-            raise(
+            raise ValueError(
                 "Please define the supported model types, regression or classification"
             )
         if input_data_type:
             self.modelmonitor.input_data_type = input_data_type
         else:
-            raise("Input data type is required")
+            raise ValueError("Input data type is required")
         return self
 
     def add_thresholds(
@@ -456,7 +456,7 @@ class DkubeModelmonitor(object):
         This function adds the datasource in dkube Model monitor.
         """
         if data_class is None:
-            raise("Please provide a class for which dataset needs to be added")
+            raise ValueError("Please provide a class for which dataset needs to be added")
 
         else:
             mm_dataset = {}
@@ -522,8 +522,7 @@ class DkubeModelmonitor(object):
         This function updates the DKube Modelmonitor datasource.
         """
         if data_class is None:
-            raise("Please provide a class for which dataset needs to be updated")
-
+            raise ValueError("Please provide a class for which dataset needs to be updated")
         else:
 
             mm_dataset = {}
@@ -579,7 +578,7 @@ class DkubeModelmonitor(object):
             if (image_train_data_savedfile_format is None
                 and
                     image_predict_data_savedfile_format is None):
-                raise("Please provide image saved file format for train and predict data")
+                raise ValueError("Please provide image saved file format for train and predict data")
             else:
                 self.modelmonitor.drift_monitoring["image_train_data_savedfile_format"] = image_train_data_savedfile_format
                 self.modelmonitor.drift_monitoring["image_predict_data_savedfile_format"] = image_predict_data_savedfile_format

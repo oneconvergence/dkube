@@ -11,6 +11,7 @@
 import json
 import os
 import time
+from logging.config import valid_ident
 
 import pandas as pd
 import urllib3
@@ -2861,9 +2862,9 @@ class DkubeApi(ApiBase, FilesBase):
         """
 
         if not label:
-            raise("Specify a valid column label")
-        if (not selected) or (not schema_class) or (not schema_type):
-            raise("Specify either selected, schema_class, or schema_type")
+            raise ValueError("Specify a valid column label")
+        if (not schema_class) and (not schema_type):
+            raise ValueError("Specify either schema_class, or schema_type")
         found = False
         config = self.modelmonitor_get(id=id)
         try:
