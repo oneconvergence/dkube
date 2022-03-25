@@ -2889,6 +2889,70 @@ class DkubeApi(ApiBase, FilesBase):
             print("Schema is Null")
             return
 
+    def modelmonitor_schema_to_df(
+        self,
+        id,
+    ):
+        """
+        Method to get schema of the modelmonitor as dataframe
+
+        *Available in DKube Release: 3.0*
+
+        *Inputs*
+
+            id
+                Modelmonitor Id
+            
+        Outputs*
+            a dataframe object of schema
+        """
+        try:
+            config = self.modelmonitor_get(id=id)
+            if config["input_data_type"] != "tabular":
+                raise (f"Schema is not available for {config['input_data_type']} data type")
+            schema = config["schema"].get("features")
+            if schema == None:
+                return None
+            existing_schema = pd.DataFrame(schema)
+            existing_schema = existing_schema.rename({"_class":"class"}, axis='columns')
+        except TypeError:
+            print("Schema is Null")
+            return
+        return existing_schema
+
+    def modelmonitor_update_schema_from_df(
+        self,
+        id,
+        schema_df: pd.DataFrame
+    ):
+        """
+        Method to get schema of the modelmonitor as dataframe
+
+        *Available in DKube Release: 3.0*
+
+        *Inputs*
+
+            id
+                Modelmonitor Id
+            schema_df
+                Pandas DataFrame having schema
+
+        Outputs*
+            a dictionary object with response status
+        """
+        try:
+            existing_schema = self.modelmonitor_schema_to_df(id)
+            existing_schema.set_index('label', inplace=True)
+            existing_schema.update(schema_df.set_index('label'))
+            existing_schema = existing_schema.reset_index()
+            new_schema = json.loads(existing_schema.to_json(orient="records"))
+            mm = DkubeModelmonitor(deployemnt_id=id)
+            mm.__dict__["modelmonitor"].__dict__["_schema"] = {"features": new_schema}
+            return self.modelmonitor_update(mm)
+        except TypeError:
+            print("Schema is Null")
+            return
+
     ### operator api's ####
 
     def configure_clusters(self, data):
