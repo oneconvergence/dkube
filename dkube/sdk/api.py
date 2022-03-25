@@ -2502,7 +2502,7 @@ class DkubeApi(ApiBase, FilesBase):
             query_params["archived"] = archived
         return super().list_modelmonitor(query_params)
 
-    def modelmonitor_get_id(self, name=None):
+    def modelmonitor_get_id(self, name):
         """
         Method to get the id  of a model monitor.
 
@@ -2522,7 +2522,7 @@ class DkubeApi(ApiBase, FilesBase):
         else:
             return None
 
-    def modelmonitor_get_alertid(self, id=None, alert_name=None):
+    def modelmonitor_get_alertid(self, id, alert_name):
         """
         Method to get the alert id  of a modelmonitor.
 
@@ -2545,7 +2545,7 @@ class DkubeApi(ApiBase, FilesBase):
                 return alert["id"]
         return None
 
-    def modelmonitor_get(self, id=None):
+    def modelmonitor_get(self, id):
         """
         Method to get the modelmonitor.
 
@@ -2562,7 +2562,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_modelmonitor_configuration(id)
 
-    def modelmonitor_get_alerts(self, id=None):
+    def modelmonitor_get_alerts(self, id):
         """
         Method to get the alerts of the modelmonitor.
 
@@ -2598,7 +2598,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().delete_modelmonitors(ids)
 
-    def modelmonitor_delete(self, id=None):
+    def modelmonitor_delete(self, id):
         """
         Method to delete the single modelmonitor.
 
@@ -2628,7 +2628,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().get_modelmonitor_template()
 
-    def modelmonitor_delete_alert(self, id=None, alert_id=None):
+    def modelmonitor_delete_alert(self, id, alert_id):
         """
         Method to delete the alerts in the modelmonitor
 
@@ -2645,7 +2645,7 @@ class DkubeApi(ApiBase, FilesBase):
         delete_alertsid_list.append(alert_id)
         return super().delete_modelmonitor_alert(id, delete_alertsid_list)
 
-    def modelmonitor_add_alert(self, id=None, alert_data=None):
+    def modelmonitor_add_alert(self, id, alert_data):
         """
         Method to add the alerts in the modelmonitor
 
@@ -2670,7 +2670,7 @@ class DkubeApi(ApiBase, FilesBase):
         response = super().modelmonitor_addalert(id, {"data": [alert_dict]})
         return response
 
-    def modelmonitor_archive(self, id=None):
+    def modelmonitor_archive(self, id):
         """
         Method to archive the modelmonitor
 
@@ -2685,7 +2685,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().modelmonitor_archive(id, archive=True)
 
-    def modelmonitor_unarchive(self, id=None):
+    def modelmonitor_unarchive(self, id):
         """
         Method to unarchive the modelmonitor
 
@@ -2700,7 +2700,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().modelmonitor_archive(id, archive=False)
 
-    def modelmonitor_start(self, id=None, wait_for_completion=True):
+    def modelmonitor_start(self, id, wait_for_completion=True):
         """
         Method to start the modelmonitor
 
@@ -2727,7 +2727,7 @@ class DkubeApi(ApiBase, FilesBase):
                 time.sleep(self.wait_interval)
         return response
 
-    def modelmonitor_stop(self, id=None):
+    def modelmonitor_stop(self, id):
         """
         Method to stop the modelmonitor
 
@@ -2743,7 +2743,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().modelmonitor_state(id, "stop")
 
-    def modelmonitor_update_alert(self, id=None, alert=None, alert_id=None):
+    def modelmonitor_update_alert(self, id, alert, alert_id):
         """
         Method to update the modelmonitor alert
 
@@ -2770,7 +2770,7 @@ class DkubeApi(ApiBase, FilesBase):
         return super().update_modelmonitor_alert(id, alert_id, alert_dict)
 
     def modelmonitor_update(
-        self, id=None, config: DkubeModelmonitor = None, wait_for_completion=True
+        self, config: DkubeModelmonitor, wait_for_completion=True
     ):
         """
         Method to update the modelmonitor
@@ -2793,6 +2793,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         config_dict = config.__dict__["modelmonitor"].__dict__
         config_dict = {k.replace("_", "", 1): v for k, v in config_dict.items()}
+        id = config_dict["id"]
         rem_list = [
             "updated_at",
             "id",
@@ -2831,11 +2832,11 @@ class DkubeApi(ApiBase, FilesBase):
 
     def modelmonitor_update_schema(
         self,
-        id=None,
-        label=None,
-        selected=True,
-        schema_class="Categorical",
-        schema_type="InputFeature",
+        id,
+        label,
+        selected,
+        schema_class,
+        schema_type,
     ):
         """
         Method to update the schema in the modelmonitor
