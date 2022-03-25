@@ -2834,9 +2834,9 @@ class DkubeApi(ApiBase, FilesBase):
         self,
         id,
         label,
-        selected,
-        schema_class,
-        schema_type,
+        selected=False,
+        schema_class=None,
+        schema_type=None,
     ):
         """
         Method to update the schema in the modelmonitor
@@ -2861,16 +2861,20 @@ class DkubeApi(ApiBase, FilesBase):
         """
 
         if not label:
-            print("Specify a valid column label")
-            return None
+            raise("Specify a valid column label")
+        if (not selected) or (not schema_class) or (not schema_type):
+            raise("Specify either selected, schema_class, or schema_type")
         found = False
         config = self.modelmonitor_get(id=id)
         try:
             for feature in config["schema"]["features"]:
                 if feature["label"] == label:
-                    feature["_class"] = schema_class
-                    feature["type"] = schema_type
-                    feature["selected"] = selected
+                    if schema_class:
+                        feature["_class"] = schema_class
+                    if schema_type:
+                        feature["type"] = schema_type
+                    if selected:
+                        feature["selected"] = selected
                     found = True
             if not found:
                 print("specified label is not in the derived schema")
