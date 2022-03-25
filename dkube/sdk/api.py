@@ -2877,7 +2877,7 @@ class DkubeApi(ApiBase, FilesBase):
                 return None
             for d in config["schema"]["features"]:
                 d["class"] = d.pop("_class")
-            mm = DkubeModelmonitor(name=config["name"])
+            mm = DkubeModelmonitor(deployemnt_id=id)
             mm.__dict__["modelmonitor"].__dict__["_schema"] = config["schema"]
             return self.modelmonitor_update(id, mm)
         except TypeError:
