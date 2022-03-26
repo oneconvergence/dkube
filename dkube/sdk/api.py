@@ -11,6 +11,7 @@
 import json
 import os
 import time
+from logging.config import valid_ident
 
 import pandas as pd
 import urllib3
@@ -2502,7 +2503,7 @@ class DkubeApi(ApiBase, FilesBase):
             query_params["archived"] = archived
         return super().list_modelmonitor(query_params)
 
-    def modelmonitor_get_id(self, name=None):
+    def modelmonitor_get_id(self, name):
         """
         Method to get the id  of a model monitor.
 
@@ -2522,7 +2523,7 @@ class DkubeApi(ApiBase, FilesBase):
         else:
             return None
 
-    def modelmonitor_get_alertid(self, id=None, alert_name=None):
+    def modelmonitor_get_alertid(self, id, alert_name):
         """
         Method to get the alert id  of a modelmonitor.
 
@@ -2545,7 +2546,7 @@ class DkubeApi(ApiBase, FilesBase):
                 return alert["id"]
         return None
 
-    def modelmonitor_get(self, id=None):
+    def modelmonitor_get(self, id):
         """
         Method to get the modelmonitor.
 
@@ -2562,7 +2563,7 @@ class DkubeApi(ApiBase, FilesBase):
 
         return super().get_modelmonitor_configuration(id)
 
-    def modelmonitor_get_alerts(self, id=None):
+    def modelmonitor_get_alerts(self, id):
         """
         Method to get the alerts of the modelmonitor.
 
@@ -2598,7 +2599,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().delete_modelmonitors(ids)
 
-    def modelmonitor_delete(self, id=None):
+    def modelmonitor_delete(self, id):
         """
         Method to delete the single modelmonitor.
 
@@ -2628,7 +2629,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().get_modelmonitor_template()
 
-    def modelmonitor_delete_alert(self, id=None, alert_id=None):
+    def modelmonitor_delete_alert(self, id, alert_id):
         """
         Method to delete the alerts in the modelmonitor
 
@@ -2645,7 +2646,7 @@ class DkubeApi(ApiBase, FilesBase):
         delete_alertsid_list.append(alert_id)
         return super().delete_modelmonitor_alert(id, delete_alertsid_list)
 
-    def modelmonitor_add_alert(self, id=None, alert_data=None):
+    def modelmonitor_add_alert(self, id, alert_data):
         """
         Method to add the alerts in the modelmonitor
 
@@ -2670,7 +2671,7 @@ class DkubeApi(ApiBase, FilesBase):
         response = super().modelmonitor_addalert(id, {"data": [alert_dict]})
         return response
 
-    def modelmonitor_archive(self, id=None):
+    def modelmonitor_archive(self, id):
         """
         Method to archive the modelmonitor
 
@@ -2685,7 +2686,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().modelmonitor_archive(id, archive=True)
 
-    def modelmonitor_unarchive(self, id=None):
+    def modelmonitor_unarchive(self, id):
         """
         Method to unarchive the modelmonitor
 
@@ -2700,7 +2701,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().modelmonitor_archive(id, archive=False)
 
-    def modelmonitor_start(self, id=None, wait_for_completion=True):
+    def modelmonitor_start(self, id, wait_for_completion=True):
         """
         Method to start the modelmonitor
 
@@ -2727,7 +2728,7 @@ class DkubeApi(ApiBase, FilesBase):
                 time.sleep(self.wait_interval)
         return response
 
-    def modelmonitor_stop(self, id=None):
+    def modelmonitor_stop(self, id):
         """
         Method to stop the modelmonitor
 
@@ -2743,7 +2744,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().modelmonitor_state(id, "stop")
 
-    def modelmonitor_update_alert(self, id=None, alert=None, alert_id=None):
+    def modelmonitor_update_alert(self, id, alert, alert_id):
         """
         Method to update the modelmonitor alert
 
@@ -2770,7 +2771,7 @@ class DkubeApi(ApiBase, FilesBase):
         return super().update_modelmonitor_alert(id, alert_id, alert_dict)
 
     def modelmonitor_update(
-        self, id=None, config: DkubeModelmonitor = None, wait_for_completion=True
+        self, config: DkubeModelmonitor, wait_for_completion=True
     ):
         """
         Method to update the modelmonitor
@@ -2793,6 +2794,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         config_dict = config.__dict__["modelmonitor"].__dict__
         config_dict = {k.replace("_", "", 1): v for k, v in config_dict.items()}
+        id = config_dict["id"]
         rem_list = [
             "updated_at",
             "id",
@@ -2831,11 +2833,11 @@ class DkubeApi(ApiBase, FilesBase):
 
     def modelmonitor_update_schema(
         self,
-        id=None,
-        label=None,
-        selected=True,
-        schema_class="Categorical",
-        schema_type="InputFeature",
+        id,
+        label,
+        selected=False,
+        schema_class=None,
+        schema_type=None,
     ):
         """
         Method to update the schema in the modelmonitor
@@ -2860,25 +2862,93 @@ class DkubeApi(ApiBase, FilesBase):
         """
 
         if not label:
-            print("Specify a valid column label")
-            return None
+            raise ValueError("Specify a valid column label")
+        if (not schema_class) and (not schema_type):
+            raise ValueError("Specify either schema_class, or schema_type")
         found = False
         config = self.modelmonitor_get(id=id)
         try:
             for feature in config["schema"]["features"]:
                 if feature["label"] == label:
-                    feature["_class"] = schema_class
-                    feature["type"] = schema_type
-                    feature["selected"] = selected
+                    if schema_class:
+                        feature["_class"] = schema_class
+                    if schema_type:
+                        feature["type"] = schema_type
+                    if selected:
+                        feature["selected"] = selected
                     found = True
             if not found:
                 print("specified label is not in the derived schema")
                 return None
             for d in config["schema"]["features"]:
                 d["class"] = d.pop("_class")
-            mm = DkubeModelmonitor(name=config["name"])
+            mm = DkubeModelmonitor(deployemnt_id=id)
             mm.__dict__["modelmonitor"].__dict__["_schema"] = config["schema"]
-            return self.modelmonitor_update(id, mm)
+            return self.modelmonitor_update(mm)
+        except TypeError:
+            print("Schema is Null")
+            return
+
+    def modelmonitor_schema_to_df(
+        self,
+        id,
+    ):
+        """
+        Method to get schema of the modelmonitor as dataframe
+
+        *Available in DKube Release: 3.0*
+
+        *Inputs*
+
+            id
+                Modelmonitor Id
+            
+        Outputs*
+            a dataframe object of schema
+        """
+        try:
+            config = self.modelmonitor_get(id=id)
+            if config["input_data_type"] != "tabular":
+                raise (f"Schema is not available for {config['input_data_type']} data type")
+            schema = config["schema"].get("features")
+            if schema == None:
+                return None
+            existing_schema = pd.DataFrame(schema)
+            existing_schema = existing_schema.rename({"_class":"class"}, axis='columns')
+        except TypeError:
+            print("Schema is Null")
+            return
+        return existing_schema
+
+    def modelmonitor_update_schema_from_df(
+        self,
+        id,
+        schema_df: pd.DataFrame
+    ):
+        """
+        Method to get schema of the modelmonitor as dataframe
+
+        *Available in DKube Release: 3.0*
+
+        *Inputs*
+
+            id
+                Modelmonitor Id
+            schema_df
+                Pandas DataFrame having schema
+
+        Outputs*
+            a dictionary object with response status
+        """
+        try:
+            existing_schema = self.modelmonitor_schema_to_df(id)
+            existing_schema.set_index('label', inplace=True)
+            existing_schema.update(schema_df.set_index('label'))
+            existing_schema = existing_schema.reset_index()
+            new_schema = json.loads(existing_schema.to_json(orient="records"))
+            mm = DkubeModelmonitor(deployemnt_id=id)
+            mm.__dict__["modelmonitor"].__dict__["_schema"] = {"features": new_schema}
+            return self.modelmonitor_update(mm)
         except TypeError:
             print("Schema is Null")
             return
