@@ -612,11 +612,10 @@ class DkubeModelmonitor(object):
         
     def update_deployment_monitoring_details(
         self,
-        enabled=None,
+        enabled,
         frequency=1,
         cluster=None,
         source_type: SourceTypeDeployment = None,
-        collect_metrics=None,
     ):
         """
         This function updates the DKube deployment monitoring details. The following updates are supported:
@@ -635,8 +634,7 @@ class DkubeModelmonitor(object):
             self.modelmonitor.deployment_monitoring["cluster"] = cluster
         if source_type:
             self.modelmonitor.deployment_monitoring["source_type"] = source_type
-        if collect_metrics:
-            self.modelmonitor.deployment_monitoring["collect_metrics"] = collect_metrics
+        self.modelmonitor.deployment_monitoring["collect_metrics"] = True
 
     def update_deployment_metrics(
         self,
