@@ -25,6 +25,7 @@ from dkube.sdk.internal.dkube_api.api.modelmonitor_api import ModelmonitorApi
 from dkube.sdk.internal.dkube_api.api_client import ApiClient
 from dkube.sdk.internal.dkube_api.configuration import Configuration
 # import models into sdk package
+from dkube.sdk.internal.dkube_api.models.add_version_model import AddVersionModel
 from dkube.sdk.internal.dkube_api.models.affinity_model import AffinityModel
 from dkube.sdk.internal.dkube_api.models.api_error import ApiError
 from dkube.sdk.internal.dkube_api.models.api_response import ApiResponse
@@ -126,6 +127,7 @@ from dkube.sdk.internal.dkube_api.models.data5 import Data5
 from dkube.sdk.internal.dkube_api.models.data50 import Data50
 from dkube.sdk.internal.dkube_api.models.data51 import Data51
 from dkube.sdk.internal.dkube_api.models.data52 import Data52
+from dkube.sdk.internal.dkube_api.models.data53 import Data53
 from dkube.sdk.internal.dkube_api.models.data6 import Data6
 from dkube.sdk.internal.dkube_api.models.data7 import Data7
 from dkube.sdk.internal.dkube_api.models.data8 import Data8
@@ -317,6 +319,8 @@ from dkube.sdk.internal.dkube_api.models.json_form_clusters import JsonFormClust
 from dkube.sdk.internal.dkube_api.models.k8_s_volume_info import K8SVolumeInfo
 from dkube.sdk.internal.dkube_api.models.last_used_credentials import LastUsedCredentials
 from dkube.sdk.internal.dkube_api.models.last_used_credentials_inner import LastUsedCredentialsInner
+from dkube.sdk.internal.dkube_api.models.log_version_model import LogVersionModel
+from dkube.sdk.internal.dkube_api.models.log_version_model_datum import LogVersionModelDatum
 from dkube.sdk.internal.dkube_api.models.log_viewer import LogViewer
 from dkube.sdk.internal.dkube_api.models.metrics import Metrics
 from dkube.sdk.internal.dkube_api.models.metrics_inner import MetricsInner

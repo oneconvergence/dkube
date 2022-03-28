@@ -227,6 +227,127 @@ class DkubeApi(object):
             _request_timeout=params.get('_request_timeout'),
             collection_formats=collection_formats)
 
+    def add_datum_versions(self, user, _class, datum, data, **kwargs):  # noqa: E501
+        """API to add new versions to a datum.  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.add_datum_versions(user, _class, datum, data, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str user: (required)
+        :param str _class: (required)
+        :param str datum: (required)
+        :param Data53 data: (required)
+        :return: ApiResponse
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.add_datum_versions_with_http_info(user, _class, datum, data, **kwargs)  # noqa: E501
+        else:
+            (data) = self.add_datum_versions_with_http_info(user, _class, datum, data, **kwargs)  # noqa: E501
+            return data
+
+    def add_datum_versions_with_http_info(self, user, _class, datum, data, **kwargs):  # noqa: E501
+        """API to add new versions to a datum.  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.add_datum_versions_with_http_info(user, _class, datum, data, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str user: (required)
+        :param str _class: (required)
+        :param str datum: (required)
+        :param Data53 data: (required)
+        :return: ApiResponse
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['user', '_class', 'datum', 'data']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method add_datum_versions" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'user' is set
+        if ('user' not in params or
+                params['user'] is None):
+            raise ValueError("Missing the required parameter `user` when calling `add_datum_versions`")  # noqa: E501
+        # verify the required parameter '_class' is set
+        if ('_class' not in params or
+                params['_class'] is None):
+            raise ValueError("Missing the required parameter `_class` when calling `add_datum_versions`")  # noqa: E501
+        # verify the required parameter 'datum' is set
+        if ('datum' not in params or
+                params['datum'] is None):
+            raise ValueError("Missing the required parameter `datum` when calling `add_datum_versions`")  # noqa: E501
+        # verify the required parameter 'data' is set
+        if ('data' not in params or
+                params['data'] is None):
+            raise ValueError("Missing the required parameter `data` when calling `add_datum_versions`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'user' in params:
+            path_params['user'] = params['user']  # noqa: E501
+        if '_class' in params:
+            path_params['class'] = params['_class']  # noqa: E501
+        if 'datum' in params:
+            path_params['datum'] = params['datum']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        if 'data' in params:
+            body_params = params['data']
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/keyauth.api.v1+json', 'application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['d3apikey']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/users/{user}/datums/{class}/datum/{datum}/versions', 'POST',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='ApiResponse',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
     def add_version(self, user, _class, datum, **kwargs):  # noqa: E501
         """API to add version of a datum.  # noqa: E501
 
@@ -8830,6 +8951,127 @@ class DkubeApi(object):
             post_params=form_params,
             files=local_var_files,
             response_type='InlineResponse20039',  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=params.get('async_req'),
+            _return_http_data_only=params.get('_return_http_data_only'),
+            _preload_content=params.get('_preload_content', True),
+            _request_timeout=params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
+    def log_job_datum_version(self, user, _class, job, data, **kwargs):  # noqa: E501
+        """API to log a datum version against a job(input/output)  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.log_job_datum_version(user, _class, job, data, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str user: (required)
+        :param str _class: (required)
+        :param str job: (required)
+        :param LogVersionModel data: (required)
+        :return: ApiResponse
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        if kwargs.get('async_req'):
+            return self.log_job_datum_version_with_http_info(user, _class, job, data, **kwargs)  # noqa: E501
+        else:
+            (data) = self.log_job_datum_version_with_http_info(user, _class, job, data, **kwargs)  # noqa: E501
+            return data
+
+    def log_job_datum_version_with_http_info(self, user, _class, job, data, **kwargs):  # noqa: E501
+        """API to log a datum version against a job(input/output)  # noqa: E501
+
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.log_job_datum_version_with_http_info(user, _class, job, data, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool
+        :param str user: (required)
+        :param str _class: (required)
+        :param str job: (required)
+        :param LogVersionModel data: (required)
+        :return: ApiResponse
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        all_params = ['user', '_class', 'job', 'data']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        params = locals()
+        for key, val in six.iteritems(params['kwargs']):
+            if key not in all_params:
+                raise TypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method log_job_datum_version" % key
+                )
+            params[key] = val
+        del params['kwargs']
+        # verify the required parameter 'user' is set
+        if ('user' not in params or
+                params['user'] is None):
+            raise ValueError("Missing the required parameter `user` when calling `log_job_datum_version`")  # noqa: E501
+        # verify the required parameter '_class' is set
+        if ('_class' not in params or
+                params['_class'] is None):
+            raise ValueError("Missing the required parameter `_class` when calling `log_job_datum_version`")  # noqa: E501
+        # verify the required parameter 'job' is set
+        if ('job' not in params or
+                params['job'] is None):
+            raise ValueError("Missing the required parameter `job` when calling `log_job_datum_version`")  # noqa: E501
+        # verify the required parameter 'data' is set
+        if ('data' not in params or
+                params['data'] is None):
+            raise ValueError("Missing the required parameter `data` when calling `log_job_datum_version`")  # noqa: E501
+
+        collection_formats = {}
+
+        path_params = {}
+        if 'user' in params:
+            path_params['user'] = params['user']  # noqa: E501
+        if '_class' in params:
+            path_params['class'] = params['_class']  # noqa: E501
+        if 'job' in params:
+            path_params['job'] = params['job']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        if 'data' in params:
+            body_params = params['data']
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # HTTP header `Content-Type`
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/keyauth.api.v1+json', 'application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = ['d3apikey']  # noqa: E501
+
+        return self.api_client.call_api(
+            '/users/{user}/class/{class}/jobs/{job}/logversion', 'POST',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type='ApiResponse',  # noqa: E501
             auth_settings=auth_settings,
             async_req=params.get('async_req'),
             _return_http_data_only=params.get('_return_http_data_only'),
