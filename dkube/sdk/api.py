@@ -3202,30 +3202,31 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         return super().add_datum_versions(user, "model", model, versions)
-
-    def log_job_input_dataset_version(self, dataset, version, info=None, description=None, jobuuid=None):
+    def log_job_input_dataset_version(self, dataset_name, dataset_owner, version_name, version_info=None, version_desc=None, jobuuid=None):
         """
         Method to log a dataset version in job input.
         If given version of dataset is not present, a new version is created.
         Raises exception in case of job is not found or any other connection errors.
         *Inputs*
-            jobuuid
-                UUID of job of which the version has to be logged.
-
-            dataset
+            dataset_name
                 Name of the dataset.
-                It must be of the format "owner:dataset_name".
 
-            version
+            dataset_owner
+                Owner of the dataset.
+
+            version_name
                 Version name of dataset to be logged.
 
-            info
+            version_info
                 Version metadata or information.
                 Needed if the version is not preset for the dataset.
 
-            description
+            version_desc
                 Version description.
                 Needed if the version is not present for the dataset.
+
+            jobuuid
+                UUID of job of which the version has to be logged.
         """
         jobuuid = jobuuid or os.getenv("DKUBE_JOB_UUID", None)
         assert (jobuuid), "Job UUID must be provided."
@@ -3238,36 +3239,33 @@ class DkubeApi(ApiBase, FilesBase):
         assert(job_class != "inference"), "Unsupported job class {}".format(
             job_class)
 
-        assert(len(dataset.split(":")) ==
-               2), "Dataset name must be of the form owner:dataset_name"
+        return super().log_job_datum_version(job_owner, job_class, job_name, dataset_owner, "dataset", dataset_name, "input", version_name, version_info, version_desc)
 
-        dataset_owner, dataset_name = dataset.split(":")
-
-        return super().log_job_datum_version(job_owner, job_class, job_name, dataset_owner, "dataset", dataset_name, "input", version, info, description)
-
-    def log_job_input_model_version(self, model, version, info=None, description=None, jobuuid=None):
+    def log_job_input_model_version(self, model_name, model_owner, version_name, version_info=None, version_desc=None, jobuuid=None):
         """
         Method to log a model version in job input.
         If given version of model is not present, a new version is created.
         Raises exception in case of job is not found or any other connection errors.
         *Inputs*
-            jobuuid
-                UUID of job of which the version has to be logged.
-
-            model
+            model_name
                 Name of the model.
-                It must be of the format "owner:model_name".
 
-            version
+            model_owner
+                Owner of the model.
+
+            version_name
                 Version name of model to be logged.
 
-            info
+            version_info
                 Version metadata or information.
                 Needed if the version is not preset for the model.
 
-            description
+            version_desc
                 Version description.
                 Needed if the version is not present for the model.
+
+            jobuuid
+                UUID of job of which the version has to be logged.
         """
         jobuuid = jobuuid or os.getenv("DKUBE_JOB_UUID", None)
         assert (jobuuid), "Job UUID must be provided."
@@ -3280,36 +3278,33 @@ class DkubeApi(ApiBase, FilesBase):
         assert(job_class != "inference"), "Unsupported job class {}".format(
             job_class)
 
-        assert(len(model.split(":")) ==
-               2), "Model name must be of the form owner:model_name"
+        return super().log_job_datum_version(job_owner, job_class, job_name, model_owner, "model", model_name, "input", version_name, version_info, version_desc)
 
-        model_owner, model_name = model.split(":")
-
-        return super().log_job_datum_version(job_owner, job_class, job_name, model_owner, "model", model_name, "input", version, info, description)
-
-    def log_job_output_version(self, datum, version, info=None, description=None, jobuuid=None):
+    def log_job_output_dataset_version(self, dataset_name, dataset_owner, version_name, version_info=None, version_desc=None, jobuuid=None):
         """
-        Method to log an output datum version in job output.
-        If given version of datum is not present, a new version is created.
+        Method to log an output dataset version in job output.
+        If given version of dataset is not present, a new version is created.
         Raises exception in case of job is not found or any other connection errors.
         *Inputs*
+            dataset_name
+                Name of the output dataset.
+
+            dataset_owner
+                Owner of the output dataset.
+
+            version_name
+                Version of output dataset to be logged.
+
+            version_info
+                Version metadata or information.
+                Needed if the version is not preset already for the output dataset.
+
+            version_desc
+                Version description.
+                Needed if the version is not present already for the output dataset.
+
             jobuuid
                 UUID of job of which the version has to be logged.
-
-            datum
-                Name of the output datum.
-                It must be of the format "owner:datum_name".
-
-            version
-                Version of datum to be logged.
-
-            info
-                Version metadata or information.
-                Needed if the version is not preset already for the output datum.
-
-            description
-                Version description.
-                Needed if the version is not present already for the output datum.
         """
         jobuuid = jobuuid or os.getenv("DKUBE_JOB_UUID", None)
         assert (jobuuid), "Job UUID must be provided."
@@ -3319,16 +3314,46 @@ class DkubeApi(ApiBase, FilesBase):
         job_class = job["parameters"]["_class"]
         job_owner = job["parameters"]["generated"]["user"]
 
-        assert(job_class != "notebook" and job_class !=
-               "inference"), "Unsupported job class {}".format(job_class)
+        assert(job_class not in ["training", "notebook", "inference"]
+               ), "Unsupported job class {}".format(job_class)
 
-        assert(len(datum.split(":")) ==
-               2), "Output datum name must be of the form owner:datum_name"
+        return super().log_job_datum_version(job_owner, job_class, job_name, dataset_owner, "dataset", dataset_name, "output", version_name, version_info, version_desc)
 
-        datum_owner, datum_name = datum.split(":")
+    def log_job_output_model_version(self, model_name, model_owner, version_name, version_info=None, version_desc=None, jobuuid=None):
+        """
+        Method to log an output model version in job output.
+        If given version of model is not present, a new version is created.
+        Raises exception in case of job is not found or any other connection errors.
+        *Inputs*
+            model_name
+                Name of the output model.
 
-        datum_class = "model"
-        if job_calss == "preprocessing":
-            datum_class = "dataset"
+            model_owner
+                Owner of the output model.
 
-        return super().log_job_datum_version(job_owner, job_class, job_name, datum_owner, datum_class, datum_name, "output", version, info, description)
+            version_name
+                Version of output model to be logged.
+
+            version_info
+                Version metadata or information.
+                Needed if the version is not preset already for the output model.
+
+            version_desc
+                Version description.
+                Needed if the version is not present already for the output model.
+
+            jobuuid
+                UUID of job of which the version has to be logged.
+        """
+        jobuuid = jobuuid or os.getenv("DKUBE_JOB_UUID", None)
+        assert (jobuuid), "Job UUID must be provided."
+
+        job = super().get_run_byuuid(jobuuid)
+        job_name = job["name"]
+        job_class = job["parameters"]["_class"]
+        job_owner = job["parameters"]["generated"]["user"]
+
+        assert(job_class not in ["preprocessing", "notebook",
+                                 "inference"]), "Unsupported job class {}".format(job_class)
+
+        return super().log_job_datum_version(job_owner, job_class, job_name, model_owner, "model", model_name, "output", version_name, version_info, version_desc)
