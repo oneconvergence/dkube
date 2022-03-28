@@ -227,12 +227,12 @@ class DkubeApi(object):
             _request_timeout=params.get('_request_timeout'),
             collection_formats=collection_formats)
 
-    def add_remote_datum_versions(self, user, _class, datum, data, **kwargs):  # noqa: E501
-        """API to add new versions to a remote datum.  # noqa: E501
+    def add_datum_versions(self, user, _class, datum, data, **kwargs):  # noqa: E501
+        """API to add new versions to a datum.  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.add_remote_datum_versions(user, _class, datum, data, async_req=True)
+        >>> thread = api.add_datum_versions(user, _class, datum, data, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
@@ -246,17 +246,17 @@ class DkubeApi(object):
         """
         kwargs['_return_http_data_only'] = True
         if kwargs.get('async_req'):
-            return self.add_remote_datum_versions_with_http_info(user, _class, datum, data, **kwargs)  # noqa: E501
+            return self.add_datum_versions_with_http_info(user, _class, datum, data, **kwargs)  # noqa: E501
         else:
-            (data) = self.add_remote_datum_versions_with_http_info(user, _class, datum, data, **kwargs)  # noqa: E501
+            (data) = self.add_datum_versions_with_http_info(user, _class, datum, data, **kwargs)  # noqa: E501
             return data
 
-    def add_remote_datum_versions_with_http_info(self, user, _class, datum, data, **kwargs):  # noqa: E501
-        """API to add new versions to a remote datum.  # noqa: E501
+    def add_datum_versions_with_http_info(self, user, _class, datum, data, **kwargs):  # noqa: E501
+        """API to add new versions to a datum.  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.add_remote_datum_versions_with_http_info(user, _class, datum, data, async_req=True)
+        >>> thread = api.add_datum_versions_with_http_info(user, _class, datum, data, async_req=True)
         >>> result = thread.get()
 
         :param async_req bool
@@ -280,26 +280,26 @@ class DkubeApi(object):
             if key not in all_params:
                 raise TypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method add_remote_datum_versions" % key
+                    " to method add_datum_versions" % key
                 )
             params[key] = val
         del params['kwargs']
         # verify the required parameter 'user' is set
         if ('user' not in params or
                 params['user'] is None):
-            raise ValueError("Missing the required parameter `user` when calling `add_remote_datum_versions`")  # noqa: E501
+            raise ValueError("Missing the required parameter `user` when calling `add_datum_versions`")  # noqa: E501
         # verify the required parameter '_class' is set
         if ('_class' not in params or
                 params['_class'] is None):
-            raise ValueError("Missing the required parameter `_class` when calling `add_remote_datum_versions`")  # noqa: E501
+            raise ValueError("Missing the required parameter `_class` when calling `add_datum_versions`")  # noqa: E501
         # verify the required parameter 'datum' is set
         if ('datum' not in params or
                 params['datum'] is None):
-            raise ValueError("Missing the required parameter `datum` when calling `add_remote_datum_versions`")  # noqa: E501
+            raise ValueError("Missing the required parameter `datum` when calling `add_datum_versions`")  # noqa: E501
         # verify the required parameter 'data' is set
         if ('data' not in params or
                 params['data'] is None):
-            raise ValueError("Missing the required parameter `data` when calling `add_remote_datum_versions`")  # noqa: E501
+            raise ValueError("Missing the required parameter `data` when calling `add_datum_versions`")  # noqa: E501
 
         collection_formats = {}
 

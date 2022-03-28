@@ -25,6 +25,7 @@ from dkube.sdk.internal.dkube_api.api.modelmonitor_api import ModelmonitorApi
 from dkube.sdk.internal.dkube_api.api_client import ApiClient
 from dkube.sdk.internal.dkube_api.configuration import Configuration
 # import models into sdk package
+from dkube.sdk.internal.dkube_api.models.add_version_model import AddVersionModel
 from dkube.sdk.internal.dkube_api.models.affinity_model import AffinityModel
 from dkube.sdk.internal.dkube_api.models.api_error import ApiError
 from dkube.sdk.internal.dkube_api.models.api_response import ApiResponse
@@ -407,7 +408,6 @@ from dkube.sdk.internal.dkube_api.models.redshift_access_info import RedshiftAcc
 from dkube.sdk.internal.dkube_api.models.registry import Registry
 from dkube.sdk.internal.dkube_api.models.released_model_item import ReleasedModelItem
 from dkube.sdk.internal.dkube_api.models.released_models import ReleasedModels
-from dkube.sdk.internal.dkube_api.models.remote_datum_version_model import RemoteDatumVersionModel
 from dkube.sdk.internal.dkube_api.models.repo_gcs_access_info import RepoGCSAccessInfo
 from dkube.sdk.internal.dkube_api.models.repo_gcs_access_info_secret import RepoGCSAccessInfoSecret
 from dkube.sdk.internal.dkube_api.models.repo_model import RepoModel

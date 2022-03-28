@@ -32,7 +32,7 @@ class LogVersionModel(object):
     """
     swagger_types = {
         'datum': 'LogVersionModelDatum',
-        'version': 'RemoteDatumVersionModel'
+        'version': 'AddVersionModel'
     }
 
     attribute_map = {
@@ -79,7 +79,7 @@ class LogVersionModel(object):
 
 
         :return: The version of this LogVersionModel.  # noqa: E501
-        :rtype: RemoteDatumVersionModel
+        :rtype: AddVersionModel
         """
         return self._version
 
@@ -89,7 +89,7 @@ class LogVersionModel(object):
 
 
         :param version: The version of this LogVersionModel.  # noqa: E501
-        :type: RemoteDatumVersionModel
+        :type: AddVersionModel
         """
 
         self._version = version

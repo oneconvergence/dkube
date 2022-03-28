@@ -31,7 +31,7 @@ class Data53(object):
                             and the value is json key in definition.
     """
     swagger_types = {
-        'versions': 'list[RemoteDatumVersionModel]'
+        'versions': 'list[AddVersionModel]'
     }
 
     attribute_map = {
@@ -53,7 +53,7 @@ class Data53(object):
         List of versions to add  # noqa: E501
 
         :return: The versions of this Data53.  # noqa: E501
-        :rtype: list[RemoteDatumVersionModel]
+        :rtype: list[AddVersionModel]
         """
         return self._versions
 
@@ -64,7 +64,7 @@ class Data53(object):
         List of versions to add  # noqa: E501
 
         :param versions: The versions of this Data53.  # noqa: E501
-        :type: list[RemoteDatumVersionModel]
+        :type: list[AddVersionModel]
         """
         if versions is None:
             raise ValueError("Invalid value for `versions`, must not be `None`")  # noqa: E501
