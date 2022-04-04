@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import json
+import operator
 import sys
 import time
 from enum import Enum
@@ -690,6 +691,7 @@ class DkubeModelmonitoralert(object):
         threshold=None,
         percent_threshold=None,
         breach_threshold=None,
+        op=operator.lt,
         emails=None,
         action_type="email",
     ):
@@ -701,10 +703,22 @@ class DkubeModelmonitoralert(object):
             feature,
             metric,
             threshold,
+            op,
             percent_threshold,
             breach_threshold,
             emails
         """
+        if not feature and not metric:
+            raise ValueError("Either feature name or metric name is required")
+        if not threshold:
+            raise ValueError("threshold value not added")
+        ops = {operator.gt: ">", operator.lt: '<', operator.ge: '>=', operator.le: '<='}
+        try:
+            alert_op = ops[op]
+        except Exception:
+            raise ValueError(f"{op} not supported, only operator.gt, operator.lt, operator.ge and operator.le are allowed")
+        if (alert_class == "feature_drift") and (alert_op != "<"):
+            raise ValueError("feature drift can only have op operator.lt")
         if tags:
             self.tags = tags
         self.name = self.name
@@ -716,7 +730,7 @@ class DkubeModelmonitoralert(object):
                 "id": None,
                 "feature": feature,
                 "metric": metric,
-                "op": ">",
+                "op": alert_op,
                 "threshold": threshold,
                 "percent_threshold": percent_threshold,
             }
