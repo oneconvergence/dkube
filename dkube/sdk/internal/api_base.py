@@ -475,16 +475,16 @@ class ApiBase(object):
         response = self._mmapi.modelmonitor_update(modelmonitor,data)
         return response.to_dict()
 
-    def get_registry(self, data):
-        response = self._api.registry_get(data)
+    def get_registry(self, project):
+        response = self._api.registry_get(project)
         return response.to_dict()
 
     def update_registry(self, update_data):
         response = self._api.registry_put(update_data)
         return response
 
-    def delete_registry(self, delete_data):
-        response = self._api.registry_delete(delete_data)
+    def delete_registry(self, project):
+        response = self._api.registry_delete(project)
         return response
 
     def validate_project_input(self, validate_data):

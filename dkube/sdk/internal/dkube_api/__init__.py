@@ -35,13 +35,6 @@ from dkube.sdk.internal.dkube_api.models.auth_model_keycloak import AuthModelKey
 from dkube.sdk.internal.dkube_api.models.auth_model_ldap import AuthModelLdap
 from dkube.sdk.internal.dkube_api.models.auth_model_ldap_advanced import AuthModelLdapAdvanced
 from dkube.sdk.internal.dkube_api.models.auth_model_local import AuthModelLocal
-from dkube.sdk.internal.dkube_api.models.body import Body
-from dkube.sdk.internal.dkube_api.models.body1 import Body1
-from dkube.sdk.internal.dkube_api.models.body2 import Body2
-from dkube.sdk.internal.dkube_api.models.body3 import Body3
-from dkube.sdk.internal.dkube_api.models.body4 import Body4
-from dkube.sdk.internal.dkube_api.models.body5 import Body5
-from dkube.sdk.internal.dkube_api.models.body6 import Body6
 from dkube.sdk.internal.dkube_api.models.cicd_status_model import CICDStatusModel
 from dkube.sdk.internal.dkube_api.models.capabilities_model import CapabilitiesModel
 from dkube.sdk.internal.dkube_api.models.cert_file_model import CertFileModel

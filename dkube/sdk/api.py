@@ -3012,8 +3012,7 @@ class DkubeApi(ApiBase, FilesBase):
         Output*
             a dictionary object
         """
-        reg_data = {"project": project}
-        resp = super().get_registry(reg_data)
+        resp = super().get_registry(project)
         return resp
 
     def update_registry(self, update_data):
@@ -3043,8 +3042,7 @@ class DkubeApi(ApiBase, FilesBase):
             project
                 Name of the feast project
         """
-        del_data = {"project": project}
-        return super().delete_registry(del_data)
+        return super().delete_registry(project)
 
     def validate_project_changes(self, infra_update):
         """
