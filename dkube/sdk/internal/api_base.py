@@ -3,8 +3,8 @@ import time
 from pprint import pprint
 
 from dkube.sdk.internal import dkube_api
-from dkube.sdk.internal.dkube_api.models import *
 from dkube.sdk.internal.dkube_api.api import dkube_operator_exclusive_api
+from dkube.sdk.internal.dkube_api.models import *
 from dkube.sdk.internal.dkube_api.models.feature_set_commit_def import \
     FeatureSetCommitDef
 from dkube.sdk.internal.dkube_api.models.feature_set_commit_def_job import \
@@ -404,6 +404,10 @@ class ApiBase(object):
         api = dkube_api.DkubeOperatorExclusiveApi(
             dkube_api.ApiClient(configuration))
         response = api.upsert_smtp_artifact(data)
+        return response.to_dict()
+
+    def get_cloudevents_logstore_creds(self):
+        response = self._api.get_cloudevents_logstore_creds()
         return response.to_dict()
 
    #### MODEL MONITOR APIS ###

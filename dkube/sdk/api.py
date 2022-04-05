@@ -3307,3 +3307,15 @@ class DkubeApi(ApiBase, FilesBase):
             data={"deployment_ids": ids}, archive="false"
         )
         return response
+
+    def get_cloudevents_logstore_creds(self):
+        """
+        Method to get the credentials for cloudevents logs bucket.
+        Raises exception on any connection errors.
+
+        Outputs*
+            a dictionary object with response status
+
+        """
+        
+        return super().get_cloudevents_logstore_creds()
