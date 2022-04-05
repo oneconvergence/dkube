@@ -717,8 +717,8 @@ class DkubeModelmonitoralert(object):
             alert_op = ops[op]
         except Exception:
             raise ValueError(f"{op} not supported, only operator.gt, operator.lt, operator.ge and operator.le are allowed")
-        if (alert_class == "feature_drift") and (alert_op != "<"):
-            raise ValueError("feature drift can only have op operator.lt")
+        if (alert_class == "feature_drift") and (alert_op not in ("<", "<=")):
+            raise ValueError("feature drift can only have op operator.lt or operator.le")
         if tags:
             self.tags = tags
         self.name = self.name
