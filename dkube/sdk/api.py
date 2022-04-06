@@ -3317,5 +3317,9 @@ class DkubeApi(ApiBase, FilesBase):
             a dictionary object with response status
 
         """
-        
-        return super().get_cloudevents_logstore_creds()
+        response = super().get_cloudevents_logstore_creds()
+        if response["response"]["code"] == 200:
+            return response["data"]
+        else:
+            raise ValueError(response["response"]["message"])
+
