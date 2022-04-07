@@ -76,7 +76,7 @@ def job(
     tags,
     output,
 ):
-    name = generate(obj["name"])
+    name = obj["runid"]
     tags = json.loads(tags)
     tags.extend(
         [
