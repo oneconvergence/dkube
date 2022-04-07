@@ -1,9 +1,11 @@
 import json
 from enum import Enum
 from pprint import pprint
-from dkube.sdk.internal.dkube_api.models.cluster import Cluster
+
 from dkube.sdk.internal.dkube_api.api import dkube_operator_exclusive_api
-from dkube.sdk.internal.dkube_api.models.cluster_access_keys_def import ClusterAccessKeysDef
+from dkube.sdk.internal.dkube_api.models.cluster import Cluster
+from dkube.sdk.internal.dkube_api.models.cluster_access_keys_def import \
+    ClusterAccessKeysDef
 
 from .util import *
 
@@ -133,7 +135,7 @@ class DkubeCluster(object):
         """
         Method to update the authentication type
         """
-        self.cluster.auth_type = None
+        self.cluster.auth_type = auth_type
 
     def update_jwt_details(self, jwt_token=None, jwt_signing_key=None, jwt_token_type: JwtTokenType = None):
         """
@@ -167,7 +169,6 @@ class DkubeCluster(object):
         
     def update_region(self, region=None):
         """
-        Method to update the region 
+        Method to update the region
         """
-        self.cluster.access_keys.region = region     
-   
+        self.cluster.access_keys.region = region
