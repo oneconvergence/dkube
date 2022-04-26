@@ -2874,7 +2874,7 @@ class DkubeApi(ApiBase, FilesBase):
                         feature["_class"] = schema_class
                     if schema_type:
                         feature["type"] = schema_type
-                    if selected:
+                    if selected is not None:
                         feature["selected"] = selected
                     found = True
             if not found:
