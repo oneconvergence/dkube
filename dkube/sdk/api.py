@@ -2667,9 +2667,52 @@ class DkubeApi(ApiBase, FilesBase):
         """
 
         alert_dict = json.loads(alert_data.to_JSON())
+        for each_condition in alert_dict["conditions"]:
+            if each_condition["threshold"] is None:
+                raise ValueError("threshold value is not provided for one or more condition")
         alert_dict["class"] = alert_dict.pop("_class")
         response = super().modelmonitor_addalert(id, {"data": [alert_dict]})
         return response
+
+    def modelmonitor_update_alert(self, id, alert, alert_id):
+        """
+        Method to update the modelmonitor alert
+
+        *Available in DKube Release: 3.0*
+
+        *Inputs*
+
+            id
+                Modelmonitor Id
+
+            data
+                Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitoralert` class.
+                Please see the :bash:`Resources` section for details on this class.
+
+            alert_id
+                ID of the alert you want to update in the modelmonitor
+
+        Outputs*
+            a dictionary object with response status
+
+        """
+        current_alert = None
+        if alert_id is None:
+            raise ValueError("alert_id is recieved as None")
+        existing_alerts = self.modelmonitor_get_alerts(id)
+        for each_alert in existing_alerts:
+            if each_alert["id"] == alert_id:
+                current_alert = each_alert
+        alert_dict = json.loads(alert.to_JSON())
+        for each_condition in alert_dict.get('conditions'):
+            if not each_condition["threshold"]:
+                alert_dict["conditions"] = current_alert["conditions"]
+        if not alert_dict["enabled"]:
+            alert_dict["enabled"] = current_alert["enabled"]
+        if not alert_dict["emails"]:
+            alert_dict["emails"] = current_alert["alert_action"]
+        alert_dict["class"] = alert_dict.pop("_class")
+        return super().update_modelmonitor_alert(id, alert_id, alert_dict)
 
     def modelmonitor_archive(self, id):
         """
@@ -2743,32 +2786,6 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         return super().modelmonitor_state(id, "stop")
-
-    def modelmonitor_update_alert(self, id, alert, alert_id):
-        """
-        Method to update the modelmonitor alert
-
-        *Available in DKube Release: 3.0*
-
-        *Inputs*
-
-            id
-                Modelmonitor Id
-
-            data
-                Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitoralert` class.
-                Please see the :bash:`Resources` section for details on this class.
-
-            alert_id
-                ID of the alert you want to update in the modelmonitor
-
-        Outputs*
-            a dictionary object with response status
-
-        """
-        alert_dict = json.loads(alert.to_JSON())
-        alert_dict["class"] = alert_dict.pop("_class")
-        return super().update_modelmonitor_alert(id, alert_id, alert_dict)
 
     def modelmonitor_update(
         self, config: DkubeModelmonitor, wait_for_completion=True

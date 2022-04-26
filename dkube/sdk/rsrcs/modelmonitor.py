@@ -710,8 +710,6 @@ class DkubeModelmonitoralert(object):
         """
         if not feature and not metric:
             raise ValueError("Either feature name or metric name is required")
-        if threshold is None:
-            raise ValueError("threshold value not added")
         ops = {operator.gt: ">", operator.lt: '<', operator.ge: '>=', operator.le: '<='}
         try:
             alert_op = ops[op]
