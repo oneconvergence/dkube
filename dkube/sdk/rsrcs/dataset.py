@@ -10,7 +10,6 @@ from dkube.sdk.internal.dkube_api.models.datum_model_hostpath import \
     DatumModelHostpath
 from dkube.sdk.internal.dkube_api.models.datum_model_k8svolume import \
     DatumModelK8svolume
-from dkube.sdk.internal.dkube_api.models.sql_access_info import SQLAccessInfo
 from dkube.sdk.internal.dkube_api.models.gcs_access_info import GCSAccessInfo
 from dkube.sdk.internal.dkube_api.models.git_access_credentials import \
     GitAccessCredentials
@@ -22,6 +21,7 @@ from dkube.sdk.internal.dkube_api.models.repo_gcs_access_info_secret import \
     RepoGCSAccessInfoSecret
 from dkube.sdk.internal.dkube_api.models.s3_access_credentials import \
     S3AccessCredentials
+from dkube.sdk.internal.dkube_api.models.sql_access_info import SQLAccessInfo
 from dkube.sdk.internal.dkube_api.rest import ApiException
 
 from .util import *
@@ -429,4 +429,5 @@ class DkubeDataset(object):
         self.sql.database = database
         self.sql.odbc_connection_string = odbc_connection_string
         self.sql.jdbc_connection_string = jdbc_connection_string
+        self.datum.remote = True
                                                                      
