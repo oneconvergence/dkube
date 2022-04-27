@@ -2668,8 +2668,8 @@ class DkubeApi(ApiBase, FilesBase):
 
         alert_dict = json.loads(alert_data.to_JSON())
         for each_condition in alert_dict["conditions"]:
-            if each_condition["threshold"] is None:
-                raise ValueError("threshold value is not provided for one or more condition")
+            if (each_condition["threshold"] is None) and (each_condition["state"] is None):
+                raise ValueError("threshold or state is not set provided for one or more condition")
         alert_dict["class"] = alert_dict.pop("_class")
         response = super().modelmonitor_addalert(id, {"data": [alert_dict]})
         return response
@@ -2705,7 +2705,7 @@ class DkubeApi(ApiBase, FilesBase):
                 current_alert = each_alert
         alert_dict = json.loads(alert.to_JSON())
         for each_condition in alert_dict.get('conditions'):
-            if not each_condition["threshold"]:
+            if (not each_condition["threshold"] or (not each_condition["state"])):
                 alert_dict["conditions"] = current_alert["conditions"]
         if not alert_dict["enabled"]:
             alert_dict["enabled"] = current_alert["enabled"]
