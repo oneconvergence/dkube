@@ -5,6 +5,7 @@ import operator
 import sys
 import time
 from enum import Enum
+from logging import critical
 
 from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_cond_def import \
@@ -349,6 +350,24 @@ class AlertActionType(Enum):
         return self.value
 
 
+class ModelMonitorState(Enum):
+    """
+    This Enum class defines the states that the Dkube modelmonitor can belong to.
+
+    *Available in DKube Release: 3.x*
+
+    """
+
+    WarningState = "warning"
+    CriticalState = "critical"
+
+    def __repr__(self):
+        return self.value
+
+    def __str__(self):
+        return self.value
+
+
 class DkubeModelmonitor(object):
     """
     This class defines the DKube Modelmonitor with helper functions to set properties of modelmonitor.::
@@ -677,6 +696,7 @@ class DkubeModelmonitoralert(object):
         self.conditions = []
         self.alert_action = {}
         self.emails=None
+        self.state=None
 
     def to_JSON(self):
         return json.dumps(self, default=lambda o: o.__dict__)
@@ -689,7 +709,7 @@ class DkubeModelmonitoralert(object):
         feature=None,
         metric=None,
         threshold=None,
-        percent_threshold=None,
+        state: ModelMonitorState = None,
         breach_threshold=None,
         op=operator.lt,
         emails=None,
@@ -704,14 +724,12 @@ class DkubeModelmonitoralert(object):
             metric,
             threshold,
             op,
-            percent_threshold,
+            state,
             breach_threshold,
             emails
         """
         if not feature and not metric:
             raise ValueError("Either feature name or metric name is required")
-        if threshold is None:
-            raise ValueError("threshold value not added")
         ops = {operator.gt: ">", operator.lt: '<', operator.ge: '>=', operator.le: '<='}
         try:
             alert_op = ops[op]
@@ -732,7 +750,7 @@ class DkubeModelmonitoralert(object):
                 "metric": metric,
                 "op": alert_op,
                 "threshold": threshold,
-                "percent_threshold": percent_threshold,
+                "state": state,
             }
         )
        

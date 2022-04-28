@@ -50,7 +50,6 @@ class AuthType(Enum):
     """
 
     jwt = "jwt"
-    roledelegation = "role_delegation"
     accesskeys = "access_keys"
     none = "none"
 
@@ -85,7 +84,7 @@ class DkubeCluster(object):
 
     def __init__(self, name=generate("dkube_cluster"), description="", tags=None):
         self.cluster = Cluster(name=None, kind=None, _class=None, url=None, ca=None, version=None, auth_type=None, jwt_token_type=None, jwt_token=None,
-                               jwt_signing_key=None, cluster_user=None, role_delegation=None, access_keys=None, tags=None, description=None, plugin=None)
+                               jwt_signing_key=None, cluster_user=None, access_keys=None, tags=None, description=None, plugin=None)
 
         self.update_basic(name, description, tags)
 
