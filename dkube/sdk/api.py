@@ -2665,11 +2665,20 @@ class DkubeApi(ApiBase, FilesBase):
             a dictionary object with response status
 
         """
+        mm = self.modelmonitor_get(id)
+        if (mm["input_data_type"] == "image") and (alert_data._class == "feature_drift"):
+            if len(alert_data.conditions) > 1:
+                raise ValueError("Data Drift alert for image data type connot have more than one conditions")
+            alert_data.conditions[0]["feature"] = "image"
+            alert_data.conditions[0]["metric"] = None    
+            alert_data.conditions[0]["op"] = "<"
 
         alert_dict = json.loads(alert_data.to_JSON())
         for each_condition in alert_dict["conditions"]:
             if (each_condition["threshold"] is None) and (each_condition["state"] is None):
-                raise ValueError("threshold or state is not set for one or more condition")
+                raise ValueError(f"threshold or state is not set for condition {each_condition}")
+            if (each_condition["feature"] is None) and (each_condition["metric"] is None):
+                raise ValueError(f"feature or metric name is not set for condition {each_condition}")
         alert_dict["class"] = alert_dict.pop("_class")
         response = super().modelmonitor_addalert(id, {"data": [alert_dict]})
         return response

@@ -701,7 +701,7 @@ class DkubeModelmonitoralert(object):
     def to_JSON(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
-    def update_alert(
+    def add_alert_condition(
         self,
         alert_class: AlertClass = "feature_drift",
         enabled=None,
@@ -728,8 +728,6 @@ class DkubeModelmonitoralert(object):
             breach_threshold,
             emails
         """
-        if not feature and not metric:
-            raise ValueError("Either feature name or metric name is required")
         ops = {operator.gt: ">", operator.lt: '<', operator.ge: '>=', operator.le: '<='}
         try:
             alert_op = ops[op]
@@ -753,9 +751,9 @@ class DkubeModelmonitoralert(object):
                 "state": state,
             }
         )
-       
         if breach_threshold:
             self.alert_action["breach_threshold"] = breach_threshold
         if emails:
             self.alert_action["emails"] = emails
-            
+
+    update_alert = add_alert_condition
