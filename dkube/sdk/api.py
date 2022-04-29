@@ -2670,7 +2670,8 @@ class DkubeApi(ApiBase, FilesBase):
             if len(alert_data.conditions) > 1:
                 raise ValueError("Data Drift alert for image data type connot have more than one conditions")
             alert_data.conditions[0]["feature"] = "image"
-            alert_data.conditions[0]["metric"] = None            
+            alert_data.conditions[0]["metric"] = None    
+            alert_data.conditions[0]["op"] = "<"
 
         alert_dict = json.loads(alert_data.to_JSON())
         for each_condition in alert_dict["conditions"]:
