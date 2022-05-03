@@ -2733,7 +2733,7 @@ class DkubeApi(ApiBase, FilesBase):
         alert_dict["conditions"] = current_alert["conditions"]
         if not alert_dict["enabled"]:
             alert_dict["enabled"] = current_alert["enabled"]
-        if not alert_dict["emails"]:
+        if not alert_dict["alert_action"].get("emails"):
             alert_dict["emails"] = current_alert["alert_action"]
         alert_dict["class"] = alert_dict.pop("_class")
         return super().update_modelmonitor_alert(id, alert_id, alert_dict)

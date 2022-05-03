@@ -731,7 +731,7 @@ class DkubeModelmonitoralert(object):
             breach_threshold,
             emails
         """
-        ops = {operator.gt: ">", operator.lt: '<', operator.ge: '>=', operator.le: '<='}
+        ops = {operator.gt: ">", operator.lt: '<', operator.ge: '>=', operator.le: '<=', None: None}
         try:
             alert_op = ops[op]
         except Exception:
