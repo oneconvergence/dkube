@@ -6,7 +6,6 @@ import sys
 import time
 from enum import Enum
 from logging import critical
-from tkinter.messagebox import NO
 
 from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_cond_def import \
