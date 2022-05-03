@@ -2676,6 +2676,8 @@ class DkubeApi(ApiBase, FilesBase):
         alert_dict = json.loads(alert_data.to_JSON())
         alert_class = alert_dict["_class"]
         for each_condition in alert_dict["conditions"]:
+            if each_condition["op"] is None:
+                raise ValueError(f"operator is none for condition {each_condition}")
             if (alert_class == "feature_drift") and (each_condition["op"] not in ("<", "<=")):
                 raise ValueError("feature drift can only have op operator.lt or operator.le")
         alert_dict["class"] = alert_dict.pop("_class")
