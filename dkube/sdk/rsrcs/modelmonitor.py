@@ -684,7 +684,8 @@ class DkubeModelmonitoralert(object):
     This class defines the DKube Modelmonitor alert with helper functions to set properties of modelmonitor alert.::
         from dkube.sdk import *
         mm = DkubeModelmonitoralert(name="mm-alert")
-        Where first argument is the name of the alert in the modelmonitor .
+        Where the arguments are .
+        alert_class, enabled, tags, emails
     *Available in DKube Release: 3.x*
     """
 
@@ -720,16 +721,12 @@ class DkubeModelmonitoralert(object):
     ):
         """
         This function updates the alert in the model monitor. The following updates are supported.
-            alert_class,
-            enabled,
-            tags,
             feature,
             metric,
             threshold,
             op,
             state,
             breach_threshold,
-            emails
         """
         ops = {operator.gt: ">", operator.lt: '<', operator.ge: '>=', operator.le: '<=', None: None}
         try:
