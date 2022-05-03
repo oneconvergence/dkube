@@ -6,6 +6,7 @@ import sys
 import time
 from enum import Enum
 from logging import critical
+from tkinter.messagebox import NO
 
 from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_cond_def import \
@@ -687,33 +688,35 @@ class DkubeModelmonitoralert(object):
     *Available in DKube Release: 3.x*
     """
 
-    def __init__(self, name="mm-alert", tags=[]):
+    def __init__(self, name="mm-alert",
+                 alert_class: AlertClass = "feature_drift",
+                 enabled=None,
+                 emails=None,
+                 action_type="email",
+                 tags=[]
+                 ):
         self.id = None
-        self._class = None
-        self.enabled = None
+        self._class = alert_class
+        self.enabled = enabled
         self.name = name
         self.tags = tags
         self.conditions = []
         self.alert_action = {}
-        self.emails=None
-        self.state=None
+        if emails:
+            self.alert_action["emails"] = emails
+        self.alert_action["action_type"] = action_type
 
     def to_JSON(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
     def add_alert_condition(
         self,
-        alert_class: AlertClass = "feature_drift",
-        enabled=None,
-        tags=None,
         feature=None,
         metric=None,
         threshold=None,
         state: ModelMonitorState = None,
         breach_threshold=None,
-        op=operator.lt,
-        emails=None,
-        action_type="email",
+        op=None,
     ):
         """
         This function updates the alert in the model monitor. The following updates are supported.
@@ -733,14 +736,15 @@ class DkubeModelmonitoralert(object):
             alert_op = ops[op]
         except Exception:
             raise ValueError(f"{op} not supported, only operator.gt, operator.lt, operator.ge and operator.le are allowed")
-        if (alert_class == "feature_drift") and (alert_op not in ("<", "<=")):
-            raise ValueError("feature drift can only have op operator.lt or operator.le")
-        if tags:
-            self.tags = tags
+        if (feature is None) and (metric is None):
+            raise ValueError("Both feature and metric can not be none, one is required")
+        if (feature is not None) and (metric is not None):
+            raise ValueError("Both feature and metric can not passed, only one can be passed")
+        if (threshold is None) and (state is None):
+            raise ValueError("Both threshold and state can not be none, one is required")
+        if (threshold is not None) and (state is not None):
+            raise ValueError("Both threshold and state can not be passed, only one can be passed")
         self.name = self.name
-        self._class = alert_class
-        self.enabled = enabled
-        self.alert_action["action_type"] = "email"
         self.conditions.append(
             {
                 "id": None,
@@ -753,7 +757,5 @@ class DkubeModelmonitoralert(object):
         )
         if breach_threshold:
             self.alert_action["breach_threshold"] = breach_threshold
-        if emails:
-            self.alert_action["emails"] = emails
 
     update_alert = add_alert_condition

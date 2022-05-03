@@ -2674,11 +2674,10 @@ class DkubeApi(ApiBase, FilesBase):
             alert_data.conditions[0]["op"] = "<"
 
         alert_dict = json.loads(alert_data.to_JSON())
+        alert_class = alert_dict["_class"]
         for each_condition in alert_dict["conditions"]:
-            if (each_condition["threshold"] is None) and (each_condition["state"] is None):
-                raise ValueError(f"threshold or state is not set for condition {each_condition}")
-            if (each_condition["feature"] is None) and (each_condition["metric"] is None):
-                raise ValueError(f"feature or metric name is not set for condition {each_condition}")
+            if (alert_class == "feature_drift") and (each_condition["op"] not in ("<", "<=")):
+                raise ValueError("feature drift can only have op operator.lt or operator.le")
         alert_dict["class"] = alert_dict.pop("_class")
         response = super().modelmonitor_addalert(id, {"data": [alert_dict]})
         return response
@@ -2706,16 +2705,32 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         current_alert = None
+        alert_class = None
+        alert_attr = lambda alert_class: "feature" if alert_class == "feature_drift" else "metric"
         if alert_id is None:
             raise ValueError("alert_id is recieved as None")
         existing_alerts = self.modelmonitor_get_alerts(id)
         for each_alert in existing_alerts:
             if each_alert["id"] == alert_id:
                 current_alert = each_alert
+                alert_class = each_alert["_class"]
+        alert_key = alert_attr(alert_class)
         alert_dict = json.loads(alert.to_JSON())
-        for each_condition in alert_dict.get('conditions'):
-            if (not each_condition["threshold"] or (not each_condition["state"])):
-                alert_dict["conditions"] = current_alert["conditions"]
+        for each_condition in alert_dict['conditions']:
+            cond_existing = False
+            for each_current_condition in current_alert["conditions"]:
+                if each_current_condition[alert_key] == each_condition[alert_key]:
+                    if each_condition["threshold"]:
+                        each_current_condition["threshold"] = each_condition["threshold"]
+                    if each_condition["state"]:
+                        each_current_condition["state"] = each_condition["state"]
+                    if each_condition["op"]:
+                        each_current_condition["op"] = each_condition["op"]
+                    cond_existing = True
+            if not cond_existing:
+                current_alert["conditions"].append(each_condition)
+        
+        alert_dict["conditions"] = current_alert["conditions"]
         if not alert_dict["enabled"]:
             alert_dict["enabled"] = current_alert["enabled"]
         if not alert_dict["emails"]:
