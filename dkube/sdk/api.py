@@ -2676,6 +2676,7 @@ class DkubeApi(ApiBase, FilesBase):
         alert_dict = json.loads(alert_data.to_JSON())
         alert_class = alert_dict["_class"]
         for each_condition in alert_dict["conditions"]:
+            
             if each_condition["state"] is None:
                 if each_condition["op"] is None:
                     raise ValueError(f"operator is none for condition {each_condition}")
@@ -2723,13 +2724,16 @@ class DkubeApi(ApiBase, FilesBase):
             cond_existing = False
             for each_current_condition in current_alert["conditions"]:
                 if each_current_condition[alert_key] == each_condition[alert_key]:
+                    cond_existing = True
+                    if len(each_condition) == 2: # delete condition will only have two items
+                        current_alert["conditions"].remove(each_current_condition)
+                        continue
                     if each_condition["threshold"]:
                         each_current_condition["threshold"] = each_condition["threshold"]
                     if each_condition["state"]:
                         each_current_condition["state"] = each_condition["state"]
                     if each_condition["op"]:
                         each_current_condition["op"] = each_condition["op"]
-                    cond_existing = True
             if not cond_existing:
                 current_alert["conditions"].append(each_condition)
         

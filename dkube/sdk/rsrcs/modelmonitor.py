@@ -679,7 +679,7 @@ class DkubeModelmonitor(object):
         }
 
 
-class DkubeModelmonitoralert(object):
+class DkubeModelmonitorAlert(object):
     """
     This class defines the DKube Modelmonitor alert with helper functions to set properties of modelmonitor alert.::
         from dkube.sdk import *
@@ -703,8 +703,6 @@ class DkubeModelmonitoralert(object):
         self.tags = tags
         self.conditions = []
         self.alert_action = {}
-        if emails:
-            self.alert_action["emails"] = emails
         self.alert_action["action_type"] = action_type
 
     def to_JSON(self):
@@ -720,7 +718,7 @@ class DkubeModelmonitoralert(object):
         op=None,
     ):
         """
-        This function updates the alert in the model monitor. The following updates are supported.
+        This function add the alert condition in the model monitor alert. The following updates are supported.
             feature,
             metric,
             threshold,
@@ -741,7 +739,6 @@ class DkubeModelmonitoralert(object):
             raise ValueError("Both threshold and state can not be none, one is required")
         if (threshold is not None) and (state is not None):
             raise ValueError("Both threshold and state can not be passed, only one can be passed")
-        self.name = self.name
         self.conditions.append(
             {
                 "id": None,
@@ -755,4 +752,28 @@ class DkubeModelmonitoralert(object):
         if breach_threshold:
             self.alert_action["breach_threshold"] = breach_threshold
 
+    def delete_alert_condition(
+        self,
+        feature=None,
+        metric=None,
+    ):
+        """
+        This function deletes the alert condition in the model monitor alert. The following updates are supported.
+            feature,
+            metric,
+        """
+        if (feature is None) and (metric is None):
+            raise ValueError("Both feature and metric can not be none, one is required")
+        if (feature is not None) and (metric is not None):
+            raise ValueError("Both feature and metric can not passed, only one can be passed")
+        self.conditions.append(
+            {
+                "feature": feature,
+                "metric": metric,
+            }
+        )
+
     update_alert = add_alert_condition
+
+    def update_emails(self, emails):
+        self.alert_action["emails"] = emails
