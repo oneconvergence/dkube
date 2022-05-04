@@ -2682,10 +2682,6 @@ class DkubeApi(ApiBase, FilesBase):
                     raise ValueError(f"operator is none for condition {each_condition}")
                 if (alert_class == "feature_drift") and (each_condition["op"] not in ("<", "<=")):
                     raise ValueError(f"feature drift can only have op operator.lt or operator.le, condition {each_condition}")
-                if (each_condition["feature"] is None) and (each_condition["metric"] is None):
-                    raise ValueError(f"Both feature and metric can not be none, one is required, condition {each_condition}")
-                if (each_condition["feature"] is not None) and (each_condition["metric"] is not None):
-                    raise ValueError(f"Both feature and metric can not passed, only one can be passed, condition {each_condition}")
                 if (each_condition["threshold"] is None) and (each_condition["state"] is None):
                     raise ValueError(f"Both threshold and state can not be none, one is required, condition {each_condition}")
                 if (each_condition["threshold"] is not None) and (each_condition["state"] is not None):

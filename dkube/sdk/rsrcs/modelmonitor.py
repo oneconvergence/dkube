@@ -730,6 +730,10 @@ class DkubeModelmonitorAlert(object):
             alert_op = ops[op]
         except Exception:
             raise ValueError(f"{op} not supported, only operator.gt, operator.lt, operator.ge and operator.le are allowed")
+        if (feature is None) and (metric is None):
+            raise ValueError("Both feature and metric can not be none, one is required")
+        if (feature is not None) and (metric is not None):
+            raise ValueError("Both feature and metric can not passed, only one can be passed")
         self.conditions.append(
             {
                 "id": None,
