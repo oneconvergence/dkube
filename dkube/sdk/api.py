@@ -2726,26 +2726,32 @@ class DkubeApi(ApiBase, FilesBase):
         alert_dict = json.loads(alert.to_JSON())
         for each_condition in alert_dict['conditions']:
             cond_existing = False
+            action = each_condition.pop("action")
             for each_current_condition in current_alert["conditions"]:
                 if each_current_condition[alert_key] == each_condition[alert_key]:
-                    cond_existing = True
-                    if len(each_condition) == 2: # delete condition will only have two items
+                    if action == "add":
+                        raise ValueError("Alert condition already alert")
+                    elif action == "delete":
                         current_alert["conditions"].remove(each_current_condition)
-                        continue
-                    if each_condition["threshold"]:
-                        each_current_condition["threshold"] = each_condition["threshold"]
-                    if each_condition["state"]:
-                        each_current_condition["state"] = each_condition["state"]
-                    if each_condition["op"]:
-                        each_current_condition["op"] = each_condition["op"]
-            if not cond_existing:
+                    else:
+                        if each_condition["threshold"]:
+                            each_current_condition["threshold"] = each_condition["threshold"]
+                        if each_condition["state"]:
+                            each_current_condition["state"] = each_condition["state"]
+                        if each_condition["op"]:
+                            each_current_condition["op"] = each_condition["op"]
+            if (not cond_existing) and (action == "add"):
                 current_alert["conditions"].append(each_condition)
+            else:
+                raise ValueError(f"alert condition {each_condition} not found in existing conditions")
         
         alert_dict["conditions"] = current_alert["conditions"]
         if not alert_dict["enabled"]:
             alert_dict["enabled"] = current_alert["enabled"]
         if not alert_dict["alert_action"].get("emails"):
             alert_dict["emails"] = current_alert["alert_action"]
+        if not alert_dict["alert_action"].get("breach_threshold"):
+            alert_dict["breach_threshold"] = current_alert["breach_threshold"]
         alert_dict["class"] = alert_dict.pop("_class")
         return super().update_modelmonitor_alert(id, alert_id, alert_dict)
 

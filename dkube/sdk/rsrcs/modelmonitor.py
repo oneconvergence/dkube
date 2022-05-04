@@ -713,7 +713,6 @@ class DkubeModelmonitorAlert(object):
         metric=None,
         threshold=None,
         state: ModelMonitorState = None,
-        breach_threshold=None,
         op=None,
     ):
         """
@@ -742,10 +741,47 @@ class DkubeModelmonitorAlert(object):
                 "op": alert_op,
                 "threshold": threshold,
                 "state": state,
+                "action": "add",
             }
         )
-        if breach_threshold:
-            self.alert_action["breach_threshold"] = breach_threshold
+
+    def update_alert_condition(
+        self,
+        feature=None,
+        metric=None,
+        threshold=None,
+        state: ModelMonitorState = None,
+        op=None,
+    ):
+        """
+        This function update the alert condition in the model monitor alert. The following updates are supported.
+            feature,
+            metric,
+            threshold,
+            op,
+            state,
+            breach_threshold,
+        """
+        ops = {operator.gt: ">", operator.lt: '<', operator.ge: '>=', operator.le: '<=', None: None}
+        try:
+            alert_op = ops[op]
+        except Exception:
+            raise ValueError(f"{op} not supported, only operator.gt, operator.lt, operator.ge and operator.le are allowed")
+        if (feature is None) and (metric is None):
+            raise ValueError("Both feature and metric can not be none, one is required")
+        if (feature is not None) and (metric is not None):
+            raise ValueError("Both feature and metric can not passed, only one can be passed")
+        self.conditions.append(
+            {
+                "id": None,
+                "feature": feature,
+                "metric": metric,
+                "op": alert_op,
+                "threshold": threshold,
+                "state": state,
+                "action": "update",
+            }
+        )
 
     def delete_alert_condition(
         self,
@@ -765,10 +801,28 @@ class DkubeModelmonitorAlert(object):
             {
                 "feature": feature,
                 "metric": metric,
+                "action": "delete",
             }
         )
 
     update_alert = add_alert_condition
 
-    def update_emails(self, emails):
+    def update_breach_incidents(
+        self,
+        breach_incidents
+    ):
+        """
+        This function update breach incidents of the model monitor alert. Input,
+            breach_incidents
+        """
+        self.alert_action["breach_threshold"] = breach_incidents
+
+    def update_emails(
+        self,
+        emails
+    ):
+        """
+        This function update emails of the model monitor alert. Input,
+            emails
+        """
         self.alert_action["emails"] = emails
