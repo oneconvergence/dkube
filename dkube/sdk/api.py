@@ -2714,7 +2714,6 @@ class DkubeApi(ApiBase, FilesBase):
         """
         current_alert = None
         alert_class = None
-        alert_attr = lambda alert_class: "feature" if alert_class == "feature_drift" else "metric"
         if alert_id is None:
             raise ValueError("alert_id is recieved as None")
         existing_alerts = self.modelmonitor_get_alerts(id)
@@ -2722,15 +2721,16 @@ class DkubeApi(ApiBase, FilesBase):
             if each_alert["id"] == alert_id:
                 current_alert = each_alert
                 alert_class = each_alert["_class"]
-        alert_key = alert_attr(alert_class)
+        alert_key = "feature" if alert_class == "feature_drift" else "metric"
         alert_dict = json.loads(alert.to_JSON())
         for each_condition in alert_dict['conditions']:
             cond_existing = False
             action = each_condition.pop("action")
             for each_current_condition in current_alert["conditions"]:
                 if each_current_condition[alert_key] == each_condition[alert_key]:
+                    cond_existing = True
                     if action == "add":
-                        raise ValueError(f"Alert condition {each_condition}already alert")
+                        raise ValueError(f"Alert for {alert_key} {each_condition[alert_key]} already exist")
                     elif action == "delete":
                         current_alert["conditions"].remove(each_current_condition)
                     else:
@@ -2742,8 +2742,8 @@ class DkubeApi(ApiBase, FilesBase):
                             each_current_condition["op"] = each_condition["op"]
             if (not cond_existing) and (action == "add"):
                 current_alert["conditions"].append(each_condition)
-            else:
-                raise ValueError(f"alert condition {each_condition} not found in existing conditions")
+            elif (not cond_existing) and (action == "update"):
+                raise ValueError(f"Alert for {alert_key} {each_condition[alert_key]} not found in existing conditions")
         
         alert_dict["conditions"] = current_alert["conditions"]
         if not alert_dict["enabled"]:
