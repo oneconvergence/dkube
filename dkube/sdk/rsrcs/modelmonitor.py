@@ -5,7 +5,6 @@ import operator
 import sys
 import time
 from enum import Enum
-from logging import critical
 
 from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_cond_def import \
@@ -771,6 +770,8 @@ class DkubeModelmonitorAlert(object):
             raise ValueError("Both feature and metric can not be none, one is required")
         if (feature is not None) and (metric is not None):
             raise ValueError("Both feature and metric can not passed, only one can be passed")
+        if (threshold is None) and (op is None) and (state is None):
+            raise ValueError("All threshold, state, and op is none, nothing to update")
         self.conditions.append(
             {
                 "id": None,
