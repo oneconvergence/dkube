@@ -2730,7 +2730,7 @@ class DkubeApi(ApiBase, FilesBase):
             for each_current_condition in current_alert["conditions"]:
                 if each_current_condition[alert_key] == each_condition[alert_key]:
                     if action == "add":
-                        raise ValueError("Alert condition already alert")
+                        raise ValueError(f"Alert condition {each_condition}already alert")
                     elif action == "delete":
                         current_alert["conditions"].remove(each_current_condition)
                     else:
@@ -2749,9 +2749,9 @@ class DkubeApi(ApiBase, FilesBase):
         if not alert_dict["enabled"]:
             alert_dict["enabled"] = current_alert["enabled"]
         if not alert_dict["alert_action"].get("emails"):
-            alert_dict["emails"] = current_alert["alert_action"]
+            alert_dict["emails"] = current_alert["alert_action"]["emails"]
         if not alert_dict["alert_action"].get("breach_threshold"):
-            alert_dict["breach_threshold"] = current_alert["breach_threshold"]
+            alert_dict["breach_threshold"] = current_alert["alert_action"]["breach_threshold"]
         alert_dict["class"] = alert_dict.pop("_class")
         return super().update_modelmonitor_alert(id, alert_id, alert_dict)
 
