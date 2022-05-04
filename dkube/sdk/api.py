@@ -2730,7 +2730,7 @@ class DkubeApi(ApiBase, FilesBase):
                 if each_current_condition[alert_key] == each_condition[alert_key]:
                     cond_existing = True
                     if action == "add":
-                        raise ValueError(f"Alert for {alert_key} {each_condition[alert_key]} already exist")
+                        raise ValueError(f"Alert condition for {alert_key} {each_condition[alert_key]} already exist")
                     elif action == "delete":
                         current_alert["conditions"].remove(each_current_condition)
                     else:
@@ -2743,7 +2743,7 @@ class DkubeApi(ApiBase, FilesBase):
             if (not cond_existing) and (action == "add"):
                 current_alert["conditions"].append(each_condition)
             elif (not cond_existing) and (action == "update"):
-                raise ValueError(f"Alert for {alert_key} {each_condition[alert_key]} not found in existing conditions")
+                raise ValueError(f"Alert condition for {alert_key} {each_condition[alert_key]} not found in existing conditions")
         
         alert_dict["conditions"] = current_alert["conditions"]
         if not alert_dict["enabled"]:
