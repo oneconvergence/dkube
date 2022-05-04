@@ -22,7 +22,8 @@ from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
-from dkube.sdk.rsrcs.modelmonitor import DatasetClass
+from dkube.sdk.rsrcs.modelmonitor import (DatasetClass, DkubeModelmonitorAlert,
+                                          DKubeModelmonitorUtils)
 from dkube.sdk.rsrcs.project import DkubeProject
 from packaging import version as pversion
 
@@ -2646,7 +2647,7 @@ class DkubeApi(ApiBase, FilesBase):
         delete_alertsid_list.append(alert_id)
         return super().delete_modelmonitor_alert(id, delete_alertsid_list)
 
-    def modelmonitor_add_alert(self, id, alert_data):
+    def modelmonitor_add_alert(self, id, alert_data:DkubeModelmonitorAlert):
         """
         Method to add the alerts in the modelmonitor
 
@@ -2665,6 +2666,7 @@ class DkubeApi(ApiBase, FilesBase):
             a dictionary object with response status
 
         """
+        
         mm = self.modelmonitor_get(id)
         if (mm["input_data_type"] == "image") and (alert_data._class == "feature_drift"):
             if len(alert_data.conditions) > 1:
@@ -2674,23 +2676,16 @@ class DkubeApi(ApiBase, FilesBase):
             alert_data.conditions[0]["op"] = "<"
 
         alert_dict = json.loads(alert_data.to_JSON())
-        alert_class = alert_dict["_class"]
-        for each_condition in alert_dict["conditions"]:
-            
-            if each_condition["state"] is None:
-                if each_condition["op"] is None:
-                    raise ValueError(f"operator is none for condition {each_condition}")
-                if (alert_class == "feature_drift") and (each_condition["op"] not in ("<", "<=")):
-                    raise ValueError(f"feature drift can only have op operator.lt or operator.le, condition {each_condition}")
-                if (each_condition["threshold"] is None) and (each_condition["state"] is None):
-                    raise ValueError(f"Both threshold and state can not be none, one is required, condition {each_condition}")
-                if (each_condition["threshold"] is not None) and (each_condition["state"] is not None):
-                    raise ValueError(f"Both threshold and state can not be passed, only one can be passed, condition {each_condition}")
+
+        # this method raises exception if validation fails
+        alert_data.validate_alert()
         alert_dict["class"] = alert_dict.pop("_class")
         response = super().modelmonitor_addalert(id, {"data": [alert_dict]})
         return response
 
-    def modelmonitor_update_alert(self, id, alert, alert_id):
+
+
+    def modelmonitor_update_alert(self, id, alert:DkubeModelmonitorAlert, alert_id):
         """
         Method to update the modelmonitor alert
 
@@ -2701,7 +2696,7 @@ class DkubeApi(ApiBase, FilesBase):
             id
                 Modelmonitor Id
 
-            data
+            alert
                 Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitoralert` class.
                 Please see the :bash:`Resources` section for details on this class.
 
@@ -2713,45 +2708,25 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         current_alert = None
-        alert_class = None
+    
         if alert_id is None:
             raise ValueError("alert_id is recieved as None")
         existing_alerts = self.modelmonitor_get_alerts(id)
+        
         for each_alert in existing_alerts:
             if each_alert["id"] == alert_id:
                 current_alert = each_alert
-                alert_class = each_alert["_class"]
-        alert_key = "feature" if alert_class == "feature_drift" else "metric"
-        alert_dict = json.loads(alert.to_JSON())
-        for each_condition in alert_dict['conditions']:
-            cond_existing = False
-            action = each_condition.pop("action")
-            for each_current_condition in current_alert["conditions"]:
-                if each_current_condition[alert_key] == each_condition[alert_key]:
-                    cond_existing = True
-                    if action == "add":
-                        raise ValueError(f"Alert condition for {alert_key} {each_condition[alert_key]} already exist")
-                    elif action == "delete":
-                        current_alert["conditions"].remove(each_current_condition)
-                    else:
-                        if each_condition["threshold"]:
-                            each_current_condition["threshold"] = each_condition["threshold"]
-                        if each_condition["state"]:
-                            each_current_condition["state"] = each_condition["state"]
-                        if each_condition["op"]:
-                            each_current_condition["op"] = each_condition["op"]
-            if (not cond_existing) and (action == "add"):
-                current_alert["conditions"].append(each_condition)
-            elif (not cond_existing) and (action == "update"):
-                raise ValueError(f"Alert condition for {alert_key} {each_condition[alert_key]} not found in existing conditions")
+                break
         
-        alert_dict["conditions"] = current_alert["conditions"]
-        if not alert_dict["enabled"]:
-            alert_dict["enabled"] = current_alert["enabled"]
-        if not alert_dict["alert_action"].get("emails"):
-            alert_dict["emails"] = current_alert["alert_action"]["emails"]
-        if not alert_dict["alert_action"].get("breach_threshold"):
-            alert_dict["breach_threshold"] = current_alert["alert_action"]["breach_threshold"]
+        if current_alert == None:
+            raise ValueError(f"No existing alert with the specified alert id {alert_id}")
+        
+        alert_dict = json.loads(alert.to_JSON())
+        
+        # This method raises exception if alert is invalid
+        alert.validate_alert()
+
+
         alert_dict["class"] = alert_dict.pop("_class")
         return super().update_modelmonitor_alert(id, alert_id, alert_dict)
 

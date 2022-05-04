@@ -7,6 +7,7 @@ import time
 from enum import Enum
 
 from dkube.sdk.internal import dkube_api
+from dkube.sdk.internal.dkube_api.models import conditions
 from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_cond_def import \
     ModelmonitorAlertCondDef
 from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_def import \
@@ -702,10 +703,20 @@ class DkubeModelmonitorAlert(object):
         self.conditions = []
         self.alert_action = {}
         self.alert_action["action_type"] = action_type
+        self.alert_action["emails"] = emails
 
     def to_JSON(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
+    def load_dkube_alert(self, alert_obj):
+        self.id = alert_obj["id"]
+        self._class = alert_obj["class"]
+        self.enabled = alert_obj["enabled"]
+        self.name = alert_obj["name"]
+        self.tags = alert_obj["tags"]
+        self.conditions = alert_obj["conditions"]
+        self.alert_action = alert_obj["alert_action"]
+        
     def add_alert_condition(
         self,
         feature=None,
@@ -720,8 +731,7 @@ class DkubeModelmonitorAlert(object):
             metric,
             threshold,
             op,
-            state,
-            breach_threshold,
+            state
         """
         ops = {operator.gt: ">", operator.lt: '<', operator.ge: '>=', operator.le: '<=', None: None}
         try:
@@ -732,17 +742,17 @@ class DkubeModelmonitorAlert(object):
             raise ValueError("Both feature and metric can not be none, one is required")
         if (feature is not None) and (metric is not None):
             raise ValueError("Both feature and metric can not passed, only one can be passed")
-        self.conditions.append(
-            {
-                "id": None,
-                "feature": feature,
-                "metric": metric,
-                "op": alert_op,
-                "threshold": threshold,
-                "state": state,
-                "action": "add",
-            }
-        )
+
+        alert_key = "feature" if self._class == "feature_drift" else "metric"
+        cond = dict()
+        if state:
+            cond["state"] = state
+        else:
+            cond["op"] = alert_op
+            cond["threshold"] = threshold
+        cond[alert_key] = feature if feature is not None else metric
+        self.conditions.append(cond)
+
 
     def update_alert_condition(
         self,
@@ -758,8 +768,7 @@ class DkubeModelmonitorAlert(object):
             metric,
             threshold,
             op,
-            state,
-            breach_threshold,
+            state
         """
         ops = {operator.gt: ">", operator.lt: '<', operator.ge: '>=', operator.le: '<=', None: None}
         try:
@@ -772,17 +781,20 @@ class DkubeModelmonitorAlert(object):
             raise ValueError("Both feature and metric can not passed, only one can be passed")
         if (threshold is None) and (op is None) and (state is None):
             raise ValueError("All threshold, state, and op is none, nothing to update")
-        self.conditions.append(
-            {
-                "id": None,
-                "feature": feature,
-                "metric": metric,
-                "op": alert_op,
-                "threshold": threshold,
-                "state": state,
-                "action": "update",
-            }
-        )
+
+        alert_key = "feature" if self._class == "feature_drift" else "metric"
+        alert_key_name = feature if feature is not None else metric
+
+        for cond in self.conditions:
+            if cond[alert_key] == alert_key_name:
+                if state is None:
+                    cond["op"] = op
+                    cond["threshold"] = threshold
+                else:
+                    cond["state"] = state
+                return
+        
+        raise ValueError(f"update key not found {alert_key_name}")
 
     def delete_alert_condition(
         self,
@@ -806,6 +818,11 @@ class DkubeModelmonitorAlert(object):
             }
         )
 
+        alert_key_name = feature if feature is not None else metric
+
+        # This should throw exception if it doesn't exist
+        self.conditions.remove(alert_key_name)
+
     update_alert = add_alert_condition
 
     def update_breach_incidents(
@@ -827,3 +844,26 @@ class DkubeModelmonitorAlert(object):
             emails
         """
         self.alert_action["emails"] = emails
+
+    def validate_alert(self):
+        
+        alert_key = "feature" if self._class == "feature_drift" else "metric"
+        alert_keys_used = list()
+        for each_condition in self.conditions:
+            if each_condition["state"] is None:
+                if each_condition["op"] is None:
+                    raise ValueError(f"operator is none for condition {each_condition}")
+                if (self._class == "feature_drift") and (each_condition["op"] not in ("<", "<=")):
+                    raise ValueError(f"feature drift can only have op operator.lt or operator.le, condition {each_condition}")
+                if (each_condition["threshold"] is None) and (each_condition["state"] is None):
+                    raise ValueError(f"Both threshold and state can not be none, one is required, condition {each_condition}")
+            elif each_condition["state"] != "critical" or each_condition["state"] != "warning":
+                raise ValueError(f"Invalid value for state {each_condition}")
+                
+            if (each_condition["threshold"] is not None) and (each_condition["state"] is not None):
+                raise ValueError(f"Both threshold and state can not be passed, only one can be passed, condition {each_condition}")
+            if each_condition[alert_key] in alert_keys_used:
+                raise ValueError(f"Multiple alert conditions defined on the same {alert_key}: {each_condition[alert_key]}")
+            else:
+                alert_keys_used.append(each_condition[alert_key])
+    
