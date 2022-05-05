@@ -2647,6 +2647,29 @@ class DkubeApi(ApiBase, FilesBase):
         delete_alertsid_list.append(alert_id)
         return super().delete_modelmonitor_alert(id, delete_alertsid_list)
 
+    def modelmonitor_get_alert_by_name(self, id, alert_name):
+        """
+        Method to add the alerts in the modelmonitor
+
+        *Available in DKube Release: 3.0*
+
+        *Inputs*
+            id
+                Modelmonitor Id
+
+            alert_name
+                Name of an existing alert in the model monitor.
+
+        Outputs*
+            a dictionary object with response status
+
+        """
+        mm_alerts = self.modelmonitor_get_alerts(id)
+        for each_alert in mm_alerts:
+            if each_alert["name"] == alert_name:
+                return each_alert
+        raise ValueError(f"alert {alert_name} not found")
+
     def modelmonitor_add_alert(self, id, alert_data:DkubeModelmonitorAlert):
         """
         Method to add the alerts in the modelmonitor
@@ -2684,8 +2707,7 @@ class DkubeApi(ApiBase, FilesBase):
         return response
 
 
-
-    def modelmonitor_update_alert(self, id, alert:DkubeModelmonitorAlert, alert_id):
+    def modelmonitor_update_alert(self, id, alert:DkubeModelmonitorAlert):
         """
         Method to update the modelmonitor alert
 
@@ -2700,32 +2722,27 @@ class DkubeApi(ApiBase, FilesBase):
                 Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitoralert` class.
                 Please see the :bash:`Resources` section for details on this class.
 
-            alert_id
-                ID of the alert you want to update in the modelmonitor
-
         Outputs*
             a dictionary object with response status
 
         """
         current_alert = None
-    
-        if alert_id is None:
-            raise ValueError("alert_id is recieved as None")
+        if alert["name"] is None:
+            raise ValueError("alert name is recieved as None")
+        alert_id = self.modelmonitor_get_alertid(id, alert["name"])
         existing_alerts = self.modelmonitor_get_alerts(id)
         
         for each_alert in existing_alerts:
             if each_alert["id"] == alert_id:
                 current_alert = each_alert
                 break
-        
         if current_alert == None:
-            raise ValueError(f"No existing alert with the specified alert id {alert_id}")
+            raise ValueError(f"No existing alert with the specified alert name {alert['name']}")
         
         alert_dict = json.loads(alert.to_JSON())
         
         # This method raises exception if alert is invalid
         alert.validate_alert()
-
 
         alert_dict["class"] = alert_dict.pop("_class")
         return super().update_modelmonitor_alert(id, alert_id, alert_dict)

@@ -688,7 +688,7 @@ class DkubeModelmonitorAlert(object):
     *Available in DKube Release: 3.x*
     """
 
-    def __init__(self, name="mm-alert",
+    def __init__(self, name,
                  alert_class: AlertClass = "feature_drift",
                  enabled=None,
                  emails=None,
