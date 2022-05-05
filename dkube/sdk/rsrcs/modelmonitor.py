@@ -5,9 +5,9 @@ import operator
 import sys
 import time
 from enum import Enum
-from logging import critical
 
 from dkube.sdk.internal import dkube_api
+from dkube.sdk.internal.dkube_api.models import conditions
 from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_cond_def import \
     ModelmonitorAlertCondDef
 from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_def import \
@@ -678,82 +678,202 @@ class DkubeModelmonitor(object):
         }
 
 
-class DkubeModelmonitoralert(object):
+class DkubeModelmonitorAlert(object):
     """
     This class defines the DKube Modelmonitor alert with helper functions to set properties of modelmonitor alert.::
         from dkube.sdk import *
         mm = DkubeModelmonitoralert(name="mm-alert")
-        Where first argument is the name of the alert in the modelmonitor .
+        Where the arguments are .
+        alert_class, enabled, tags, emails
     *Available in DKube Release: 3.x*
     """
 
-    def __init__(self, name="mm-alert", tags=[]):
+    def __init__(self, name,
+                 alert_class: AlertClass = "feature_drift",
+                 enabled=None,
+                 emails=None,
+                 action_type="email",
+                 tags=[]
+                 ):
         self.id = None
-        self._class = None
-        self.enabled = None
+        self._class = alert_class
+        self.enabled = enabled
         self.name = name
         self.tags = tags
         self.conditions = []
         self.alert_action = {}
-        self.emails=None
-        self.state=None
+        self.alert_action["action_type"] = action_type
+        self.alert_action["emails"] = emails
+        self.alert_loaded = False
 
     def to_JSON(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
+    def load_modelmonitor_alert(self, alert_obj):
+        self.id = alert_obj["id"]
+        self._class = alert_obj["_class"]
+        self.enabled = alert_obj["enabled"]
+        self.name = alert_obj["name"]
+        self.tags = alert_obj["tags"]
+        self.conditions = alert_obj["conditions"]
+        self.alert_action = alert_obj["alert_action"]
+        self.alert_loaded = True
+        
     def add_alert_condition(
         self,
-        alert_class: AlertClass = "feature_drift",
-        enabled=None,
-        tags=None,
         feature=None,
         metric=None,
         threshold=None,
         state: ModelMonitorState = None,
-        breach_threshold=None,
-        op=operator.lt,
-        emails=None,
-        action_type="email",
+        op=None,
     ):
         """
-        This function updates the alert in the model monitor. The following updates are supported.
-            alert_class,
-            enabled,
-            tags,
+        This function add the alert condition in the model monitor alert. The following updates are supported.
             feature,
             metric,
             threshold,
             op,
-            state,
-            breach_threshold,
-            emails
+            state
         """
-        ops = {operator.gt: ">", operator.lt: '<', operator.ge: '>=', operator.le: '<='}
+        ops = {operator.gt: ">", operator.lt: '<', operator.ge: '>=', operator.le: '<=', None: None}
         try:
             alert_op = ops[op]
         except Exception:
             raise ValueError(f"{op} not supported, only operator.gt, operator.lt, operator.ge and operator.le are allowed")
-        if (alert_class == "feature_drift") and (alert_op not in ("<", "<=")):
-            raise ValueError("feature drift can only have op operator.lt or operator.le")
-        if tags:
-            self.tags = tags
-        self.name = self.name
-        self._class = alert_class
-        self.enabled = enabled
-        self.alert_action["action_type"] = "email"
-        self.conditions.append(
-            {
-                "id": None,
-                "feature": feature,
-                "metric": metric,
-                "op": alert_op,
-                "threshold": threshold,
-                "state": state,
-            }
-        )
-        if breach_threshold:
-            self.alert_action["breach_threshold"] = breach_threshold
-        if emails:
-            self.alert_action["emails"] = emails
+        if (feature is None) and (metric is None):
+            raise ValueError("Both feature and metric can not be none, one is required")
+        if (feature is not None) and (metric is not None):
+            raise ValueError("Both feature and metric can not passed, only one can be passed")
+        # Adding the check otherwise the condition is getting appended
+        if (threshold is None) and (state is None):
+            raise ValueError("Both threshold and state can not be None, only one can be passed")
+        if (threshold is not None) and (state is not None):
+            raise ValueError("Both threshold and state can not passed, only one can be passed")
+        if (op is None) and (threshold is not None):
+            raise ValueError("Operator is not passed")
+
+        alert_key = "feature" if self._class == "feature_drift" else "metric"
+        cond = dict()
+        cond["state"] = state
+        cond["op"] = alert_op
+        cond["threshold"] = threshold
+        cond[alert_key] = feature if feature is not None else metric
+        cond["action"] = "add"
+        self.conditions.append(cond)
+
+
+    def update_alert_condition(
+        self,
+        feature=None,
+        metric=None,
+        threshold=None,
+        state: ModelMonitorState = None,
+        op=None,
+    ):
+        """
+        This function update the alert condition in the model monitor alert. The following updates are supported.
+            feature,
+            metric,
+            threshold,
+            op,
+            state
+        """
+        ops = {operator.gt: ">", operator.lt: '<', operator.ge: '>=', operator.le: '<=', None: None}
+        try:
+            alert_op = ops[op]
+        except Exception:
+            raise ValueError(f"{op} not supported, only operator.gt, operator.lt, operator.ge and operator.le are allowed")
+        if (feature is None) and (metric is None):
+            raise ValueError("Both feature and metric can not be none, one is required")
+        if (feature is not None) and (metric is not None):
+            raise ValueError("Both feature and metric can not passed, only one can be passed")
+        if (threshold is None) and (op is None) and (state is None):
+            raise ValueError("All threshold, state, and op is none, nothing to update")
+
+        alert_key = "feature" if self._class == "feature_drift" else "metric"
+        alert_key_name = feature if feature is not None else metric
+        
+        if len(self.conditions) == 0:
+            raise ValueError("existing conditions are empty, use load_modelmonitor_alert first before updating an alert")
+
+        for cond in self.conditions:
+            if cond[alert_key] == alert_key_name:
+                if alert_op:
+                    cond["op"] = alert_op
+                if threshold:
+                    cond["threshold"] = threshold
+                if state:
+                    cond["state"] = state
+                return
+        
+        raise ValueError(f"update key not found {alert_key_name}")
+
+    def delete_alert_condition(
+        self,
+        feature=None,
+        metric=None,
+    ):
+        """
+        This function deletes the alert condition in the model monitor alert. The following updates are supported.
+            feature,
+            metric,
+        """
+        if (feature is None) and (metric is None):
+            raise ValueError("Both feature and metric can not be none, one is required")
+        if (feature is not None) and (metric is not None):
+            raise ValueError("Both feature and metric can not passed, only one can be passed")
+        
+        alert_key = "feature" if self._class == "feature_drift" else "metric"
+        alert_key_name = feature if feature is not None else metric
+        
+        if len(self.conditions) == 0:
+            raise ValueError("existing conditions are empty, use load_modelmonitor_alert first before deleting an alert")
+        for each_condition in self.conditions:
+            if each_condition[alert_key] == alert_key_name:
+                self.conditions.remove(each_condition)
+                return
+        raise ValueError(f"{alert_key_name} not found in existing conditions")
 
     update_alert = add_alert_condition
+
+    def update_breach_incidents(
+        self,
+        breach_incidents
+    ):
+        """
+        This function update breach incidents of the model monitor alert. Input,
+            breach_incidents
+        """
+        self.alert_action["breach_threshold"] = breach_incidents
+
+    def update_emails(
+        self,
+        emails
+    ):
+        """
+        This function update emails of the model monitor alert. Input,
+            emails
+        """
+        self.alert_action["emails"] = emails
+
+    def validate_alert(self):
+        
+        alert_key = "feature" if self._class == "feature_drift" else "metric"
+        alert_keys_used = list()
+        for each_condition in self.conditions:
+            if each_condition["state"] is None:
+                if each_condition["op"] is None:
+                    raise ValueError(f"operator is none for condition {each_condition}")
+                if (self._class == "feature_drift") and (each_condition["op"] not in ("<", "<=")):
+                    raise ValueError(f"feature drift can only have op operator.lt or operator.le, condition {each_condition}")
+                if (each_condition["threshold"] is None) and (each_condition["state"] is None):
+                    raise ValueError(f"Both threshold and state can not be none, one is required, condition {each_condition}")
+            elif each_condition["state"] != "critical" or each_condition["state"] != "warning":
+                raise ValueError(f"Invalid value for state {each_condition}")
+            # Keeping it here also as user can set state while updating, whereas threshold is already present.
+            if (each_condition["threshold"] is not None) and (each_condition["state"] is not None):
+                raise ValueError(f"Both threshold and state can not be passed, only one can be passed, condition {each_condition}")
+            if each_condition[alert_key] in alert_keys_used:
+                raise ValueError(f"Multiple alert conditions defined on the same {alert_key}: {each_condition[alert_key]}")
+            else:
+                alert_keys_used.append(each_condition[alert_key])

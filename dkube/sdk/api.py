@@ -22,7 +22,7 @@ from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
-from dkube.sdk.rsrcs.modelmonitor import DatasetClass
+from dkube.sdk.rsrcs.modelmonitor import DkubeModelmonitorAlert
 from dkube.sdk.rsrcs.project import DkubeProject
 from packaging import version as pversion
 
@@ -2646,7 +2646,30 @@ class DkubeApi(ApiBase, FilesBase):
         delete_alertsid_list.append(alert_id)
         return super().delete_modelmonitor_alert(id, delete_alertsid_list)
 
-    def modelmonitor_add_alert(self, id, alert_data):
+    def modelmonitor_get_alert_by_name(self, id, alert_name):
+        """
+        Method to add the alerts in the modelmonitor
+
+        *Available in DKube Release: 3.0*
+
+        *Inputs*
+            id
+                Modelmonitor Id
+
+            alert_name
+                Name of an existing alert in the model monitor.
+
+        Outputs*
+            a dictionary object with response status
+
+        """
+        mm_alerts = self.modelmonitor_get_alerts(id)
+        for each_alert in mm_alerts:
+            if each_alert["name"] == alert_name:
+                return each_alert
+        raise ValueError(f"alert {alert_name} not found")
+
+    def modelmonitor_add_alert(self, id, alert_data:DkubeModelmonitorAlert):
         """
         Method to add the alerts in the modelmonitor
 
@@ -2665,25 +2688,23 @@ class DkubeApi(ApiBase, FilesBase):
             a dictionary object with response status
 
         """
+        
         mm = self.modelmonitor_get(id)
         if (mm["input_data_type"] == "image") and (alert_data._class == "feature_drift"):
             if len(alert_data.conditions) > 1:
                 raise ValueError("Data Drift alert for image data type connot have more than one conditions")
             alert_data.conditions[0]["feature"] = "image"
-            alert_data.conditions[0]["metric"] = None    
-            alert_data.conditions[0]["op"] = "<"
 
         alert_dict = json.loads(alert_data.to_JSON())
-        for each_condition in alert_dict["conditions"]:
-            if (each_condition["threshold"] is None) and (each_condition["state"] is None):
-                raise ValueError(f"threshold or state is not set for condition {each_condition}")
-            if (each_condition["feature"] is None) and (each_condition["metric"] is None):
-                raise ValueError(f"feature or metric name is not set for condition {each_condition}")
+
+        # this method raises exception if validation fails
+        alert_data.validate_alert()
         alert_dict["class"] = alert_dict.pop("_class")
         response = super().modelmonitor_addalert(id, {"data": [alert_dict]})
         return response
 
-    def modelmonitor_update_alert(self, id, alert, alert_id):
+
+    def modelmonitor_update_alert(self, id, alert:DkubeModelmonitorAlert):
         """
         Method to update the modelmonitor alert
 
@@ -2694,32 +2715,33 @@ class DkubeApi(ApiBase, FilesBase):
             id
                 Modelmonitor Id
 
-            data
+            alert
                 Instance of :bash:`dkube.sdk.rsrcs.modelmonitor.DkubeModelmonitoralert` class.
                 Please see the :bash:`Resources` section for details on this class.
-
-            alert_id
-                ID of the alert you want to update in the modelmonitor
 
         Outputs*
             a dictionary object with response status
 
         """
         current_alert = None
-        if alert_id is None:
-            raise ValueError("alert_id is recieved as None")
+        alert_dict = json.loads(alert.to_JSON())
+        if not alert_dict["alert_loaded"]:
+            raise ValueError("use load_modelmonitor_alert first before updating an alert")
+        if alert_dict["name"] is None:
+            raise ValueError("alert name is recieved as None")
+        alert_id = self.modelmonitor_get_alertid(id, alert_dict["name"])
         existing_alerts = self.modelmonitor_get_alerts(id)
+        
         for each_alert in existing_alerts:
             if each_alert["id"] == alert_id:
                 current_alert = each_alert
-        alert_dict = json.loads(alert.to_JSON())
-        for each_condition in alert_dict.get('conditions'):
-            if (not each_condition["threshold"] or (not each_condition["state"])):
-                alert_dict["conditions"] = current_alert["conditions"]
-        if not alert_dict["enabled"]:
-            alert_dict["enabled"] = current_alert["enabled"]
-        if not alert_dict["emails"]:
-            alert_dict["emails"] = current_alert["alert_action"]
+                break
+        if current_alert == None:
+            raise ValueError(f"No existing alert with the specified alert name {alert['name']}")
+        
+        # This method raises exception if alert is invalid
+        alert.validate_alert()
+
         alert_dict["class"] = alert_dict.pop("_class")
         return super().update_modelmonitor_alert(id, alert_id, alert_dict)
 
