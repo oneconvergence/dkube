@@ -2726,9 +2726,12 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         current_alert = None
-        if alert["name"] is None:
+        alert_dict = json.loads(alert.to_JSON())
+        if not alert_dict["alert_loaded"]:
+            raise ValueError("use load_modelmonitor_alert first before updating an alert")
+        if alert_dict["name"] is None:
             raise ValueError("alert name is recieved as None")
-        alert_id = self.modelmonitor_get_alertid(id, alert["name"])
+        alert_id = self.modelmonitor_get_alertid(id, alert_dict["name"])
         existing_alerts = self.modelmonitor_get_alerts(id)
         
         for each_alert in existing_alerts:
@@ -2737,8 +2740,6 @@ class DkubeApi(ApiBase, FilesBase):
                 break
         if current_alert == None:
             raise ValueError(f"No existing alert with the specified alert name {alert['name']}")
-        
-        alert_dict = json.loads(alert.to_JSON())
         
         # This method raises exception if alert is invalid
         alert.validate_alert()

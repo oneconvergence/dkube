@@ -1,7 +1,6 @@
 from __future__ import print_function
 
 import json
-import operator
 import sys
 import time
 from enum import Enum
@@ -704,18 +703,20 @@ class DkubeModelmonitorAlert(object):
         self.alert_action = {}
         self.alert_action["action_type"] = action_type
         self.alert_action["emails"] = emails
+        self.alert_loaded = False
 
     def to_JSON(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
-    def load_dkube_alert(self, alert_obj):
+    def load_modelmonitor_alert(self, alert_obj):
         self.id = alert_obj["id"]
-        self._class = alert_obj["class"]
+        self._class = alert_obj["_class"]
         self.enabled = alert_obj["enabled"]
         self.name = alert_obj["name"]
         self.tags = alert_obj["tags"]
         self.conditions = alert_obj["conditions"]
         self.alert_action = alert_obj["alert_action"]
+        self.alert_loaded = True
         
     def add_alert_condition(
         self,
@@ -745,12 +746,11 @@ class DkubeModelmonitorAlert(object):
 
         alert_key = "feature" if self._class == "feature_drift" else "metric"
         cond = dict()
-        if state:
-            cond["state"] = state
-        else:
-            cond["op"] = alert_op
-            cond["threshold"] = threshold
+        cond["state"] = state
+        cond["op"] = alert_op
+        cond["threshold"] = threshold
         cond[alert_key] = feature if feature is not None else metric
+        cond["action"] = "add"
         self.conditions.append(cond)
 
 
@@ -784,13 +784,17 @@ class DkubeModelmonitorAlert(object):
 
         alert_key = "feature" if self._class == "feature_drift" else "metric"
         alert_key_name = feature if feature is not None else metric
+        
+        if len(self.conditions) == 0:
+            raise ValueError("existing conditions are empty, use load_modelmonitor_alert first before updating an alert")
 
         for cond in self.conditions:
             if cond[alert_key] == alert_key_name:
-                if state is None:
-                    cond["op"] = op
+                if alert_op:
+                    cond["op"] = alert_op
+                if threshold:
                     cond["threshold"] = threshold
-                else:
+                if state:
                     cond["state"] = state
                 return
         
@@ -810,18 +814,17 @@ class DkubeModelmonitorAlert(object):
             raise ValueError("Both feature and metric can not be none, one is required")
         if (feature is not None) and (metric is not None):
             raise ValueError("Both feature and metric can not passed, only one can be passed")
-        self.conditions.append(
-            {
-                "feature": feature,
-                "metric": metric,
-                "action": "delete",
-            }
-        )
-
+        
+        alert_key = "feature" if self._class == "feature_drift" else "metric"
         alert_key_name = feature if feature is not None else metric
-
-        # This should throw exception if it doesn't exist
-        self.conditions.remove(alert_key_name)
+        
+        if len(self.conditions) == 0:
+            raise ValueError("existing conditions are empty, use load_modelmonitor_alert first before deleting an alert")
+        for each_condition in self.conditions:
+            if each_condition[alert_key] == alert_key_name:
+                self.conditions.remove(each_condition)
+                return
+        raise ValueError(f"{alert_key_name} not found in existing conditions")
 
     update_alert = add_alert_condition
 
@@ -866,4 +869,3 @@ class DkubeModelmonitorAlert(object):
                 raise ValueError(f"Multiple alert conditions defined on the same {alert_key}: {each_condition[alert_key]}")
             else:
                 alert_keys_used.append(each_condition[alert_key])
-    
