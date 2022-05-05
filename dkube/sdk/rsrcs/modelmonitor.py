@@ -744,6 +744,13 @@ class DkubeModelmonitorAlert(object):
             raise ValueError("Both feature and metric can not be none, one is required")
         if (feature is not None) and (metric is not None):
             raise ValueError("Both feature and metric can not passed, only one can be passed")
+        # Adding the check otherwise the condition is getting appended
+        if (threshold is None) and (state is None):
+            raise ValueError("Both threshold and state can not be None, only one can be passed")
+        if (threshold is not None) and (state is not None):
+            raise ValueError("Both threshold and state can not passed, only one can be passed")
+        if (op is None) and (threshold is not None):
+            raise ValueError("Operator is not passed")
 
         alert_key = "feature" if self._class == "feature_drift" else "metric"
         cond = dict()
@@ -863,7 +870,7 @@ class DkubeModelmonitorAlert(object):
                     raise ValueError(f"Both threshold and state can not be none, one is required, condition {each_condition}")
             elif each_condition["state"] != "critical" or each_condition["state"] != "warning":
                 raise ValueError(f"Invalid value for state {each_condition}")
-                
+            # Keeping it here also as user can set state while updating, whereas threshold is already present.
             if (each_condition["threshold"] is not None) and (each_condition["state"] is not None):
                 raise ValueError(f"Both threshold and state can not be passed, only one can be passed, condition {each_condition}")
             if each_condition[alert_key] in alert_keys_used:
