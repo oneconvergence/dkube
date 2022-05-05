@@ -22,8 +22,7 @@ from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.internal.files_base import *
 from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
-from dkube.sdk.rsrcs.modelmonitor import (DatasetClass, DkubeModelmonitorAlert,
-                                          DKubeModelmonitorUtils)
+from dkube.sdk.rsrcs.modelmonitor import DkubeModelmonitorAlert
 from dkube.sdk.rsrcs.project import DkubeProject
 from packaging import version as pversion
 
