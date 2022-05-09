@@ -2467,7 +2467,7 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(
                     "ModelMonitor {} - waiting for completion, current state {}".format(
-                        modelmonitor.modelmonitor.name, state
+                        response["name"], state
                     )
                 )
                 time.sleep(self.wait_interval)
