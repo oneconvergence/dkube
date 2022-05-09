@@ -2452,19 +2452,22 @@ class DkubeApi(ApiBase, FilesBase):
         while wait_for_completion:
             mm_config = super().get_modelmonitor_configuration(response["uuid"])
             state = mm_config["status"]["state"]
-            if state.lower() in ["init", "ready", "error", "incomplete","pending"]:
+            if state.lower() in ["init", "error", "incomplete","pending"]:
                 print(
-                    "ModelMonitor {} - is in state {} and reason {}".format(
-                        modelmonitor.modelmonitor.name,
+                    "ModelMonitor {} - is in {} state and reason {}".format(
+                        response["name"],
                         state,
                         mm_config["status"]["message"],
                     )
                 )
                 break
+            elif state.lower() == "ready":
+                print("ModelMonitor {} - is in {} state".format(response["name"],state))
+                break
             else:
                 print(
                     "ModelMonitor {} - waiting for completion, current state {}".format(
-                        modelmonitor.modelmonitor.name, state
+                        response["name"], state
                     )
                 )
                 time.sleep(self.wait_interval)
@@ -2798,7 +2801,7 @@ class DkubeApi(ApiBase, FilesBase):
             if mm_state.lower() in ["init", "active", "error"]:
                 break
             else:
-                print("ModelMonitor {} - is in {} state".format(id, mm_state))
+                print("ModelMonitor {} - is in {} state".format(response["response"]["name"], mm_state))
                 time.sleep(self.wait_interval)
         return response
 
