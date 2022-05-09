@@ -2801,7 +2801,7 @@ class DkubeApi(ApiBase, FilesBase):
             if mm_state.lower() in ["init", "active", "error"]:
                 break
             else:
-                print("ModelMonitor {} - is in {} state".format(id, mm_state))
+                print("ModelMonitor {} - is in {} state".format(response["response"]["name"], mm_state))
                 time.sleep(self.wait_interval)
         return response
 
