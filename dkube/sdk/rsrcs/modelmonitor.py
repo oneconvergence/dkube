@@ -444,7 +444,6 @@ class DkubeModelmonitor(object):
             self.modelmonitor.input_data_type = input_data_type
         else:
             raise ValueError("Input data type is required")
-        return self
 
     def add_thresholds(
         self,
@@ -455,7 +454,6 @@ class DkubeModelmonitor(object):
         """
         if thresholds:
             self.modelmonitor.thresholds = thresholds
-        return self
 
     def add_datasources(
         self,
