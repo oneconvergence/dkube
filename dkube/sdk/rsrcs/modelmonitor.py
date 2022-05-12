@@ -632,48 +632,17 @@ class DkubeModelmonitor(object):
         self,
         enabled,
         frequency=1,
-        cluster=None,
-        source_type: SourceTypeDeployment = None,
     ):
         """
         This function updates the DKube deployment monitoring details. The following updates are supported:
         enabled : boolean value,
         frequency : an integer, frequency for deployment monitoring
-        cluster: cluster
-        source_type: SourceType see the DeploymentSourceType Enum class for the details,
-        metrics:
-        thresholds : a dictionary containing hard and soft thresholds, eg : { hard:0.02, soft:0.01}
         """
         if enabled:
             self.modelmonitor.deployment_monitoring["enabled"] = enabled
         if frequency:
             self.modelmonitor.deployment_monitoring["frequency"] = frequency
-        if cluster:
-            self.modelmonitor.deployment_monitoring["cluster"] = cluster
-        if source_type:
-            self.modelmonitor.deployment_monitoring["source_type"] = source_type
         self.modelmonitor.deployment_monitoring["collect_metrics"] = True
-
-    def update_deployment_metrics(
-        self,
-        heartbeat=None,
-        protocol: Protocol = None,
-        payload=None,
-        headers=None,
-        response_status_code=None,
-        response_body=None,
-    ):
-        """
-        Method to update deployment metrics in performance monitoring
-        """
-        self.modelmonitor.deployment_monitoring["metrics"] = {
-            "heartbeat": heartbeat,
-            "protocol": protocol,
-            "payload": payload,
-            "headers": headers,
-            "response_status_code": response_status_code,
-            "response_body": response_body,
-        }
 
 
 class DkubeModelmonitorAlert(object):
