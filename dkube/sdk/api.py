@@ -3021,6 +3021,8 @@ class DkubeApi(ApiBase, FilesBase):
         Outputs*
             a dictionary object with response status
         """
+        if data.auth_type is None:
+            raise ValueError("Auth type for cluster can't be None")
         clusters_info = []
         clusters_info.append(data)
         clusters_dict = {}
