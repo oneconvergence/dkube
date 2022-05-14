@@ -83,15 +83,17 @@ class DkubeCluster(object):
     """
 
     def __init__(self, name=generate("dkube_cluster"), description="", tags=None):
-        self.cluster = Cluster(name=None, kind=None, _class=None, url=None, ca=None, version=None, auth_type=None, jwt_token_type=None, jwt_token=None,
-                               jwt_signing_key=None, cluster_user=None, access_keys=None, tags=None, description=None, plugin=None)
+        self.cluster = Cluster(name=None, tags=None, description=None)
 
         self.update_basic(name, description, tags)
 
     def update_basic(self, name, description, tags):
         """
-        Method to update the attributes specified at creation. Description and tags can be updated. tags is a list of string values.
+        Method to update the attributes specified at creation. 
+        Description and tags can be updated. 
+        tags is a list of string values.
         """
+        
         tags = list_of_strs(tags)
 
         self.cluster.name = name
@@ -100,37 +102,37 @@ class DkubeCluster(object):
 
         return self
 
-    def update_kind(self, kind: ClusterKind = None):
+    def update_kind(self, kind: ClusterKind):
         """
         Method to update the kind of the cluster
         """
         self.cluster.kind = kind
 
-    def update_url(self, url=None):
+    def update_url(self, url):
         """
         Method to update the url of the cluster
         """
         self.cluster.url = url
 
-    def update_class(self, cluster_class: ClusterClass = None):
+    def update_class(self, cluster_class: ClusterClass):
         """
         Method to update the class of the cluster
         """
         self.cluster._class = cluster_class
 
-    def update_ca(self, ca=None):
+    def update_ca(self, ca):
         """
         Method to update the ca for the cluster
         """
         self.cluster.ca = ca
 
-    def update_version(self, version=None):
+    def update_version(self, version):
         """
         Method to update the version
         """
         self.cluster.version = version
 
-    def update_authtype(self, auth_type: AuthType = None):
+    def update_authtype(self, auth_type: AuthType):
         """
         Method to update the authentication type
         """
@@ -147,26 +149,26 @@ class DkubeCluster(object):
         if jwt_token_type:
             self.cluster.jwt_token_type = jwt_token_type
 
-    def update_cluster_user(self, cluster_user=None):
+    def update_cluster_user(self, cluster_user):
         """
         Method to update the cluster user
         """
         self.cluster.cluster_user = cluster_user
 
-    def update_plugin(self, plugin=None):
+    def update_plugin(self, plugin):
         """
         Method to update the plugin
         """
         self.cluster.plugin = plugin
 
-    def update_access_keys(self, access_key=None, secret_key=None):
+    def update_access_keys(self, access_key, secret_key):
         """
         Method to update the access keys
         """
         self.cluster.access_keys = ClusterAccessKeysDef(
             access_key=access_key, secret_key=secret_key)
         
-    def update_region(self, region=None):
+    def update_region(self, region):
         """
         Method to update the region
         """
