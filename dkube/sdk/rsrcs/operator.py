@@ -83,10 +83,7 @@ class DkubeCluster(object):
     """
 
     def __init__(self, name=generate("dkube_cluster"), description="", tags=None):
-        self.cluster = Cluster(name=None, kind=None, _class=None, url=None, ca=None, version=None, 
-                               auth_type="none", jwt_token_type=None, jwt_token=None,
-                               jwt_signing_key=None, cluster_user=None, access_keys=None, 
-                               tags=None, description=None, plugin=None)
+        self.cluster = Cluster(name=None, tags=None, description=None)
 
         self.update_basic(name, description, tags)
 
