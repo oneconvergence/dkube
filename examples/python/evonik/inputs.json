@@ -1,0 +1,23 @@
+{
+    "model": "mnist",
+    "fpath": "mnist-1652280061057.zip",
+    "description": "Mnist digit model",
+    "predictor": {
+        "image": "ocdr/tensorflowserver:2.0.0"
+    },
+    "transformer": {
+	"enable": true,
+        "image": "ocdr/dkube-datascience-tf-cpu:v2.0.0",
+        "private": false,
+        "registry": {
+            "username": "",
+            "password": ""
+        },
+        "code": {
+            "url": "https://github.com/oneconvergence/dkube-examples.git",
+            "branch": "tensorflow",
+            "token": ""
+        },
+        "script": "mnist/transformer.py"
+    }
+}
