@@ -3263,7 +3263,7 @@ class DkubeApi(ApiBase, FilesBase):
         response = self._api.update_deployment(id, data)
         return response
 
-    def delete_deployments(self, ids, wait=True):
+    def delete_deployments(self, ids=[], wait=True):
         """
         Method to delete the multiple deployments.
         *Available in DKube Release: 3.3.x*
@@ -3292,7 +3292,7 @@ class DkubeApi(ApiBase, FilesBase):
         *Outputs*
             A dictionary object with response status
         """
-        response = self._api.delete_deployments({"deployment_ids": [id]}, wait)
+        response = self.delete_deployments([id], wait)
         return response
 
     def archive_deployment(self, id):
