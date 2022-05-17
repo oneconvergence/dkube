@@ -3106,7 +3106,7 @@ class DkubeApi(ApiBase, FilesBase):
         return response["data"]
 
     def get_deployment_id(
-        self, name=None, clustername=None, variant=None, namespace=None
+        self, name, clustername=None, variant=None, namespace=None
     ):
         """
         Method to get the id  of a deployment.
@@ -3150,7 +3150,7 @@ class DkubeApi(ApiBase, FilesBase):
                         ):
                             return deployment["id"]
 
-    def get_deployment(self, id=None):
+    def get_deployment(self, id):
         """
         Method to get the deployment based on the id
 
@@ -3168,7 +3168,7 @@ class DkubeApi(ApiBase, FilesBase):
 
     def import_deployment(
         self,
-        name=None,
+        name,
         description=None,
         tags=None,
         cluster=None,
@@ -3219,7 +3219,7 @@ class DkubeApi(ApiBase, FilesBase):
 
     def update_deployment(
         self,
-        id=None,
+        id,
         description=None,
         tags=None,
         cluster=None,
@@ -3276,7 +3276,7 @@ class DkubeApi(ApiBase, FilesBase):
         response = self._api.delete_deployments({"deployment_ids": ids})
         return response
 
-    def delete_deployment(self, id=None):
+    def delete_deployment(self, id, wait=True):
         """
         Method to delete deployment.
         *Available in DKube Release: 3.3.x*
@@ -3287,9 +3287,13 @@ class DkubeApi(ApiBase, FilesBase):
             A dictionary object with response status
         """
         response = self._api.delete_deployments({"deployment_ids": [id]})
+        deployment_data = True
+        while deployment_data and wait:
+            dep_res = self.get_deployment(id)
+            deployment_data = dep_res.data
         return response
 
-    def archive_deployment(self, id=None):
+    def archive_deployment(self, id):
         """
         Method to archive the deployment
 
@@ -3325,7 +3329,7 @@ class DkubeApi(ApiBase, FilesBase):
         )
         return response
 
-    def unarchive_deployment(self, id=None):
+    def unarchive_deployment(self, id):
         """
         Method to unarchive the deployment
 
@@ -3368,7 +3372,6 @@ class DkubeApi(ApiBase, FilesBase):
 
         Outputs*
             a dictionary object with response status
-
         """
         response = super().get_cloudevents_logstore_creds()
         if response["response"]["code"] == 200:
