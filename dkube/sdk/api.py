@@ -1800,6 +1800,13 @@ class DkubeApi(ApiBase, FilesBase):
             run.serving_def.model,
             run.serving_def.version,
         )
+        if run.serving_def.version == None:
+            v = self.get_model_latest_version(
+                run.serving_def.owner, run.serving_def.model
+            )
+            run.serving_def.version = v["uuid"]
+        version = run.serving_def.version
+
         # Fetch training run details and fill in information for serving
         if (
             run.predictor.image == None
@@ -1810,11 +1817,6 @@ class DkubeApi(ApiBase, FilesBase):
             )
         ):
 
-            if run.serving_def.version == None:
-                v = self.get_model_latest_version(
-                    run.serving_def.owner, run.serving_def.model
-                )
-                run.serving_def.version = v["uuid"]
 
             li = self.get_model_lineage(
                 run.serving_def.owner, run.serving_def.model, run.serving_def.version

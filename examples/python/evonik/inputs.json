@@ -1,0 +1,30 @@
+{
+    "name": "insurance",
+    "description": "Insurance example.",
+    "artifact-store": {
+        "endpoint": "http://192.168.200.147:32221",
+        "bucket": "cloudevents",
+        "accesskeyid": "cloudevents",
+        "accesskey": "",
+        "model_prefix": "evonik/model",
+        "traindata_prefix": "evonik/traindata"
+    },
+    "predictor": {
+        "image": "ocdr/sklearnserver:0.23.2"
+    },
+    "transformer": {
+        "enable": true,
+        "image": "docker.io/ocdr/d3-datascience-sklearn:v0.23.2",
+        "private": false,
+        "registry": {
+            "username": "",
+            "password": ""
+        },
+        "code": {
+            "url": "https://github.com/oneconvergence/dkube-examples.git",
+            "branch": "monitoring",
+            "token": ""
+        },
+        "script": "insurance_datasources/transformer.py"
+    }
+}
