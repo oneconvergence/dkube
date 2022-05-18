@@ -12,6 +12,7 @@ import json
 import os
 import time
 from logging.config import valid_ident
+from urllib import response
 
 import pandas as pd
 import urllib3
@@ -2584,7 +2585,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().get_modelmonitor_alerts(id)
 
-    def modelmonitors_delete(self, ids=[]):
+    def modelmonitors_delete(self, ids=[], wait_for_completion=True):
         """
         Method to delete the multiple modelmonitors.
 
@@ -2600,9 +2601,15 @@ class DkubeApi(ApiBase, FilesBase):
             A dictionary object with response status
 
         """
-        return super().delete_modelmonitors(ids)
+        response = super().delete_modelmonitors(ids)
+        if wait_for_completion and (response["code"] == 200):
+            for each_id in ids:
+                mm_data = True
+                while mm_data:
+                    mm_data = self.get_deployment(each_id).data.modelmonitor
+        return response
 
-    def modelmonitor_delete(self, id):
+    def modelmonitor_delete(self, id, wait_for_completion=True):
         """
         Method to delete the single modelmonitor.
 
@@ -2618,7 +2625,7 @@ class DkubeApi(ApiBase, FilesBase):
             A dictionary object with response status
 
         """
-        return super().delete_modelmonitors([id])
+        return self.modelmonitors_delete([id], wait_for_completion)
 
     def modelmonitor_get_metricstemplate(self):
         """
@@ -3263,7 +3270,7 @@ class DkubeApi(ApiBase, FilesBase):
         response = self._api.update_deployment(id, data)
         return response
 
-    def delete_deployments(self, ids=[], wait=True):
+    def delete_deployments(self, ids=[], wait_for_completion=True):
         """
         Method to delete the multiple deployments.
         *Available in DKube Release: 3.3.x*
@@ -3274,7 +3281,7 @@ class DkubeApi(ApiBase, FilesBase):
            A dictionary object with response status
         """
         response = self._api.delete_deployments({"deployment_ids": ids})
-        if wait is True:
+        if wait_for_completion is True:
             for each_id in ids:
                 deployment_data = True
                 while deployment_data:
@@ -3282,7 +3289,7 @@ class DkubeApi(ApiBase, FilesBase):
                     deployment_data = dep_res.data
         return response
 
-    def delete_deployment(self, id, wait=True):
+    def delete_deployment(self, id, wait_for_completion=True):
         """
         Method to delete deployment.
         *Available in DKube Release: 3.3.x*
@@ -3292,7 +3299,7 @@ class DkubeApi(ApiBase, FilesBase):
         *Outputs*
             A dictionary object with response status
         """
-        response = self.delete_deployments([id], wait)
+        response = self.delete_deployments([id], wait_for_completion)
         return response
 
     def archive_deployment(self, id):
