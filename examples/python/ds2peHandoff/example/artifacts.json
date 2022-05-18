@@ -1,0 +1,36 @@
+{
+    "name": "insurance",
+    "description": "Insurance example.",
+    "artifact-store": "s3",
+    "s3_endpoint": "https://1.2.3.4:xxxx",
+    "s3_bucket": "mybucket",
+    "deployment_inputs": {
+        "model": "example/model",
+        "predictor": {
+            "image": "ocdr/sklearnserver:0.23.2"
+        },
+        "transformer": {
+            "enable": true,
+            "image": "docker.io/ocdr/d3-datascience-sklearn:v0.23.2",
+            "private": false,
+            "registry": {
+                "username": "",
+                "password": ""
+            },
+            "code": {
+                "url": "https://github.com/oneconvergence/dkube-examples.git",
+                "branch": "monitoring",
+                "token": ""
+            },
+            "script": "insurance_datasources/transformer.py"
+        }
+    },
+    "monitor_inputs": {
+        "traindata": "example/traindata",
+        "traindata_transformer": "example/transform-data.py",
+        "thresholds": "example/thresholds.json",
+        "model_type": "regression",
+        "model_input": "tabular",
+        "data_tz": "UTC"
+    }
+}

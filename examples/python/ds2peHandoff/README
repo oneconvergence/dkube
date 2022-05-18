@@ -1,0 +1,39 @@
+Scenario: Team A creates models, Team B deploys them and provides operational support. How does this hand off work?
+
+A shared S3 repo is used for collaboration. DKube also supports git, nfs or OOB (workstation storage) in addition to S3
+
+Deployment (Serving)
+--------------------
+
+Team A Trains and exports model artifacts for deployment. This includes model binary, Serving image & Transformer image
+
+Team B imports model, publishes it by specifying serving & transformer images
+Team B launches deployment manually from the UI using the published data
+
+import.ipynb implements the Team B logic. 
+Team A fills in artifacts.json and exports it to the shared space
+Team B fills in inputs.json and specifies access information of the shared folder to the scrits 
+
+Monitor
+-------
+
+Team A exports Train data & metrics thresholds.
+- Train data is used for baselining, feature distribution and feature scoring calculations.
+- Metrics thresholds would be used for notifying/alerting data drift or performance decay. This file describes toleration thresholds for each metric.
+
+Team B creates model monitor for the deployment created above.
+
+monitoring.ipynb implements the monitor creation. This example assumes insurace model with tabular/columnar data as inputs and computes insurance premium which is continuous data.
+
+A data generation script would be used to
+- Simulate traffic by continuously generating http prediction requests to the serving deployment.
+- Simulates creation of ground truth data by adding noise to the predicted values.
+
+data-generation.ipynb implements this logic
+
+- Tune the cell with the name 'Configuration' for relevant information in all 3 notebooks.
+The same artifacts.json and inputs.json would be used as described above.
+
+Team A exports
+--------------
+Team A exports are in the folder example. 
