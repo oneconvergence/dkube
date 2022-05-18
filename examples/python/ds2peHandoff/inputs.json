@@ -1,0 +1,10 @@
+{
+    "name": "ins",
+    "description": "Insurance example.",
+    "artifact_store": "s3",
+    "s3_endpoint": "https://1.2.3.4:xxxx",
+    "s3_bucket": "mybucket",
+    "s3_accesskeyid": "mykey",
+    "s3_accesskey": "mysecret",
+    "artifacts_json": "example/artifacts.json"
+ }
