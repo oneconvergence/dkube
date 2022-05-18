@@ -12,6 +12,7 @@ import json
 import os
 import time
 from logging.config import valid_ident
+from urllib import response
 
 import pandas as pd
 import urllib3
@@ -2584,7 +2585,7 @@ class DkubeApi(ApiBase, FilesBase):
         """
         return super().get_modelmonitor_alerts(id)
 
-    def modelmonitors_delete(self, ids=[]):
+    def modelmonitors_delete(self, ids=[], wait_for_completion=True):
         """
         Method to delete the multiple modelmonitors.
 
@@ -2594,15 +2595,23 @@ class DkubeApi(ApiBase, FilesBase):
 
             ids
                 List of modelmonitor Ids to be deleted. Example: ["cd123","345fg"]
+            wait_for_completion
+                When set to :bash:`True` this method will wait for modelmonitors to get deleted.
 
         *Outputs*
 
             A dictionary object with response status
 
         """
-        return super().delete_modelmonitors(ids)
+        response = super().delete_modelmonitors(ids)
+        if wait_for_completion and (response["code"] == 200):
+            for each_id in ids:
+                mm_data = True
+                while mm_data:
+                    mm_data = self.get_deployment(each_id).data.modelmonitor
+        return response
 
-    def modelmonitor_delete(self, id):
+    def modelmonitor_delete(self, id, wait_for_completion=True):
         """
         Method to delete the single modelmonitor.
 
@@ -2612,13 +2621,15 @@ class DkubeApi(ApiBase, FilesBase):
 
             id
                 Modelmonitor Id
+            wait_for_completion
+                When set to :bash:`True` this method will wait for modelmonitor to get deleted.
 
         *Outputs*
 
             A dictionary object with response status
 
         """
-        return super().delete_modelmonitors([id])
+        return self.modelmonitors_delete([id], wait_for_completion)
 
     def modelmonitor_get_metricstemplate(self):
         """
@@ -3106,7 +3117,7 @@ class DkubeApi(ApiBase, FilesBase):
         return response["data"]
 
     def get_deployment_id(
-        self, name=None, clustername=None, variant=None, namespace=None
+        self, name, clustername=None, variant=None, namespace=None
     ):
         """
         Method to get the id  of a deployment.
@@ -3150,7 +3161,7 @@ class DkubeApi(ApiBase, FilesBase):
                         ):
                             return deployment["id"]
 
-    def get_deployment(self, id=None):
+    def get_deployment(self, id):
         """
         Method to get the deployment based on the id
 
@@ -3168,7 +3179,7 @@ class DkubeApi(ApiBase, FilesBase):
 
     def import_deployment(
         self,
-        name=None,
+        name,
         description=None,
         tags=None,
         cluster=None,
@@ -3219,7 +3230,7 @@ class DkubeApi(ApiBase, FilesBase):
 
     def update_deployment(
         self,
-        id=None,
+        id,
         description=None,
         tags=None,
         cluster=None,
@@ -3263,33 +3274,43 @@ class DkubeApi(ApiBase, FilesBase):
         response = self._api.update_deployment(id, data)
         return response
 
-    def delete_deployments(self, ids=[]):
+    def delete_deployments(self, ids=[], wait_for_completion=True):
         """
         Method to delete the multiple deployments.
         *Available in DKube Release: 3.3.x*
         *Inputs*
           ids
             List of deployment Ids to be deleted. Example: ["cd123","345fg"]
+          wait_for_completion
+            When set to :bash:`True` this method will wait for deployments to get deleted.
         *Outputs*
            A dictionary object with response status
         """
         response = self._api.delete_deployments({"deployment_ids": ids})
+        if wait_for_completion is True:
+            for each_id in ids:
+                deployment_data = True
+                while deployment_data:
+                    dep_res = self.get_deployment(each_id)
+                    deployment_data = dep_res.data
         return response
 
-    def delete_deployment(self, id=None):
+    def delete_deployment(self, id, wait_for_completion=True):
         """
         Method to delete deployment.
         *Available in DKube Release: 3.3.x*
         *Inputs*
           id
             id of the deployment to be deleted
+          wait_for_completion
+            When set to :bash:`True` this method will wait for modelmonitor to get deleted.
         *Outputs*
             A dictionary object with response status
         """
-        response = self._api.delete_deployments({"deployment_ids": [id]})
+        response = self.delete_deployments([id], wait_for_completion)
         return response
 
-    def archive_deployment(self, id=None):
+    def archive_deployment(self, id):
         """
         Method to archive the deployment
 
@@ -3325,7 +3346,7 @@ class DkubeApi(ApiBase, FilesBase):
         )
         return response
 
-    def unarchive_deployment(self, id=None):
+    def unarchive_deployment(self, id):
         """
         Method to unarchive the deployment
 
@@ -3368,7 +3389,6 @@ class DkubeApi(ApiBase, FilesBase):
 
         Outputs*
             a dictionary object with response status
-
         """
         response = super().get_cloudevents_logstore_creds()
         if response["response"]["code"] == 200:
