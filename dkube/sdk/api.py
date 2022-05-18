@@ -2595,6 +2595,8 @@ class DkubeApi(ApiBase, FilesBase):
 
             ids
                 List of modelmonitor Ids to be deleted. Example: ["cd123","345fg"]
+            wait_for_completion
+                When set to :bash:`True` this method will wait for modelmonitors to get deleted.
 
         *Outputs*
 
@@ -2619,6 +2621,8 @@ class DkubeApi(ApiBase, FilesBase):
 
             id
                 Modelmonitor Id
+            wait_for_completion
+                When set to :bash:`True` this method will wait for modelmonitor to get deleted.
 
         *Outputs*
 
@@ -3277,6 +3281,8 @@ class DkubeApi(ApiBase, FilesBase):
         *Inputs*
           ids
             List of deployment Ids to be deleted. Example: ["cd123","345fg"]
+          wait_for_completion
+            When set to :bash:`True` this method will wait for deployments to get deleted.
         *Outputs*
            A dictionary object with response status
         """
@@ -3296,6 +3302,8 @@ class DkubeApi(ApiBase, FilesBase):
         *Inputs*
           id
             id of the deployment to be deleted
+          wait_for_completion
+            When set to :bash:`True` this method will wait for modelmonitor to get deleted.
         *Outputs*
             A dictionary object with response status
         """
