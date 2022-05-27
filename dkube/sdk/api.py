@@ -579,7 +579,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "data"
                 ]
                 name = code["name"].split(":")[1]
-                run.update_transformer_code(name, code["version"])
+                run.update_transformer_code(name, code["version_name"])
 
         if run.serving_def.min_replicas == 0:
             run.serving_def.min_replicas = inference["minreplicas"]
@@ -694,7 +694,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "data"
                 ]
                 name = code["name"].split(":")[1]
-                run.update_transformer_code(name, code["version"])
+                run.update_transformer_code(name, code["version_name"])
         # Don't allow prod deploy using this API, if MODEL_CATALOG_ENABLED=true
         if (
             run.serving_def.deploy == True
@@ -1834,7 +1834,7 @@ class DkubeApi(ApiBase, FilesBase):
                     "data"
                 ]
                 cname = code["name"].split(":")[1]
-                run.update_transformer_code(cname, code["version"])
+                run.update_transformer_code(cname, code["version_name"])
 
         data = {"name": name, "description": description, "serving": run.serving_def}
         super().publish_model(user, model, version, data)
