@@ -2808,17 +2808,6 @@ class DkubeApi(ApiBase, FilesBase):
             a dictionary object with response status
 
         """
-        deployment_state = "RUNNING"
-        while True:
-            deployment_data = self.get_deployment(id)
-            # inferenceservice_deployment will be none for imported deployments
-            if deployment_data.data.inferenceservice_deployment:
-                deployment_state = deployment_data.data.inferenceservice_deployment.parameters.generated.status.state
-            if deployment_state == "RUNNING":
-                break
-            else:
-                print(f"Deployment {id} - is in {deployment_state} state, waiting it to be in RUNNING state")
-                time.sleep(self.wait_interval)
         response = super().modelmonitor_state(id, "start")
         while wait_for_completion:
             mm_state = self.modelmonitor_get(id=id)["status"]["state"]
@@ -2827,22 +2816,6 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print("ModelMonitor {} - is in {} state".format(response["response"]["name"], mm_state))
                 time.sleep(self.wait_interval)
-        return response
-
-    def modelmonitor_stop(self, id):
-        """
-        Method to stop the modelmonitor
-
-        *Available in DKube Release: 3.0*
-
-        *Inputs*
-            id
-                Modelmonitor Id
-
-        Outputs*
-            a dictionary object with response status
-
-        """
         deployment_state = "RUNNING"
         while True:
             deployment_data = self.get_deployment(id)
@@ -2854,7 +2827,43 @@ class DkubeApi(ApiBase, FilesBase):
             else:
                 print(f"Deployment {id} - is in {deployment_state} state, waiting it to be in RUNNING state")
                 time.sleep(self.wait_interval)
-        return super().modelmonitor_state(id, "stop")
+        return response
+
+    def modelmonitor_stop(self, id, wait_for_completion=True):
+        """
+        Method to stop the modelmonitor
+
+        *Available in DKube Release: 3.0*
+
+        *Inputs*
+            id
+                Modelmonitor Id
+            wait_for_completion
+                When set to :bash:`True` this method will wait for modelmonitor resource to get into ready state.
+        Outputs*
+            a dictionary object with response status
+
+        """
+        response = super().modelmonitor_state(id, "stop")
+        deployment_state = "RUNNING"
+        while True:
+            deployment_data = self.get_deployment(id)
+            # inferenceservice_deployment will be none for imported deployments
+            if deployment_data.data.inferenceservice_deployment:
+                deployment_state = deployment_data.data.inferenceservice_deployment.parameters.generated.status.state
+            if deployment_state == "RUNNING":
+                break
+            else:
+                print(f"Deployment {id} - is in {deployment_state} state, waiting it to be in RUNNING state")
+                time.sleep(self.wait_interval)
+        while wait_for_completion:
+            mm_state = self.modelmonitor_get(id=id)["status"]["state"]
+            if mm_state.lower() == "ready":
+                break
+            else:
+                print("ModelMonitor {} - is in {} state".format(response["response"]["name"], mm_state))
+                time.sleep(self.wait_interval)
+        return response
 
     def modelmonitor_update(
         self, config: DkubeModelmonitor, wait_for_completion=True
