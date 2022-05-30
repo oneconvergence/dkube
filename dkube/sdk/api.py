@@ -2816,6 +2816,9 @@ class DkubeApi(ApiBase, FilesBase):
                 deployment_state = deployment_data.data.inferenceservice_deployment.parameters.generated.status.state
             if deployment_state == "RUNNING":
                 break
+            else:
+                print(f"Deployment {id} - is in {deployment_state} state, waiting it to be in running state")
+                time.sleep(self.wait_interval)
         response = super().modelmonitor_state(id, "start")
         while wait_for_completion:
             mm_state = self.modelmonitor_get(id=id)["status"]["state"]
@@ -2848,6 +2851,9 @@ class DkubeApi(ApiBase, FilesBase):
                 deployment_state = deployment_data.data.inferenceservice_deployment.parameters.generated.status.state
             if deployment_state == "RUNNING":
                 break
+            else:
+                print(f"Deployment {id} - is in {deployment_state} state, waiting it to be in running state")
+                time.sleep(self.wait_interval)
         return super().modelmonitor_state(id, "stop")
 
     def modelmonitor_update(
