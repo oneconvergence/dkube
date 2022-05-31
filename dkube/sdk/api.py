@@ -2809,16 +2809,33 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         response = super().modelmonitor_state(id, "start")
+        if response["response"]["code"] != 200:
+            raise Exception(response["response"]["message"])
         while wait_for_completion:
             mm_state = self.modelmonitor_get(id=id)["status"]["state"]
-            if mm_state.lower() in ["init", "active", "error"]:
+            if mm_state.lower() == "init":
+                return response
+            elif mm_state.lower() == "error":
+                raise Exception(response["response"]["message"])
+            elif mm_state.lower() == "active":
                 break
             else:
                 print("ModelMonitor {} - is in {} state".format(response["response"]["name"], mm_state))
                 time.sleep(self.wait_interval)
+        deployment_state = "RUNNING"
+        while True:
+            deployment_data = self.get_deployment(id)
+            # inferenceservice_deployment will be none for imported deployments
+            if deployment_data.data.inferenceservice_deployment:
+                deployment_state = deployment_data.data.inferenceservice_deployment.parameters.generated.status.state
+            if deployment_state == "RUNNING":
+                break
+            else:
+                print(f"Waiting to enable logs for deployment. Deployment state is {deployment_state}")
+                time.sleep(self.wait_interval)
         return response
 
-    def modelmonitor_stop(self, id):
+    def modelmonitor_stop(self, id, wait_for_completion=True):
         """
         Method to stop the modelmonitor
 
@@ -2827,12 +2844,34 @@ class DkubeApi(ApiBase, FilesBase):
         *Inputs*
             id
                 Modelmonitor Id
-
+            wait_for_completion
+                When set to :bash:`True` this method will wait for modelmonitor resource to get into ready state.
         Outputs*
             a dictionary object with response status
 
         """
-        return super().modelmonitor_state(id, "stop")
+        response = super().modelmonitor_state(id, "stop")
+        if response["response"]["code"] != 200:
+            raise Exception(response["response"]["message"])
+        while wait_for_completion:
+            mm_state = self.modelmonitor_get(id=id)["status"]["state"]
+            if mm_state.lower() == "ready":
+                break
+            else:
+                print("ModelMonitor {} - is in {} state".format(response["response"]["name"], mm_state))
+                time.sleep(self.wait_interval)
+        deployment_state = "RUNNING"
+        while True:
+            deployment_data = self.get_deployment(id)
+            # inferenceservice_deployment will be none for imported deployments
+            if deployment_data.data.inferenceservice_deployment:
+                deployment_state = deployment_data.data.inferenceservice_deployment.parameters.generated.status.state
+            if deployment_state == "RUNNING":
+                break
+            else:
+                print(f"Waiting to disable logs for deployment. Deployment state is {deployment_state}")
+                time.sleep(self.wait_interval)
+        return response
 
     def modelmonitor_update(
         self, config: DkubeModelmonitor, wait_for_completion=True
