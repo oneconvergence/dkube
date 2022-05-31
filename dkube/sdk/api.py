@@ -2813,7 +2813,11 @@ class DkubeApi(ApiBase, FilesBase):
             raise Exception(response["response"]["message"])
         while wait_for_completion:
             mm_state = self.modelmonitor_get(id=id)["status"]["state"]
-            if mm_state.lower() in ["init", "active", "error"]:
+            if mm_state.lower() == "init":
+                return response
+            elif mm_state.lower() == "error":
+                raise Exception(response["response"]["message"])
+            elif mm_state.lower() == "active":
                 break
             else:
                 print("ModelMonitor {} - is in {} state".format(response["response"]["name"], mm_state))
@@ -2827,7 +2831,7 @@ class DkubeApi(ApiBase, FilesBase):
             if deployment_state == "RUNNING":
                 break
             else:
-                print(f"Waiting to restore deployment RUNNING status. Deployment state is {deployment_state}")
+                print(f"Waiting to enable logs for deployment. Deployment state is {deployment_state}")
                 time.sleep(self.wait_interval)
         return response
 
@@ -2865,7 +2869,7 @@ class DkubeApi(ApiBase, FilesBase):
             if deployment_state == "RUNNING":
                 break
             else:
-                print(f"Waiting to restore deployment RUNNING status. Deployment state is {deployment_state}")
+                print(f"Waiting to disable logs for deployment. Deployment state is {deployment_state}")
                 time.sleep(self.wait_interval)
         return response
 
