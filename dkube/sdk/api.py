@@ -2809,6 +2809,8 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         response = super().modelmonitor_state(id, "start")
+        if response["response"]["code"] != 200:
+            raise Exception(response["response"]["message"])
         while wait_for_completion:
             mm_state = self.modelmonitor_get(id=id)["status"]["state"]
             if mm_state.lower() in ["init", "active", "error"]:
@@ -2825,7 +2827,7 @@ class DkubeApi(ApiBase, FilesBase):
             if deployment_state == "RUNNING":
                 break
             else:
-                print(f"Deployment {id} - is in {deployment_state} state, waiting it to be in RUNNING state")
+                print(f"Waiting to restore deployment RUNNING status. Deployment state is {deployment_state}")
                 time.sleep(self.wait_interval)
         return response
 
@@ -2845,6 +2847,15 @@ class DkubeApi(ApiBase, FilesBase):
 
         """
         response = super().modelmonitor_state(id, "stop")
+        if response["response"]["code"] != 200:
+            raise Exception(response["response"]["message"])
+        while wait_for_completion:
+            mm_state = self.modelmonitor_get(id=id)["status"]["state"]
+            if mm_state.lower() == "ready":
+                break
+            else:
+                print("ModelMonitor {} - is in {} state".format(response["response"]["name"], mm_state))
+                time.sleep(self.wait_interval)
         deployment_state = "RUNNING"
         while True:
             deployment_data = self.get_deployment(id)
@@ -2854,14 +2865,7 @@ class DkubeApi(ApiBase, FilesBase):
             if deployment_state == "RUNNING":
                 break
             else:
-                print(f"Deployment {id} - is in {deployment_state} state, waiting it to be in RUNNING state")
-                time.sleep(self.wait_interval)
-        while wait_for_completion:
-            mm_state = self.modelmonitor_get(id=id)["status"]["state"]
-            if mm_state.lower() == "ready":
-                break
-            else:
-                print("ModelMonitor {} - is in {} state".format(response["response"]["name"], mm_state))
+                print(f"Waiting to restore deployment RUNNING status. Deployment state is {deployment_state}")
                 time.sleep(self.wait_interval)
         return response
 
