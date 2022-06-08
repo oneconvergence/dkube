@@ -10,3 +10,4 @@ url_normalize
 pyarrow==2.0.0
 pandas==1.1.5
 pyyaml
+packaging
