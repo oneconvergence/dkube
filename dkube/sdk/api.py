@@ -3434,9 +3434,7 @@ class DkubeApi(ApiBase, FilesBase):
             return response["data"]
         else:
             raise ValueError(response["response"]["message"])
-=======
             return 
->>>>>>> f3732746369f53e63535070fdd6068e23e420aff
 
     def _get_job_datum_info(self, datum, _class):
         dinfo = {}
