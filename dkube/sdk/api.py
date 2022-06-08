@@ -1220,8 +1220,6 @@ class DkubeApi(ApiBase, FilesBase):
             type(dataset) == DkubeDataset
         ), "Invalid type for run, value must be instance of rsrcs:DkubeDataset class"
         super().create_repo(dataset)
-        if dataset.datum.remote == True:
-            wait_for_completion = False
         while wait_for_completion:
             status = super().get_repo(
                 "dataset", dataset.user, dataset.name, fields="status"
