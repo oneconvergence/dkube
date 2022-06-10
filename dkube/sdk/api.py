@@ -3179,10 +3179,8 @@ class DkubeApi(ApiBase, FilesBase):
         """
         if clustername == None:
             for deployment in self.list_deployments():
-                if deployment["name"] == name and if deployment.get("imported_deployment") is None:
+                if (deployment["name"] == name) and (not deployment["imported_deployment"]):
                     return deployment["id"]
-            else:
-                print("no deployment found")
         else:
             if clustername:
                 cluster_kind = self.get_cluster_details(clustername)["data"]["cluster"][
