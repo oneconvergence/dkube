@@ -43,6 +43,6 @@ def create_run(url=None, token=None, user=None, name=None, code=None, code_versi
     run_id = run_response["job"]["parameters"]["generated"]["uuid"]
 
     logger.info("DKube run id (" + run_id +
-                "), metrics can be reported against it")
+                "), use it as mlflow run id")
 
     return run_id
