@@ -12,6 +12,9 @@ def create_run(url=None, token=None, user=None, name=None, code=None, code_versi
     user = user or os.getenv("DKUBE_USER_LOGIN_NAME", None)
     assert (user), "User must be provided."
 
+    token = token or os.getenv("DKUBE_USER_ACCESS_TOKEN", None)
+    assert (token), "Token must be provided."
+
     assert (output), "Output must be provided."
 
     api = DkubeApi(URL=url, token=token)

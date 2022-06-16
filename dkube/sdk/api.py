@@ -91,7 +91,7 @@ class DkubeApi(ApiBase, FilesBase):
         if self.token == None:
             self.token = os.getenv("DKUBE_ACCESS_TOKEN", None)
             assert (
-                self.token != None
+                self.token == None
             ), "TOKEN must be specified either by passing argument or by setting DKUBE_ACCESS_TOKEN env variable"
 
         ApiBase.__init__(self, self.url, self.token, common_tags)
