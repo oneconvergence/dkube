@@ -11,7 +11,8 @@ from .rsrcs.storage import DkubeResourcePVC
 from .rsrcs.training import DkubeTraining
 from .rsrcs.modelmonitor import DkubeModelmonitor
 from .rsrcs.util import generate
+from . import mlflow
 
 __all__ = ['DkubeApi', 'DkubeIDE', 'DkubeTraining', 'DkubePreprocessing',
            'DkubeServing', 'DkubeCode', 'DkubeDataset', 'DkubeModel', 'generate',
-           'DkubeFeatureSet', 'DkubeProject','DkubeResourcePVC','DkubeModelmonitor']
+           'DkubeFeatureSet', 'DkubeProject','DkubeResourcePVC','DkubeModelmonitor', 'mlflow']
