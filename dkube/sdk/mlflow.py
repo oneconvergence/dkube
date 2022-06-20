@@ -1,23 +1,36 @@
 import logging
 import os
 from . import *
+from dkube.sdk.internal.api_base import *
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
 def create_run(url=None, token=None, user=None, name=None, code=None, code_version=None, dataset=None, dataset_version=None, model=None, model_version=None, output=None):
+    token = token or os.getenv("DKUBE_USER_ACCESS_TOKEN", None)
+    assert (token), "Token must be provided."
+
+    api = DkubeApi(URL=url, token=token)
+
+    run_id = os.getenv('DKUBE_MLFLOW_RUN_ID', None)
+    if run_id:
+        try:
+            run = ApiBase.get_run_byuuid(api, run_id)
+        except Exception as e:
+            raise e
+        run_class = run['parameters']['_class']
+        if run_class != "notebook":
+            logger.info("DKube run id (" + run_id +
+                "), use it as mlflow run id")
+            return run_id
+
     print("creating mlflow run")
 
     user = user or os.getenv("DKUBE_USER_LOGIN_NAME", None)
     assert (user), "User must be provided."
 
-    token = token or os.getenv("DKUBE_USER_ACCESS_TOKEN", None)
-    assert (token), "Token must be provided."
-
     assert (output), "Output must be provided."
-
-    api = DkubeApi(URL=url, token=token)
 
     if name is None:
         name = "mlflow"
