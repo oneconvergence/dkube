@@ -25,11 +25,8 @@ def create_run(url=None, token=None, user=None, name=None, code=None, code_versi
                         "), use it as mlflow run id")
             return run_id
 
-    print("creating mlflow run")
-
     user = user or os.getenv("DKUBE_USER_LOGIN_NAME", None)
     assert (user), "User must be provided."
-
     assert (output), "Output must be provided."
 
     if name is None:
@@ -39,8 +36,6 @@ def create_run(url=None, token=None, user=None, name=None, code=None, code_versi
                 training_name + ") for user " + user)
     training = DkubeTraining(user, name=training_name,
                              description='Mlflow training run')
-    training.update_container(
-        framework="tensorflow_2.0.0", image_url="ocdr/dkube-datascience-tf-cpu:v2.0.0")
     if code is not None:
         training.add_code(code, code_version)
     if dataset is not None:
