@@ -22,7 +22,7 @@ def create_run(url=None, token=None, user=None, name=None, code=None, code_versi
         run_class = run['parameters']['_class']
         if run_class != "notebook":
             logger.info("DKube run id (" + run_id +
-                "), use it as mlflow run id")
+                        "), use it as mlflow run id")
             return run_id
 
     print("creating mlflow run")
