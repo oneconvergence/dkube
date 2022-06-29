@@ -89,8 +89,9 @@ class DkubeTraining(object):
             data=self.input_project_data, script=None)
         self.output_models = []
         self.input_datasets = []
+        self.input_models = []
         self.input_datums = JobDatumModel(
-            workspace=self.input_project, datasets=self.input_datasets, outputs=self.output_models)
+            workspace=self.input_project, datasets=self.input_datasets, models=self.input_models, outputs=self.output_models)
         self.input_featuresets = []
         self.output_featuresets = []
         self.featuresets = JobFeaturesetModel(
