@@ -1862,6 +1862,93 @@ class DkubeApi(ApiBase, FilesBase):
                 )
                 time.sleep(self.wait_interval)
 
+    def model_image_build(
+        self,
+        user,
+        registry,
+        model,
+        version,
+        code,
+        commit="",
+        image_name="",
+        image_tag="",
+        wait_for_build_start=True
+    ):
+        """
+        Method to create image build for model.
+        Raises Exception in case of errors.
+
+
+        *Inputs*
+
+            user
+                Name of the user creating the deployment
+
+            registry
+                Docker registry(an existing docker secret name in dkube-cicd namespace) to push model image
+
+            model
+                Name of the model to be used in image build
+
+            version
+                Version of the model to be used in image build
+
+            code
+                Name of the code to be used for image build
+                Dockerfile from this code will be used for image build
+
+            commit
+                Commit ID of the code
+
+            image_name
+                Image name for the image which is going to be built
+
+            image_tag
+                Image tag for the image which is going to be built
+
+            wait_for_build_creation
+                Wait for image build task creation to get build name. It will not wait for image build completion
+
+        """
+
+        data = {
+            "registry": registry,
+            "model": model,
+            "version": version,
+            "code": code,
+            "commit": commit,
+            "image_name": image_name,
+            "image_tag": image_tag
+        }
+
+        resp = self._api.model_image_build(user, data)
+        build_name = resp.message.split(":")[-1].strip()
+        print(
+            "Model image build {}/{} request successfully invoked - build name: {}".format(
+                model, version, build_name)
+        )
+        while wait_for_build_start:
+            v = self.get_model_version(user, model, version)
+            found = False
+            if "images" in v:
+                for img in v["images"]:
+                    if img["build_name"] == build_name:
+                        print(
+                            "Model image build {}/{} - build {} started".format(
+                            model, version, build_name
+                            )
+                        )
+                        found = True
+                        break
+            if found:
+                break
+            print(
+                "Model image build {}/{} - waiting for build {} to start".format(
+                model, version, build_name
+                )
+            )
+            time.sleep(self.wait_interval)
+
     def create_model_deployment(
         self,
         user,
