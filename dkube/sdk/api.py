@@ -1924,29 +1924,25 @@ class DkubeApi(ApiBase, FilesBase):
         resp = self._api.model_image_build(user, data)
         build_name = resp.message.split(":")[-1].strip()
         print(
-            "Model image build {}/{} request successfully invoked - build name: {}".format(
-                model, version, build_name)
+            "Image build {} for model {}/{} triggered successfully.".format(
+                build_name, model, version)
         )
         while wait_for_build_start:
+            print(
+                "Waiting for image build {} to start".format(build_name)
+            )
             v = self.get_model_version(user, model, version)
             found = False
             if "images" in v:
                 for img in v["images"]:
                     if img["build_name"] == build_name:
                         print(
-                            "Model image build {}/{} - build {} started".format(
-                            model, version, build_name
-                            )
+                            "Image build {} started".format(build_name)
                         )
                         found = True
                         break
             if found:
                 break
-            print(
-                "Model image build {}/{} - waiting for build {} to start".format(
-                model, version, build_name
-                )
-            )
             time.sleep(self.wait_interval)
 
     def create_model_deployment(
