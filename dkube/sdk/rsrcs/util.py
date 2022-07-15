@@ -1,7 +1,7 @@
 import string
 import random
 
-generate = lambda hint: "{}-{}".format(hint, ''.join([random.choice(string.digits) for n in range(4)]))
+generate = lambda hint: "{}-{}".format(hint, ''.join(random.sample(string.ascii_letters + string.digits, 6)))
 
 def list_of_strs(x):
     if x != None:
