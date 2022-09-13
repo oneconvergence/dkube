@@ -7,7 +7,7 @@ with open("requirements.txt") as f:
 
 setup(
     name="dkube",
-    version="3.3",
+    version="3.6",
     description="Dkube SDK",
     author="oneconvergence",
     author_email="dkube@oneconvergence.com",
