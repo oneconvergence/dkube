@@ -10,6 +10,8 @@ from dkube.sdk.internal.dkube_api.models.datum_model_hostpath import \
     DatumModelHostpath
 from dkube.sdk.internal.dkube_api.models.datum_model_k8svolume import \
     DatumModelK8svolume
+from dkube.sdk.internal.dkube_api.models.sql_access_info import SQLAccessInfo
+from dkube.sdk.internal.dkube_api.models.snowflake_access_info import SnowflakeAccessInfo
 from dkube.sdk.internal.dkube_api.models.gcs_access_info import GCSAccessInfo
 from dkube.sdk.internal.dkube_api.models.git_access_credentials import \
     GitAccessCredentials
@@ -41,7 +43,7 @@ class DkubeDataset(object):
     """
 
     DATASET_SOURCES = ["dvs", "git", "aws_s3",
-                       "s3", "gcs", "nfs", "redshift", "k8svolume","sql"]
+            "s3", "gcs", "nfs", "redshift", "k8s_volume", "sql", "snowflake", "fsx", "pub_url", "hostpath"]
     """
 	List of valid datasources in DKube.
 	Some datasources are downloaded while some are remotely referenced.
@@ -65,6 +67,12 @@ class DkubeDataset(object):
         :bash:`hostpath` :- If data is in a path in host machine. :bash:`Remote`
 	
 	:bash:`sql` :- sql dataset source :bash:`Remote`
+
+	:bash:`snowflake` :- snowflake dataset source :bash:`Remote`
+
+	:bash:`fsx` :- FSx dataset source :bash:`Remote`
+
+	:bash:`pub_url` :- If data is available publicly and can be downloaded using the URL :bash:`Downloaded`
 
     """
 
@@ -108,6 +116,17 @@ class DkubeDataset(object):
             cacert=None,
             insecure_ssl=None)
 
+        self.snowflake = SnowflakeAccessInfo(
+            account=None,
+            username=None,
+            password=None,
+            database=None,
+            odbc_connection_string=None,
+            jdbc_connection_string=None,
+            schema=None,
+            warehouse=None,
+            parameters=None)
+
         self.nfsaccess = NFSAccessInfo(server=None, path=None)
 
         self.gcssecret = RepoGCSAccessInfoSecret(name=None, content=None)
@@ -141,7 +160,8 @@ class DkubeDataset(object):
             url=None,
             remote=remote,
             gitaccess=self.gitaccess,
-	    sql=self.sql,
+            sql=self.sql,
+            snowflake=self.snowflake,
             s3access=self.s3access,
             nfsaccess=self.nfsaccess,
             gcsaccess=self.gcsaccess,
@@ -396,7 +416,6 @@ class DkubeDataset(object):
 
                 provider
                     possible values are 'oracle','mysql' and 'mssql' (string)
-                
                 host
                     host address (string)
 
@@ -420,7 +439,7 @@ class DkubeDataset(object):
         """
 
         self.datum.source = "sql"
-        self.datum.url = "sql:"+ host + ":" + str(port) + ":" + database
+        self.datum.url = "sql:" + host + ":" + str(port) + ":" + database
         self.sql.provider = provider
         self.sql.host = host
         self.sql.port = port
@@ -431,3 +450,51 @@ class DkubeDataset(object):
         self.sql.jdbc_connection_string = jdbc_connection_string
         self.datum.remote = True
                                                                      
+    def update_snowflake_details(self, account='', username=None, password=None, database='', odbc_connection_string=None, jdbc_connection_string=None, schema='', warehouse='', parameters={}):
+        """
+            Method to update details of snowflake data source.
+
+            *Inputs*
+
+                account
+                    snowflake account URL without the '.snowflakecomputing.com' (string)
+
+                username
+                    username for accessing the database (string)
+
+                password
+                    password for accessing the database (string)
+
+                database
+                    name of the database (string)
+
+                odbc_connection_string
+                    odbc connection string
+
+                jdbc_connection_string
+                    jdbc connection string
+
+                schema
+                    database schema to use by default in the client session (string)
+
+                warehouse
+                    virtual warehouse to use by default for queries, loading, etc. in the client session (string)
+
+                parameters
+                    Dictionary of env parameters name and value
+        """
+
+        self.datum.source = "snowflake"
+        self.snowflake.account = account
+        self.snowflake.username = username
+        self.snowflake.password = password
+        self.snowflake.database = database
+        self.snowflake.odbc_connection_string = odbc_connection_string
+        self.snowflake.jdbc_connection_string = jdbc_connection_string
+        self.snowflake.schema = schema
+        self.snowflake.warehouse = warehouse
+
+        params = []
+        for k, v in parameters.items():
+            params.append({"key": k, "value": v})
+        self.snowflake.parameters = params
