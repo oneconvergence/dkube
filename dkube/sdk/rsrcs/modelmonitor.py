@@ -8,6 +8,10 @@ from enum import Enum
 
 from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.models import conditions
+from dkube.sdk.internal.dkube_api.models.custom_container_model import \
+    CustomContainerModel
+from dkube.sdk.internal.dkube_api.models.custom_container_model_image import \
+    CustomContainerModelImage
 from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_cond_def import \
     ModelmonitorAlertCondDef
 from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_def import \
@@ -572,6 +576,32 @@ class DkubeModelmonitor(object):
             for key in mm_dataset:
                 self.modelmonitor.datasources[data_class][key] = mm_dataset[key]
 
+    def update_drift_monitoring_custom_details(
+        self,
+        path,
+        username=None,
+        password=None,
+        runas=None,
+    ):
+        self.modelmonitor.drift_monitoring["custom"] = {"image" : dict()}
+        self.modelmonitor.drift_monitoring["custom"]["image"]["path"] = path
+        self.modelmonitor.drift_monitoring["custom"]["image"]["username"] = username
+        self.modelmonitor.drift_monitoring["custom"]["image"]["password"] = password
+        self.modelmonitor.drift_monitoring["custom"]["image"]["runas"] = runas
+
+    def update_performance_monitoring_custom_details(
+        self,
+        path,
+        username=None,
+        password=None,
+        runas=None,
+    ):
+        self.modelmonitor.performance_monitoring["custom"] = {"image" : dict()}
+        self.modelmonitor.performance_monitoring["custom"]["image"]["path"] = path
+        self.modelmonitor.performance_monitoring["custom"]["image"]["username"] = username
+        self.modelmonitor.performance_monitoring["custom"]["image"]["password"] = password
+        self.modelmonitor.performance_monitoring["custom"]["image"]["runas"] = runas
+
     def update_drift_monitoring_details(
         self,
         enabled=None,
@@ -579,6 +609,7 @@ class DkubeModelmonitor(object):
         algorithm: DriftAlgo = "auto",
         image_train_data_savedfile_format: ImageDataSavedFileFormat = None,
         image_predict_data_savedfile_format: ImageDataSavedFileFormat = None,
+        custom=False,
     ):
         """
         This function updates the DKube drift monitor details. The following updates are supported:
@@ -601,6 +632,8 @@ class DkubeModelmonitor(object):
                 self.modelmonitor.drift_monitoring["image_train_data_savedfile_format"] = image_train_data_savedfile_format
                 self.modelmonitor.drift_monitoring["image_predict_data_savedfile_format"] = image_predict_data_savedfile_format
             self.schema = None
+        if custom and (not self.modelmonitor.drift_monitoring.get("custom")):
+            print("Add custom details using update_drift_monitoring_custom_details(...) func")
      
     def update_performance_monitoring_details(
         self,
@@ -609,6 +642,7 @@ class DkubeModelmonitor(object):
         source_type: SourceTypePerformance = None,
         docker_image=None,
         startup_script=None,
+        custom=False,
     ):
         """
         This function updates the DKube performance monitoring details. The following updates are supported:
@@ -627,6 +661,8 @@ class DkubeModelmonitor(object):
             self.modelmonitor.performance_monitoring["docker_image"] = docker_image
         if startup_script:
             self.modelmonitor.performance_monitoring["startup_script"] = startup_script
+        if custom and (not self.modelmonitor.performance_monitoring.get("custom")):
+            print("Add custom details using update_performance_monitoring_custom_details(...) func")
         
     def update_deployment_monitoring_details(
         self,
@@ -727,7 +763,6 @@ class DkubeModelmonitorAlert(object):
         cond[alert_key] = feature if feature is not None else metric
         cond["action"] = "add"
         self.conditions.append(cond)
-
 
     def update_alert_condition(
         self,
