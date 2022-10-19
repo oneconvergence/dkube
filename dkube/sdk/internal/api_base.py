@@ -18,7 +18,7 @@ from url_normalize import url_normalize
 # Configure API key authorization: d3apikey
 configuration = dkube_api.Configuration()
 configuration.api_key_prefix['Authorization'] = 'Bearer'
-
+configuration.safe_chars_for_path_param = '@'
 
 class ApiBase(object):
 
