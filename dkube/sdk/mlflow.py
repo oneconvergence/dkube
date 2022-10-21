@@ -3,7 +3,7 @@ import os
 from . import *
 from dkube.sdk.internal.api_base import *
 
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
