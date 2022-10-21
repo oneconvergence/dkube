@@ -7,12 +7,14 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
-def create_run(url=None, token=None, user=None, name=None, code=None, code_version=None, dataset=None, dataset_version=None, model=None, model_version=None, output=None):
+def create_run(url=None, token=None, user=None, name=None, project=None, code=None, code_version=None, dataset=None, dataset_version=None, model=None, model_version=None, output=None):
     token = token or os.getenv("DKUBE_USER_ACCESS_TOKEN", None)
     assert (token), "Token must be provided."
 
     api = DkubeApi(URL=url, token=token)
-
+    if project == None:
+        project = os.getenv("DKUBE_PROJECT_ID")
+    
     run_id = os.getenv('DKUBE_MLFLOW_RUN_ID', None)
     if run_id:
         try:
@@ -35,11 +37,12 @@ def create_run(url=None, token=None, user=None, name=None, code=None, code_versi
     logger.info("Creating a training run (" +
                 training_name + ") for user " + user)
     training = DkubeTraining(user, name=training_name,
-                             description='Mlflow training run')
+                             description='Mlflow training run' ,
+                             tags=[f"project:{project}", "execute=false"])
     if code is not None:
         training.add_code(code, code_version)
     if dataset is not None:
-        training. add_input_dataset(datset, dataset_version)
+        training.add_input_dataset(dataset, dataset_version)
     if model is not None:
         training.add_input_model(model, model_version)
     training.add_output_model(output)
