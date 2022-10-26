@@ -36,7 +36,8 @@ class Data30(object):
         'description': 'str',
         'image': 'str',
         'leaderboard': 'bool',
-        'feast_enabled': 'bool'
+        'feast_enabled': 'bool',
+        'offline_dataset': 'str'
     }
 
     attribute_map = {
@@ -45,10 +46,11 @@ class Data30(object):
         'description': 'description',
         'image': 'image',
         'leaderboard': 'leaderboard',
-        'feast_enabled': 'feastEnabled'
+        'feast_enabled': 'feastEnabled',
+        'offline_dataset': 'offline_dataset'
     }
 
-    def __init__(self, name=None, group=None, description=None, image=None, leaderboard=False, feast_enabled=False):  # noqa: E501
+    def __init__(self, name=None, group=None, description=None, image=None, leaderboard=False, feast_enabled=False, offline_dataset=None):  # noqa: E501
         """Data30 - a model defined in Swagger"""  # noqa: E501
 
         self._name = None
@@ -57,6 +59,7 @@ class Data30(object):
         self._image = None
         self._leaderboard = None
         self._feast_enabled = None
+        self._offline_dataset = None
         self.discriminator = None
 
         if name is not None:
@@ -71,6 +74,8 @@ class Data30(object):
             self.leaderboard = leaderboard
         if feast_enabled is not None:
             self.feast_enabled = feast_enabled
+        if offline_dataset is not None:
+            self.offline_dataset = offline_dataset
 
     @property
     def name(self):
@@ -201,6 +206,27 @@ class Data30(object):
         """
 
         self._feast_enabled = feast_enabled
+
+    @property
+    def offline_dataset(self):
+        """Gets the offline_dataset of this Data30.  # noqa: E501
+
+
+        :return: The offline_dataset of this Data30.  # noqa: E501
+        :rtype: str
+        """
+        return self._offline_dataset
+
+    @offline_dataset.setter
+    def offline_dataset(self, offline_dataset):
+        """Sets the offline_dataset of this Data30.
+
+
+        :param offline_dataset: The offline_dataset of this Data30.  # noqa: E501
+        :type: str
+        """
+
+        self._offline_dataset = offline_dataset
 
     def to_dict(self):
         """Returns the model properties as a dict"""

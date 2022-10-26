@@ -39,6 +39,8 @@ class ProjectListModel(object):
         'owner': 'str',
         'group': 'str',
         'last_updated': 'str',
+        'feast_enabled': 'bool',
+        'offline_dataset': 'str',
         'status': 'ProjectStatusModel'
     }
 
@@ -51,10 +53,12 @@ class ProjectListModel(object):
         'owner': 'owner',
         'group': 'group',
         'last_updated': 'last_updated',
+        'feast_enabled': 'feastEnabled',
+        'offline_dataset': 'offline_dataset',
         'status': 'status'
     }
 
-    def __init__(self, name=None, description=None, image=None, leaderboard=False, id=None, owner=None, group=None, last_updated=None, status=None):  # noqa: E501
+    def __init__(self, name=None, description=None, image=None, leaderboard=False, id=None, owner=None, group=None, last_updated=None, feast_enabled=False, offline_dataset=None, status=None):  # noqa: E501
         """ProjectListModel - a model defined in Swagger"""  # noqa: E501
 
         self._name = None
@@ -65,6 +69,8 @@ class ProjectListModel(object):
         self._owner = None
         self._group = None
         self._last_updated = None
+        self._feast_enabled = None
+        self._offline_dataset = None
         self._status = None
         self.discriminator = None
 
@@ -84,6 +90,10 @@ class ProjectListModel(object):
             self.group = group
         if last_updated is not None:
             self.last_updated = last_updated
+        if feast_enabled is not None:
+            self.feast_enabled = feast_enabled
+        if offline_dataset is not None:
+            self.offline_dataset = offline_dataset
         if status is not None:
             self.status = status
 
@@ -258,6 +268,48 @@ class ProjectListModel(object):
         """
 
         self._last_updated = last_updated
+
+    @property
+    def feast_enabled(self):
+        """Gets the feast_enabled of this ProjectListModel.  # noqa: E501
+
+
+        :return: The feast_enabled of this ProjectListModel.  # noqa: E501
+        :rtype: bool
+        """
+        return self._feast_enabled
+
+    @feast_enabled.setter
+    def feast_enabled(self, feast_enabled):
+        """Sets the feast_enabled of this ProjectListModel.
+
+
+        :param feast_enabled: The feast_enabled of this ProjectListModel.  # noqa: E501
+        :type: bool
+        """
+
+        self._feast_enabled = feast_enabled
+
+    @property
+    def offline_dataset(self):
+        """Gets the offline_dataset of this ProjectListModel.  # noqa: E501
+
+
+        :return: The offline_dataset of this ProjectListModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._offline_dataset
+
+    @offline_dataset.setter
+    def offline_dataset(self, offline_dataset):
+        """Sets the offline_dataset of this ProjectListModel.
+
+
+        :param offline_dataset: The offline_dataset of this ProjectListModel.  # noqa: E501
+        :type: str
+        """
+
+        self._offline_dataset = offline_dataset
 
     @property
     def status(self):

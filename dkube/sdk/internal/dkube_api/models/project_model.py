@@ -46,6 +46,7 @@ class ProjectModel(object):
         'eval_script': 'str',
         'eval_details': 'str',
         'feast_enabled': 'bool',
+        'offline_dataset': 'str',
         'submissions': 'list[SubmissionModel]',
         'status': 'ProjectStatusModel',
         'eval_dataset': 'ProjectEvalDatumModel'
@@ -67,12 +68,13 @@ class ProjectModel(object):
         'eval_script': 'eval_script',
         'eval_details': 'eval_details',
         'feast_enabled': 'feastEnabled',
+        'offline_dataset': 'offline_dataset',
         'submissions': 'submissions',
         'status': 'status',
         'eval_dataset': 'eval_dataset'
     }
 
-    def __init__(self, name=None, description=None, image=None, leaderboard=False, id=None, owner=None, group=None, last_updated=None, details=None, eval_repo=None, eval_commit_id=None, eval_image=None, eval_script=None, eval_details=None, feast_enabled=None, submissions=None, status=None, eval_dataset=None):  # noqa: E501
+    def __init__(self, name=None, description=None, image=None, leaderboard=False, id=None, owner=None, group=None, last_updated=None, details=None, eval_repo=None, eval_commit_id=None, eval_image=None, eval_script=None, eval_details=None, feast_enabled=False, offline_dataset=None, submissions=None, status=None, eval_dataset=None):  # noqa: E501
         """ProjectModel - a model defined in Swagger"""  # noqa: E501
 
         self._name = None
@@ -90,6 +92,7 @@ class ProjectModel(object):
         self._eval_script = None
         self._eval_details = None
         self._feast_enabled = None
+        self._offline_dataset = None
         self._submissions = None
         self._status = None
         self._eval_dataset = None
@@ -125,6 +128,8 @@ class ProjectModel(object):
             self.eval_details = eval_details
         if feast_enabled is not None:
             self.feast_enabled = feast_enabled
+        if offline_dataset is not None:
+            self.offline_dataset = offline_dataset
         if submissions is not None:
             self.submissions = submissions
         if status is not None:
@@ -450,6 +455,27 @@ class ProjectModel(object):
         """
 
         self._feast_enabled = feast_enabled
+
+    @property
+    def offline_dataset(self):
+        """Gets the offline_dataset of this ProjectModel.  # noqa: E501
+
+
+        :return: The offline_dataset of this ProjectModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._offline_dataset
+
+    @offline_dataset.setter
+    def offline_dataset(self, offline_dataset):
+        """Sets the offline_dataset of this ProjectModel.
+
+
+        :param offline_dataset: The offline_dataset of this ProjectModel.  # noqa: E501
+        :type: str
+        """
+
+        self._offline_dataset = offline_dataset
 
     @property
     def submissions(self):

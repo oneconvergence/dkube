@@ -42,7 +42,8 @@ class ProjectUpdateModel(object):
         'eval_script': 'str',
         'eval_details': 'str',
         'eval_dataset': 'ProjectEvalDatumModel',
-        'feast_enabled': 'bool'
+        'feast_enabled': 'bool',
+        'offline_dataset': 'str'
     }
 
     attribute_map = {
@@ -57,10 +58,11 @@ class ProjectUpdateModel(object):
         'eval_script': 'eval_script',
         'eval_details': 'eval_details',
         'eval_dataset': 'eval_dataset',
-        'feast_enabled': 'feastEnabled'
+        'feast_enabled': 'feastEnabled',
+        'offline_dataset': 'offline_dataset'
     }
 
-    def __init__(self, name=None, description=None, image=None, leaderboard=False, details=None, eval_repo=None, eval_commit_id=None, eval_image=None, eval_script=None, eval_details=None, eval_dataset=None, feast_enabled=None):  # noqa: E501
+    def __init__(self, name=None, description=None, image=None, leaderboard=False, details=None, eval_repo=None, eval_commit_id=None, eval_image=None, eval_script=None, eval_details=None, eval_dataset=None, feast_enabled=False, offline_dataset=None):  # noqa: E501
         """ProjectUpdateModel - a model defined in Swagger"""  # noqa: E501
 
         self._name = None
@@ -75,6 +77,7 @@ class ProjectUpdateModel(object):
         self._eval_details = None
         self._eval_dataset = None
         self._feast_enabled = None
+        self._offline_dataset = None
         self.discriminator = None
 
         if name is not None:
@@ -101,6 +104,8 @@ class ProjectUpdateModel(object):
             self.eval_dataset = eval_dataset
         if feast_enabled is not None:
             self.feast_enabled = feast_enabled
+        if offline_dataset is not None:
+            self.offline_dataset = offline_dataset
 
     @property
     def name(self):
@@ -357,6 +362,27 @@ class ProjectUpdateModel(object):
         """
 
         self._feast_enabled = feast_enabled
+
+    @property
+    def offline_dataset(self):
+        """Gets the offline_dataset of this ProjectUpdateModel.  # noqa: E501
+
+
+        :return: The offline_dataset of this ProjectUpdateModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._offline_dataset
+
+    @offline_dataset.setter
+    def offline_dataset(self, offline_dataset):
+        """Sets the offline_dataset of this ProjectUpdateModel.
+
+
+        :param offline_dataset: The offline_dataset of this ProjectUpdateModel.  # noqa: E501
+        :type: str
+        """
+
+        self._offline_dataset = offline_dataset
 
     def to_dict(self):
         """Returns the model properties as a dict"""
