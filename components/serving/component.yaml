@@ -30,12 +30,6 @@ inputs:
      description: 'Required. Transformer script.'}
   - {name: transformer_commit_id,      type: String,   optional: true,
      description: 'Optional. Transformer project commit ID.'}
-  - {name: min_replicas,      type: String,   optional: true,
-     description: 'Optional. Minimum number of replicas that each Revision should have. If not provided, value from platform config will be used.'}
-  - {name: max_concurrent_requests,      type: String,   optional: true,
-     description: 'Optional. Maximum number of requests an inf pod can process at a time. If not provided, value from platform config will be used.'}
-  - {name: production,      type: String,   optional: true,     default: 'false',
-     description: 'Set the value to true for production deployment' }
 outputs:
   - {name: rundetails,       description: 'Details of the dkube run'}
   - {name: servingurl,       description: 'URL at which the serving web server is accessible.'}
@@ -50,14 +44,11 @@ implementation:
       --model, {inputValue: model},
       --model_version, {inputValue: model_version},
       --device, {inputValue: device},
-      --production, {inputValue: production},
       --serving_image, {inputValue: serving_image},
       --transformer_image, {inputValue: transformer_image},
       --transformer_project, {inputValue: transformer_project},
       --transformer_code, {inputValue: transformer_code},
       --transformer_commit_id, {inputValue: transformer_commit_id},
-      --min_replicas, {inputValue: min_replicas},
-      --max_concurrent_requests, {inputValue: max_concurrent_requests},
       --runid, '{{pod.name}}',
       --wfid, '{{workflow.uid}}'
     ]
