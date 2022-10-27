@@ -16,13 +16,13 @@ from dkube.sdk.internal.dkube_api.models.modelmonitor_alert_def import (
 from dkube.sdk.internal.dkube_api.models.modelmonitor_component_def import (
     ModelmonitorComponentDef,
 )
-from dkube.sdk.internal.dkube_api.models.modelmonitor_dataset_def import (
-    ModelmonitorDatasetDef,
-)
+#from dkube.sdk.internal.dkube_api.models.modelmonitor_dataset_def import (
+#    ModelmonitorDatasetDef,
+#)
 from dkube.sdk.internal.dkube_api.models.modelmonitor_def import ModelmonitorDef
-from dkube.sdk.internal.dkube_api.models.modelmonitor_default_threshold_def import (
-    ModelmonitorDefaultThresholdDef,
-)
+#from dkube.sdk.internal.dkube_api.models.modelmonitor_default_threshold_def import (
+#    ModelmonitorDefaultThresholdDef,
+#)
 from dkube.sdk.internal.dkube_api.models.modelmonitor_features_spec_def import (
     ModelmonitorFeaturesSpecDef,
 )
