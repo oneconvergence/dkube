@@ -83,7 +83,7 @@ class DkubeCluster(object):
     """
 
     def __init__(self, name=generate("dkube_cluster"), description="", tags=None):
-        self.cluster = Cluster(name=None, tags=None, description=None)
+        self.cluster = Cluster(name=None, tags=None, description=None, auth_type="none")
 
         self.update_basic(name, description, tags)
 
