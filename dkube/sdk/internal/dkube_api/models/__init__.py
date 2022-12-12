@@ -139,6 +139,7 @@ from dkube.sdk.internal.dkube_api.models.datum_model_k8svolume import DatumModel
 from dkube.sdk.internal.dkube_api.models.datum_source_details import DatumSourceDetails
 from dkube.sdk.internal.dkube_api.models.datum_source_details_job import DatumSourceDetailsJob
 from dkube.sdk.internal.dkube_api.models.datum_status_model import DatumStatusModel
+from dkube.sdk.internal.dkube_api.models.delta_lake import DeltaLake
 from dkube.sdk.internal.dkube_api.models.deployment_def import DeploymentDef
 from dkube.sdk.internal.dkube_api.models.deployment_import_request_def import DeploymentImportRequestDef
 from dkube.sdk.internal.dkube_api.models.deployment_monitoring_def import DeploymentMonitoringDef
@@ -316,6 +317,7 @@ from dkube.sdk.internal.dkube_api.models.job_status_model import JobStatusModel
 from dkube.sdk.internal.dkube_api.models.json_form import JsonForm
 from dkube.sdk.internal.dkube_api.models.json_form_clusters import JsonFormClusters
 from dkube.sdk.internal.dkube_api.models.k8_s_volume_info import K8SVolumeInfo
+from dkube.sdk.internal.dkube_api.models.kafka_event_source import KafkaEventSource
 from dkube.sdk.internal.dkube_api.models.last_used_credentials import LastUsedCredentials
 from dkube.sdk.internal.dkube_api.models.last_used_credentials_inner import LastUsedCredentialsInner
 from dkube.sdk.internal.dkube_api.models.log_viewer import LogViewer

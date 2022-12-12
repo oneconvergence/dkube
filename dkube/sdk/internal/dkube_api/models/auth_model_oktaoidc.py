@@ -36,7 +36,9 @@ class AuthModelOktaoidc(object):
         'redirect_uri': 'str',
         'client_id': 'str',
         'client_secret': 'str',
-        'updated_at': 'str'
+        'updated_at': 'str',
+        'user_name_attribute': 'str',
+        'api_key': 'str'
     }
 
     attribute_map = {
@@ -45,10 +47,12 @@ class AuthModelOktaoidc(object):
         'redirect_uri': 'redirectURI',
         'client_id': 'clientId',
         'client_secret': 'clientSecret',
-        'updated_at': 'updatedAt'
+        'updated_at': 'updatedAt',
+        'user_name_attribute': 'userNameAttribute',
+        'api_key': 'apiKey'
     }
 
-    def __init__(self, username=None, endpoint=None, redirect_uri=None, client_id=None, client_secret=None, updated_at=None):  # noqa: E501
+    def __init__(self, username=None, endpoint=None, redirect_uri=None, client_id=None, client_secret=None, updated_at=None, user_name_attribute=None, api_key=None):  # noqa: E501
         """AuthModelOktaoidc - a model defined in Swagger"""  # noqa: E501
 
         self._username = None
@@ -57,6 +61,8 @@ class AuthModelOktaoidc(object):
         self._client_id = None
         self._client_secret = None
         self._updated_at = None
+        self._user_name_attribute = None
+        self._api_key = None
         self.discriminator = None
 
         if username is not None:
@@ -71,6 +77,10 @@ class AuthModelOktaoidc(object):
             self.client_secret = client_secret
         if updated_at is not None:
             self.updated_at = updated_at
+        if user_name_attribute is not None:
+            self.user_name_attribute = user_name_attribute
+        if api_key is not None:
+            self.api_key = api_key
 
     @property
     def username(self):
@@ -221,6 +231,54 @@ class AuthModelOktaoidc(object):
         """
 
         self._updated_at = updated_at
+
+    @property
+    def user_name_attribute(self):
+        """Gets the user_name_attribute of this AuthModelOktaoidc.  # noqa: E501
+
+        To derive okta username  # noqa: E501
+
+        :return: The user_name_attribute of this AuthModelOktaoidc.  # noqa: E501
+        :rtype: str
+        """
+        return self._user_name_attribute
+
+    @user_name_attribute.setter
+    def user_name_attribute(self, user_name_attribute):
+        """Sets the user_name_attribute of this AuthModelOktaoidc.
+
+        To derive okta username  # noqa: E501
+
+        :param user_name_attribute: The user_name_attribute of this AuthModelOktaoidc.  # noqa: E501
+        :type: str
+        """
+
+        self._user_name_attribute = user_name_attribute
+
+    @property
+    def api_key(self):
+        """Gets the api_key of this AuthModelOktaoidc.  # noqa: E501
+
+        okta api token  # noqa: E501
+
+        :return: The api_key of this AuthModelOktaoidc.  # noqa: E501
+        :rtype: str
+        """
+        return self._api_key
+
+    @api_key.setter
+    def api_key(self, api_key):
+        """Sets the api_key of this AuthModelOktaoidc.
+
+        okta api token  # noqa: E501
+
+        :param api_key: The api_key of this AuthModelOktaoidc.  # noqa: E501
+        :type: str
+        """
+        if api_key is not None and len(api_key) < 1:
+            raise ValueError("Invalid value for `api_key`, length must be greater than or equal to `1`")  # noqa: E501
+
+        self._api_key = api_key
 
     def to_dict(self):
         """Returns the model properties as a dict"""

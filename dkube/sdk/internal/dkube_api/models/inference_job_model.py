@@ -47,7 +47,9 @@ class InferenceJobModel(object):
         'max_concurrent_requests': 'int',
         'envs': 'CustomKVModel',
         'resource_requirements': 'ResourceRequirements',
-        'enable_logs': 'bool'
+        'enable_logs': 'bool',
+        'event_source': 'str',
+        'kafka_event_source': 'KafkaEventSource'
     }
 
     attribute_map = {
@@ -67,10 +69,12 @@ class InferenceJobModel(object):
         'max_concurrent_requests': 'maxConcurrentRequests',
         'envs': 'envs',
         'resource_requirements': 'resourceRequirements',
-        'enable_logs': 'enable_logs'
+        'enable_logs': 'enable_logs',
+        'event_source': 'event_source',
+        'kafka_event_source': 'kafkaEventSource'
     }
 
-    def __init__(self, model=None, version=None, owner=None, device=None, deploy=False, mcname=None, serving_image=None, transformer=False, transformer_image=None, transformer_project=None, transformer_commit_id=None, transformer_code=None, min_replicas=None, max_concurrent_requests=None, envs=None, resource_requirements=None, enable_logs=None):  # noqa: E501
+    def __init__(self, model=None, version=None, owner=None, device=None, deploy=False, mcname=None, serving_image=None, transformer=False, transformer_image=None, transformer_project=None, transformer_commit_id=None, transformer_code=None, min_replicas=None, max_concurrent_requests=None, envs=None, resource_requirements=None, enable_logs=None, event_source=None, kafka_event_source=None):  # noqa: E501
         """InferenceJobModel - a model defined in Swagger"""  # noqa: E501
 
         self._model = None
@@ -90,6 +94,8 @@ class InferenceJobModel(object):
         self._envs = None
         self._resource_requirements = None
         self._enable_logs = None
+        self._event_source = None
+        self._kafka_event_source = None
         self.discriminator = None
 
         if model is not None:
@@ -126,6 +132,10 @@ class InferenceJobModel(object):
             self.resource_requirements = resource_requirements
         if enable_logs is not None:
             self.enable_logs = enable_logs
+        if event_source is not None:
+            self.event_source = event_source
+        if kafka_event_source is not None:
+            self.kafka_event_source = kafka_event_source
 
     @property
     def model(self):
@@ -501,6 +511,56 @@ class InferenceJobModel(object):
         """
 
         self._enable_logs = enable_logs
+
+    @property
+    def event_source(self):
+        """Gets the event_source of this InferenceJobModel.  # noqa: E501
+
+        Event source  # noqa: E501
+
+        :return: The event_source of this InferenceJobModel.  # noqa: E501
+        :rtype: str
+        """
+        return self._event_source
+
+    @event_source.setter
+    def event_source(self, event_source):
+        """Sets the event_source of this InferenceJobModel.
+
+        Event source  # noqa: E501
+
+        :param event_source: The event_source of this InferenceJobModel.  # noqa: E501
+        :type: str
+        """
+        allowed_values = ["kafka"]  # noqa: E501
+        if event_source not in allowed_values:
+            raise ValueError(
+                "Invalid value for `event_source` ({0}), must be one of {1}"  # noqa: E501
+                .format(event_source, allowed_values)
+            )
+
+        self._event_source = event_source
+
+    @property
+    def kafka_event_source(self):
+        """Gets the kafka_event_source of this InferenceJobModel.  # noqa: E501
+
+
+        :return: The kafka_event_source of this InferenceJobModel.  # noqa: E501
+        :rtype: KafkaEventSource
+        """
+        return self._kafka_event_source
+
+    @kafka_event_source.setter
+    def kafka_event_source(self, kafka_event_source):
+        """Sets the kafka_event_source of this InferenceJobModel.
+
+
+        :param kafka_event_source: The kafka_event_source of this InferenceJobModel.  # noqa: E501
+        :type: KafkaEventSource
+        """
+
+        self._kafka_event_source = kafka_event_source
 
     def to_dict(self):
         """Returns the model properties as a dict"""

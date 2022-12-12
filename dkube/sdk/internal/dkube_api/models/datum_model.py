@@ -51,6 +51,7 @@ class DatumModel(object):
         'nfsaccess': 'NFSAccessInfo',
         'gcsaccess': 'GCSAccessInfo',
         'fsx': 'Fsx',
+        'deltalake': 'DeltaLake',
         'generated': 'DatumModelGenerated'
     }
 
@@ -75,10 +76,11 @@ class DatumModel(object):
         'nfsaccess': 'nfsaccess',
         'gcsaccess': 'gcsaccess',
         'fsx': 'fsx',
+        'deltalake': 'deltalake',
         'generated': 'generated'
     }
 
-    def __init__(self, version=None, name=None, description=None, tags=None, _class=None, group=None, project=None, dvs=None, source=None, url=None, remote=False, gitaccess=None, redshift=None, sql=None, s3access=None, k8svolume=None, hostpath=None, nfsaccess=None, gcsaccess=None, fsx=None, generated=None):  # noqa: E501
+    def __init__(self, version=None, name=None, description=None, tags=None, _class=None, group=None, project=None, dvs=None, source=None, url=None, remote=False, gitaccess=None, redshift=None, sql=None, s3access=None, k8svolume=None, hostpath=None, nfsaccess=None, gcsaccess=None, fsx=None, deltalake=None, generated=None):  # noqa: E501
         """DatumModel - a model defined in Swagger"""  # noqa: E501
 
         self._version = None
@@ -101,6 +103,7 @@ class DatumModel(object):
         self._nfsaccess = None
         self._gcsaccess = None
         self._fsx = None
+        self._deltalake = None
         self._generated = None
         self.discriminator = None
 
@@ -144,6 +147,8 @@ class DatumModel(object):
             self.gcsaccess = gcsaccess
         if fsx is not None:
             self.fsx = fsx
+        if deltalake is not None:
+            self.deltalake = deltalake
         if generated is not None:
             self.generated = generated
 
@@ -341,7 +346,7 @@ class DatumModel(object):
         :param source: The source of this DatumModel.  # noqa: E501
         :type: str
         """
-        allowed_values = ["git", "aws_s3", "s3", "pub_url", "k8s_volume", "dkube", "nfs", "gcs", "dvs", "workstation", "redshift", "hostpath", "sql", "fsx"]  # noqa: E501
+        allowed_values = ["git", "aws_s3", "s3", "pub_url", "k8s_volume", "dkube", "nfs", "gcs", "dvs", "workstation", "redshift", "hostpath", "sql", "fsx", "deltalake"]  # noqa: E501
         if source not in allowed_values:
             raise ValueError(
                 "Invalid value for `source` ({0}), must be one of {1}"  # noqa: E501
@@ -584,6 +589,27 @@ class DatumModel(object):
         """
 
         self._fsx = fsx
+
+    @property
+    def deltalake(self):
+        """Gets the deltalake of this DatumModel.  # noqa: E501
+
+
+        :return: The deltalake of this DatumModel.  # noqa: E501
+        :rtype: DeltaLake
+        """
+        return self._deltalake
+
+    @deltalake.setter
+    def deltalake(self, deltalake):
+        """Sets the deltalake of this DatumModel.
+
+
+        :param deltalake: The deltalake of this DatumModel.  # noqa: E501
+        :type: DeltaLake
+        """
+
+        self._deltalake = deltalake
 
     @property
     def generated(self):
