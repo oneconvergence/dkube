@@ -16,7 +16,10 @@ from dkube.sdk.internal.dkube_api.models.job_model_parameters import \
     JobModelParameters
 from dkube.sdk.internal.dkube_api.models.job_model_parameters_run import \
     JobModelParametersRun
+from dkube.sdk.internal.dkube_api.models.kafka_event_source import \
+    KafkaEventSource
 from dkube.sdk.internal.dkube_api.rest import ApiException
+
 
 from .util import *
 
@@ -202,3 +205,20 @@ class DkubeServing(object):
                     Boolean value, it can be either True or False
         """
         self.serving_def.enable_logs = enable_logs
+
+    def update_kafkasource(self, brokers, topics, group):
+        """
+            Method to attach a kafka source to the inference deployment
+
+            *Inputs*
+
+                brokers
+                    Comma separated list of kafka brokers
+                topics
+                    Comma separated list of kafka topics
+                group
+                    Consumer group to subscribed to
+
+        """
+        self.serving_def.event_source = 'kafka'
+        self.serving_def.kafka_event_source = KafkaEventSource(brokers=brokers, topics=topics, group=group)
