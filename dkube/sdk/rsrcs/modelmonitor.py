@@ -831,8 +831,6 @@ class DkubeModelmonitorAlert(object):
             if each_condition["state"] is None:
                 if each_condition["op"] is None:
                     raise ValueError(f"operator is none for condition {each_condition}")
-                if (self._class == "feature_drift") and (each_condition["op"] not in ("<", "<=")):
-                    raise ValueError(f"feature drift can only have op operator.lt or operator.le, condition {each_condition}")
                 if (each_condition["threshold"] is None) and (each_condition["state"] is None):
                     raise ValueError(f"Both threshold and state can not be none, one is required, condition {each_condition}")
             elif each_condition["state"] != "critical" or each_condition["state"] != "warning":
