@@ -1,8 +1,5 @@
-import base64
 import json
 import os
-import sys
-import time
 
 from .metrics import DKubeMetrics
 
