@@ -3126,25 +3126,21 @@ class DkubeApi(ApiBase, FilesBase):
         Outputs*
             a dictionary object with response status
         """
-        try:
-            existing_schema = self.modelmonitor_schema_to_df(id)
-            if existing_schema is None:
-                new_schema = json.loads(schema_df.to_json(orient="records"))
-            else:
-                existing_schema.set_index('label', inplace=True)
-                existing_schema.update(schema_df.set_index('label'))
-                existing_schema = existing_schema.reset_index()
-                new_schema = json.loads(existing_schema.to_json(orient="records"))
-            if cluster_id:
-                schema = {"schema":{"features":new_schema}}
-                super().modelmonitor_update_schema_url(id, schema, cluster_id)
-            else:
-                mm = DkubeModelmonitor(deployemnt_id=id)
-                mm.__dict__["modelmonitor"].__dict__["_schema"] = {"features": new_schema}
-                return self.modelmonitor_update(mm)
-        except TypeError:
-            print("Schema is Null")
-            return
+        existing_schema = self.modelmonitor_schema_to_df(id)
+        if existing_schema is None:
+            new_schema = json.loads(schema_df.to_json(orient="records"))
+        else:
+            existing_schema.set_index('label', inplace=True)
+            existing_schema.update(schema_df.set_index('label'))
+            existing_schema = existing_schema.reset_index()
+            new_schema = json.loads(existing_schema.to_json(orient="records"))
+        if cluster_id:
+            schema = {"schema":{"features":new_schema}}
+            super().modelmonitor_update_schema_url(id, schema, cluster_id)
+        else:
+            mm = DkubeModelmonitor(deployemnt_id=id)
+            mm.__dict__["modelmonitor"].__dict__["_schema"] = {"features": new_schema}
+            return self.modelmonitor_update(mm)
 
     ### operator api's ####
 
