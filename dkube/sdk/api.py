@@ -3092,9 +3092,8 @@ class DkubeApi(ApiBase, FilesBase):
             a dataframe object of schema
         """
         try:
+            print(id)
             config = self.modelmonitor_get(id=id)
-            if config["input_data_type"] != "tabular":
-                raise (f"Schema is not available for {config['input_data_type']} data type")
             schema = config.get("schema", {}).get("features")
             if schema == None:
                 return None
