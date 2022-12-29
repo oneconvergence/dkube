@@ -3092,13 +3092,11 @@ class DkubeApi(ApiBase, FilesBase):
             a dataframe object of schema
         """
         try:
-            print(id)
             config = self.modelmonitor_get(id=id)
-            print(config)
-            schema = config.get("schema", {}).get("features")
+            schema = config.get("schema", {})
             if schema == None:
                 return None
-            existing_schema = pd.DataFrame(schema)
+            existing_schema = pd.DataFrame(schema.get("features"))
             existing_schema = existing_schema.rename({"_class":"class"}, axis='columns')
         except TypeError:
             print("Schema is Null")
