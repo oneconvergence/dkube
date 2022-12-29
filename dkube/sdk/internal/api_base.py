@@ -494,9 +494,10 @@ class ApiBase(object):
         return response.to_dict()
 
     def modelmonitor_update_schema_url(self, id, schema, cluster_id):
-        url = "{}modelmonitor/{}".format(url, id)
-        header = {'authorization': "Bearer {}".format(token),
+        url = "{}modelmonitor/{}".format(configuration.host, id)
+        header = {'authorization': "Bearer {}".format(configuration.api_key['Authorization']),
                         'Content-Type': 'application/json'}
+        header["x-mm-pipeline"] = cluster_id
         res = requests.patch(url, data=json.dumps(schema, default=str),
                             headers=header, verify=False)
         if res.json()["code"] == 200:
@@ -504,7 +505,6 @@ class ApiBase(object):
         else:
             raise ApiError(f'schema could not be patched {res.json()["code"]} {res.json()["message"]}')
         
-
 
 # operator api's
 
