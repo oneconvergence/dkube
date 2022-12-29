@@ -3094,6 +3094,7 @@ class DkubeApi(ApiBase, FilesBase):
         try:
             print(id)
             config = self.modelmonitor_get(id=id)
+            print(config)
             schema = config.get("schema", {}).get("features")
             if schema == None:
                 return None
