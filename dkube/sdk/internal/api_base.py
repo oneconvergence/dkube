@@ -1,6 +1,10 @@
+import json
 import os
 import time
 from pprint import pprint
+
+import requests
+from url_normalize import url_normalize
 
 from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.api import dkube_operator_exclusive_api
@@ -13,7 +17,6 @@ from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.rsrcs.featureset import DKubeFeatureSetUtils
 from dkube.sdk.rsrcs.training import DkubeTraining
 from dkube.sdk.rsrcs.util import list_of_strs
-from url_normalize import url_normalize
 
 # Configure API key authorization: d3apikey
 configuration = dkube_api.Configuration()
@@ -489,6 +492,19 @@ class ApiBase(object):
     def update_modelmonitor_config(self, modelmonitor, data):
         response = self._mmapi.modelmonitor_update(modelmonitor, data)
         return response.to_dict()
+
+    def modelmonitor_update_schema_url(self, id, schema, cluster_id):
+        url = "{}modelmonitor/{}".format(url, id)
+        header = {'authorization': "Bearer {}".format(token),
+                        'Content-Type': 'application/json'}
+        res = requests.patch(url, data=json.dumps(schema, default=str),
+                            headers=header, verify=False)
+        if res.json()["code"] == 200:
+            print("schema patched")
+        else:
+            raise ApiError(f'schema could not be patched {res.json()["code"]} {res.json()["message"]}')
+        
+
 
 # operator api's
 

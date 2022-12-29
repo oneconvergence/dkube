@@ -3106,7 +3106,8 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_update_schema_from_df(
         self,
         id,
-        schema_df: pd.DataFrame
+        schema_df: pd.DataFrame,
+        cluster_id=None
     ):
         """
         Method to get schema of the modelmonitor as dataframe
@@ -3119,6 +3120,8 @@ class DkubeApi(ApiBase, FilesBase):
                 Modelmonitor Id
             schema_df
                 Pandas DataFrame having schema
+            cluster_id
+                cluster_id if using in custom drift, available in config[envs]
 
         Outputs*
             a dictionary object with response status
@@ -3132,9 +3135,13 @@ class DkubeApi(ApiBase, FilesBase):
                 existing_schema.update(schema_df.set_index('label'))
                 existing_schema = existing_schema.reset_index()
                 new_schema = json.loads(existing_schema.to_json(orient="records"))
-            mm = DkubeModelmonitor(deployemnt_id=id)
-            mm.__dict__["modelmonitor"].__dict__["_schema"] = {"features": new_schema}
-            return self.modelmonitor_update(mm)
+            if cluster_id:
+                schema = {"schema":{"features":new_schema}}
+                super().modelmonitor_update_schema_url(id, schema, cluster_id)
+            else:
+                mm = DkubeModelmonitor(deployemnt_id=id)
+                mm.__dict__["modelmonitor"].__dict__["_schema"] = {"features": new_schema}
+                return self.modelmonitor_update(mm)
         except TypeError:
             print("Schema is Null")
             return
