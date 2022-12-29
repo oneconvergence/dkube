@@ -16,6 +16,8 @@ from urllib import response
 
 import pandas as pd
 import urllib3
+from packaging import version as pversion
+
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.internal.dkube_api.models.conditions import \
     Conditions as TriggerCondition
@@ -25,7 +27,6 @@ from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
 from dkube.sdk.rsrcs.modelmonitor import DkubeModelmonitorAlert
 from dkube.sdk.rsrcs.project import DkubeProject
-from packaging import version as pversion
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -3094,7 +3095,7 @@ class DkubeApi(ApiBase, FilesBase):
             config = self.modelmonitor_get(id=id)
             if config["input_data_type"] != "tabular":
                 raise (f"Schema is not available for {config['input_data_type']} data type")
-            schema = config["schema"].get("features")
+            schema = config.get("schema", {}).get("features")
             if schema == None:
                 return None
             existing_schema = pd.DataFrame(schema)
@@ -3126,10 +3127,13 @@ class DkubeApi(ApiBase, FilesBase):
         """
         try:
             existing_schema = self.modelmonitor_schema_to_df(id)
-            existing_schema.set_index('label', inplace=True)
-            existing_schema.update(schema_df.set_index('label'))
-            existing_schema = existing_schema.reset_index()
-            new_schema = json.loads(existing_schema.to_json(orient="records"))
+            if existing_schema is None:
+                new_schema = json.loads(schema_df.to_json(orient="records"))
+            else:
+                existing_schema.set_index('label', inplace=True)
+                existing_schema.update(schema_df.set_index('label'))
+                existing_schema = existing_schema.reset_index()
+                new_schema = json.loads(existing_schema.to_json(orient="records"))
             mm = DkubeModelmonitor(deployemnt_id=id)
             mm.__dict__["modelmonitor"].__dict__["_schema"] = {"features": new_schema}
             return self.modelmonitor_update(mm)
