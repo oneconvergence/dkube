@@ -493,8 +493,8 @@ class ApiBase(object):
         response = self._mmapi.modelmonitor_update(modelmonitor, data)
         return response.to_dict()
 
-    def modelmonitor_update_schema_url(self, id, schema, cluster_id):
-        url = "{}modelmonitor/{}".format(configuration.host, id)
+    def modelmonitor_update_schema_custom(self, id, schema, cluster_id):
+        url = "http://dkube-controller-master.dkube.svc.cluster.local:5000/dkube/v2/controller/modelmonitor/{}".format(id)
         header = {'authorization': "Bearer {}".format(configuration.api_key['Authorization']),
                         'Content-Type': 'application/json'}
         header["x-mm-pipeline"] = cluster_id

@@ -3136,7 +3136,7 @@ class DkubeApi(ApiBase, FilesBase):
             new_schema = json.loads(existing_schema.to_json(orient="records"))
         if cluster_id:
             schema = {"schema":{"features":new_schema}}
-            super().modelmonitor_update_schema_url(id, schema, cluster_id)
+            super().modelmonitor_update_schema_custom(id, schema, cluster_id)
         else:
             mm = DkubeModelmonitor(deployemnt_id=id)
             mm.__dict__["modelmonitor"].__dict__["_schema"] = {"features": new_schema}
