@@ -503,7 +503,7 @@ class ApiBase(object):
         if res.json()["code"] == 200:
             print("schema patched")
         else:
-            raise ApiError(f'schema could not be patched {res.json()["code"]} {res.json()["message"]}')
+            raise ValueError(f'schema could not be patched {res.json()["code"]} {res.json()["message"]}')
         
 
 # operator api's
