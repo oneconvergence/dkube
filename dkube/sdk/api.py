@@ -3142,6 +3142,12 @@ class DkubeApi(ApiBase, FilesBase):
             mm.__dict__["modelmonitor"].__dict__["_schema"] = {"features": new_schema}
             return self.modelmonitor_update(mm)
 
+    def publish_baseline(baseline, mm_config):
+        return super().publish_baseline(mm_config)
+
+    def publish_featurescores(featurescores, mm_config):
+        return super().publish_featurescores(mm_config)
+
     ### operator api's ####
 
     def configure_clusters(self, data):

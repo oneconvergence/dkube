@@ -53,7 +53,6 @@ def infer_tabular_schema(train_df):
 
 def baseline_from_schema(train_df, schema_df):
     features = train_df.columns.to_list()
-    df_null = train_df.isna().any().to_dict()
     selected_features = list()
     prediction_output = None
     schema = json.loads(schema_df.to_json(orient="records"))
@@ -86,24 +85,5 @@ def baseline_from_schema(train_df, schema_df):
             col_baseline["class"] = "categorical"
             col_baseline["bins"] = train_df[feature_name].astype(int).value_counts().to_dict()
             col_baseline["description"] = train_df[feature_name].astype(int).astype("string").describe().astype(int).to_dict()
-        col_baseline["is_null"] = df_null[feature_name]
         baseline[feature_name] = col_baseline
     return baseline
-
-
-def publish_baseline(baseline, mm_config):
-    # publish metrics to dkube
-    metrics_sink = DKubeMetrics("data_drift", mm_config["envs"]["MM_UUID"])
-    for feature in baseline:
-        distributions = baseline[feature]["description"]
-        for metric, value in distributions.items():
-            labels = {"cycle": "base", "feature": feature, "metric": metric}
-            metrics_sink.add_metric("distribution", value, labels)
-    metrics_sink.publish_metrics()
-
-
-def publish_featurescores(featurescores, mm_config):
-    metrics_sink = DKubeMetrics("data_drift", mm_config["envs"]["MM_UUID"])
-    for metric, value in featurescores.items():
-        metrics_sink.add_metric("feature_importance", value, {"feature": metric, "cycle": "base"})
-    metrics_sink.publish_metrics()
