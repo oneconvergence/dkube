@@ -507,7 +507,7 @@ class ApiBase(object):
         else:
             raise ValueError(f'schema could not be patched {res.json()["code"]} {res.json()["message"]}')
 
-    def publish_baseline(baseline, mm_config):
+    def publish_baseline(self, baseline, mm_config):
         # publish metrics to dkube
         metrics_sink = DKubeMetrics("data_drift", mm_config["envs"]["MM_UUID"])
         for feature in baseline:
@@ -517,10 +517,11 @@ class ApiBase(object):
                 metrics_sink.add_metric("distribution", value, labels)
         metrics_sink.publish_metrics()
 
-    def publish_featurescores(featurescores, mm_config):
+    def publish_featurescores(self, featurescores, mm_config):
         metrics_sink = DKubeMetrics("data_drift", mm_config["envs"]["MM_UUID"])
         for metric, value in featurescores.items():
-            metrics_sink.add_metric("feature_importance", value, {"feature": metric, "cycle": "base"})
+            metrics_sink.add_metric("feature_importance", value,
+                                    {"feature": metric, "cycle": "base"})
         metrics_sink.publish_metrics()
         
     # operator api's
