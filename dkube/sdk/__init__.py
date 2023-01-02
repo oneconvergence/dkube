@@ -12,9 +12,9 @@ from .rsrcs.serving import DkubeServing
 from .rsrcs.storage import DkubeResourcePVC
 from .rsrcs.training import DkubeTraining
 from .rsrcs.util import generate
-from .utils import DKubeMetrics, monitoring
+from .utils import monitoring
 
 __all__ = ['DkubeApi', 'DkubeIDE', 'DkubeTraining', 'DkubePreprocessing',
            'DkubeServing', 'DkubeCode', 'DkubeDataset', 'DkubeModel', 'generate',
            'DkubeFeatureSet', 'DkubeProject', 'DkubeResourcePVC', 'DkubeModelmonitor',
-           'mlflow', 'monitoring', 'DKubeMetrics']
+           'mlflow', 'monitoring']

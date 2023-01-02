@@ -1,9 +1,6 @@
 import json
 import os
 
-from .metrics import DKubeMetrics
-
-
 def get_configuration():
     config_file = os.getenv('MM_CONFIG_FILE')
     if os.path.exists(config_file):
