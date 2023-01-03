@@ -1,5 +1,6 @@
 from . import mlflow
 from .api import DkubeApi
+from .internal.metrics import CUSTOM_METRICS_FILE
 from .rsrcs.code import DkubeCode
 from .rsrcs.dataset import DkubeDataset
 from .rsrcs.featureset import DkubeFeatureSet
@@ -17,4 +18,4 @@ from .utils import monitoring
 __all__ = ['DkubeApi', 'DkubeIDE', 'DkubeTraining', 'DkubePreprocessing',
            'DkubeServing', 'DkubeCode', 'DkubeDataset', 'DkubeModel', 'generate',
            'DkubeFeatureSet', 'DkubeProject', 'DkubeResourcePVC', 'DkubeModelmonitor',
-           'mlflow', 'monitoring']
+           'mlflow', 'monitoring', 'CUSTOM_METRICS_FILE']

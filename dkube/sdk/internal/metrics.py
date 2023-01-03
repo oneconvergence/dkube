@@ -10,6 +10,8 @@ import requests
 
 url = "http://dkube-exporter.dkube:9401/modelmonitor/metrics"
 
+CUSTOM_METRICS_FILE = "/tmp/metrics.json"
+
 
 class DKubeMetrics:
     def __init__(self, drift_type, id):
