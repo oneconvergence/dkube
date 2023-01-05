@@ -3135,7 +3135,7 @@ class DkubeApi(ApiBase, FilesBase):
             new_schema = json.loads(existing_schema.to_json(orient="records"))
         mm = DkubeModelmonitor(deployemnt_id=id)
         mm.__dict__["modelmonitor"].__dict__["_schema"] = {"features": new_schema}
-        return self.modelmonitor_update(mm)
+        return self.modelmonitor_update(mm, wait_for_completion=False)
 
     def publish_baseline(self,baseline, mm_config):
         return super().publish_baseline(baseline,mm_config)
