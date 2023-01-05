@@ -495,18 +495,6 @@ class ApiBase(object):
         response = self._mmapi.modelmonitor_update(modelmonitor, data)
         return response.to_dict()
 
-    def modelmonitor_update_schema_custom(self, id, schema, cluster_id):
-        url = "http://dkube-controller-master.dkube.svc.cluster.local:5000/dkube/v2/controller/modelmonitor/{}".format(id)
-        header = {'authorization': "Bearer {}".format(configuration.api_key['Authorization']),
-                        'Content-Type': 'application/json'}
-        header["x-mm-pipeline"] = cluster_id
-        res = requests.patch(url, data=json.dumps(schema, default=str),
-                            headers=header, verify=False)
-        if res.json()["code"] == 200:
-            print("schema patched")
-        else:
-            raise ValueError(f'schema could not be patched {res.json()["code"]} {res.json()["message"]}')
-
     def publish_baseline(self, baseline, mm_config):
         # publish metrics to dkube
         metrics_sink = DKubeMetrics("data_drift", mm_config["envs"]["MM_UUID"])

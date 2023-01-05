@@ -1,6 +1,7 @@
 import json
 import os
 
+
 def get_configuration():
     config_file = os.getenv('MM_CONFIG_FILE')
     if os.path.exists(config_file):
@@ -48,7 +49,7 @@ def infer_tabular_schema(train_df):
     return pd.DataFrame(schema["schema"]["features"])
 
 
-def baseline_from_schema(train_df, schema_df):
+def compute_distributions_from_schema(train_df, schema_df):
     features = train_df.columns.to_list()
     selected_features = list()
     prediction_output = None
