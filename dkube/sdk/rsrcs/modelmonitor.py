@@ -606,11 +606,11 @@ class DkubeModelmonitor(object):
         if algorithm == "custom":
             self.modelmonitor.drift_monitoring["custom"] = {"image":dict()}
             if image_path:
-                self.modelmonitor.drift_monitoring["custom"]["path"] = image_path
+                self.modelmonitor.drift_monitoring["custom"]["image"]["path"] = image_path
             else:
                 raise ValueError("image_path not passed for custom data drift")
             if run_as_script:
-                self.modelmonitor.drift_monitoring["custom"]["runas"] = run_as_script
+                self.modelmonitor.drift_monitoring["custom"]["image"]["runas"] = run_as_script
             else:
                 raise ValueError("run_as_script not passed for custom data drift")
      
@@ -636,13 +636,13 @@ class DkubeModelmonitor(object):
         if source_type:
             self.modelmonitor.performance_monitoring["source_type"] = source_type
         if source_type == SourceTypePerformance.Custom.value:
-            self.modelmonitor.performance_monitoring["custom"] = {"image":dict()}
+            self.modelmonitor.performance_monitoring["custom"] = {"image": dict()}
             if image_path:
-                self.modelmonitor.performance_monitoring["custom"]["path"] = image_path
+                self.modelmonitor.performance_monitoring["custom"]["image"]["path"] = image_path
             else:
                 raise ValueError("Image not passed for custom performacne drift")
             if run_as_script:
-                self.modelmonitor.performance_monitoring["custom"]["runas"] = run_as_script
+                self.modelmonitor.performance_monitoring["custom"]["image"]["runas"] = run_as_script
             else:
                 raise ValueError("Run as script not passed for custom performacne drift")
         
