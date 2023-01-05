@@ -579,6 +579,8 @@ class DkubeModelmonitor(object):
         algorithm: DriftAlgo = "auto",
         image_train_data_savedfile_format: ImageDataSavedFileFormat = None,
         image_predict_data_savedfile_format: ImageDataSavedFileFormat = None,
+        image_path=None,
+        run_as_script=None,
     ):
         """
         This function updates the DKube drift monitor details. The following updates are supported:
@@ -601,14 +603,24 @@ class DkubeModelmonitor(object):
                 self.modelmonitor.drift_monitoring["image_train_data_savedfile_format"] = image_train_data_savedfile_format
                 self.modelmonitor.drift_monitoring["image_predict_data_savedfile_format"] = image_predict_data_savedfile_format
             self.schema = None
+        if algorithm == "custom":
+            self.modelmonitor.drift_monitoring["custom"] = {"image"}
+            if image_path:
+                self.modelmonitor.drift_monitoring["custom"]["path"] = image_path
+            else:
+                raise ValueError("image_path not passed for custom data drift")
+            if run_as_script:
+                self.modelmonitor.drift_monitoring["custom"]["runas"] = run_as_script
+            else:
+                raise ValueError("run_as_script not passed for custom data drift")
      
     def update_performance_monitoring_details(
         self,
         enabled=None,
         frequency=5,
         source_type: SourceTypePerformance = None,
-        docker_image=None,
-        startup_script=None,
+        image_path=None,
+        run_as_script=None,
     ):
         """
         This function updates the DKube performance monitoring details. The following updates are supported:
@@ -623,10 +635,16 @@ class DkubeModelmonitor(object):
             self.modelmonitor.performance_monitoring["frequency"] = frequency
         if source_type:
             self.modelmonitor.performance_monitoring["source_type"] = source_type
-        if docker_image:
-            self.modelmonitor.performance_monitoring["docker_image"] = docker_image
-        if startup_script:
-            self.modelmonitor.performance_monitoring["startup_script"] = startup_script
+        if source_type == SourceTypePerformance.Custom.value:
+            self.modelmonitor.performance_monitoring["custom"] = {"image"}
+            if image_path:
+                self.modelmonitor.performance_monitoring["custom"]["path"] = image_path
+            else:
+                raise ValueError("Image not passed for custom performacne drift")
+            if run_as_script:
+                self.modelmonitor.performance_monitoring["custom"]["runas"] = run_as_script
+            else:
+                raise ValueError("Run as script not passed for custom performacne drift")
         
     def update_deployment_monitoring_details(
         self,
