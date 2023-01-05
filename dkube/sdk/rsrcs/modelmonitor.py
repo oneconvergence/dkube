@@ -604,7 +604,7 @@ class DkubeModelmonitor(object):
                 self.modelmonitor.drift_monitoring["image_predict_data_savedfile_format"] = image_predict_data_savedfile_format
             self.schema = None
         if algorithm == "custom":
-            self.modelmonitor.drift_monitoring["custom"] = {"image"}
+            self.modelmonitor.drift_monitoring["custom"] = {"image":dict()}
             if image_path:
                 self.modelmonitor.drift_monitoring["custom"]["path"] = image_path
             else:
@@ -636,7 +636,7 @@ class DkubeModelmonitor(object):
         if source_type:
             self.modelmonitor.performance_monitoring["source_type"] = source_type
         if source_type == SourceTypePerformance.Custom.value:
-            self.modelmonitor.performance_monitoring["custom"] = {"image"}
+            self.modelmonitor.performance_monitoring["custom"] = {"image":dict()}
             if image_path:
                 self.modelmonitor.performance_monitoring["custom"]["path"] = image_path
             else:
