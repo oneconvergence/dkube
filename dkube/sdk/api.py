@@ -2533,6 +2533,8 @@ class DkubeApi(ApiBase, FilesBase):
         assert (
             type(modelmonitor) == DkubeModelmonitor
         ), "Invalid type for model monitor, value must be instance of rsrcs:DkubeModelmonitor class"
+        if not modelmonitor.drift_monitoring:
+            modelmonitor.update_drift_monitoring_details()
         response = super().create_model_monitor(modelmonitor)
         while wait_for_completion:
             mm_config = super().get_modelmonitor_configuration(response["uuid"])
