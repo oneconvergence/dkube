@@ -16,6 +16,8 @@ from urllib import response
 
 import pandas as pd
 import urllib3
+from packaging import version as pversion
+
 from dkube.sdk.internal.api_base import *
 from dkube.sdk.internal.dkube_api.models.conditions import \
     Conditions as TriggerCondition
@@ -25,7 +27,6 @@ from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
 from dkube.sdk.rsrcs.modelmonitor import DkubeModelmonitorAlert
 from dkube.sdk.rsrcs.project import DkubeProject
-from packaging import version as pversion
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -2532,6 +2533,8 @@ class DkubeApi(ApiBase, FilesBase):
         assert (
             type(modelmonitor) == DkubeModelmonitor
         ), "Invalid type for model monitor, value must be instance of rsrcs:DkubeModelmonitor class"
+        if not modelmonitor.drift_monitoring:
+            modelmonitor.update_drift_monitoring_details()
         response = super().create_model_monitor(modelmonitor)
         while wait_for_completion:
             mm_config = super().get_modelmonitor_configuration(response["uuid"])
@@ -3092,12 +3095,10 @@ class DkubeApi(ApiBase, FilesBase):
         """
         try:
             config = self.modelmonitor_get(id=id)
-            if config["input_data_type"] != "tabular":
-                raise (f"Schema is not available for {config['input_data_type']} data type")
-            schema = config["schema"].get("features")
+            schema = config.get("schema", {})
             if schema == None:
                 return None
-            existing_schema = pd.DataFrame(schema)
+            existing_schema = pd.DataFrame(schema.get("features"))
             existing_schema = existing_schema.rename({"_class":"class"}, axis='columns')
         except TypeError:
             print("Schema is Null")
@@ -3107,7 +3108,7 @@ class DkubeApi(ApiBase, FilesBase):
     def modelmonitor_update_schema_from_df(
         self,
         id,
-        schema_df: pd.DataFrame
+        schema_df: pd.DataFrame,
     ):
         """
         Method to get schema of the modelmonitor as dataframe
@@ -3120,22 +3121,27 @@ class DkubeApi(ApiBase, FilesBase):
                 Modelmonitor Id
             schema_df
                 Pandas DataFrame having schema
-
+        
         Outputs*
             a dictionary object with response status
         """
-        try:
-            existing_schema = self.modelmonitor_schema_to_df(id)
+        existing_schema = self.modelmonitor_schema_to_df(id)
+        if existing_schema is None:
+            new_schema = json.loads(schema_df.to_json(orient="records"))
+        else:
             existing_schema.set_index('label', inplace=True)
             existing_schema.update(schema_df.set_index('label'))
             existing_schema = existing_schema.reset_index()
             new_schema = json.loads(existing_schema.to_json(orient="records"))
-            mm = DkubeModelmonitor(deployemnt_id=id)
-            mm.__dict__["modelmonitor"].__dict__["_schema"] = {"features": new_schema}
-            return self.modelmonitor_update(mm)
-        except TypeError:
-            print("Schema is Null")
-            return
+        mm = DkubeModelmonitor(deployemnt_id=id)
+        mm.__dict__["modelmonitor"].__dict__["_schema"] = {"features": new_schema}
+        return self.modelmonitor_update(mm, wait_for_completion=False)
+
+    def publish_baseline(self,baseline, mm_config):
+        return super().publish_baseline(baseline,mm_config)
+
+    def publish_featurescores(self, featurescores, mm_config):
+        return super().publish_featurescores(featurescores,mm_config)
 
     ### operator api's ####
 

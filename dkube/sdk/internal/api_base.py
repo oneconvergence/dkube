@@ -1,6 +1,10 @@
+import json
 import os
 import time
 from pprint import pprint
+
+import requests
+from url_normalize import url_normalize
 
 from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.api import dkube_operator_exclusive_api
@@ -13,7 +17,8 @@ from dkube.sdk.internal.dkube_api.rest import ApiException
 from dkube.sdk.rsrcs.featureset import DKubeFeatureSetUtils
 from dkube.sdk.rsrcs.training import DkubeTraining
 from dkube.sdk.rsrcs.util import list_of_strs
-from url_normalize import url_normalize
+
+from .metrics import DKubeMetrics
 
 # Configure API key authorization: d3apikey
 configuration = dkube_api.Configuration()
@@ -490,7 +495,24 @@ class ApiBase(object):
         response = self._mmapi.modelmonitor_update(modelmonitor, data)
         return response.to_dict()
 
-# operator api's
+    def publish_baseline(self, baseline, mm_config):
+        # publish metrics to dkube
+        metrics_sink = DKubeMetrics("data_drift", mm_config["envs"]["MM_UUID"])
+        for feature in baseline:
+            distributions = baseline[feature]["description"]
+            for metric, value in distributions.items():
+                labels = {"cycle": "base", "feature": feature, "metric": metric}
+                metrics_sink.add_metric("distribution", value, labels)
+        metrics_sink.publish_metrics()
+
+    def publish_featurescores(self, featurescores, mm_config):
+        metrics_sink = DKubeMetrics("data_drift", mm_config["envs"]["MM_UUID"])
+        for metric, value in featurescores.items():
+            metrics_sink.add_metric("feature_importance", value,
+                                    {"feature": metric, "cycle": "base"})
+        metrics_sink.publish_metrics()
+        
+    # operator api's
 
     def configure_clusters(self, data):
         response = self._opsapi.configure_clusters(data)
