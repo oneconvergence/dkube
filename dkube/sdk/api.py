@@ -3096,7 +3096,7 @@ class DkubeApi(ApiBase, FilesBase):
         try:
             config = self.modelmonitor_get(id=id)
             schema = config.get("schema", {})
-            if schema == None:
+            if (not schema) or (not schema.get("features")):
                 return None
             existing_schema = pd.DataFrame(schema.get("features"))
             existing_schema = existing_schema.rename({"_class":"class"}, axis='columns')
