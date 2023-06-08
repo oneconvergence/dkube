@@ -39,6 +39,7 @@ from dkube.sdk.internal.dkube_api.models.job_model import JobModel
 from dkube.sdk.internal.dkube_api.models.job_model_parameters import \
     JobModelParameters
 from dkube.sdk.internal.dkube_api.models.job_model_parameters_run import \
+    JobModelParametersRun
 from dkube.sdk.internal.dkube_api.models.job_cluster_model import \
     JobClusterModel
 from dkube.sdk.internal.dkube_api.rest import ApiException

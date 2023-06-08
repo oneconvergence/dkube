@@ -27,6 +27,7 @@ from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
 from dkube.sdk.rsrcs.modelmonitor import DkubeModelmonitorAlert
 from dkube.sdk.rsrcs.project import DkubeProject
+from dkube.sdk.internal.dkube_api.models.dl_framework_model import DLFrameworkModel
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -3540,7 +3541,7 @@ class DkubeApi(ApiBase, FilesBase):
         Outputs*
             a dictionary object with response status
         """
-        frameworks_dict = {}
-        frameworks_dict["frameworks"] = [clusters_info]
-        response = super().configure_clusters(framework_dict)
+        data.framework.versions = data.versions
+        frameworks = DLFrameworkModel([data.framework])
+        response = super().add_dl_frameworks(frameworks)
         return response

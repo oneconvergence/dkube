@@ -6,6 +6,8 @@ from dkube.sdk.internal.dkube_api.api import dkube_operator_exclusive_api
 from dkube.sdk.internal.dkube_api.models.cluster import Cluster
 from dkube.sdk.internal.dkube_api.models.cluster_access_keys_def import \
     ClusterAccessKeysDef
+from dkube.sdk.internal.dkube_api.models.dl_framework import DLFramework
+from dkube.sdk.internal.dkube_api.models.dl_framework_model_versions import DLFrameworkModelVersions
 
 from .util import *
 
@@ -174,13 +176,13 @@ class DkubeCluster(object):
         """
         self.cluster.access_keys.region = region
 
-class DLFramework(object):
-    def __init__(self, name="", versions=[]):
-        self.name = name
-        self.versions = versions
+class DkubeDLFramework(object):
+    def __init__(self, name=""):
+        self.framework = DLFramework(name)
+        self.versions = []
 
     def update_basic(self, name):
-        self.name = name
+        self.framework.name = name
 
     def update_version(self, name, image, capabilities=["training"]):
-        self.versions.append({name: name, image: image, capabilities=capabilities})
+        self.versions.append(DLFrameworkModelVersions(name, image, capabilities))
