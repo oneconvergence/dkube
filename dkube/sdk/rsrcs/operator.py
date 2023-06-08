@@ -173,3 +173,14 @@ class DkubeCluster(object):
         Method to update the region
         """
         self.cluster.access_keys.region = region
+
+class DLFramework(object):
+    def __init__(self, name="", versions=[]):
+        self.name = name
+        self.versions = versions
+
+    def update_basic(self, name):
+        self.name = name
+
+    def update_version(self, name, image, capabilities=["training"]):
+        self.versions.append({name: name, image: image, capabilities=capabilities})

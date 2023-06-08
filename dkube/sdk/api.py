@@ -3527,3 +3527,20 @@ class DkubeApi(ApiBase, FilesBase):
         else:
             raise ValueError(response["response"]["message"])
 
+    def add_dl_framework(self, data:)
+        """
+        Method to add framework in dkube
+
+        *Inputs*
+
+            data
+               Instance of :bash:`dkube.sdk.rsrcs.operator.DLFramework` class.
+                Please see the :bash:`Resources` section for details on this class.
+
+        Outputs*
+            a dictionary object with response status
+        """
+        frameworks_dict = {}
+        frameworks_dict["frameworks"] = [clusters_info]
+        response = super().configure_clusters(framework_dict)
+        return response
