@@ -31,6 +31,8 @@ from dkube.sdk.internal.dkube_api.models.preprocessing_job_model import \
     PreprocessingJobModel
 from dkube.sdk.internal.dkube_api.models.preprocessing_job_model_executor import \
     PreprocessingJobModelExecutor
+from dkube.sdk.internal.dkube_api.models.job_cluster_model import \
+    JobClusterModel
 from dkube.sdk.internal.dkube_api.rest import ApiException
 
 from .util import *
@@ -76,8 +78,9 @@ class DkubePreprocessing(object):
         self.customenv = {}
         self.envs = []
         self.config = JobConfigModel(envs=self.envs, file=self.configfile)
+        self.cluster = JobClusterModel()
         self.pp_def = PreprocessingJobModel(
-            kind='preprocessing', executor=self.executor_def, datums=self.input_datums, config=self.config, featuresets=self.featuresets)
+            kind='preprocessing', executor=self.executor_def, datums=self.input_datums, config=self.config, featuresets=self.featuresets, cluster=self.cluster)
         self.run_def = JobModelParametersRun(template=None, group='default')
         self.job_parameters = JobModelParameters(
             _class='preprocessing', preprocessing=self.pp_def, run=self.run_def)
@@ -312,3 +315,18 @@ class DkubePreprocessing(object):
         """
         for k, v in vars.items():
             self.envs.append({"key": k, "value": v})
+
+    def update_cluster(self, name, kind):
+        """
+            Method to cluster for the preprocessing run
+
+            *Inputs*
+
+                name
+                    Name of the cluster
+
+                kind
+                    kind of the cluster
+        """
+        self.cluster.name = name
+        self.cluster.kind = kind

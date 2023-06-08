@@ -39,7 +39,8 @@ from dkube.sdk.internal.dkube_api.models.job_model import JobModel
 from dkube.sdk.internal.dkube_api.models.job_model_parameters import \
     JobModelParameters
 from dkube.sdk.internal.dkube_api.models.job_model_parameters_run import \
-    JobModelParametersRun
+from dkube.sdk.internal.dkube_api.models.job_cluster_model import \
+    JobClusterModel
 from dkube.sdk.internal.dkube_api.rest import ApiException
 
 from .util import *
@@ -99,9 +100,10 @@ class DkubeTraining(object):
         self.customenv = {}
         self.hyperparameters = DSJobModelHyperparams(file=self.configfile)
         self.hptuning = DSJobModelHptuning()
+        self.cluster = JobClusterModel()
 
         self.training_def = DSJobModel(executor=self.executor_def, datums=self.input_datums,
-                                       rdma=False, hyperparams=self.hyperparameters, hptuning=self.hptuning, featuresets=self.featuresets)
+                                       rdma=False, hyperparams=self.hyperparameters, hptuning=self.hptuning, featuresets=self.featuresets, cluster=self.cluster)
         self.run_def = JobModelParametersRun(template=None, group='default')
         self.job_parameters = JobModelParameters(
             _class='training', training=self.training_def, run=self.run_def)
@@ -386,3 +388,18 @@ class DkubeTraining(object):
             Method to create Run with no execution to track external execution
         """
         self.execute = False
+
+    def update_cluster(self, name, kind):
+        """
+            Method to cluster for the preprocessing run
+
+            *Inputs*
+
+                name
+                    Name of the cluster
+
+                kind
+                    kind of the cluster
+        """
+        self.cluster.name = name
+        self.cluster.kind = kind
