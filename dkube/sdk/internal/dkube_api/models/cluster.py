@@ -160,7 +160,7 @@ class Cluster(object):
         :param kind: The kind of this Cluster.  # noqa: E501
         :type: str
         """
-        allowed_values = ["kubernetes-local", "dkube-remote", "slurm-remote", "sagemaker", "kserve", "custom", "fate-remote"]  # noqa: E501
+        allowed_values = ["kubernetes-local", "dkube-remote", "slurm-remote", "sagemaker", "kserve", "custom", "FATE"]  # noqa: E501
         if kind not in allowed_values:
             raise ValueError(
                 "Invalid value for `kind` ({0}), must be one of {1}"  # noqa: E501

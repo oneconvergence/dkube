@@ -96,7 +96,7 @@ class JobClusterModel(object):
         :param kind: The kind of this JobClusterModel.  # noqa: E501
         :type: str
         """
-        allowed_values = ["CLUSTER_LOCAL", "CLUSTER_SLURMHPC_REMOTE", "fate-remote"]  # noqa: E501
+        allowed_values = ["CLUSTER_LOCAL", "CLUSTER_SLURMHPC_REMOTE", "FATE"]  # noqa: E501
         if kind not in allowed_values:
             raise ValueError(
                 "Invalid value for `kind` ({0}), must be one of {1}"  # noqa: E501
