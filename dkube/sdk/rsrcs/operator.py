@@ -176,6 +176,10 @@ class DkubeCluster(object):
         """
         self.cluster.access_keys.region = region
 
+    def update_host_port(self, host, port):
+        self.cluster.host = host
+        self.cluster.port = port
+
 class DkubeDLFramework(object):
     def __init__(self, name=""):
         self.framework = DLFramework(name)

@@ -46,7 +46,9 @@ class Cluster(object):
         'access_keys': 'ClusterAccessKeysDef',
         'tags': 'list[str]',
         'description': 'str',
-        'plugin': 'str'
+        'plugin': 'str',
+        'host': 'str',
+        'port': 'str'
     }
 
     attribute_map = {
@@ -65,10 +67,12 @@ class Cluster(object):
         'access_keys': 'access_keys',
         'tags': 'tags',
         'description': 'description',
-        'plugin': 'plugin'
+        'plugin': 'plugin',
+        'host': 'host',
+        'port': 'port'
     }
 
-    def __init__(self, name=None, kind=None, _class=None, url=None, ca=None, version=None, auth_type=None, jwt_token_type=None, headers=None, jwt_token=None, jwt_signing_key=None, cluster_user=None, access_keys=None, tags=None, description=None, plugin=None):  # noqa: E501
+    def __init__(self, name=None, kind=None, _class=None, url=None, ca=None, version=None, auth_type=None, jwt_token_type=None, headers=None, jwt_token=None, jwt_signing_key=None, cluster_user=None, access_keys=None, tags=None, description=None, plugin=None, host=None, port=None):  # noqa: E501
         """Cluster - a model defined in Swagger"""  # noqa: E501
 
         self._name = None
@@ -87,6 +91,8 @@ class Cluster(object):
         self._tags = None
         self._description = None
         self._plugin = None
+        self._host = None
+        self._port = None
         self.discriminator = None
 
         if name is not None:
@@ -101,7 +107,8 @@ class Cluster(object):
             self.ca = ca
         if version is not None:
             self.version = version
-        self.auth_type = auth_type
+        if auth_type is not None:
+            self.auth_type = auth_type
         if jwt_token_type is not None:
             self.jwt_token_type = jwt_token_type
         if headers is not None:
@@ -120,6 +127,10 @@ class Cluster(object):
             self.description = description
         if plugin is not None:
             self.plugin = plugin
+        if host is not None:
+            self.host = host
+        if port is not None:
+            self.port = port
 
     @property
     def name(self):
@@ -283,8 +294,6 @@ class Cluster(object):
         :param auth_type: The auth_type of this Cluster.  # noqa: E501
         :type: str
         """
-        if auth_type is None:
-            raise ValueError("Invalid value for `auth_type`, must not be `None`")  # noqa: E501
         allowed_values = ["jwt", "access_keys", "none"]  # noqa: E501
         if auth_type not in allowed_values:
             raise ValueError(
@@ -492,6 +501,48 @@ class Cluster(object):
         """
 
         self._plugin = plugin
+
+    @property
+    def host(self):
+        """Gets the host of this Cluster.  # noqa: E501
+
+
+        :return: The host of this Cluster.  # noqa: E501
+        :rtype: str
+        """
+        return self._host
+
+    @host.setter
+    def host(self, host):
+        """Sets the host of this Cluster.
+
+
+        :param host: The host of this Cluster.  # noqa: E501
+        :type: str
+        """
+
+        self._host = host
+
+    @property
+    def port(self):
+        """Gets the port of this Cluster.  # noqa: E501
+
+
+        :return: The port of this Cluster.  # noqa: E501
+        :rtype: str
+        """
+        return self._port
+
+    @port.setter
+    def port(self, port):
+        """Sets the port of this Cluster.
+
+
+        :param port: The port of this Cluster.  # noqa: E501
+        :type: str
+        """
+
+        self._port = port
 
     def to_dict(self):
         """Returns the model properties as a dict"""
