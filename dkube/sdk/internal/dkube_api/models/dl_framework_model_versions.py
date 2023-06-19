@@ -117,7 +117,7 @@ class DLFrameworkModelVersions(object):
         :param capabilities: The capabilities of this DLFrameworkModelVersions.  # noqa: E501
         :type: list[str]
         """
-        allowed_values = ["training", "preprocessing"]  # noqa: E501
+        allowed_values = ["training", "preprocessing", "jlab-ide", "r-ide", "vs-ide", "serving", "ssh"]  # noqa: E501
         if not set(capabilities).issubset(set(allowed_values)):
             raise ValueError(
                 "Invalid values for `capabilities` [{0}], must be a subset of [{1}]"  # noqa: E501
