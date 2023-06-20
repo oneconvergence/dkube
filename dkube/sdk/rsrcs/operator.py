@@ -188,5 +188,10 @@ class DkubeDLFramework(object):
     def update_basic(self, name):
         self.framework.name = name
 
-    def update_version(self, name, image, capabilities=["training"]):
-        self.versions.append(DLFrameworkModelVersions(name, image, capabilities))
+    def update_version(self, name, image, login_uname="", login_pswd="", capabilities=["training"]):
+        private = False
+        if login_uname != "" and login_pswd != "":
+            private = True
+        fv = DLFrameworkModelVersions(name=name, image=image, private=private,
+            username=login_uname, password=login_pswd, capabilities=capabilities)
+        self.versions.append(fv)

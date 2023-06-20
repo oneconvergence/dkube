@@ -33,21 +33,30 @@ class DLFrameworkModelVersions(object):
     swagger_types = {
         'name': 'str',
         'image': 'str',
-        'capabilities': 'list[str]'
+        'capabilities': 'list[str]',
+        'private': 'bool',
+        'username': 'str',
+        'password': 'str'
     }
 
     attribute_map = {
         'name': 'name',
         'image': 'image',
-        'capabilities': 'capabilities'
+        'capabilities': 'capabilities',
+        'private': 'private',
+        'username': 'username',
+        'password': 'password'
     }
 
-    def __init__(self, name=None, image=None, capabilities=None):  # noqa: E501
+    def __init__(self, name=None, image=None, capabilities=None, private=False, username=None, password=None):  # noqa: E501
         """DLFrameworkModelVersions - a model defined in Swagger"""  # noqa: E501
 
         self._name = None
         self._image = None
         self._capabilities = None
+        self._private = None
+        self._username = None
+        self._password = None
         self.discriminator = None
 
         if name is not None:
@@ -56,6 +65,12 @@ class DLFrameworkModelVersions(object):
             self.image = image
         if capabilities is not None:
             self.capabilities = capabilities
+        if private is not None:
+            self.private = private
+        if username is not None:
+            self.username = username
+        if password is not None:
+            self.password = password
 
     @property
     def name(self):
@@ -126,6 +141,69 @@ class DLFrameworkModelVersions(object):
             )
 
         self._capabilities = capabilities
+
+    @property
+    def private(self):
+        """Gets the private of this DLFrameworkModelVersions.  # noqa: E501
+
+
+        :return: The private of this DLFrameworkModelVersions.  # noqa: E501
+        :rtype: bool
+        """
+        return self._private
+
+    @private.setter
+    def private(self, private):
+        """Sets the private of this DLFrameworkModelVersions.
+
+
+        :param private: The private of this DLFrameworkModelVersions.  # noqa: E501
+        :type: bool
+        """
+
+        self._private = private
+
+    @property
+    def username(self):
+        """Gets the username of this DLFrameworkModelVersions.  # noqa: E501
+
+
+        :return: The username of this DLFrameworkModelVersions.  # noqa: E501
+        :rtype: str
+        """
+        return self._username
+
+    @username.setter
+    def username(self, username):
+        """Sets the username of this DLFrameworkModelVersions.
+
+
+        :param username: The username of this DLFrameworkModelVersions.  # noqa: E501
+        :type: str
+        """
+
+        self._username = username
+
+    @property
+    def password(self):
+        """Gets the password of this DLFrameworkModelVersions.  # noqa: E501
+
+
+        :return: The password of this DLFrameworkModelVersions.  # noqa: E501
+        :rtype: str
+        """
+        return self._password
+
+    @password.setter
+    def password(self, password):
+        """Sets the password of this DLFrameworkModelVersions.
+
+
+        :param password: The password of this DLFrameworkModelVersions.  # noqa: E501
+        :type: str
+        """
+
+        self._password = password
 
     def to_dict(self):
         """Returns the model properties as a dict"""
