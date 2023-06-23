@@ -192,6 +192,13 @@ class DkubeDSFramework(object):
         private = False
         if login_uname != "" and login_pswd != "":
             private = True
+            self.validate_image_hostname(image)
         fv = DLFrameworkModelVersions(name=name, image=image, private=private,
             username=login_uname, password=login_pswd, capabilities=capabilities)
         self.versions.append(fv)
+
+    def validate_image_hostname(self, image):
+        i = image.find("/")
+        if i == -1 or not any([x in image[:i] for x in [".", ":"]]):
+            e = "Image name {} is not prefixed with hostname. Hostname is required for private image. Hint: add docker.io as prefix in image name for dockerhub registry eg. docker.io/<path>:<tag>".format(image)
+            raise Exception(e)
