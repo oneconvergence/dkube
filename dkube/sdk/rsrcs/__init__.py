@@ -9,7 +9,9 @@ from .storage import DkubeResourcePVC
 from .training import DkubeTraining
 from .modelmonitor import DkubeModelmonitor
 from .operator import DkubeCluster
+from .operator import DkubeDSFramework
 
 __all__ = ['DkubeIDE', 'DkubeTraining', 'DkubePreprocessing',
            'DkubeServing', 'DkubeCode', 'DkubeDataset', 'DkubeModel',
-           'DkubeFeatureSet', 'DkubeResourcePVC','DkubeModelmonitor','DkubeCluster']
+           'DkubeFeatureSet', 'DkubeResourcePVC','DkubeModelmonitor','DkubeCluster',
+           'DkubeDSFramework']

@@ -27,6 +27,7 @@ from dkube.sdk.rsrcs import *
 from dkube.sdk.rsrcs.featureset import DkubeFeatureSet, DKubeFeatureSetUtils
 from dkube.sdk.rsrcs.modelmonitor import DkubeModelmonitorAlert
 from dkube.sdk.rsrcs.project import DkubeProject
+from dkube.sdk.internal.dkube_api.models.dl_framework_model import DLFrameworkModel
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -3160,10 +3161,10 @@ class DkubeApi(ApiBase, FilesBase):
         Outputs*
             a dictionary object with response status
         """
-        if data.auth_type is None:
-            raise ValueError("auth type cannot be None, set auth type with update_authtype")
+        #if data.cluster.auth_type is None:
+        #    raise ValueError("auth type cannot be None, set auth type with update_authtype")
         clusters_info = []
-        clusters_info.append(data)
+        clusters_info.append(data.cluster)
         clusters_dict = {}
         clusters_dict["clusters"] = clusters_info
         response = super().configure_clusters(clusters_dict)
@@ -3527,3 +3528,20 @@ class DkubeApi(ApiBase, FilesBase):
         else:
             raise ValueError(response["response"]["message"])
 
+    def add_ds_framework(self, data):
+        """
+        Method to add framework in dkube
+
+        *Inputs*
+
+            data
+               Instance of :bash:`dkube.sdk.rsrcs.operator.DLFramework` class.
+                Please see the :bash:`Resources` section for details on this class.
+
+        Outputs*
+            a dictionary object with response status
+        """
+        data.framework.versions = data.versions
+        frameworks = DLFrameworkModel([data.framework])
+        response = super().add_dl_frameworks(frameworks)
+        return response

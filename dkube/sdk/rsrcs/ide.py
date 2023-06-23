@@ -36,6 +36,8 @@ from dkube.sdk.internal.dkube_api.models.job_model_parameters import \
     JobModelParameters
 from dkube.sdk.internal.dkube_api.models.job_model_parameters_run import \
     JobModelParametersRun
+from dkube.sdk.internal.dkube_api.models.job_cluster_model import \
+    JobClusterModel
 from dkube.sdk.internal.dkube_api.rest import ApiException
 
 from .util import *
@@ -83,8 +85,10 @@ class DkubeIDE(object):
         self.hyperparameters = DSJobModelHyperparams(
             file=self.configfile, custom=self.customenv)
         self.hptuning = DSJobModelHptuning()
+        self.cluster = JobClusterModel()
         self.notebook_def = DSJobModel(executor=self.executor_def, datums=self.input_datums,
-                                       rdma=False, hyperparams=self.hyperparameters, hptuning=self.hptuning)
+                                       rdma=False, hyperparams=self.hyperparameters, hptuning=self.hptuning,
+                                       cluster=self.cluster)
         self.run_def = JobModelParametersRun(template=None, group='default')
         self.job_parameters = JobModelParameters(
             _class='notebook', notebook=self.notebook_def, run=self.run_def)
@@ -287,3 +291,18 @@ class DkubeIDE(object):
         """
         self.notebook_def.ngpus = ngpus
         self.notebook_def.gpus_override = False
+
+    def update_cluster(self, name, kind):
+        """
+            Method to cluster for the preprocessing run
+
+            *Inputs*
+
+                name
+                    Name of the cluster
+
+                kind
+                    kind of the cluster
+        """
+        self.cluster.name = name
+        self.cluster.kind = kind

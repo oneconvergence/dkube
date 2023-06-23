@@ -14,8 +14,10 @@ from .rsrcs.storage import DkubeResourcePVC
 from .rsrcs.training import DkubeTraining
 from .rsrcs.util import generate
 from .utils import monitoring
+from .rsrcs.operator import DkubeDSFramework
+from .rsrcs.operator import DkubeCluster
 
 __all__ = ['DkubeApi', 'DkubeIDE', 'DkubeTraining', 'DkubePreprocessing',
            'DkubeServing', 'DkubeCode', 'DkubeDataset', 'DkubeModel', 'generate',
            'DkubeFeatureSet', 'DkubeProject', 'DkubeResourcePVC', 'DkubeModelmonitor',
-           'mlflow', 'monitoring', 'CUSTOM_METRICS_FILE']
+           'mlflow', 'monitoring', 'CUSTOM_METRICS_FILE', 'DkubeDSFramework', 'DkubeCluster']

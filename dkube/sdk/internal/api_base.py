@@ -533,3 +533,7 @@ class ApiBase(object):
     def update_cluster_configuration(self, clustername, data):
         response = self._opsapi.update_cluster(clustername, data)
         return response.to_dict()
+
+    def add_dl_frameworks(self, data):
+        response = self._opsapi.add_dl_frameworks(data)
+        return response.to_dict()
