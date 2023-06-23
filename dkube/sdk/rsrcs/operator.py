@@ -180,7 +180,7 @@ class DkubeCluster(object):
         self.cluster.host = host
         self.cluster.port = port
 
-class DkubeDLFramework(object):
+class DkubeDSFramework(object):
     def __init__(self, name=""):
         self.framework = DLFramework(name)
         self.versions = []

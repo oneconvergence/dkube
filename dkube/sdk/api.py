@@ -3528,7 +3528,7 @@ class DkubeApi(ApiBase, FilesBase):
         else:
             raise ValueError(response["response"]["message"])
 
-    def add_dl_framework(self, data):
+    def add_ds_framework(self, data):
         """
         Method to add framework in dkube
 
