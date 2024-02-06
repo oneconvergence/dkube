@@ -5,13 +5,13 @@ import tempfile
 import os
 
 
-class DkubeMlflowLogger:
-    def get_logger(self):
+class NotebookMlflowLogger:
+    def get_logger(self, level=logging.INFO):
         logger = logging.getLogger()
         if logger.handlers:
             return logger
         else:
-            logger.setLevel(logging.INFO)
+            logger.setLevel(level)
             log_formatter = logging.Formatter(
                 "%(asctime)s  %(name)s  |%(levelname)-5.5s|  %(message)s")
             temp = tempfile.NamedTemporaryFile(suffix='.log', delete=False)
