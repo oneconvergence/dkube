@@ -7,6 +7,8 @@ import os
 
 class NotebookMlflowLogger:
     def get_logger(self, level=logging.INFO):
+        if os.getenv("DKUBE_JOB_CLASS") != "notebook":
+            return logging.getLogger()
         logger = logging.getLogger()
         if logger.handlers:
             return logger
@@ -25,12 +27,13 @@ class NotebookMlflowLogger:
             return logger
 
     def flush(self):
+        if os.getenv("DKUBE_JOB_CLASS") != "notebook":
+            return
         logger = logging.getLogger()
         log_paths = [handler.baseFilename for handler in logger.handlers if isinstance(
             handler, logging.FileHandler)]
         log_file = next(iter(log_paths))
         if mlflow.active_run():
-            print("Persisting logs in storage")
             mlflow.log_artifact(log_file, "logs")
             os.remove(log_file)
         else:
