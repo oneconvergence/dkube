@@ -6,8 +6,8 @@ from pprint import pprint
 
 from dkube.sdk.internal import dkube_api
 from dkube.sdk.internal.dkube_api.models.datum_model import DatumModel
-from dkube.sdk.internal.dkube_api.models.datum_model_k8svolume import \
-    DatumModelK8svolume
+#from dkube.sdk.internal.dkube_api.models.datum_model_k8svolume import \
+#    DatumModelK8svolume
 from dkube.sdk.internal.dkube_api.models.gcs_access_info import GCSAccessInfo
 from dkube.sdk.internal.dkube_api.models.git_access_credentials import \
     GitAccessCredentials

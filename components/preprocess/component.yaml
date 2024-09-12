@@ -37,9 +37,9 @@ inputs:
      description: 'Optional. List of input models mount paths.'}
   - {name: input_model_versions,        type: List,     optional: true,     default: '[]',
      description: 'Optional. List of input models versions.'}
-  - {name: outputs,            type: List,   optional: true,      default: '[]',
+  - {name: outputs,            type: List,   optional: true,
      description: 'Required. List of output datasets of a datajob'}
-  - {name: output_mounts,            type: List,   optional: true,      default: '[]',
+  - {name: output_mounts,            type: List,   optional: true,
      description: 'Required. List of output datasets mount paths'}
   - {name: output_featuresets,            type: List,   optional: true,
     description: 'Required. List of output featuresets of a datajob'}
