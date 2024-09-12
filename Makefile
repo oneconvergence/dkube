@@ -13,7 +13,7 @@ endef
 export PRINT_HELP_PYSCRIPT
 
 
-VERSION=2.3
+VERSION=3.1
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
